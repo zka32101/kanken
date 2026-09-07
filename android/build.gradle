@@ -1,0 +1,29 @@
+buildscript {
+    ext {
+        kotlin_version = '1.9.0'
+        gradle_version = '8.1.0'
+    }
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.android.tools.build:gradle:$gradle_version"
+        classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

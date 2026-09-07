@@ -1,0 +1,118 @@
+name: Android Build
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.0'
+          channel: 'stable'
+
+      - name: Get Flutter dependencies
+        run: |
+          set -o pipefail
+          flutter pub get 2>&1 | tee pub_get.log
+
+      - name: Verify dependencies
+        run: |
+          if grep -q "error\|Error\|ERR" pub_get.log; then
+            echo "❌ Dependency resolution failed"
+            exit 1
+          fi
+          echo "✅ Dependencies resolved"
+
+      - name: Check Android platform
+        run: |
+          if [ ! -d "android" ]; then
+            echo "❌ android/ directory not found"
+            exit 1
+          fi
+          echo "✅ Android platform present"
+
+      - name: Build APK (Debug)
+        run: |
+          set -o pipefail
+          flutter build apk --debug 2>&1 | tee build_debug.log
+        continue-on-error: true
+
+      - name: Verify APK
+        run: |
+          APK_PATH="build/app/outputs/apk/debug/app-debug.apk"
+          if [ -f "$APK_PATH" ]; then
+            SIZE=$(du -h "$APK_PATH" | cut -f1)
+            echo "✅ APK built successfully"
+            echo "   Path: $APK_PATH"
+            echo "   Size: $SIZE"
+          else
+            echo "❌ APK not found: $APK_PATH"
+            echo "=== Build log ==="
+            cat build_debug.log || true
+            exit 1
+          fi
+
+      - name: Build App Bundle (Release)
+        run: |
+          set -o pipefail
+          flutter build appbundle --release 2>&1 | tee build_release.log
+        continue-on-error: true
+
+      - name: Verify App Bundle
+        run: |
+          AAB_PATH="build/app/outputs/bundle/release/app-release.aab"
+          if [ -f "$AAB_PATH" ]; then
+            SIZE=$(du -h "$AAB_PATH" | cut -f1)
+            echo "✅ App Bundle built successfully"
+            echo "   Path: $AAB_PATH"
+            echo "   Size: $SIZE"
+          else
+            echo "⚠️  App Bundle not found (may require signing setup)"
+            echo "   Expected: $AAB_PATH"
+          fi
+
+      - name: Upload APK artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: build/app/outputs/apk/debug/app-debug.apk
+          retention-days: 7
+
+      - name: Upload App Bundle artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+          retention-days: 7
+        continue-on-error: true
+
+      - name: Report status
+        run: |
+          echo "## Android Build Summary"
+          echo "- APK: $([ -f build/app/outputs/apk/debug/app-debug.apk ] && echo '✅ OK' || echo '❌ Failed')"
+          echo "- AAB: $([ -f build/app/outputs/bundle/release/app-release.aab ] && echo '✅ OK' || echo '⚠️  Skipped/Failed')"

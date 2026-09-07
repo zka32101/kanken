@@ -35,7 +35,7 @@ dependencies:
   cloud_functions: ^4.5.0
 
   # Monetization
-  revenue_cat_flutter: ^7.7.0
+  purchases_flutter: ^7.7.0
 
   # Animation & Lottie
   lottie: ^2.4.0
