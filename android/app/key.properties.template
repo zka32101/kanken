@@ -1,0 +1,8 @@
+# Flutter/Android Signing Configuration Template
+# Copy this file to android/key.properties and fill in your values
+# Do NOT commit key.properties to git!
+
+storePassword=YOUR_KEYSTORE_PASSWORD
+keyPassword=YOUR_KEY_PASSWORD
+keyAlias=kanken_key
+storeFile=/path/to/kanken_key.jks
