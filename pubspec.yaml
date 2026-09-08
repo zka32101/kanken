@@ -34,9 +34,6 @@ dependencies:
   firebase_remote_config: ^4.3.0
   cloud_functions: ^4.5.0
 
-  # Monetization
-  purchases_flutter: ^6.0.0
-
   # Animation & Lottie
   lottie: ^2.4.0
 
