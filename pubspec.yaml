@@ -12,14 +12,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Core & UI
-  petit_core:
-    path: ../petit_core
-  petit_ui:
-    path: ../petit_ui
-  petit_ai:
-    path: ../petit_ai
-
   # State Management
   riverpod: ^2.4.0
   flutter_riverpod: ^2.4.0
