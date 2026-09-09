@@ -89,6 +89,30 @@ jobs:
           echo "=== Full build log ==="
           tail -200 build_debug.log || cat build_debug.log || echo "No log found"
 
+      - name: Upload build logs and structure as artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            build_debug.log
+            build_release.log
+            build_structure.txt
+          retention-days: 7
+        continue-on-error: true
+
+      - name: Debug - Save build directory structure
+        if: always()
+        run: |
+          echo "=== Build Directory Structure ===" > build_structure.txt
+          if [ -d "build" ]; then
+            echo "build/ exists" >> build_structure.txt
+            find build -type f 2>/dev/null | sort >> build_structure.txt || echo "Error listing build/" >> build_structure.txt
+          else
+            echo "build/ directory NOT found" >> build_structure.txt
+          fi
+          cat build_structure.txt
+
       - name: Verify APK
         run: |
           echo "=== Searching for APK in entire build directory ==="
