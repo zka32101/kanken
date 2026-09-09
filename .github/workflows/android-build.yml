@@ -33,6 +33,12 @@ jobs:
           flutter-version: '3.13.0'
           channel: 'stable'
 
+      - name: Create local.properties
+        run: |
+          echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
+          echo "✅ Created android/local.properties"
+          cat android/local.properties
+
       - name: Get Flutter dependencies
         run: |
           set -o pipefail
