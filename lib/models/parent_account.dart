@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class ParentAccount {
   final String uid;
   final String linkedChildUid;
@@ -13,21 +11,23 @@ class ParentAccount {
     required this.createdAt,
   });
 
-  factory ParentAccount.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory ParentAccount.fromJson(Map<String, dynamic> json) {
     return ParentAccount(
-      uid: doc.id,
-      linkedChildUid: data['linkedChildUid'] ?? '',
-      notifyPrefs: data['notifyPrefs'] ?? {},
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      uid: json['uid'] ?? '',
+      linkedChildUid: json['linkedChildUid'] ?? '',
+      notifyPrefs: json['notifyPrefs'] ?? {},
+      createdAt: json['createdAt'] != null
+        ? DateTime.parse(json['createdAt'])
+        : DateTime.now(),
     );
   }
 
-  Map<String, dynamic> toFirestore() {
+  Map<String, dynamic> toJson() {
     return {
+      'uid': uid,
       'linkedChildUid': linkedChildUid,
       'notifyPrefs': notifyPrefs,
-      'createdAt': Timestamp.fromDate(createdAt),
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 

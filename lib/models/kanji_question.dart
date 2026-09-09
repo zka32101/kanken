@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 enum QuestionType { multipleChoice, handwriting }
 
 class KanjiQuestion {
@@ -23,17 +21,16 @@ class KanjiQuestion {
     required this.version,
   });
 
-  factory KanjiQuestion.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory KanjiQuestion.fromJson(Map<String, dynamic> json) {
     return KanjiQuestion(
-      id: doc.id,
-      level: data['level'] ?? 'LEVEL_10',
-      kanji: data['kanji'] ?? '',
-      questionType: _parseQuestionType(data['questionType']),
-      choices: List<String>.from(data['choices'] ?? []),
-      correctAnswer: data['correctAnswer'] ?? '',
-      strokeOrderData: data['strokeOrderData'],
-      version: data['version'] ?? 1,
+      id: json['id'] ?? '',
+      level: json['level'] ?? 'LEVEL_10',
+      kanji: json['kanji'] ?? '',
+      questionType: _parseQuestionType(json['questionType']),
+      choices: List<String>.from(json['choices'] ?? []),
+      correctAnswer: json['correctAnswer'] ?? '',
+      strokeOrderData: json['strokeOrderData'],
+      version: json['version'] ?? 1,
     );
   }
 
@@ -46,8 +43,9 @@ class KanjiQuestion {
     }
   }
 
-  Map<String, dynamic> toFirestore() {
+  Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'level': level,
       'kanji': kanji,
       'questionType': questionType.toString().split('.').last,

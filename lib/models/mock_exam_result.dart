@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class MockExamResult {
   final String id;
   final String uid;
@@ -17,25 +15,27 @@ class MockExamResult {
     required this.takenAt,
   });
 
-  factory MockExamResult.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory MockExamResult.fromJson(Map<String, dynamic> json) {
     return MockExamResult(
-      id: doc.id,
-      uid: data['uid'] ?? '',
-      examId: data['examId'] ?? '',
-      score: data['score'] ?? 0,
-      passed: data['passed'] ?? false,
-      takenAt: (data['takenAt'] as Timestamp).toDate(),
+      id: json['id'] ?? '',
+      uid: json['uid'] ?? '',
+      examId: json['examId'] ?? '',
+      score: json['score'] ?? 0,
+      passed: json['passed'] ?? false,
+      takenAt: json['takenAt'] != null
+        ? DateTime.parse(json['takenAt'])
+        : DateTime.now(),
     );
   }
 
-  Map<String, dynamic> toFirestore() {
+  Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'uid': uid,
       'examId': examId,
       'score': score,
       'passed': passed,
-      'takenAt': Timestamp.fromDate(takenAt),
+      'takenAt': takenAt.toIso8601String(),
     };
   }
 

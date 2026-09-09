@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class CollectionBadge {
   final String id;
   final String uid;
@@ -13,21 +11,23 @@ class CollectionBadge {
     required this.unlockedAt,
   });
 
-  factory CollectionBadge.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory CollectionBadge.fromJson(Map<String, dynamic> json) {
     return CollectionBadge(
-      id: doc.id,
-      uid: data['uid'] ?? '',
-      level: data['level'] ?? 'LEVEL_10',
-      unlockedAt: (data['unlockedAt'] as Timestamp).toDate(),
+      id: json['id'] ?? '',
+      uid: json['uid'] ?? '',
+      level: json['level'] ?? 'LEVEL_10',
+      unlockedAt: json['unlockedAt'] != null
+        ? DateTime.parse(json['unlockedAt'])
+        : DateTime.now(),
     );
   }
 
-  Map<String, dynamic> toFirestore() {
+  Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'uid': uid,
       'level': level,
-      'unlockedAt': Timestamp.fromDate(unlockedAt),
+      'unlockedAt': unlockedAt.toIso8601String(),
     };
   }
 }

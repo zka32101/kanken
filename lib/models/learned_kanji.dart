@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class LearnedKanji {
   final String id;
   final String uid;
@@ -17,25 +15,27 @@ class LearnedKanji {
     required this.learnedAt,
   });
 
-  factory LearnedKanji.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory LearnedKanji.fromJson(Map<String, dynamic> json) {
     return LearnedKanji(
-      id: doc.id,
-      uid: data['uid'] ?? '',
-      questionId: data['questionId'] ?? '',
-      kanji: data['kanji'] ?? '',
-      level: data['level'] ?? '',
-      learnedAt: (data['learnedAt'] as Timestamp).toDate(),
+      id: json['id'] ?? '',
+      uid: json['uid'] ?? '',
+      questionId: json['questionId'] ?? '',
+      kanji: json['kanji'] ?? '',
+      level: json['level'] ?? '',
+      learnedAt: json['learnedAt'] != null
+        ? DateTime.parse(json['learnedAt'])
+        : DateTime.now(),
     );
   }
 
-  Map<String, dynamic> toFirestore() {
+  Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'uid': uid,
       'questionId': questionId,
       'kanji': kanji,
       'level': level,
-      'learnedAt': Timestamp.fromDate(learnedAt),
+      'learnedAt': learnedAt.toIso8601String(),
     };
   }
 

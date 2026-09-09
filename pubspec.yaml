@@ -1,5 +1,5 @@
 name: kanken
-description: "小学漢検チャレンジ - 小学生向け漢字検定学習アプリ"
+description: "漢検チャレンジ - 漢字検定学習アプリ"
 publish_to: 'none'
 
 version: 1.0.0+1

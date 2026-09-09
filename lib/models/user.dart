@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class User {
   final String uid;
   final String currentLevel;
@@ -13,21 +11,23 @@ class User {
     required this.createdAt,
   });
 
-  factory User.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      uid: doc.id,
-      currentLevel: data['currentLevel'] ?? 'LEVEL_10',
-      streakCount: data['streakCount'] ?? 0,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      uid: json['uid'] ?? '',
+      currentLevel: json['currentLevel'] ?? 'LEVEL_10',
+      streakCount: json['streakCount'] ?? 0,
+      createdAt: json['createdAt'] != null
+        ? DateTime.parse(json['createdAt'])
+        : DateTime.now(),
     );
   }
 
-  Map<String, dynamic> toFirestore() {
+  Map<String, dynamic> toJson() {
     return {
+      'uid': uid,
       'currentLevel': currentLevel,
       'streakCount': streakCount,
-      'createdAt': Timestamp.fromDate(createdAt),
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 

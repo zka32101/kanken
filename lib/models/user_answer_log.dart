@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 enum AnswerMode { normal, handwriting, weakKanjiFocus }
 
 class UserAnswerLog {
@@ -19,15 +17,16 @@ class UserAnswerLog {
     required this.answeredAt,
   });
 
-  factory UserAnswerLog.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory UserAnswerLog.fromJson(Map<String, dynamic> json) {
     return UserAnswerLog(
-      id: doc.id,
-      uid: data['uid'] ?? '',
-      questionId: data['questionId'] ?? '',
-      isCorrect: data['isCorrect'] ?? false,
-      mode: _parseAnswerMode(data['mode']),
-      answeredAt: (data['answeredAt'] as Timestamp).toDate(),
+      id: json['id'] ?? '',
+      uid: json['uid'] ?? '',
+      questionId: json['questionId'] ?? '',
+      isCorrect: json['isCorrect'] ?? false,
+      mode: _parseAnswerMode(json['mode']),
+      answeredAt: json['answeredAt'] != null
+        ? DateTime.parse(json['answeredAt'])
+        : DateTime.now(),
     );
   }
 
@@ -42,13 +41,14 @@ class UserAnswerLog {
     }
   }
 
-  Map<String, dynamic> toFirestore() {
+  Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'uid': uid,
       'questionId': questionId,
       'isCorrect': isCorrect,
       'mode': mode.toString().split('.').last,
-      'answeredAt': Timestamp.fromDate(answeredAt),
+      'answeredAt': answeredAt.toIso8601String(),
     };
   }
 }

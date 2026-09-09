@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class WeakKanjiList {
   final String id;
   final String uid;
@@ -17,27 +15,29 @@ class WeakKanjiList {
     this.masteredAt,
   });
 
-  factory WeakKanjiList.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory WeakKanjiList.fromJson(Map<String, dynamic> json) {
     return WeakKanjiList(
-      id: doc.id,
-      uid: data['uid'] ?? '',
-      kanjiId: data['kanjiId'] ?? '',
-      missCount: data['missCount'] ?? 0,
-      lastMissedAt: (data['lastMissedAt'] as Timestamp).toDate(),
-      masteredAt: data['masteredAt'] != null
-          ? (data['masteredAt'] as Timestamp).toDate()
+      id: json['id'] ?? '',
+      uid: json['uid'] ?? '',
+      kanjiId: json['kanjiId'] ?? '',
+      missCount: json['missCount'] ?? 0,
+      lastMissedAt: json['lastMissedAt'] != null
+        ? DateTime.parse(json['lastMissedAt'])
+        : DateTime.now(),
+      masteredAt: json['masteredAt'] != null
+          ? DateTime.parse(json['masteredAt'])
           : null,
     );
   }
 
-  Map<String, dynamic> toFirestore() {
+  Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'uid': uid,
       'kanjiId': kanjiId,
       'missCount': missCount,
-      'lastMissedAt': Timestamp.fromDate(lastMissedAt),
-      if (masteredAt != null) 'masteredAt': Timestamp.fromDate(masteredAt!),
+      'lastMissedAt': lastMissedAt.toIso8601String(),
+      if (masteredAt != null) 'masteredAt': masteredAt!.toIso8601String(),
     };
   }
 
