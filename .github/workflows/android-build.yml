@@ -92,8 +92,11 @@ jobs:
       - name: Show detailed build log on failure
         if: failure()
         run: |
-          echo "=== Full build log ==="
-          tail -200 build_debug.log || cat build_debug.log || echo "No log found"
+          echo "=== Full build log (last 300 lines) ==="
+          tail -300 build_debug.log || cat build_debug.log || echo "No log found"
+          echo ""
+          echo "=== Searching for ERROR and FAILED keywords ==="
+          grep -i "error\|failed\|exception" build_debug.log | tail -50 || echo "No error patterns found"
 
       - name: Upload build logs and structure as artifacts
         if: always()
