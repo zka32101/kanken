@@ -107,15 +107,14 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
 
-    // Firebase
-    implementation platform('com.google.firebase:firebase-bom:32.3.1')
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.google.firebase:firebase-auth'
+    // Firebase - Using explicit versions instead of BOM for Gradle 8.1 compatibility
+    implementation 'com.google.firebase:firebase-analytics:21.5.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.6.1'
+    implementation 'com.google.firebase:firebase-auth:22.3.0'
     // Removed firebase-firestore - using JSON serialization instead of Firestore
     // implementation 'com.google.firebase:firebase-firestore'
-    implementation 'com.google.firebase:firebase-remote-config'
-    implementation 'com.google.firebase:firebase-functions'
+    implementation 'com.google.firebase:firebase-remote-config:21.6.0'
+    implementation 'com.google.firebase:firebase-functions:20.4.0'
 
     // Google Play Services
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
