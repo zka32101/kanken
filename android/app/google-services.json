@@ -1,0 +1,36 @@
+{
+  "project_info": {
+    "project_number": "123456789",
+    "firebase_url": "https://kanken-dev.firebaseio.com",
+    "project_id": "kanken-dev",
+    "storage_bucket": "kanken-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123456789:android:abc1234567def890",
+        "android_client_info": {
+          "package_name": "com.example.kanken"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbcDe1234567890_-_-_-_-_-_-_"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "analytics_console_integration_enabled": true
+        },
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
