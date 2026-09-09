@@ -74,6 +74,17 @@ jobs:
 
       - name: Verify APK
         run: |
+          echo "=== Checking APK output structure ==="
+          if [ -d "build/app/outputs" ]; then
+            find build/app/outputs -name "*.apk" -type f 2>/dev/null || echo "No APK files found"
+            echo ""
+            echo "Full directory structure:"
+            find build/app/outputs -type f 2>/dev/null | head -20
+          else
+            echo "build/app/outputs directory not found!"
+          fi
+
+          # Try standard path
           APK_PATH="build/app/outputs/apk/debug/app-debug.apk"
           if [ -f "$APK_PATH" ]; then
             SIZE=$(du -h "$APK_PATH" | cut -f1)
@@ -81,9 +92,10 @@ jobs:
             echo "   Path: $APK_PATH"
             echo "   Size: $SIZE"
           else
-            echo "❌ APK not found: $APK_PATH"
-            echo "=== Build log ==="
-            cat build_debug.log || true
+            echo "❌ APK not found at: $APK_PATH"
+            echo ""
+            echo "=== Last 100 lines of build log ==="
+            tail -100 build_debug.log || cat build_debug.log || true
             exit 1
           fi
 
