@@ -108,14 +108,16 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
 
     // Firebase using BOM for version management (Gradle 8.1 compatible)
+    // Minimal Firebase dependencies for testing
     implementation platform('com.google.firebase:firebase-bom:32.1.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-auth'
+    // Temporarily disabled for debugging dependency resolution
+    // implementation 'com.google.firebase:firebase-remote-config'
+    // implementation 'com.google.firebase:firebase-functions'
     // Removed firebase-firestore - using JSON serialization instead of Firestore
     // implementation 'com.google.firebase:firebase-firestore'
-    implementation 'com.google.firebase:firebase-remote-config'
-    implementation 'com.google.firebase:firebase-functions'
 
     // Google Play Services
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
