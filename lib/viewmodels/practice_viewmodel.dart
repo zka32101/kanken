@@ -53,8 +53,14 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
     state = state.copyWith(isAnswering: true);
 
     try {
-      final question = ref.read(currentQuestionProvider);
+      final questionAsync = ref.read(currentQuestionProvider);
       final firestoreService = ref.read(firestoreServiceProvider);
+
+      // Handle AsyncValue<KanjiQuestion?>
+      KanjiQuestion? question;
+      if (questionAsync is AsyncData) {
+        question = questionAsync.value;
+      }
 
       if (question != null) {
         // 答ログを保存

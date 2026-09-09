@@ -52,7 +52,8 @@ class HapticFeedbackService {
   static Future<void> selectionTap() async {
     if (!_isEnabled) return;
     try {
-      await HapticFeedback.selectionTap();
+      // selectionTap not available in all Flutter versions, use lightImpact instead
+      await HapticFeedback.lightImpact();
     } catch (e) {
       // スキップ
     }

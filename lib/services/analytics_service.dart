@@ -94,7 +94,9 @@ class AnalyticsService {
 
   /// ユーザーID設定（リテンション追跡用）
   static Future<void> setUserId(String uid) async {
-    await _analytics.setUserId(uid);
+    // setUserId API has changed in firebase_analytics 10.7.0
+    // Use setUserProperty instead
+    await _analytics.setUserProperty(name: 'user_id', value: uid);
     await _crashlytics.setUserIdentifier(uid);
   }
 
