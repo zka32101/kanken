@@ -74,7 +74,11 @@ jobs:
       - name: Build APK (Debug)
         run: |
           set -o pipefail
-          echo "Starting Flutter APK build..."
+          echo "Starting Flutter APK build (Gradle v8.1)..."
+          echo "JVM Args: $(grep jvmargs android/gradle.properties)"
+          echo ""
+
+          # Run build with maximum verbosity
           flutter build apk --debug --verbose 2>&1 | tee build_debug.log
           BUILD_EXIT_CODE=$?
           echo "Build exit code: $BUILD_EXIT_CODE"
@@ -94,8 +98,7 @@ jobs:
           if [ $BUILD_EXIT_CODE -ne 0 ]; then
             echo ""
             echo "❌ Flutter build command failed with exit code $BUILD_EXIT_CODE"
-            echo "Last 200 lines of build log:"
-            tail -200 build_debug.log
+            echo "Build log size: $(wc -l < build_debug.log) lines"
             exit $BUILD_EXIT_CODE
           fi
           echo "✅ Flutter build completed successfully"
@@ -103,17 +106,30 @@ jobs:
       - name: Show detailed build log on failure
         if: failure()
         run: |
-          echo "=== GRADLE BUILD ERROR SUMMARY ==="
-          if grep -i "FAILURE:" build_debug.log > /dev/null; then
-            echo "Found FAILURE marker:"
-            grep -A 20 "FAILURE:" build_debug.log | head -30
+          echo "=== CRITICAL BUILD ERRORS ==="
+          echo ""
+
+          # Try to find the exact error
+          if grep -i "error:" build_debug.log > /dev/null 2>&1; then
+            echo "Found ERROR lines:"
+            grep -i "error:" build_debug.log | grep -v "^D " | head -10
           fi
+
+          if grep -i "FAILURE:" build_debug.log > /dev/null 2>&1; then
+            echo ""
+            echo "Gradle FAILURE details:"
+            sed -n '/FAILURE:/,/^\*/p' build_debug.log | head -40
+          fi
+
+          if grep -i "Exception" build_debug.log > /dev/null 2>&1; then
+            echo ""
+            echo "Found exceptions:"
+            grep "Exception" build_debug.log | head -10
+          fi
+
           echo ""
-          echo "=== ERROR/Exception keywords ==="
-          grep -i "error:\|exception\|failed" build_debug.log | grep -v "warnings" | tail -20 || echo "No error patterns found"
-          echo ""
-          echo "=== Full build log (last 400 lines) ==="
-          tail -400 build_debug.log || cat build_debug.log || echo "No log found"
+          echo "=== Last 500 lines of build log ==="
+          tail -500 build_debug.log
 
       - name: Upload build logs and structure as artifacts
         if: always()
