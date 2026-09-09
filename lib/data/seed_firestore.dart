@@ -12,7 +12,9 @@
 /// - レベル 6: 110 問（小 5～6 級）
 /// - レベル 5: 120 問（小 6 級）
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// Firestore dependency removed - using JSON serialization instead.
+// This seed file is a utility script and not used in the main app.
 
 /// 問題タイプの定義
 enum QuestionType {
@@ -56,7 +58,8 @@ class KanjiQuestionSeed {
       'reading': reading,
       'example': example,
       'version': version,
-      'createdAt': FieldValue.serverTimestamp(),
+      // 'createdAt': FieldValue.serverTimestamp(), // Firestore removed
+      'createdAt': DateTime.now().toIso8601String(),
     };
   }
 }
@@ -64,28 +67,31 @@ class KanjiQuestionSeed {
 /// Firestore にデータを投入するクラス
 class FirestoreSeed {
   static Future<void> seedKanjiQuestions() async {
-    final firestore = FirebaseFirestore.instance;
-    final questions = _generateKanjiQuestions();
-
-    print('投入開始: ${questions.length} 問の漢字問題');
-
-    int count = 0;
-    try {
-      for (final question in questions) {
-        await firestore
-            .collection('kanji_questions')
-            .add(question.toMap());
-        count++;
-
-        if (count % 50 == 0) {
-          print('投入済み: $count 問');
-        }
-      }
-      print('✅ 投入完了: $count 問');
-    } catch (e) {
-      print('❌ エラー: $e');
-      rethrow;
-    }
+    // Firestore dependency removed - this method is deprecated
+    // Data seeding should now be done through JSON files or direct API calls
+    print('❌ seedKanjiQuestions is deprecated - Firestore removed');
+    // final firestore = FirebaseFirestore.instance;
+    // final questions = _generateKanjiQuestions();
+    //
+    // print('投入開始: ${questions.length} 問の漢字問題');
+    //
+    // int count = 0;
+    // try {
+    //   for (final question in questions) {
+    //     await firestore
+    //         .collection('kanji_questions')
+    //         .add(question.toMap());
+    //     count++;
+    //
+    //     if (count % 50 == 0) {
+    //       print('投入済み: $count 問');
+    //     }
+    //   }
+    //   print('✅ 投入完了: $count 問');
+    // } catch (e) {
+    //   print('❌ エラー: $e');
+    //   rethrow;
+    // }
   }
 
   /// レベル 10～5 までの問題を生成
@@ -569,34 +575,36 @@ class FirestoreSeed {
 /// 模擬試験セット生成クラス
 class MockExamSeed {
   static Future<void> seedMockExams() async {
-    final firestore = FirebaseFirestore.instance;
-
-    print('模擬試験セットを投入開始...');
-
-    // レベル別に 3 セットずつ作成
-    for (int level = 10; level >= 5; level--) {
-      for (int setNum = 1; setNum <= 3; setNum++) {
-        final examData = {
-          'level': 'LEVEL_$level',
-          'setNumber': setNum,
-          'title': 'レベル $level 模擬試験 第 $setNum セット',
-          'timeLimitSec': 600, // 10 分
-          'passScore': 80,     // 80 点以上で合格
-          'totalQuestions': 50,
-          'questionIds': [], // 実際には投入済み問題の ID をリスト化
-          'createdAt': FieldValue.serverTimestamp(),
-        };
-
-        try {
-          await firestore.collection('mock_exams').add(examData);
-          print('✅ レベル $level セット $setNum を投入');
-        } catch (e) {
-          print('❌ エラー: $e');
-        }
-      }
-    }
-
-    print('✅ 模擬試験セット投入完了: 18 セット');
+    // Firestore dependency removed - this method is deprecated
+    print('❌ seedMockExams is deprecated - Firestore removed');
+    // final firestore = FirebaseFirestore.instance;
+    //
+    // print('模擬試験セットを投入開始...');
+    //
+    // // レベル別に 3 セットずつ作成
+    // for (int level = 10; level >= 5; level--) {
+    //   for (int setNum = 1; setNum <= 3; setNum++) {
+    //     final examData = {
+    //       'level': 'LEVEL_$level',
+    //       'setNumber': setNum,
+    //       'title': 'レベル $level 模擬試験 第 $setNum セット',
+    //       'timeLimitSec': 600, // 10 分
+    //       'passScore': 80,     // 80 点以上で合格
+    //       'totalQuestions': 50,
+    //       'questionIds': [], // 実際には投入済み問題の ID をリスト化
+    //       'createdAt': FieldValue.serverTimestamp(),
+    //     };
+    //
+    //     try {
+    //       await firestore.collection('mock_exams').add(examData);
+    //       print('✅ レベル $level セット $setNum を投入');
+    //     } catch (e) {
+    //       print('❌ エラー: $e');
+    //     }
+    //   }
+    // }
+    //
+    // print('✅ 模擬試験セット投入完了: 18 セット');
   }
 }
 
