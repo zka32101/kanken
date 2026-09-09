@@ -105,7 +105,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-firestore'
+    // Removed firebase-firestore - using JSON serialization instead of Firestore
+    // implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-remote-config'
     implementation 'com.google.firebase:firebase-functions'
 
