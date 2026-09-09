@@ -78,15 +78,34 @@ jobs:
           cd ..
           echo "✅ Gradle cache cleaned"
 
+      - name: Network diagnostics for Maven repositories
+        run: |
+          echo "=== Testing Maven repository connectivity ==="
+          echo ""
+          echo "Testing Google Maven repository..."
+          curl -I https://maven.google.com/ 2>&1 | head -5
+          echo ""
+          echo "Testing Maven Central..."
+          curl -I https://repo.maven.apache.org/maven2/ 2>&1 | head -5
+          echo ""
+          echo "Testing GitHub Maven packages..."
+          curl -I https://maven.pkg.github.com/ 2>&1 | head -5
+          echo ""
+          echo "✅ Network diagnostics complete"
+
       - name: Build APK (Debug)
         run: |
           set -o pipefail
           echo "Starting Flutter APK build (Gradle v8.1)..."
           echo "JVM Args: $(grep jvmargs android/gradle.properties)"
           echo ""
+          echo "=== Gradle Configuration ==="
+          cat android/gradle.properties
+          echo ""
 
           # Run build with maximum verbosity and refresh dependencies
-          flutter build apk --debug --verbose 2>&1 | tee build_debug.log
+          # Add --stacktrace for better error details
+          flutter build apk --debug --verbose -- --stacktrace --info 2>&1 | tee build_debug.log
           BUILD_EXIT_CODE=$?
           echo "Build exit code: $BUILD_EXIT_CODE"
 

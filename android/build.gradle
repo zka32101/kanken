@@ -20,8 +20,21 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
+        // Firebase requires google() first
+        google() {
+            content {
+                includeGroupByRegex "com.google.*"
+                includeGroupByRegex "androidx.*"
+                includeGroupByRegex "com.android.*"
+                includeGroupByRegex "com.firebase.*"
+            }
+        }
         mavenCentral()
+        // Fallback for Firebase and Google services
+        maven {
+            url "https://maven.google.com"
+            name "Google"
+        }
     }
 }
 
