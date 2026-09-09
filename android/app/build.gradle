@@ -108,7 +108,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
 
     // Firebase using BOM for version management
-    implementation platform('com.google.firebase:firebase-bom:32.0.0')
+    // Using older stable version for Gradle 8.1 compatibility
+    implementation platform('com.google.firebase:firebase-bom:31.0.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-auth'
