@@ -63,8 +63,14 @@ jobs:
       - name: Build APK (Debug)
         run: |
           set -o pipefail
-          flutter build apk --debug 2>&1 | tee build_debug.log
+          flutter build apk --debug --verbose 2>&1 | tee build_debug.log
         continue-on-error: true
+
+      - name: Show detailed build log on failure
+        if: failure()
+        run: |
+          echo "=== Full build log ==="
+          tail -200 build_debug.log || cat build_debug.log || echo "No log found"
 
       - name: Verify APK
         run: |
