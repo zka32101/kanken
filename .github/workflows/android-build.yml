@@ -60,6 +60,17 @@ jobs:
           fi
           echo "✅ Android platform present"
 
+      - name: Verify google-services.json
+        run: |
+          GSJ_PATH="android/app/google-services.json"
+          if [ ! -f "$GSJ_PATH" ]; then
+            echo "❌ google-services.json not found at $GSJ_PATH"
+            exit 1
+          fi
+          echo "✅ google-services.json found"
+          echo "=== google-services.json content ==="
+          cat "$GSJ_PATH" | jq . 2>/dev/null || cat "$GSJ_PATH"
+
       - name: Build APK (Debug)
         run: |
           set -o pipefail
@@ -92,11 +103,17 @@ jobs:
       - name: Show detailed build log on failure
         if: failure()
         run: |
-          echo "=== Full build log (last 300 lines) ==="
-          tail -300 build_debug.log || cat build_debug.log || echo "No log found"
+          echo "=== GRADLE BUILD ERROR SUMMARY ==="
+          if grep -i "FAILURE:" build_debug.log > /dev/null; then
+            echo "Found FAILURE marker:"
+            grep -A 20 "FAILURE:" build_debug.log | head -30
+          fi
           echo ""
-          echo "=== Searching for ERROR and FAILED keywords ==="
-          grep -i "error\|failed\|exception" build_debug.log | tail -50 || echo "No error patterns found"
+          echo "=== ERROR/Exception keywords ==="
+          grep -i "error:\|exception\|failed" build_debug.log | grep -v "warnings" | tail -20 || echo "No error patterns found"
+          echo ""
+          echo "=== Full build log (last 400 lines) ==="
+          tail -400 build_debug.log || cat build_debug.log || echo "No log found"
 
       - name: Upload build logs and structure as artifacts
         if: always()
