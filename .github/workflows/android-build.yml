@@ -80,8 +80,14 @@ jobs:
             echo "build/ directory does not exist!"
           fi
 
-          exit $BUILD_EXIT_CODE
-        continue-on-error: true
+          if [ $BUILD_EXIT_CODE -ne 0 ]; then
+            echo ""
+            echo "❌ Flutter build command failed with exit code $BUILD_EXIT_CODE"
+            echo "Last 200 lines of build log:"
+            tail -200 build_debug.log
+            exit $BUILD_EXIT_CODE
+          fi
+          echo "✅ Flutter build completed successfully"
 
       - name: Show detailed build log on failure
         if: failure()
