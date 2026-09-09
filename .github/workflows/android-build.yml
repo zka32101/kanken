@@ -74,30 +74,36 @@ jobs:
 
       - name: Verify APK
         run: |
-          echo "=== Checking APK output structure ==="
-          if [ -d "build/app/outputs" ]; then
-            find build/app/outputs -name "*.apk" -type f 2>/dev/null || echo "No APK files found"
-            echo ""
-            echo "Full directory structure:"
-            find build/app/outputs -type f 2>/dev/null | head -20
-          else
-            echo "build/app/outputs directory not found!"
+          echo "=== Searching for APK in entire build directory ==="
+
+          # Search for all APK files
+          APK_FOUND=$(find build -name "*.apk" -type f 2>/dev/null | head -1)
+
+          if [ -n "$APK_FOUND" ]; then
+            SIZE=$(du -h "$APK_FOUND" | cut -f1)
+            echo "✅ APK built successfully"
+            echo "   Path: $APK_FOUND"
+            echo "   Size: $SIZE"
+            exit 0
           fi
 
-          # Try standard path
-          APK_PATH="build/app/outputs/apk/debug/app-debug.apk"
-          if [ -f "$APK_PATH" ]; then
-            SIZE=$(du -h "$APK_PATH" | cut -f1)
-            echo "✅ APK built successfully"
-            echo "   Path: $APK_PATH"
-            echo "   Size: $SIZE"
-          else
-            echo "❌ APK not found at: $APK_PATH"
+          # If no APK found, show directory structure
+          echo "❌ APK not found"
+          echo ""
+          echo "=== build/ directory structure ==="
+          if [ -d "build" ]; then
+            ls -lah build/ 2>/dev/null || true
             echo ""
-            echo "=== Last 100 lines of build log ==="
-            tail -100 build_debug.log || cat build_debug.log || true
-            exit 1
+            echo "=== Searching in build/ ==="
+            find build -type f -name "*.apk" 2>/dev/null || echo "No .apk files found"
+            echo ""
+            echo "=== Last 150 lines of build log ==="
+            tail -150 build_debug.log || cat build_debug.log || true
+          else
+            echo "build/ directory not found!"
           fi
+
+          exit 1
 
       - name: Build App Bundle (Release)
         run: |
@@ -123,7 +129,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: debug-apk
-          path: build/app/outputs/apk/debug/app-debug.apk
+          path: build/**/*.apk
           retention-days: 7
 
       - name: Upload App Bundle artifact
