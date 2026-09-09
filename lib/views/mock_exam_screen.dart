@@ -254,7 +254,7 @@ class _MockExamScreenState extends ConsumerState<MockExamScreen> {
             children: [
               // 結果アイコン
               Icon(
-                passed ? Icons.star : Icons.close_circle,
+                passed ? Icons.star : Icons.cancel,
                 size: 120,
                 color: passed ? Colors.amber : Colors.red,
               ),
@@ -414,7 +414,7 @@ class _MockExamScreenState extends ConsumerState<MockExamScreen> {
 
   Future<void> _submitExam(BuildContext context, WidgetRef ref) async {
     // 採点完了
-    practiceVM.moveToNextQuestion();
+    ref.read(practiceViewModelProvider.notifier).moveToNextQuestion();
   }
 
   void _handlePassedExam(BuildContext context, WidgetRef ref) {

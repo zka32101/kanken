@@ -24,16 +24,25 @@ class AIWeakAnalysisService {
 
       // WeakKanjiListを更新
       for (final entry in weakMap.entries) {
-        final existingWeak =
-            await _firestoreService.getWeakKanjiList(uid, entry.key);
+        final weakList = await _firestoreService.getWeakKanjiList(uid);
+        final existingWeak = weakList.firstWhere(
+          (w) => w.kanjiId == entry.key,
+          orElse: () => WeakKanjiList(
+            id: '',
+            uid: uid,
+            kanjiId: entry.key,
+            missCount: 0,
+            lastMissedAt: DateTime.now(),
+          ),
+        );
 
         final updatedWeak = WeakKanjiList(
-          id: existingWeak?.id ?? '',
+          id: existingWeak.id,
           uid: uid,
           kanjiId: entry.key,
           missCount: entry.value,
           lastMissedAt: DateTime.now(),
-          masteredAt: existingWeak?.masteredAt,
+          masteredAt: existingWeak.masteredAt,
         );
 
         await _firestoreService.upsertWeakKanjiList(updatedWeak);
@@ -51,18 +60,20 @@ class AIWeakAnalysisService {
   }) async {
     try {
       final weakKanjis =
-          await _firestoreService.getUserWeakKanjis(uid, limit: limit * 2);
+          await _firestoreService.getUserWeakKanjis(uid);
 
-      // 学習済み質問を取得
+      // 学習済み漢字を取得
       final learnedKanjis = await _firestoreService.getUserLearnedKanjis(uid);
-      final learnedQuestionIds = learnedKanjis.map((l) => l.questionId).toSet();
+      final learnedKanjiIds = learnedKanjis.toSet();
 
       final questions = <KanjiQuestion>[];
-      for (final weak in weakKanjis) {
-        final question = await _firestoreService.getKanjiQuestion(weak.kanjiId);
-        if (question != null && !learnedQuestionIds.contains(question.id)) {
-          questions.add(question);
-          if (questions.length >= limit) break;
+      for (final weakKanjiId in weakKanjis.take(limit * 2)) {
+        if (!learnedKanjiIds.contains(weakKanjiId)) {
+          final question = await _firestoreService.getKanjiQuestion(weakKanjiId);
+          if (question != null) {
+            questions.add(question);
+            if (questions.length >= limit) break;
+          }
         }
       }
 
@@ -74,7 +85,12 @@ class AIWeakAnalysisService {
 
   /// 苦手漢字を習得済みとしてマーク
   Future<void> markAsMatured(String uid, String kanjiId) async {
-    final weak = await _firestoreService.getWeakKanjiList(uid, kanjiId);
+    final weakList = await _firestoreService.getWeakKanjiList(uid);
+    final weak = weakList.firstWhere(
+      (w) => w.kanjiId == kanjiId,
+      orElse: () => null as dynamic,
+    );
+
     if (weak != null) {
       final updated = weak.copyWith(masteredAt: DateTime.now());
       await _firestoreService.upsertWeakKanjiList(updated);
@@ -83,7 +99,7 @@ class AIWeakAnalysisService {
 
   /// ユーザーの苦手漢字数を取得（Dashboard用）
   Future<int> getWeakKanjiCount(String uid) async {
-    final weakKanjis = await _firestoreService.getUserWeakKanjis(uid, limit: 1000);
+    final weakKanjis = await _firestoreService.getWeakKanjiList(uid);
     final notMastered = weakKanjis.where((w) => w.masteredAt == null).length;
     return notMastered;
   }
