@@ -1,6 +1,6 @@
 {
   "project_info": {
-    "project_number": "123456789",
+    "project_number": "123456789012",
     "firebase_url": "https://kanken-dev.firebaseio.com",
     "project_id": "kanken-dev",
     "storage_bucket": "kanken-dev.appspot.com"
@@ -8,26 +8,37 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:123456789:android:abc1234567def890",
+        "mobilesdk_app_id": "1:123456789012:android:abcdef1234567890abcd",
+        "client_type": 1,
         "android_client_info": {
           "package_name": "com.example.kanken"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "123456789012-abcdefghijklmnopqrstuvwxyz123456.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAbcDe1234567890_-_-_-_-_-_-_"
+          "current_key": "AIzaSyAbcDefGhIjKlMnOpQrStUvWxYz1234567"
         }
       ],
       "services": {
-        "analytics_service": {
-          "analytics_console_integration_enabled": true
-        },
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123456789012-abcdefghijklmnopqrstuvwxyz123456.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
+        },
+        "analytics_service": {
+          "analytics_console_integration_enabled": false
         }
       }
     }
