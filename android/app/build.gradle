@@ -103,13 +103,14 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
 
-    // Firebase dependencies with explicit versions for Gradle 8.1 compatibility
-    implementation 'com.google.firebase:firebase-analytics:21.6.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.8.0'
-    implementation 'com.google.firebase:firebase-auth:22.3.0'
-    implementation 'com.google.firebase:firebase-remote-config:21.5.0'
-    implementation 'com.google.firebase:firebase-functions:20.5.0'
-    implementation 'com.google.firebase:firebase-core:21.1.1'
+    // Firebase using BOM - latest version that handles all dependencies
+    // Dart firebase packages determine compatible Android versions
+    implementation platform('com.google.firebase:firebase-bom:33.1.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-remote-config'
+    implementation 'com.google.firebase:firebase-functions'
 
     // Google Play Services
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
