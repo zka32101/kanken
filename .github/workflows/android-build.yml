@@ -104,8 +104,7 @@ jobs:
           echo ""
 
           # Run build with maximum verbosity and refresh dependencies
-          # Add --stacktrace for better error details
-          flutter build apk --debug --verbose -- --stacktrace --info 2>&1 | tee build_debug.log
+          flutter build apk --debug --verbose 2>&1 | tee build_debug.log
           BUILD_EXIT_CODE=$?
           echo "Build exit code: $BUILD_EXIT_CODE"
 
