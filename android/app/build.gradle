@@ -21,12 +21,8 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-// Configure repositories for dependency resolution (required for Gradle 8.1+)
-repositories {
-    google()
-    mavenCentral()
-    maven { url 'https://maven.google.com' }
-}
+// Repository configuration moved to settings.gradle for Gradle 8.1+ compatibility
+// Do NOT declare repositories here - use settings.gradle dependencyResolutionManagement instead
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -107,14 +103,13 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
 
-    // Firebase using BOM for version management
-    // Using older stable version for Gradle 8.1 compatibility
-    implementation platform('com.google.firebase:firebase-bom:31.0.0')
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-remote-config'
-    implementation 'com.google.firebase:firebase-functions'
+    // Firebase dependencies with explicit versions for Gradle 8.1 compatibility
+    implementation 'com.google.firebase:firebase-analytics:21.6.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.8.0'
+    implementation 'com.google.firebase:firebase-auth:22.3.0'
+    implementation 'com.google.firebase:firebase-remote-config:21.5.0'
+    implementation 'com.google.firebase:firebase-functions:20.5.0'
+    implementation 'com.google.firebase:firebase-core:21.1.1'
 
     // Google Play Services
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
