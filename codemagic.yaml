@@ -1,0 +1,50 @@
+workflows:
+  android-build:
+    name: Android Build
+    instance_type: linux_x2
+    environment:
+      flutter: stable
+      java: 11
+      android_sdk: 34
+      groups:
+        - firebase_config
+    triggering:
+      events:
+        - push
+        - pull_request
+      branch:
+        include_patterns:
+          - main
+          - master
+          - develop
+    scripts:
+      - name: Get dependencies
+        script: |
+          flutter pub get
+
+      - name: Run Dart Analyzer
+        script: |
+          dart analyze
+
+      - name: Build APK (Debug)
+        script: |
+          flutter build apk \
+            --debug \
+            --target-platform android-arm64
+
+      - name: Build App Bundle (Release)
+        script: |
+          flutter build appbundle \
+            --release
+
+    artifacts:
+      - build/app/outputs/apk/debug/app-debug.apk
+      - build/app/outputs/bundle/release/app-release.aab
+
+    publishing:
+      email:
+        recipients:
+          - $TEAM_EMAIL
+        notify:
+          success: true
+          failure: true
