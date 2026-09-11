@@ -14,7 +14,8 @@ buildscript {
         classpath "com.android.tools.build:gradle:$gradle_version"
         // Updated for better Gradle 8.1 compatibility
         classpath 'com.google.gms:google-services:4.4.0'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.0'
+        // Downgrade from 3.0.0 to 2.9.10 for Gradle 8.1 compatibility
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.10'
     }
 }
 
