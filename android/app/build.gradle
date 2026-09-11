@@ -103,9 +103,9 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
 
-    // Firebase using BOM - latest version that handles all dependencies
-    // Dart firebase packages determine compatible Android versions
-    implementation platform('com.google.firebase:firebase-bom:33.1.0')
+    // Firebase using BOM - version 32.x compatible with Flutter 3.13
+    // Reduced from 33.1.0 due to compatibility issues with cloud_functions
+    implementation platform('com.google.firebase:firebase-bom:32.8.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-auth'
