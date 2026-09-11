@@ -131,30 +131,30 @@ jobs:
       - name: Show detailed build log on failure
         if: failure()
         run: |
-          echo "=== CRITICAL BUILD ERRORS ==="
-          echo ""
+          echo "=== CRITICAL BUILD ERRORS ===" | tee -a $GITHUB_STEP_SUMMARY
+          echo "" | tee -a $GITHUB_STEP_SUMMARY
 
           # Try to find the exact error
           if grep -i "error:" build_debug.log > /dev/null 2>&1; then
-            echo "Found ERROR lines:"
-            grep -i "error:" build_debug.log | grep -v "^D " | head -10
+            echo "## Found ERROR lines:" | tee -a $GITHUB_STEP_SUMMARY
+            grep -i "error:" build_debug.log | grep -v "^D " | head -20 | tee -a $GITHUB_STEP_SUMMARY
           fi
 
           if grep -i "FAILURE:" build_debug.log > /dev/null 2>&1; then
-            echo ""
-            echo "Gradle FAILURE details:"
-            sed -n '/FAILURE:/,/^\*/p' build_debug.log | head -40
+            echo "" | tee -a $GITHUB_STEP_SUMMARY
+            echo "## Gradle FAILURE details:" | tee -a $GITHUB_STEP_SUMMARY
+            sed -n '/FAILURE:/,/^\*/p' build_debug.log | head -60 | tee -a $GITHUB_STEP_SUMMARY
           fi
 
           if grep -i "Exception" build_debug.log > /dev/null 2>&1; then
-            echo ""
-            echo "Found exceptions:"
-            grep "Exception" build_debug.log | head -10
+            echo "" | tee -a $GITHUB_STEP_SUMMARY
+            echo "## Found exceptions:" | tee -a $GITHUB_STEP_SUMMARY
+            grep "Exception" build_debug.log | head -20 | tee -a $GITHUB_STEP_SUMMARY
           fi
 
-          echo ""
-          echo "=== Last 500 lines of build log ==="
-          tail -500 build_debug.log
+          echo "" | tee -a $GITHUB_STEP_SUMMARY
+          echo "## Last 300 lines of build log:" | tee -a $GITHUB_STEP_SUMMARY
+          tail -300 build_debug.log | tee -a $GITHUB_STEP_SUMMARY
 
       - name: Upload build logs and structure as artifacts
         if: always()
