@@ -7,9 +7,9 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    // FAIL_ON_PROJECT_REPOS: すべてのリポジトリ宣言をここに統一
-    // included build が repositories を宣言していても使用されない
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    // PREFER_SETTINGS_REPOS: settings.gradle repositories を優先
+    // included build の repositories は許可（settings.gradle が優先）
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS_REPOS)
     repositories {
         google()
         mavenCentral()
