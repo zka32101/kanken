@@ -32,6 +32,7 @@ jobs:
         with:
           flutter-version: '3.13.0'
           channel: 'stable'
+          cache: false
 
       - name: Create local.properties
         run: |
@@ -119,15 +120,17 @@ jobs:
       - name: Build APK (Debug)
         run: |
           set -o pipefail
-          echo "Starting Flutter APK build (Gradle v8.1)..."
-          echo "JVM Args: $(grep jvmargs android/gradle.properties)"
-          echo ""
-          echo "=== Gradle Configuration ===" | tee -a $GITHUB_STEP_SUMMARY
-          cat android/gradle.properties | tee -a $GITHUB_STEP_SUMMARY
+          echo "Starting Flutter APK build (Gradle v8.0.2, no cache)..."
+          echo "JVM Args: $(grep jvmargs android/gradle.properties || echo 'Not found')"
+          echo "Flutter version: $(flutter --version)"
+          echo "Dart version: $(dart --version)"
           echo ""
 
-          # Run build with maximum verbosity and refresh dependencies
-          flutter build apk --debug --verbose 2>&1 | tee build_debug.log
+          # Disable Gradle daemon explicitly
+          export GRADLE_OPTS="-XX:+UseParallelGC"
+
+          # Run build with maximum verbosity
+          flutter build apk --debug --verbose --no-shrink 2>&1 | tee build_debug.log
           BUILD_EXIT_CODE=$?
           echo "Build exit code: $BUILD_EXIT_CODE"
 
