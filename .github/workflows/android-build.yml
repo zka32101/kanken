@@ -93,14 +93,25 @@ jobs:
           echo ""
           echo "✅ Network diagnostics complete"
 
+      - name: Pre-build diagnostics
+        run: |
+          echo "=== Flutter Doctor ===" | tee -a $GITHUB_STEP_SUMMARY
+          flutter doctor -v 2>&1 | head -50 | tee -a $GITHUB_STEP_SUMMARY
+          echo ""
+          echo "=== Dart Analysis ===" | tee -a $GITHUB_STEP_SUMMARY
+          dart analyze --fatal-infos 2>&1 | head -50 | tee -a $GITHUB_STEP_SUMMARY
+          echo ""
+          echo "=== Pubspec Dependencies ===" | tee -a $GITHUB_STEP_SUMMARY
+          cat pubspec.yaml | grep -A 50 "dependencies:" | head -30 | tee -a $GITHUB_STEP_SUMMARY
+
       - name: Build APK (Debug)
         run: |
           set -o pipefail
           echo "Starting Flutter APK build (Gradle v8.1)..."
           echo "JVM Args: $(grep jvmargs android/gradle.properties)"
           echo ""
-          echo "=== Gradle Configuration ==="
-          cat android/gradle.properties
+          echo "=== Gradle Configuration ===" | tee -a $GITHUB_STEP_SUMMARY
+          cat android/gradle.properties | tee -a $GITHUB_STEP_SUMMARY
           echo ""
 
           # Run build with maximum verbosity and refresh dependencies
@@ -108,10 +119,15 @@ jobs:
           BUILD_EXIT_CODE=$?
           echo "Build exit code: $BUILD_EXIT_CODE"
 
-          # Export first 100 lines to annotations for immediate visibility
+          # Export detailed error information
           if [ $BUILD_EXIT_CODE -ne 0 ]; then
-            echo "## Build Failed - First 100 lines" >> $GITHUB_STEP_SUMMARY
-            head -100 build_debug.log >> $GITHUB_STEP_SUMMARY
+            echo "## ❌ Build Failed - Detailed Diagnostics" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### First 150 lines of build output:" >> $GITHUB_STEP_SUMMARY
+            head -150 build_debug.log >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Error/Exception patterns:" >> $GITHUB_STEP_SUMMARY
+            grep -i "error\|exception\|failure" build_debug.log | head -30 >> $GITHUB_STEP_SUMMARY || echo "No explicit error patterns found"
           fi
 
           echo ""

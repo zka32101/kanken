@@ -110,8 +110,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-remote-config'
-    // TEMPORARY: Removed firebase-functions to isolate build issue
-    // implementation 'com.google.firebase:firebase-functions'
+    implementation 'com.google.firebase:firebase-functions'
 
     // Google Play Services
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
