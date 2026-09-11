@@ -12,10 +12,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # State Management
-  riverpod: ^2.4.0
-  flutter_riverpod: ^2.4.0
-  riverpod_generator: ^2.3.0
+  # State Management - TEMPORARY: Riverpod removed for minimal build test
+  # riverpod: ^2.4.0
+  # flutter_riverpod: ^2.4.0
+  # riverpod_generator: ^2.3.0
 
   # Firebase - TEMPORARY: All Firebase dependencies removed for minimal build test
   # firebase_core: ^2.24.0
