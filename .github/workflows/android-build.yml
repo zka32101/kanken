@@ -108,6 +108,12 @@ jobs:
           BUILD_EXIT_CODE=$?
           echo "Build exit code: $BUILD_EXIT_CODE"
 
+          # Export first 100 lines to annotations for immediate visibility
+          if [ $BUILD_EXIT_CODE -ne 0 ]; then
+            echo "## Build Failed - First 100 lines" >> $GITHUB_STEP_SUMMARY
+            head -100 build_debug.log >> $GITHUB_STEP_SUMMARY
+          fi
+
           echo ""
           echo "=== Checking build directory after build ==="
           if [ -d "build" ]; then
