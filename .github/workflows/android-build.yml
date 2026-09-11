@@ -188,6 +188,22 @@ jobs:
           echo "#### Last 50 lines:" | tee -a $GITHUB_STEP_SUMMARY
           tail -50 build_debug.log | tee -a $GITHUB_STEP_SUMMARY
 
+      - name: Save build log to repo (for debugging)
+        if: failure()
+        run: |
+          mkdir -p ci-debug-logs
+          cp build_debug.log ci-debug-logs/build_debug_run_${{ github.run_number }}.log
+          echo "Build log saved to ci-debug-logs/build_debug_run_${{ github.run_number }}.log"
+          ls -lah ci-debug-logs/
+
+      - name: Upload debug logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-logs-run-${{ github.run_number }}
+          path: ci-debug-logs/
+          retention-days: 7
+
       - name: Upload build logs and structure as artifacts
         if: always()
         uses: actions/upload-artifact@v4
