@@ -17,13 +17,12 @@ dependencies:
   flutter_riverpod: ^2.4.0
   riverpod_generator: ^2.3.0
 
-  # Firebase
-  firebase_core: ^2.24.0
-  firebase_auth: ^4.15.0
-  firebase_analytics: ^10.7.0
-  firebase_crashlytics: ^3.4.0
-  firebase_remote_config: ^4.3.0
-  # TEMPORARY: cloud_functions ^4.5.0 removed to isolate build issue
+  # Firebase - TEMPORARY: All Firebase dependencies removed for minimal build test
+  # firebase_core: ^2.24.0
+  # firebase_auth: ^4.15.0
+  # firebase_analytics: ^10.7.0
+  # firebase_crashlytics: ^3.4.0
+  # firebase_remote_config: ^4.3.0
   # cloud_functions: ^4.5.0
 
   # Animation & Lottie
