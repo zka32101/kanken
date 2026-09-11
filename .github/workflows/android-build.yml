@@ -170,28 +170,23 @@ jobs:
         run: |
           echo "=== CRITICAL BUILD ERRORS ===" | tee -a $GITHUB_STEP_SUMMARY
           echo "" | tee -a $GITHUB_STEP_SUMMARY
-
-          # Try to find the exact error
-          if grep -i "error:" build_debug.log > /dev/null 2>&1; then
-            echo "## Found ERROR lines:" | tee -a $GITHUB_STEP_SUMMARY
-            grep -i "error:" build_debug.log | grep -v "^D " | head -20 | tee -a $GITHUB_STEP_SUMMARY
-          fi
-
-          if grep -i "FAILURE:" build_debug.log > /dev/null 2>&1; then
-            echo "" | tee -a $GITHUB_STEP_SUMMARY
-            echo "## Gradle FAILURE details:" | tee -a $GITHUB_STEP_SUMMARY
-            sed -n '/FAILURE:/,/^\*/p' build_debug.log | head -60 | tee -a $GITHUB_STEP_SUMMARY
-          fi
-
-          if grep -i "Exception" build_debug.log > /dev/null 2>&1; then
-            echo "" | tee -a $GITHUB_STEP_SUMMARY
-            echo "## Found exceptions:" | tee -a $GITHUB_STEP_SUMMARY
-            grep "Exception" build_debug.log | head -20 | tee -a $GITHUB_STEP_SUMMARY
-          fi
-
+          echo "### Build Log Summary" | tee -a $GITHUB_STEP_SUMMARY
+          echo "Total lines: $(wc -l < build_debug.log)" | tee -a $GITHUB_STEP_SUMMARY
           echo "" | tee -a $GITHUB_STEP_SUMMARY
-          echo "## Last 300 lines of build log:" | tee -a $GITHUB_STEP_SUMMARY
-          tail -300 build_debug.log | tee -a $GITHUB_STEP_SUMMARY
+
+          # First 50 lines
+          echo "#### First 50 lines:" | tee -a $GITHUB_STEP_SUMMARY
+          head -50 build_debug.log | tee -a $GITHUB_STEP_SUMMARY
+          echo "" | tee -a $GITHUB_STEP_SUMMARY
+
+          # Error patterns
+          echo "#### Error/Exception patterns:" | tee -a $GITHUB_STEP_SUMMARY
+          grep -i "error\|exception\|failure" build_debug.log | head -30 | tee -a $GITHUB_STEP_SUMMARY || echo "No error patterns found" | tee -a $GITHUB_STEP_SUMMARY
+          echo "" | tee -a $GITHUB_STEP_SUMMARY
+
+          # Last 50 lines
+          echo "#### Last 50 lines:" | tee -a $GITHUB_STEP_SUMMARY
+          tail -50 build_debug.log | tee -a $GITHUB_STEP_SUMMARY
 
       - name: Upload build logs and structure as artifacts
         if: always()
