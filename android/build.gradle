@@ -1,8 +1,8 @@
 buildscript {
     ext {
-        // Downgrade from 1.9.0 to 1.8.22 for Gradle 8.1 + Firebase 32.x compatibility
         kotlin_version = '1.8.22'
-        gradle_version = '8.1.0'
+        // Downgrade Gradle from 8.1.0 to 8.0.2 for better stability
+        gradle_version = '8.0.2'
     }
 
     repositories {
