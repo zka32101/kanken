@@ -129,8 +129,8 @@ jobs:
           # Disable Gradle daemon explicitly
           export GRADLE_OPTS="-XX:+UseParallelGC"
 
-          # Run build with maximum verbosity
-          flutter build apk --debug --verbose --no-shrink 2>&1 | tee build_debug.log
+          # Run build with minimal options (troubleshooting)
+          flutter build apk --debug 2>&1 | tee build_debug.log
           BUILD_EXIT_CODE=$?
           echo "Build exit code: $BUILD_EXIT_CODE"
 
