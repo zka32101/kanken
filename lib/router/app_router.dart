@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../screens/daily_challenge_screen.dart';
 import '../screens/progress_dashboard_screen.dart';
 import '../screens/ranking_screen.dart';
+import '../screens/friend_list_screen.dart';
 import '../views/index.dart';
 
 /// アプリケーションのルーティング定義
@@ -33,6 +34,13 @@ final appRouter = GoRouter(
           path: 'ranking',
           name: 'ranking',
           builder: (context, state) => const RankingScreen(),
+        ),
+
+        // フレンドリスト
+        GoRoute(
+          path: 'friends',
+          name: 'friends',
+          builder: (context, state) => const FriendListScreen(),
         ),
 
         // コレクションバッジ
@@ -105,6 +113,9 @@ extension NavigationExtension on BuildContext {
 
   /// ランキングに遷移
   void goRanking() => push('/ranking');
+
+  /// フレンドリストに遷移
+  void goFriends() => push('/friends');
 
   /// コレクションバッジに遷移
   void goCollectionBadge() => push('/collection-badge');
