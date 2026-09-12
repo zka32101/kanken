@@ -4,6 +4,7 @@ import '../screens/daily_challenge_screen.dart';
 import '../screens/progress_dashboard_screen.dart';
 import '../screens/ranking_screen.dart';
 import '../screens/friend_list_screen.dart';
+import '../screens/challenge_screen.dart';
 import '../views/index.dart';
 
 /// アプリケーションのルーティング定義
@@ -41,6 +42,13 @@ final appRouter = GoRouter(
           path: 'friends',
           name: 'friends',
           builder: (context, state) => const FriendListScreen(),
+        ),
+
+        // チャレンジ
+        GoRoute(
+          path: 'challenges',
+          name: 'challenges',
+          builder: (context, state) => const ChallengeScreen(),
         ),
 
         // コレクションバッジ
@@ -116,6 +124,9 @@ extension NavigationExtension on BuildContext {
 
   /// フレンドリストに遷移
   void goFriends() => push('/friends');
+
+  /// チャレンジに遷移
+  void goChallenges() => push('/challenges');
 
   /// コレクションバッジに遷移
   void goCollectionBadge() => push('/collection-badge');

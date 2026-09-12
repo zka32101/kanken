@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kanken/models/friend.dart';
 import 'package:kanken/providers/friend_provider.dart';
+import 'package:kanken/providers/challenge_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FriendListScreen extends ConsumerStatefulWidget {
   const FriendListScreen({Key? key}) : super(key: key);
@@ -180,19 +182,33 @@ class _FriendListScreenState extends ConsumerState<FriendListScreen>
           ),
 
           // アクション
-          PopupMenuButton(
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                child: const Text('削除'),
-                onTap: () => _showConfirmDialog(
-                  'フレンド削除',
-                  '${friend.userName} を削除しますか？',
-                  () => ref.read(friendNotifierProvider.notifier)
-                      .removeFriend(friend.userId),
-                ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // チャレンジボタン
+              IconButton(
+                icon: const Icon(Icons.sports_esports, color: Colors.purple),
+                tooltip: 'チャレンジを送信',
+                onPressed: () => _showChallengeDialog(friend),
+                iconSize: 20,
+              ),
+
+              // その他のオプション
+              PopupMenuButton(
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    child: const Text('削除'),
+                    onTap: () => _showConfirmDialog(
+                      'フレンド削除',
+                      '${friend.userName} を削除しますか？',
+                      () => ref.read(friendNotifierProvider.notifier)
+                          .removeFriend(friend.userId),
+                    ),
+                  ),
+                ],
+                icon: const Icon(Icons.more_vert),
               ),
             ],
-            icon: const Icon(Icons.more_vert),
           ),
         ],
       ),
@@ -398,6 +414,54 @@ class _FriendListScreenState extends ConsumerState<FriendListScreen>
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text(
               '削除',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showChallengeDialog(Friend friend) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('チャレンジを送信'),
+        content: Text('${friend.userName} にチャレンジを送信しますか？'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('キャンセル'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(context);
+
+              final currentUser = FirebaseAuth.instance.currentUser;
+              if (currentUser == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('ログインしてください')),
+                );
+                return;
+              }
+
+              // チャレンジを送信
+              await ref.read(challengeNotifierProvider.notifier).sendChallenge(
+                toUserId: friend.userId,
+                toUserName: friend.userName,
+                fromUserName: currentUser.displayName ?? 'Unknown',
+              );
+
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('${friend.userName} にチャレンジを送信しました')),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.purple,
+            ),
+            child: const Text(
+              '送信',
               style: TextStyle(color: Colors.white),
             ),
           ),
