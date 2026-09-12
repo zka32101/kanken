@@ -26,6 +26,19 @@ workflows:
         script: |
           dart analyze
 
+      - name: Run Unit Tests
+        script: |
+          flutter test \
+            --coverage \
+            test/models_test.dart \
+            test/gamification_notifier_test.dart \
+            test/ranking_test.dart \
+            test/friend_test.dart
+
+      - name: Generate Coverage Report
+        script: |
+          bash <(curl -s https://codecov.io/bash) -f coverage/lcov.info -F unittests
+
       - name: Build APK (Debug)
         script: |
           flutter build apk \

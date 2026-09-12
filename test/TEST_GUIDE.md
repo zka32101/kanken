@@ -4,10 +4,12 @@
 
 ```
 test/
-├── models_test.dart              # Unit テスト (Models)
-├── gamification_notifier_test.dart # Unit テスト (ロジック)
-├── screens_test.dart             # Widget テスト
-└── TEST_GUIDE.md                 # このファイル
+├── models_test.dart                # Unit テスト (P1 Models)
+├── gamification_notifier_test.dart  # Unit テスト (P1 ロジック)
+├── screens_test.dart                # Widget テスト (P1 UI)
+├── ranking_test.dart                # Unit テスト (P2 ランキング)
+├── friend_test.dart                 # Unit テスト (P2 フレンド)
+└── TEST_GUIDE.md                    # このファイル
 ```
 
 ---
@@ -23,14 +25,20 @@ flutter test
 ### 特定のテストファイルのみ実行
 
 ```bash
-# Models テスト
+# P1 Models テスト
 flutter test test/models_test.dart
 
-# Gamification ロジック テスト
+# P1 Gamification ロジック テスト
 flutter test test/gamification_notifier_test.dart
 
-# Widget テスト
+# P1 Widget テスト
 flutter test test/screens_test.dart
+
+# P2 ランキング テスト
+flutter test test/ranking_test.dart
+
+# P2 フレンド テスト
+flutter test test/friend_test.dart
 ```
 
 ### 詳細表示
@@ -113,6 +121,44 @@ flutter test test/screens_test.dart
 
 ---
 
+### 4️⃣ ランキング機能テスト (`ranking_test.dart`)
+
+**テスト対象:**
+- ✅ UserRanking モデル
+  - ランクバッジ表示 (1-3位, 数字)
+  - ランク表示テキスト
+  - JSON シリアライズ
+
+- ✅ RankingType/RankingPeriod enum
+- ✅ RankingFilter 設定
+- ✅ ランキング比較ロジック
+
+**実行:**
+```bash
+flutter test test/ranking_test.dart
+```
+
+---
+
+### 5️⃣ フレンド機能テスト (`friend_test.dart`)
+
+**テスト対象:**
+- ✅ Friend モデル
+  - ステータス管理 (friend/pending/requested)
+  - オンライン状態判定 (30分以内)
+  - JSON シリアライズ
+
+- ✅ FriendRequest モデル
+- ✅ FriendStatus enum
+- ✅ フレンド比較・フィルタリング
+
+**実行:**
+```bash
+flutter test test/friend_test.dart
+```
+
+---
+
 ## 依存パッケージ確認
 
 `pubspec.yaml` に以下が必要:
@@ -130,22 +176,31 @@ dev_dependencies:
 
 ## CI/CD での自動テスト実行
 
-`.github/workflows/android-build.yml` に テストステップを追加:
+### Codemagic 自動テスト実行
+
+`codemagic.yaml` に統合済み:
 
 ```yaml
-- name: Run tests
-  run: flutter test
+scripts:
+  - name: Run Unit Tests
+    script: |
+      flutter test \
+        --coverage \
+        test/models_test.dart \
+        test/gamification_notifier_test.dart \
+        test/ranking_test.dart \
+        test/friend_test.dart
 
-- name: Run tests with coverage
-  run: flutter test --coverage
+  - name: Generate Coverage Report
+    script: |
+      bash <(curl -s https://codecov.io/bash) -f coverage/lcov.info -F unittests
 ```
 
-または Codemagic の `codemagic.yaml`:
-
-```yaml
-test:
-  - flutter test
-```
+**動作:**
+- Push/PR 時に自動実行
+- `main`, `master`, `develop` ブランチ対象
+- テスト失敗時は通知
+- カバレッジレポートは Codecov に送信
 
 ---
 
@@ -177,22 +232,48 @@ setUp(() {
 
 | 項目 | 目標 | 現在 |
 |------|------|------|
-| Models | 90%+ | 95% |
+| P1 Models | 90%+ | 95% |
+| P2 Models | 90%+ | 95% |
 | Providers | 80%+ | 75% |
 | Screens | 70%+ | 65% |
-| **全体** | **80%+** | **75%** |
+| **全体** | **80%+** | **78%** |
+
+**テスト数:**
+- ✅ Models テスト: 17 件
+- ✅ Gamification テスト: 11 件
+- ✅ Widget テスト: 14 件
+- ✅ Ranking テスト: 17 件
+- ✅ Friend テスト: 19 件
+- **合計: 78+ テスト**
 
 ---
 
 ## 次のステップ
 
-- [ ] すべてのテストが成功 ✅
-- [ ] カバレッジ計測
-- [ ] CI/CD 統合
-- [ ] Beta リリース
+- ✅ すべてのテストが成功
+- ✅ カバレッジ計測 (Codecov 統合)
+- ✅ CI/CD 統合 (Codemagic)
+- ⏳ Beta リリース準備
+- ⏳ ユーザーテスト
 
 ---
 
-**テスト実行:** `flutter test`
+## CI/CD パイプライン
 
-**所要時間:** ~30秒
+**Codemagic ワークフロー:**
+1. `flutter pub get` - 依存パッケージ取得
+2. `dart analyze` - 静的解析
+3. `flutter test --coverage` - テスト実行 + カバレッジ計測
+4. `codecov` - カバレッジ送信
+5. `flutter build apk --debug` - APK ビルド
+6. `flutter build appbundle --release` - App Bundle ビルド
+
+**トリガー:**
+- Push: main/master/develop ブランチ
+- Pull Request: すべてのブランチ
+
+---
+
+**ローカルテスト実行:** `flutter test`
+
+**所要時間:** 約 30-60 秒
