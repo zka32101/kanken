@@ -97,6 +97,44 @@ flutter build apk --debug --target-platform android-arm64
 
 ---
 
+## Beta リリースビルド
+
+### Release App Bundle 作成（Google Play Console 用）
+
+```bash
+# 1. Release ビルド前にバージョン確認
+grep version pubspec.yaml
+# 例: version: 1.0.0-beta.1+1
+
+# 2. App Bundle ビルド
+flutter build appbundle --release
+
+# 出力: build/app/outputs/bundle/release/app-release.aab
+```
+
+### 署名キーストア確認
+
+```bash
+# キーストア情報確認
+keytool -list -v -keystore ~/.android/upload-keystore.jks
+
+# 署名確認
+jarsigner -verify -verbose \
+  build/app/outputs/bundle/release/app-release.aab
+```
+
+### Google Play Console へアップロード
+
+1. Google Play Console にログイン
+2. 「Releases」 → 「Internal Testing」
+3. 「Create Release」 をクリック
+4. app-release.aab をアップロード
+5. リリースノート入力
+6. 「Save」 → 「Review Release」
+7. 「Start Rollout to Internal Testing」
+
+---
+
 ## 次のステップ
 
 - [x] ローカルビルド検証
