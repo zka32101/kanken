@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/daily_challenge_screen.dart';
 import '../screens/progress_dashboard_screen.dart';
+import '../screens/ranking_screen.dart';
 import '../views/index.dart';
 
 /// アプリケーションのルーティング定義
@@ -25,6 +26,13 @@ final appRouter = GoRouter(
           path: 'progress',
           name: 'progress',
           builder: (context, state) => const ProgressDashboardScreen(),
+        ),
+
+        // ランキング
+        GoRoute(
+          path: 'ranking',
+          name: 'ranking',
+          builder: (context, state) => const RankingScreen(),
         ),
 
         // コレクションバッジ
@@ -94,6 +102,9 @@ extension NavigationExtension on BuildContext {
 
   /// 学習進捗に遷移
   void goProgress() => push('/progress');
+
+  /// ランキングに遷移
+  void goRanking() => push('/ranking');
 
   /// コレクションバッジに遷移
   void goCollectionBadge() => push('/collection-badge');
