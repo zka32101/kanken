@@ -6,6 +6,9 @@ import '../viewmodels/index.dart';
 import '../services/index.dart';
 import '../widgets/index.dart';
 import '../router/app_router.dart';
+import '../providers/ranking_provider.dart';
+import '../providers/friend_provider.dart';
+import '../models/user_ranking.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -47,6 +50,42 @@ class HomeScreen extends ConsumerWidget {
             children: [
               // ユーザー情報・進捗セクション
               _buildProgressCard(context, ref, user, weakKanjiCount),
+              const SizedBox(height: 24),
+
+              // ランキングセクション
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'ランキング 🏆',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                    onPressed: () => context.goRanking(),
+                    child: const Text('全て見る'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              _buildRankingPreview(context, ref),
+              const SizedBox(height: 24),
+
+              // フレンドセクション
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'フレンド 👥',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                    onPressed: () => context.goFriends(),
+                    child: const Text('全て見る'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              _buildFriendPreview(context, ref),
               const SizedBox(height: 24),
 
               // 級選択セクション
@@ -182,6 +221,193 @@ class HomeScreen extends ConsumerWidget {
           ),
         );
       }).toList(),
+    );
+  }
+
+  Widget _buildRankingPreview(BuildContext context, WidgetRef ref) {
+    final filter = const RankingFilter(limit: 5);
+    final rankingAsyncValue = ref.watch(rankingProvider(filter));
+
+    return rankingAsyncValue.when(
+      data: (rankings) {
+        if (rankings.isEmpty) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Text(
+              'ランキングデータなし',
+              style: TextStyle(color: Colors.grey),
+            ),
+          );
+        }
+
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.blue.shade50,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: rankings.take(3).length,
+            itemBuilder: (context, index) {
+              final ranking = rankings[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                child: Row(
+                  children: [
+                    Text(
+                      ranking.getRankBadge(),
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            ranking.userName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                          Text(
+                            'Lv ${ranking.level} • ${(ranking.accuracyRate * 100).toStringAsFixed(0)}%',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      '🔥${ranking.streak}',
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+      loading: () => const Center(
+        child: SizedBox(
+          height: 80,
+          child: CircularProgressIndicator(),
+        ),
+      ),
+      error: (_, __) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.red.shade50,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Text(
+          'ランキング取得エラー',
+          style: TextStyle(color: Colors.red),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFriendPreview(BuildContext context, WidgetRef ref) {
+    final friendsAsyncValue = ref.watch(friendListProvider);
+
+    return friendsAsyncValue.when(
+      data: (friends) {
+        if (friends.isEmpty) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Text(
+              'フレンドを追加しましょう',
+              style: TextStyle(color: Colors.grey),
+            ),
+          );
+        }
+
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.green.shade50,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: friends.take(3).length,
+            itemBuilder: (context, index) {
+              final friend = friends[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: friend.isOnline ? Colors.green : Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            friend.userName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                          Text(
+                            'Lv ${friend.level} • ${(friend.accuracyRate * 100).toStringAsFixed(0)}%',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      friend.getStatusIcon(),
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+      loading: () => const Center(
+        child: SizedBox(
+          height: 80,
+          child: CircularProgressIndicator(),
+        ),
+      ),
+      error: (_, __) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.red.shade50,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Text(
+          'フレンド取得エラー',
+          style: TextStyle(color: Colors.red),
+        ),
+      ),
     );
   }
 
