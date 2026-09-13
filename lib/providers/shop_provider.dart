@@ -140,27 +140,28 @@ class ShopNotifier extends StateNotifier<void> {
     if (_userId == null) return false;
 
     try {
-      // ウォレット情報を取得
-      final walletDoc = await _firestore
-          .collection('users')
-          .doc(_userId)
-          .collection('wallet')
-          .doc('balance')
-          .get();
+      // トランザクションで購入処理を実行（race condition防止）
+      final result = await _firestore.runTransaction<bool>((transaction) async {
+        final walletRef = _firestore
+            .collection('users')
+            .doc(_userId)
+            .collection('wallet')
+            .doc('balance');
 
-      if (!walletDoc.exists) {
-        return false;
-      }
+        // トランザクション内でウォレット情報を取得
+        final walletDoc = await transaction.get(walletRef);
 
-      final wallet = UserWallet.fromJson(walletDoc.data() ?? {});
+        if (!walletDoc.exists) {
+          return false;
+        }
 
-      // 購入可能かチェック
-      if (!wallet.canAfford(item.price, item.currency)) {
-        return false;
-      }
+        final wallet = UserWallet.fromJson(walletDoc.data() ?? {});
 
-      // トランザクションで購入処理を実行
-      await _firestore.runTransaction((transaction) async {
+        // トランザクション内で購入可能かチェック
+        if (!wallet.canAfford(item.price, item.currency)) {
+          return false;
+        }
+
         // ウォレットを更新
         int newCoins = wallet.coins;
         int newDiamonds = wallet.diamonds;
@@ -228,9 +229,11 @@ class ShopNotifier extends StateNotifier<void> {
               .doc(inventoryId),
           inventoryItem.toJson(),
         );
+
+        return true;
       });
 
-      return true;
+      return result;
     } catch (e) {
       return false;
     }

@@ -227,10 +227,11 @@ class _FriendManagementScreenState extends ConsumerState<FriendManagementScreen>
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
                   ),
-                  onPressed: () {
-                    ref.read(socialProvider.notifier).acceptFriendRequest(request);
+                  onPressed: () async {
+                    final success = await ref.read(socialProvider.notifier).acceptFriendRequest(request);
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('フレンドを承認しました')),
+                      SnackBar(content: Text(success ? 'フレンドを承認しました' : 'エラーが発生しました')),
                     );
                   },
                 ),
@@ -246,10 +247,11 @@ class _FriendManagementScreenState extends ConsumerState<FriendManagementScreen>
                     backgroundColor: Colors.grey,
                     foregroundColor: Colors.white,
                   ),
-                  onPressed: () {
-                    ref.read(socialProvider.notifier).rejectFriendRequest(request);
+                  onPressed: () async {
+                    final success = await ref.read(socialProvider.notifier).rejectFriendRequest(request);
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('要求を拒否しました')),
+                      SnackBar(content: Text(success ? '要求を拒否しました' : 'エラーが発生しました')),
                     );
                   },
                 ),
@@ -342,10 +344,11 @@ class _FriendManagementScreenState extends ConsumerState<FriendManagementScreen>
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
               ),
-              onPressed: () {
-                ref.read(socialProvider.notifier).cancelFriendRequest(request.toUserId);
+              onPressed: () async {
+                final success = await ref.read(socialProvider.notifier).cancelFriendRequest(request.toUserId);
+                if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('要求をキャンセルしました')),
+                  SnackBar(content: Text(success ? '要求をキャンセルしました' : 'エラーが発生しました')),
                 );
               },
             ),

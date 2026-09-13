@@ -234,8 +234,8 @@ class UserProfileScreen extends ConsumerWidget {
     WidgetRef ref,
     UserProfile profile,
   ) {
-    String displayName = profile.displayName;
-    String bio = profile.bio ?? '';
+    final displayNameController = TextEditingController(text: profile.displayName);
+    final bioController = TextEditingController(text: profile.bio ?? '');
 
     showDialog(
       context: context,
@@ -246,29 +246,33 @@ class UserProfileScreen extends ConsumerWidget {
           children: [
             TextField(
               decoration: const InputDecoration(labelText: 'ユーザー名'),
-              controller: TextEditingController(text: displayName),
-              onChanged: (value) => displayName = value,
+              controller: displayNameController,
             ),
             const SizedBox(height: 16),
             TextField(
               decoration: const InputDecoration(labelText: '自己紹介'),
-              controller: TextEditingController(text: bio),
-              onChanged: (value) => bio = value,
+              controller: bioController,
             ),
           ],
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              displayNameController.dispose();
+              bioController.dispose();
+              Navigator.pop(context);
+            },
             child: const Text('キャンセル'),
           ),
           ElevatedButton(
             onPressed: () async {
               final success = await ref.read(profileProvider.notifier).updateProfile(
-                    displayName: displayName,
-                    bio: bio,
+                    displayName: displayNameController.text,
+                    bio: bioController.text,
                   );
               if (!context.mounted) return;
+              displayNameController.dispose();
+              bioController.dispose();
               Navigator.pop(context);
               if (!success) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -280,6 +284,9 @@ class UserProfileScreen extends ConsumerWidget {
           ),
         ],
       ),
-    );
+    ).then((_) {
+      displayNameController.dispose();
+      bioController.dispose();
+    });
   }
 }

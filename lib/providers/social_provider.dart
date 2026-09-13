@@ -143,7 +143,13 @@ class SocialNotifier extends StateNotifier<void> {
         'respondedAt': Timestamp.now(),
       });
 
-      // 相手をフレンドに追加
+      // 相手をフレンドに追加（送信者と受信者の情報を取得）
+      final fromUserDoc = await _firestore
+          .collection('users')
+          .doc(request.fromUserId)
+          .get();
+      final fromLevel = fromUserDoc.data()?['level'] as int? ?? 0;
+
       final toUserDoc = await _firestore
           .collection('users')
           .doc(_userId)
@@ -152,12 +158,13 @@ class SocialNotifier extends StateNotifier<void> {
       final toAvatarUrl = toUserDoc.data()?['avatarUrl'] as String?;
       final toLevel = toUserDoc.data()?['level'] as int? ?? 0;
 
+      // 受信者のフレンドリストに送信者を追加
       final friend = Friend(
         friendId: request.fromUserId,
         userId: _userId!,
         displayName: request.fromDisplayName,
         avatarUrl: request.fromAvatarUrl,
-        level: toLevel,
+        level: fromLevel,
         connectedAt: DateTime.now(),
       );
 
@@ -168,7 +175,7 @@ class SocialNotifier extends StateNotifier<void> {
           .doc(request.fromUserId)
           .set(friend.toJson());
 
-      // 要求者のフレンドリストにも追加
+      // 送信者のフレンドリストに受信者を追加
       final fromFriend = Friend(
         friendId: _userId!,
         userId: request.fromUserId,
