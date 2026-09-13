@@ -10,6 +10,7 @@ import '../screens/weak_area_screen.dart';
 import '../screens/learning_plan_screen.dart';
 import '../screens/event_screen.dart';
 import '../screens/parent_dashboard_screen.dart';
+import '../screens/exam_result_screen.dart';
 import '../views/index.dart';
 
 /// アプリケーションのルーティング定義
@@ -118,6 +119,21 @@ final appRouter = GoRouter(
           name: 'parentDashboard',
           builder: (context, state) => const ParentDashboardScreen(),
         ),
+
+        // 試験結果
+        GoRoute(
+          path: 'exam-result',
+          name: 'examResult',
+          builder: (context, state) {
+            final result = state.extra as ExamResult?;
+            if (result == null) {
+              return const Scaffold(
+                body: Center(child: Text('エラー')),
+              );
+            }
+            return ExamResultScreen(result: result);
+          },
+        ),
       ],
     ),
   ],
@@ -187,4 +203,8 @@ extension NavigationExtension on BuildContext {
 
   /// 保護者ダッシュボードに遷移
   void goParentDashboard() => push('/parent-dashboard');
+
+  /// 試験結果画面に遷移
+  void goExamResult(ExamResult result) =>
+      push('/exam-result', extra: result);
 }
