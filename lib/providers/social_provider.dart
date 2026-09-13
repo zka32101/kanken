@@ -157,7 +157,7 @@ class SocialNotifier extends StateNotifier<void> {
         userId: _userId!,
         displayName: request.fromDisplayName,
         avatarUrl: request.fromAvatarUrl,
-        level: request.fromDisplayName.length, // placeholder
+        level: toLevel,
         connectedAt: DateTime.now(),
       );
 

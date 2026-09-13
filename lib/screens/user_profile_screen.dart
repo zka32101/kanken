@@ -263,12 +263,18 @@ class UserProfileScreen extends ConsumerWidget {
             child: const Text('キャンセル'),
           ),
           ElevatedButton(
-            onPressed: () {
-              ref.read(profileProvider.notifier).updateProfile(
+            onPressed: () async {
+              final success = await ref.read(profileProvider.notifier).updateProfile(
                     displayName: displayName,
                     bio: bio,
                   );
+              if (!context.mounted) return;
               Navigator.pop(context);
+              if (!success) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('更新に失敗しました')),
+                );
+              }
             },
             child: const Text('保存'),
           ),

@@ -34,8 +34,8 @@ class NotificationCenterScreen extends ConsumerWidget {
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                     ),
-                    onPressed: () {
-                      ref
+                    onPressed: () async {
+                      await ref
                           .read(notificationProvider.notifier)
                           .markAllAsRead();
                     },

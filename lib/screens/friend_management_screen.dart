@@ -131,10 +131,11 @@ class _FriendManagementScreenState extends ConsumerState<FriendManagementScreen>
               itemBuilder: (context) => [
                 PopupMenuItem(
                   child: const Text('削除'),
-                  onTap: () {
-                    ref.read(socialProvider.notifier).removeFriend(friend.friendId);
+                  onTap: () async {
+                    final success = await ref.read(socialProvider.notifier).removeFriend(friend.friendId);
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('フレンドを削除しました')),
+                      SnackBar(content: Text(success ? 'フレンドを削除しました' : 'エラーが発生しました')),
                     );
                   },
                 ),
@@ -316,7 +317,7 @@ class _FriendManagementScreenState extends ConsumerState<FriendManagementScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'ユーザーID: ${request.toUserId.substring(0, 8)}',
+                    'ユーザーID: ${request.toUserId.length > 8 ? request.toUserId.substring(0, 8) : request.toUserId}',
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   const SizedBox(height: 4),

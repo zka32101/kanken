@@ -241,39 +241,37 @@ class ShopNotifier extends StateNotifier<void> {
     if (_userId == null) return false;
 
     try {
-      // ウォレット情報を取得
-      final walletDoc = await _firestore
-          .collection('users')
-          .doc(_userId)
-          .collection('wallet')
-          .doc('balance')
-          .get();
+      // トランザクション使用（race condition防止）
+      await _firestore.runTransaction((transaction) async {
+        final walletRef = _firestore
+            .collection('users')
+            .doc(_userId)
+            .collection('wallet')
+            .doc('balance');
 
-      UserWallet wallet;
-      if (walletDoc.exists) {
-        wallet = UserWallet.fromJson(walletDoc.data() ?? {});
-      } else {
-        wallet = UserWallet(
-          userId: _userId!,
-          coins: 0,
-          diamonds: 0,
-          totalSpent: 0,
-          lastUpdated: DateTime.now(),
-        );
-      }
+        final walletDoc = await transaction.get(walletRef);
 
-      // ウォレットを更新（コイン追加）
-      await _firestore
-          .collection('users')
-          .doc(_userId)
-          .collection('wallet')
-          .doc('balance')
-          .set({
-        'userId': _userId,
-        'coins': wallet.coins + package.totalCoins,
-        'diamonds': wallet.diamonds,
-        'totalSpent': wallet.totalSpent + package.realPrice,
-        'lastUpdated': Timestamp.now(),
+        UserWallet wallet;
+        if (walletDoc.exists) {
+          wallet = UserWallet.fromJson(walletDoc.data() ?? {});
+        } else {
+          wallet = UserWallet(
+            userId: _userId!,
+            coins: 0,
+            diamonds: 0,
+            totalSpent: 0,
+            lastUpdated: DateTime.now(),
+          );
+        }
+
+        // トランザクション内でウォレットを更新
+        transaction.set(walletRef, {
+          'userId': _userId,
+          'coins': wallet.coins + package.totalCoins,
+          'diamonds': wallet.diamonds,
+          'totalSpent': wallet.totalSpent + package.realPrice,
+          'lastUpdated': Timestamp.now(),
+        });
       });
 
       return true;

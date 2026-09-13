@@ -221,14 +221,15 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
                   ),
-                  onPressed: () {
-                    ref
+                  onPressed: () async {
+                    final success = await ref
                         .read(shopProvider.notifier)
                         .purchaseCoins(package);
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          '${package.totalCoins}コイン獲得!',
+                          success ? '${package.totalCoins}コイン獲得!' : '購入に失敗しました',
                         ),
                       ),
                     );
@@ -328,10 +329,11 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
                   ),
-                  onPressed: () {
-                    ref.read(shopProvider.notifier).purchaseItem(item);
+                  onPressed: () async {
+                    final success = await ref.read(shopProvider.notifier).purchaseItem(item);
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('${item.name}を購入しました!')),
+                      SnackBar(content: Text(success ? '${item.name}を購入しました!' : '購入に失敗しました')),
                     );
                   },
                   child: const Text('買', style: TextStyle(fontSize: 11)),
