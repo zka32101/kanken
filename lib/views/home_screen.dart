@@ -70,7 +70,7 @@ class HomeScreen extends ConsumerWidget {
               _buildRankingPreview(context, ref),
               const SizedBox(height: 24),
 
-              // フレンドセクション
+              // フレンド・チャレンジセクション
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -86,6 +86,66 @@ class HomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               _buildFriendPreview(context, ref),
+              const SizedBox(height: 24),
+
+              // P4・P5 機能クイックアクセス
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.analytics),
+                      label: const Text('苦手分析'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange.shade400,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () => context.goWeakAreas(),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.lightbulb),
+                      label: const Text('学習計画'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal.shade400,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () => context.goLearningPlan(),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.event),
+                      label: const Text('イベント'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.purple.shade400,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () => context.goEvents(),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.leaderboard),
+                      label: const Text('ランキング'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.indigo.shade400,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () => context.goGlobalRanking(),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 24),
 
               // 級選択セクション
