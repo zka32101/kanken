@@ -146,6 +146,19 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.card_giftcard),
+                  label: const Text('バッジコレクション'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber.shade600,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () => context.goCollectionBadge(),
+                ),
+              ),
               const SizedBox(height: 24),
 
               // 級選択セクション
