@@ -14,6 +14,7 @@ import '../screens/exam_result_screen.dart';
 import '../screens/battle_room_list_screen.dart';
 import '../screens/battle_screen.dart';
 import '../screens/battle_result_screen.dart';
+import '../screens/analytics_dashboard_screen.dart';
 import '../models/multiplayer.dart';
 import '../views/index.dart';
 
@@ -170,6 +171,13 @@ final appRouter = GoRouter(
             return BattleResultScreen(result: result);
           },
         ),
+
+        // 学習分析ダッシュボード
+        GoRoute(
+          path: 'analytics',
+          name: 'analytics',
+          builder: (context, state) => const AnalyticsDashboardScreen(),
+        ),
       ],
     ),
   ],
@@ -253,4 +261,7 @@ extension NavigationExtension on BuildContext {
   /// バトル結果画面に遷移
   void goBattleResult(BattleResult result) =>
       push('/battle-result', extra: result);
+
+  /// 学習分析ダッシュボードに遷移
+  void goAnalytics() => push('/analytics');
 }
