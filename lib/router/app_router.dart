@@ -5,6 +5,8 @@ import '../screens/progress_dashboard_screen.dart';
 import '../screens/ranking_screen.dart';
 import '../screens/friend_list_screen.dart';
 import '../screens/challenge_screen.dart';
+import '../screens/weak_area_screen.dart';
+import '../screens/learning_plan_screen.dart';
 import '../views/index.dart';
 
 /// アプリケーションのルーティング定義
@@ -49,6 +51,20 @@ final appRouter = GoRouter(
           path: 'challenges',
           name: 'challenges',
           builder: (context, state) => const ChallengeScreen(),
+        ),
+
+        // 苦手分野分析
+        GoRoute(
+          path: 'weak-areas',
+          name: 'weakAreas',
+          builder: (context, state) => const WeakAreaScreen(),
+        ),
+
+        // 学習推奨プラン
+        GoRoute(
+          path: 'learning-plan',
+          name: 'learningPlan',
+          builder: (context, state) => const LearningPlanScreen(),
         ),
 
         // コレクションバッジ
@@ -127,6 +143,12 @@ extension NavigationExtension on BuildContext {
 
   /// チャレンジに遷移
   void goChallenges() => push('/challenges');
+
+  /// 苦手分野分析に遷移
+  void goWeakAreas() => push('/weak-areas');
+
+  /// 学習推奨プランに遷移
+  void goLearningPlan() => push('/learning-plan');
 
   /// コレクションバッジに遷移
   void goCollectionBadge() => push('/collection-badge');
