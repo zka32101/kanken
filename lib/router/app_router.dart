@@ -16,6 +16,7 @@ import '../screens/battle_screen.dart';
 import '../screens/battle_result_screen.dart';
 import '../screens/analytics_dashboard_screen.dart';
 import '../screens/friend_management_screen.dart';
+import '../screens/notification_center_screen.dart';
 import '../models/multiplayer.dart';
 import '../views/index.dart';
 
@@ -186,6 +187,13 @@ final appRouter = GoRouter(
           name: 'analytics',
           builder: (context, state) => const AnalyticsDashboardScreen(),
         ),
+
+        // 通知センター
+        GoRoute(
+          path: 'notifications',
+          name: 'notifications',
+          builder: (context, state) => const NotificationCenterScreen(),
+        ),
       ],
     ),
   ],
@@ -275,4 +283,7 @@ extension NavigationExtension on BuildContext {
 
   /// 学習分析ダッシュボードに遷移
   void goAnalytics() => push('/analytics');
+
+  /// 通知センターに遷移
+  void goNotifications() => push('/notifications');
 }
