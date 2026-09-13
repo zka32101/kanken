@@ -15,6 +15,7 @@ import '../screens/battle_room_list_screen.dart';
 import '../screens/battle_screen.dart';
 import '../screens/battle_result_screen.dart';
 import '../screens/analytics_dashboard_screen.dart';
+import '../screens/friend_management_screen.dart';
 import '../models/multiplayer.dart';
 import '../views/index.dart';
 
@@ -53,6 +54,13 @@ final appRouter = GoRouter(
           path: 'friends',
           name: 'friends',
           builder: (context, state) => const FriendListScreen(),
+        ),
+
+        // フレンド管理
+        GoRoute(
+          path: 'friend-management',
+          name: 'friendManagement',
+          builder: (context, state) => const FriendManagementScreen(),
         ),
 
         // チャレンジ
@@ -217,6 +225,9 @@ extension NavigationExtension on BuildContext {
 
   /// フレンドリストに遷移
   void goFriends() => push('/friends');
+
+  /// フレンド管理画面に遷移
+  void goFriendManagement() => push('/friend-management');
 
   /// チャレンジに遷移
   void goChallenges() => push('/challenges');
