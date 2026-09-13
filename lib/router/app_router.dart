@@ -9,6 +9,7 @@ import '../screens/challenge_screen.dart';
 import '../screens/weak_area_screen.dart';
 import '../screens/learning_plan_screen.dart';
 import '../screens/event_screen.dart';
+import '../screens/parent_dashboard_screen.dart';
 import '../views/index.dart';
 
 /// アプリケーションのルーティング定義
