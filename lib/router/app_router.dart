@@ -3,10 +3,12 @@ import 'package:go_router/go_router.dart';
 import '../screens/daily_challenge_screen.dart';
 import '../screens/progress_dashboard_screen.dart';
 import '../screens/ranking_screen.dart';
+import '../screens/global_ranking_screen.dart';
 import '../screens/friend_list_screen.dart';
 import '../screens/challenge_screen.dart';
 import '../screens/weak_area_screen.dart';
 import '../screens/learning_plan_screen.dart';
+import '../screens/event_screen.dart';
 import '../views/index.dart';
 
 /// アプリケーションのルーティング定義
@@ -65,6 +67,20 @@ final appRouter = GoRouter(
           path: 'learning-plan',
           name: 'learningPlan',
           builder: (context, state) => const LearningPlanScreen(),
+        ),
+
+        // イベント
+        GoRoute(
+          path: 'events',
+          name: 'events',
+          builder: (context, state) => const EventScreen(),
+        ),
+
+        // グローバルランキング
+        GoRoute(
+          path: 'global-ranking',
+          name: 'globalRanking',
+          builder: (context, state) => const GlobalRankingScreen(),
         ),
 
         // コレクションバッジ
@@ -149,6 +165,12 @@ extension NavigationExtension on BuildContext {
 
   /// 学習推奨プランに遷移
   void goLearningPlan() => push('/learning-plan');
+
+  /// イベントに遷移
+  void goEvents() => push('/events');
+
+  /// グローバルランキングに遷移
+  void goGlobalRanking() => push('/global-ranking');
 
   /// コレクションバッジに遷移
   void goCollectionBadge() => push('/collection-badge');
