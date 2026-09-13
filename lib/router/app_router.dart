@@ -18,6 +18,7 @@ import '../screens/analytics_dashboard_screen.dart';
 import '../screens/friend_management_screen.dart';
 import '../screens/notification_center_screen.dart';
 import '../screens/shop_screen.dart';
+import '../screens/user_profile_screen.dart';
 import '../models/multiplayer.dart';
 import '../views/index.dart';
 
@@ -202,6 +203,13 @@ final appRouter = GoRouter(
           name: 'shop',
           builder: (context, state) => const ShopScreen(),
         ),
+
+        // ユーザープロフィール
+        GoRoute(
+          path: 'profile',
+          name: 'profile',
+          builder: (context, state) => const UserProfileScreen(),
+        ),
       ],
     ),
   ],
@@ -297,4 +305,7 @@ extension NavigationExtension on BuildContext {
 
   /// ショップに遷移
   void goShop() => push('/shop');
+
+  /// ユーザープロフィールに遷移
+  void goProfile() => push('/profile');
 }
