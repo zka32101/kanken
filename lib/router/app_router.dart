@@ -11,6 +11,10 @@ import '../screens/learning_plan_screen.dart';
 import '../screens/event_screen.dart';
 import '../screens/parent_dashboard_screen.dart';
 import '../screens/exam_result_screen.dart';
+import '../screens/battle_room_list_screen.dart';
+import '../screens/battle_screen.dart';
+import '../screens/battle_result_screen.dart';
+import '../models/multiplayer.dart';
 import '../views/index.dart';
 
 /// アプリケーションのルーティング定義
@@ -134,6 +138,38 @@ final appRouter = GoRouter(
             return ExamResultScreen(result: result);
           },
         ),
+
+        // バトルルーム一覧
+        GoRoute(
+          path: 'battle-rooms',
+          name: 'battleRooms',
+          builder: (context, state) => const BattleRoomListScreen(),
+        ),
+
+        // バトル中
+        GoRoute(
+          path: 'battle/:roomId',
+          name: 'battle',
+          builder: (context, state) {
+            final roomId = state.pathParameters['roomId'] ?? '';
+            return BattleScreen(roomId: roomId);
+          },
+        ),
+
+        // バトル結果
+        GoRoute(
+          path: 'battle-result',
+          name: 'battleResult',
+          builder: (context, state) {
+            final result = state.extra as BattleResult?;
+            if (result == null) {
+              return const Scaffold(
+                body: Center(child: Text('エラー')),
+              );
+            }
+            return BattleResultScreen(result: result);
+          },
+        ),
       ],
     ),
   ],
@@ -207,4 +243,14 @@ extension NavigationExtension on BuildContext {
   /// 試験結果画面に遷移
   void goExamResult(ExamResult result) =>
       push('/exam-result', extra: result);
+
+  /// バトルルーム一覧に遷移
+  void goBattleRooms() => push('/battle-rooms');
+
+  /// バトル画面に遷移
+  void goBattle(String roomId) => push('/battle/$roomId');
+
+  /// バトル結果画面に遷移
+  void goBattleResult(BattleResult result) =>
+      push('/battle-result', extra: result);
 }
