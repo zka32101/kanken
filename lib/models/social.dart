@@ -27,19 +27,16 @@ class Friend {
     'connectedAt': Timestamp.fromDate(connectedAt),
   };
 
-  factory Friend.fromJson(Map<String, dynamic> json) {
-    if (json['connectedAt'] is! Timestamp) {
-      throw FormatException('Invalid connectedAt timestamp in friend');
-    }
-    return Friend(
-      friendId: json['friendId'] as String,
-      userId: json['userId'] as String,
-      displayName: json['displayName'] as String,
-      avatarUrl: json['avatarUrl'] as String?,
-      level: json['level'] as int? ?? 0,
-      connectedAt: (json['connectedAt'] as Timestamp).toDate(),
-    );
-  }
+  factory Friend.fromJson(Map<String, dynamic> json) => Friend(
+    friendId: json['friendId'] as String,
+    userId: json['userId'] as String,
+    displayName: json['displayName'] as String,
+    avatarUrl: json['avatarUrl'] as String?,
+    level: json['level'] as int? ?? 0,
+    connectedAt: json['connectedAt'] is Timestamp
+        ? (json['connectedAt'] as Timestamp).toDate()
+        : DateTime.now(),
+  );
 }
 
 /// フレンド要求
@@ -79,23 +76,20 @@ class FriendRequest {
     'respondedAt': respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
   };
 
-  factory FriendRequest.fromJson(Map<String, dynamic> json) {
-    if (json['createdAt'] is! Timestamp) {
-      throw FormatException('Invalid createdAt timestamp in friend request');
-    }
-    return FriendRequest(
-      requestId: json['requestId'] as String,
-      fromUserId: json['fromUserId'] as String,
-      toUserId: json['toUserId'] as String,
-      fromDisplayName: json['fromDisplayName'] as String,
-      fromAvatarUrl: json['fromAvatarUrl'] as String?,
-      status: json['status'] as String? ?? 'pending',
-      createdAt: (json['createdAt'] as Timestamp).toDate(),
-      respondedAt: json['respondedAt'] is Timestamp
-          ? (json['respondedAt'] as Timestamp).toDate()
-          : null,
-    );
-  }
+  factory FriendRequest.fromJson(Map<String, dynamic> json) => FriendRequest(
+    requestId: json['requestId'] as String,
+    fromUserId: json['fromUserId'] as String,
+    toUserId: json['toUserId'] as String,
+    fromDisplayName: json['fromDisplayName'] as String,
+    fromAvatarUrl: json['fromAvatarUrl'] as String?,
+    status: json['status'] as String? ?? 'pending',
+    createdAt: json['createdAt'] is Timestamp
+        ? (json['createdAt'] as Timestamp).toDate()
+        : DateTime.now(),
+    respondedAt: json['respondedAt'] is Timestamp
+        ? (json['respondedAt'] as Timestamp).toDate()
+        : null,
+  );
 }
 
 /// ユーザープロフィール（社交機能用）

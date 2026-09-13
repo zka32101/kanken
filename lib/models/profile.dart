@@ -48,25 +48,24 @@ class UserProfile {
     'lastLogin': Timestamp.fromDate(lastLogin),
   };
 
-  factory UserProfile.fromJson(Map<String, dynamic> json) {
-    if (json['createdAt'] is! Timestamp || json['lastLogin'] is! Timestamp) {
-      throw FormatException('Invalid timestamp in user profile');
-    }
-    return UserProfile(
-      userId: json['userId'] as String,
-      displayName: json['displayName'] as String,
-      avatarUrl: json['avatarUrl'] as String?,
-      bio: json['bio'] as String?,
-      level: json['level'] as int? ?? 1,
-      experience: json['experience'] as int? ?? 0,
-      totalBattles: json['totalBattles'] as int? ?? 0,
-      totalWins: json['totalWins'] as int? ?? 0,
-      totalExamsCompleted: json['totalExamsCompleted'] as int? ?? 0,
-      bestExamScore: (json['bestExamScore'] as num?)?.toDouble() ?? 0.0,
-      createdAt: (json['createdAt'] as Timestamp).toDate(),
-      lastLogin: (json['lastLogin'] as Timestamp).toDate(),
-    );
-  }
+  factory UserProfile.fromJson(Map<String, dynamic> json) => UserProfile(
+    userId: json['userId'] as String,
+    displayName: json['displayName'] as String,
+    avatarUrl: json['avatarUrl'] as String?,
+    bio: json['bio'] as String?,
+    level: json['level'] as int? ?? 1,
+    experience: json['experience'] as int? ?? 0,
+    totalBattles: json['totalBattles'] as int? ?? 0,
+    totalWins: json['totalWins'] as int? ?? 0,
+    totalExamsCompleted: json['totalExamsCompleted'] as int? ?? 0,
+    bestExamScore: (json['bestExamScore'] as num?)?.toDouble() ?? 0.0,
+    createdAt: json['createdAt'] is Timestamp
+        ? (json['createdAt'] as Timestamp).toDate()
+        : DateTime.now(),
+    lastLogin: json['lastLogin'] is Timestamp
+        ? (json['lastLogin'] as Timestamp).toDate()
+        : DateTime.now(),
+  );
 }
 
 /// 実績
