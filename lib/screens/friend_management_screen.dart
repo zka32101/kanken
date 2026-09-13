@@ -409,7 +409,7 @@ class _FriendManagementScreenState extends ConsumerState<FriendManagementScreen>
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
             ),
-            onPressed: () {
+            onPressed: () async {
               if (searchUserId.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('ユーザーIDを入力してください')),
@@ -417,12 +417,13 @@ class _FriendManagementScreenState extends ConsumerState<FriendManagementScreen>
                 return;
               }
 
-              ref
+              final success = await ref
                   .read(socialProvider.notifier)
                   .sendFriendRequest(searchUserId);
+              if (!context.mounted) return;
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('フレンド要求を送信しました')),
+                SnackBar(content: Text(success ? 'フレンド要求を送信しました' : '送信に失敗しました')),
               );
             },
             child: const Text('送信'),

@@ -179,8 +179,8 @@ class NotificationCenterScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                  onPressed: () {
-                    ref
+                  onPressed: () async {
+                    await ref
                         .read(notificationProvider.notifier)
                         .deleteNotification(notification.notificationId);
                   },
@@ -194,8 +194,8 @@ class NotificationCenterScreen extends ConsumerWidget {
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                     ),
-                    onPressed: () {
-                      ref
+                    onPressed: () async {
+                      await ref
                           .read(notificationProvider.notifier)
                           .markAsRead(notification.notificationId);
                     },

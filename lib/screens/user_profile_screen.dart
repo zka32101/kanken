@@ -271,8 +271,6 @@ class UserProfileScreen extends ConsumerWidget {
                     bio: bioController.text,
                   );
               if (!context.mounted) return;
-              displayNameController.dispose();
-              bioController.dispose();
               Navigator.pop(context);
               if (!success) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -285,8 +283,8 @@ class UserProfileScreen extends ConsumerWidget {
         ],
       ),
     ).then((_) {
-      displayNameController.dispose();
-      bioController.dispose();
+      if (displayNameController.hasListeners) displayNameController.dispose();
+      if (bioController.hasListeners) bioController.dispose();
     });
   }
 }
