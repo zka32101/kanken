@@ -132,65 +132,70 @@ class SocialNotifier extends StateNotifier<void> {
     if (_userId == null) return false;
 
     try {
-      // リクエストを承認に更新
-      await _firestore
-          .collection('users')
-          .doc(_userId)
-          .collection('friendRequests')
-          .doc(request.requestId)
-          .update({
-        'status': 'accepted',
-        'respondedAt': Timestamp.now(),
+      // トランザクション使用でデータ一貫性を確保
+      await _firestore.runTransaction((transaction) async {
+        // 相手をフレンドに追加（送信者と受信者の情報を取得）
+        final fromUserDoc = await transaction.get(
+            _firestore.collection('users').doc(request.fromUserId));
+        final fromLevel = fromUserDoc.data()?['level'] as int? ?? 0;
+
+        final toUserDoc = await transaction
+            .get(_firestore.collection('users').doc(_userId));
+        final toDisplayName = toUserDoc.data()?['displayName'] ?? 'ユーザー';
+        final toAvatarUrl = toUserDoc.data()?['avatarUrl'] as String?;
+        final toLevel = toUserDoc.data()?['level'] as int? ?? 0;
+
+        // フレンド要求ステータスを更新
+        transaction.update(
+          _firestore
+              .collection('users')
+              .doc(_userId)
+              .collection('friendRequests')
+              .doc(request.requestId),
+          {
+            'status': 'accepted',
+            'respondedAt': Timestamp.now(),
+          },
+        );
+
+        // 受信者のフレンドリストに送信者を追加
+        final friend = Friend(
+          friendId: request.fromUserId,
+          userId: _userId!,
+          displayName: request.fromDisplayName,
+          avatarUrl: request.fromAvatarUrl,
+          level: fromLevel,
+          connectedAt: DateTime.now(),
+        );
+
+        transaction.set(
+          _firestore
+              .collection('users')
+              .doc(_userId)
+              .collection('friends')
+              .doc(request.fromUserId),
+          friend.toJson(),
+        );
+
+        // 送信者のフレンドリストに受信者を追加
+        final fromFriend = Friend(
+          friendId: _userId!,
+          userId: request.fromUserId,
+          displayName: toDisplayName,
+          avatarUrl: toAvatarUrl,
+          level: toLevel,
+          connectedAt: DateTime.now(),
+        );
+
+        transaction.set(
+          _firestore
+              .collection('users')
+              .doc(request.fromUserId)
+              .collection('friends')
+              .doc(_userId),
+          fromFriend.toJson(),
+        );
       });
-
-      // 相手をフレンドに追加（送信者と受信者の情報を取得）
-      final fromUserDoc = await _firestore
-          .collection('users')
-          .doc(request.fromUserId)
-          .get();
-      final fromLevel = fromUserDoc.data()?['level'] as int? ?? 0;
-
-      final toUserDoc = await _firestore
-          .collection('users')
-          .doc(_userId)
-          .get();
-      final toDisplayName = toUserDoc.data()?['displayName'] ?? 'ユーザー';
-      final toAvatarUrl = toUserDoc.data()?['avatarUrl'] as String?;
-      final toLevel = toUserDoc.data()?['level'] as int? ?? 0;
-
-      // 受信者のフレンドリストに送信者を追加
-      final friend = Friend(
-        friendId: request.fromUserId,
-        userId: _userId!,
-        displayName: request.fromDisplayName,
-        avatarUrl: request.fromAvatarUrl,
-        level: fromLevel,
-        connectedAt: DateTime.now(),
-      );
-
-      await _firestore
-          .collection('users')
-          .doc(_userId)
-          .collection('friends')
-          .doc(request.fromUserId)
-          .set(friend.toJson());
-
-      // 送信者のフレンドリストに受信者を追加
-      final fromFriend = Friend(
-        friendId: _userId!,
-        userId: request.fromUserId,
-        displayName: toDisplayName,
-        avatarUrl: toAvatarUrl,
-        level: toLevel,
-        connectedAt: DateTime.now(),
-      );
-
-      await _firestore
-          .collection('users')
-          .doc(request.fromUserId)
-          .collection('friends')
-          .doc(_userId)
-          .set(fromFriend.toJson());
 
       return true;
     } catch (e) {

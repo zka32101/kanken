@@ -53,20 +53,22 @@ class AppNotification {
     'data': data,
   };
 
-  factory AppNotification.fromJson(Map<String, dynamic> json) =>
-      AppNotification(
-        notificationId: json['notificationId'] as String,
-        userId: json['userId'] as String,
-        type: json['type'] as String,
-        title: json['title'] as String,
-        message: json['message'] as String,
-        relatedId: json['relatedId'] as String?,
-        isRead: json['isRead'] as bool? ?? false,
-        createdAt: json['createdAt'] is Timestamp
-            ? (json['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
-        data: json['data'] as Map<String, dynamic>?,
-      );
+  factory AppNotification.fromJson(Map<String, dynamic> json) {
+    if (json['createdAt'] is! Timestamp) {
+      throw FormatException('Invalid createdAt timestamp in notification');
+    }
+    return AppNotification(
+      notificationId: json['notificationId'] as String,
+      userId: json['userId'] as String,
+      type: json['type'] as String,
+      title: json['title'] as String,
+      message: json['message'] as String,
+      relatedId: json['relatedId'] as String?,
+      isRead: json['isRead'] as bool? ?? false,
+      createdAt: (json['createdAt'] as Timestamp).toDate(),
+      data: json['data'] as Map<String, dynamic>?,
+    );
+  }
 }
 
 /// 通知設定
@@ -111,22 +113,24 @@ class NotificationSettings {
     'updatedAt': Timestamp.fromDate(updatedAt),
   };
 
-  factory NotificationSettings.fromJson(Map<String, dynamic> json) =>
-      NotificationSettings(
-        userId: json['userId'] as String,
-        battleInviteEnabled: json['battleInviteEnabled'] as bool? ?? true,
-        battleResultEnabled: json['battleResultEnabled'] as bool? ?? true,
-        examResultEnabled: json['examResultEnabled'] as bool? ?? true,
-        badgeEnabled: json['badgeEnabled'] as bool? ?? true,
-        friendRequestEnabled: json['friendRequestEnabled'] as bool? ?? true,
-        achievementEnabled: json['achievementEnabled'] as bool? ?? true,
-        dailyChallengeEnabled: json['dailyChallengeEnabled'] as bool? ?? true,
-        soundEnabled: json['soundEnabled'] as bool? ?? true,
-        vibrationEnabled: json['vibrationEnabled'] as bool? ?? true,
-        updatedAt: json['updatedAt'] is Timestamp
-            ? (json['updatedAt'] as Timestamp).toDate()
-            : DateTime.now(),
-      );
+  factory NotificationSettings.fromJson(Map<String, dynamic> json) {
+    if (json['updatedAt'] is! Timestamp) {
+      throw FormatException('Invalid updatedAt timestamp in notification settings');
+    }
+    return NotificationSettings(
+      userId: json['userId'] as String,
+      battleInviteEnabled: json['battleInviteEnabled'] as bool? ?? true,
+      battleResultEnabled: json['battleResultEnabled'] as bool? ?? true,
+      examResultEnabled: json['examResultEnabled'] as bool? ?? true,
+      badgeEnabled: json['badgeEnabled'] as bool? ?? true,
+      friendRequestEnabled: json['friendRequestEnabled'] as bool? ?? true,
+      achievementEnabled: json['achievementEnabled'] as bool? ?? true,
+      dailyChallengeEnabled: json['dailyChallengeEnabled'] as bool? ?? true,
+      soundEnabled: json['soundEnabled'] as bool? ?? true,
+      vibrationEnabled: json['vibrationEnabled'] as bool? ?? true,
+      updatedAt: (json['updatedAt'] as Timestamp).toDate(),
+    );
+  }
 
   NotificationSettings copyWith({
     bool? battleInviteEnabled,

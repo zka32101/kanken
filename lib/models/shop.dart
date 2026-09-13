@@ -39,20 +39,23 @@ class ShopItem {
     'createdAt': Timestamp.fromDate(createdAt),
   };
 
-  factory ShopItem.fromJson(Map<String, dynamic> json) => ShopItem(
-    itemId: json['itemId'] as String,
-    name: json['name'] as String,
-    description: json['description'] as String,
-    category: json['category'] as String,
-    price: json['price'] as int? ?? 0,
-    currency: json['currency'] as String? ?? 'coin',
-    imageUrl: json['imageUrl'] as String?,
-    isAvailable: json['isAvailable'] as bool? ?? true,
-    rarity: json['rarity'] as int? ?? 1,
-    createdAt: json['createdAt'] is Timestamp
-        ? (json['createdAt'] as Timestamp).toDate()
-        : DateTime.now(),
-  );
+  factory ShopItem.fromJson(Map<String, dynamic> json) {
+    if (json['createdAt'] is! Timestamp) {
+      throw FormatException('Invalid createdAt timestamp in shop item');
+    }
+    return ShopItem(
+      itemId: json['itemId'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String,
+      category: json['category'] as String,
+      price: json['price'] as int? ?? 0,
+      currency: json['currency'] as String? ?? 'coin',
+      imageUrl: json['imageUrl'] as String?,
+      isAvailable: json['isAvailable'] as bool? ?? true,
+      rarity: json['rarity'] as int? ?? 1,
+      createdAt: (json['createdAt'] as Timestamp).toDate(),
+    );
+  }
 }
 
 /// ユーザーウォレット
@@ -90,15 +93,18 @@ class UserWallet {
     'lastUpdated': Timestamp.fromDate(lastUpdated),
   };
 
-  factory UserWallet.fromJson(Map<String, dynamic> json) => UserWallet(
-    userId: json['userId'] as String,
-    coins: json['coins'] as int? ?? 0,
-    diamonds: json['diamonds'] as int? ?? 0,
-    totalSpent: json['totalSpent'] as int? ?? 0,
-    lastUpdated: json['lastUpdated'] is Timestamp
-        ? (json['lastUpdated'] as Timestamp).toDate()
-        : DateTime.now(),
-  );
+  factory UserWallet.fromJson(Map<String, dynamic> json) {
+    if (json['lastUpdated'] is! Timestamp) {
+      throw FormatException('Invalid lastUpdated timestamp in wallet');
+    }
+    return UserWallet(
+      userId: json['userId'] as String,
+      coins: json['coins'] as int? ?? 0,
+      diamonds: json['diamonds'] as int? ?? 0,
+      totalSpent: json['totalSpent'] as int? ?? 0,
+      lastUpdated: (json['lastUpdated'] as Timestamp).toDate(),
+    );
+  }
 }
 
 /// 購入履歴
@@ -134,18 +140,21 @@ class Purchase {
     'isRefunded': isRefunded,
   };
 
-  factory Purchase.fromJson(Map<String, dynamic> json) => Purchase(
-    purchaseId: json['purchaseId'] as String,
-    userId: json['userId'] as String,
-    itemId: json['itemId'] as String,
-    itemName: json['itemName'] as String,
-    price: json['price'] as int? ?? 0,
-    currency: json['currency'] as String? ?? 'coin',
-    purchasedAt: json['purchasedAt'] is Timestamp
-        ? (json['purchasedAt'] as Timestamp).toDate()
-        : DateTime.now(),
-    isRefunded: json['isRefunded'] as bool? ?? false,
-  );
+  factory Purchase.fromJson(Map<String, dynamic> json) {
+    if (json['purchasedAt'] is! Timestamp) {
+      throw FormatException('Invalid purchasedAt timestamp in purchase');
+    }
+    return Purchase(
+      purchaseId: json['purchaseId'] as String,
+      userId: json['userId'] as String,
+      itemId: json['itemId'] as String,
+      itemName: json['itemName'] as String,
+      price: json['price'] as int? ?? 0,
+      currency: json['currency'] as String? ?? 'coin',
+      purchasedAt: (json['purchasedAt'] as Timestamp).toDate(),
+      isRefunded: json['isRefunded'] as bool? ?? false,
+    );
+  }
 }
 
 /// コイン購入パッケージ
@@ -220,17 +229,19 @@ class UserInventoryItem {
     'obtainedAt': Timestamp.fromDate(obtainedAt),
   };
 
-  factory UserInventoryItem.fromJson(Map<String, dynamic> json) =>
-      UserInventoryItem(
-        inventoryId: json['inventoryId'] as String,
-        userId: json['userId'] as String,
-        itemId: json['itemId'] as String,
-        itemName: json['itemName'] as String,
-        category: json['category'] as String,
-        quantity: json['quantity'] as int? ?? 0,
-        isEquipped: json['isEquipped'] as bool? ?? false,
-        obtainedAt: json['obtainedAt'] is Timestamp
-            ? (json['obtainedAt'] as Timestamp).toDate()
-            : DateTime.now(),
-      );
+  factory UserInventoryItem.fromJson(Map<String, dynamic> json) {
+    if (json['obtainedAt'] is! Timestamp) {
+      throw FormatException('Invalid obtainedAt timestamp in inventory item');
+    }
+    return UserInventoryItem(
+      inventoryId: json['inventoryId'] as String,
+      userId: json['userId'] as String,
+      itemId: json['itemId'] as String,
+      itemName: json['itemName'] as String,
+      category: json['category'] as String,
+      quantity: json['quantity'] as int? ?? 0,
+      isEquipped: json['isEquipped'] as bool? ?? false,
+      obtainedAt: (json['obtainedAt'] as Timestamp).toDate(),
+    );
+  }
 }
