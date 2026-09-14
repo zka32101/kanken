@@ -40,7 +40,7 @@ class GlobalEvent {
     required this.endAt,
     required this.targetCategory,
     required this.targetScore,
-    required this.participantCount = 0,
+    this.participantCount = 0,
     this.rewards = const {},
     this.bannerImageUrl = '',
   });

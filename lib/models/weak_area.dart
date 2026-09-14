@@ -42,7 +42,7 @@ class WeakArea {
   String getLevelLabel() {
     switch (level) {
       case WeakLevel.excellent:
-        return '得意';
+        return '優秀';
       case WeakLevel.good:
         return '良好';
       case WeakLevel.normal:
@@ -50,7 +50,7 @@ class WeakArea {
       case WeakLevel.weak:
         return '苦手';
       case WeakLevel.veryWeak:
-        return '非常に苦手';
+        return '要改善';
     }
   }
 

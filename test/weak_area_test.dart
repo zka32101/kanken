@@ -20,6 +20,7 @@ void main() {
         categoryName: '音読み',
         totalAttempts: 100,
         correctAnswers: 75,
+        accuracyRate: 0.75,
         level: WeakLevel.good,
         recentStreakDays: 5,
         lastAttemptAt: DateTime(2026, 9, 13),
@@ -41,6 +42,7 @@ void main() {
         categoryName: 'テスト',
         totalAttempts: 100,
         correctAnswers: 75,
+        accuracyRate: 0.75,
         level: WeakLevel.good,
         recentStreakDays: 0,
         lastAttemptAt: DateTime.now(),
@@ -55,6 +57,7 @@ void main() {
         categoryName: 'テスト',
         totalAttempts: 0,
         correctAnswers: 0,
+        accuracyRate: 0.0,
         level: WeakLevel.excellent,
         recentStreakDays: 0,
         lastAttemptAt: DateTime.now(),
@@ -70,6 +73,7 @@ void main() {
           categoryName: 'テスト',
           totalAttempts: 100,
           correctAnswers: 95,
+          accuracyRate: 0.95,
           level: WeakLevel.excellent,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
@@ -83,6 +87,7 @@ void main() {
           categoryName: 'テスト',
           totalAttempts: 100,
           correctAnswers: 25,
+          accuracyRate: 0.25,
           level: WeakLevel.veryWeak,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
@@ -98,6 +103,7 @@ void main() {
           categoryName: 'テスト',
           totalAttempts: 100,
           correctAnswers: 95,
+          accuracyRate: 0.95,
           level: WeakLevel.excellent,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
@@ -111,6 +117,7 @@ void main() {
           categoryName: 'テスト',
           totalAttempts: 100,
           correctAnswers: 25,
+          accuracyRate: 0.25,
           level: WeakLevel.veryWeak,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
@@ -125,6 +132,7 @@ void main() {
         categoryName: 'テスト',
         totalAttempts: 100,
         correctAnswers: 75,
+        accuracyRate: 0.75,
         level: WeakLevel.good,
         recentStreakDays: 0,
         lastAttemptAt: DateTime.now(),
@@ -135,6 +143,7 @@ void main() {
         categoryName: 'テスト',
         totalAttempts: 100,
         correctAnswers: 25,
+        accuracyRate: 0.25,
         level: WeakLevel.weak,
         recentStreakDays: 0,
         lastAttemptAt: DateTime.now(),
@@ -151,6 +160,7 @@ void main() {
           categoryName: 'テスト',
           totalAttempts: 100,
           correctAnswers: 25,
+          accuracyRate: 0.25,
           level: WeakLevel.veryWeak,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
@@ -164,6 +174,7 @@ void main() {
           categoryName: 'テスト',
           totalAttempts: 100,
           correctAnswers: 75,
+          accuracyRate: 0.75,
           level: WeakLevel.good,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
@@ -179,6 +190,7 @@ void main() {
           categoryName: 'テスト',
           totalAttempts: 100,
           correctAnswers: 25,
+          accuracyRate: 0.25,
           level: WeakLevel.veryWeak,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
@@ -192,6 +204,7 @@ void main() {
           categoryName: 'テスト',
           totalAttempts: 100,
           correctAnswers: 75,
+          accuracyRate: 0.75,
           level: WeakLevel.good,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
@@ -206,6 +219,7 @@ void main() {
         categoryName: '音読み',
         totalAttempts: 100,
         correctAnswers: 75,
+        accuracyRate: 0.75,
         level: WeakLevel.good,
         recentStreakDays: 5,
         lastAttemptAt: DateTime(2026, 9, 13),
@@ -243,6 +257,7 @@ void main() {
         categoryName: '音読み',
         totalAttempts: 100,
         correctAnswers: 75,
+        accuracyRate: 0.75,
         level: WeakLevel.good,
         recentStreakDays: 5,
         lastAttemptAt: DateTime(2026, 9, 13),
@@ -261,6 +276,7 @@ void main() {
           categoryName: '音読み',
           totalAttempts: 100,
           correctAnswers: 90,
+          accuracyRate: 0.9,
           level: WeakLevel.good,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
@@ -270,13 +286,18 @@ void main() {
           categoryName: '訓読み',
           totalAttempts: 100,
           correctAnswers: 70,
+          accuracyRate: 0.7,
           level: WeakLevel.normal,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
         ),
       ];
 
-      final analysis = WeakAreaAnalysis(areas: areas);
+      final analysis = WeakAreaAnalysis(
+        allAreas: areas,
+        overallAccuracy: 0.8,
+        analyzedAt: DateTime.now(),
+      );
       expect(analysis.overallAccuracy, closeTo(0.8, 0.01));
     });
 
@@ -287,6 +308,7 @@ void main() {
           categoryName: '音読み',
           totalAttempts: 100,
           correctAnswers: 90,
+          accuracyRate: 0.9,
           level: WeakLevel.good,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
@@ -296,14 +318,19 @@ void main() {
           categoryName: '訓読み',
           totalAttempts: 100,
           correctAnswers: 25,
+          accuracyRate: 0.25,
           level: WeakLevel.weak,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
         ),
       ];
 
-      final analysis = WeakAreaAnalysis(areas: areas);
-      final weakAreas = analysis.getWeakAreas();
+      final analysis = WeakAreaAnalysis(
+        allAreas: areas,
+        overallAccuracy: 0.575,
+        analyzedAt: DateTime.now(),
+      );
+      final weakAreas = analysis.weakAreas;
       expect(weakAreas.length, equals(1));
       expect(weakAreas[0].categoryName, equals('訓読み'));
     });
@@ -315,6 +342,7 @@ void main() {
           categoryName: '音読み',
           totalAttempts: 100,
           correctAnswers: 90,
+          accuracyRate: 0.9,
           level: WeakLevel.good,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
@@ -324,13 +352,18 @@ void main() {
           categoryName: '訓読み',
           totalAttempts: 100,
           correctAnswers: 25,
+          accuracyRate: 0.25,
           level: WeakLevel.weak,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
         ),
       ];
 
-      final analysis = WeakAreaAnalysis(areas: areas);
+      final analysis = WeakAreaAnalysis(
+        allAreas: areas,
+        overallAccuracy: 0.575,
+        analyzedAt: DateTime.now(),
+      );
       final worst = analysis.getWorstArea();
       expect(worst?.categoryName, equals('訓読み'));
     });
@@ -342,6 +375,7 @@ void main() {
           categoryName: '音読み',
           totalAttempts: 100,
           correctAnswers: 90,
+          accuracyRate: 0.9,
           level: WeakLevel.good,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
@@ -351,13 +385,18 @@ void main() {
           categoryName: '訓読み',
           totalAttempts: 100,
           correctAnswers: 25,
+          accuracyRate: 0.25,
           level: WeakLevel.weak,
           recentStreakDays: 0,
           lastAttemptAt: DateTime.now(),
         ),
       ];
 
-      final analysis = WeakAreaAnalysis(areas: areas);
+      final analysis = WeakAreaAnalysis(
+        allAreas: areas,
+        overallAccuracy: 0.575,
+        analyzedAt: DateTime.now(),
+      );
       expect(analysis.weakPercentage, closeTo(0.5, 0.01));
     });
   });
