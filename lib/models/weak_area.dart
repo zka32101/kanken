@@ -77,9 +77,9 @@ class WeakArea {
   int getRecommendedFrequency() {
     switch (level) {
       case WeakLevel.excellent:
-        return 14; // 2週間
-      case WeakLevel.good:
         return 7;  // 1週間
+      case WeakLevel.good:
+        return 14; // 2週間
       case WeakLevel.normal:
         return 3;  // 3日
       case WeakLevel.weak:
@@ -93,9 +93,9 @@ class WeakArea {
   int getRecommendedQuestionCount() {
     switch (level) {
       case WeakLevel.excellent:
-        return 5;
-      case WeakLevel.good:
         return 10;
+      case WeakLevel.good:
+        return 5;
       case WeakLevel.normal:
         return 15;
       case WeakLevel.weak:
@@ -108,6 +108,7 @@ class WeakArea {
   /// JSON からのデシリアライズ
   factory WeakArea.fromJson(Map<String, dynamic> json) {
     final accuracyRate = (json['accuracyRate'] as num?)?.toDouble() ?? 0.0;
+    final hasAccuracyRate = json.containsKey('accuracyRate');
 
     return WeakArea(
       categoryId: json['categoryId'] as String? ?? '',
@@ -115,7 +116,7 @@ class WeakArea {
       totalAttempts: json['totalAttempts'] as int? ?? 0,
       correctAnswers: json['correctAnswers'] as int? ?? 0,
       accuracyRate: accuracyRate,
-      level: _levelFromAccuracy(accuracyRate),
+      level: hasAccuracyRate ? _levelFromAccuracy(accuracyRate) : WeakLevel.excellent,
       recentStreakDays: json['recentStreakDays'] as int? ?? 0,
       lastAttemptAt: json['lastAttemptAt'] is Timestamp
           ? (json['lastAttemptAt'] as Timestamp).toDate()
@@ -178,7 +179,7 @@ class WeakAreaAnalysis {
   /// 改善度合い（全体の何%が苦手か）
   double get weakPercentage {
     if (allAreas.isEmpty) return 0.0;
-    return (weakAreas.length / allAreas.length) * 100;
+    return weakAreas.length / allAreas.length;
   }
 
   @override
