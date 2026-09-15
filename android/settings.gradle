@@ -7,9 +7,9 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    // FAIL_ON_PROJECT_REPOS: settings.gradle repositories のみを使用
-    // project build.gradle での repositories 宣言は禁止（エラーにしない、ただし無視）
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    // PREFER_SETTINGS: settings.gradle repositories を優先
+    // FlutterPlugin が追加するリポジトリは settings.gradle に定義済みのもので優先
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google()
         mavenCentral()

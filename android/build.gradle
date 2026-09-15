@@ -8,8 +8,8 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        // Firebase dependencies repository
-        maven { url 'https://maven.google.com' }
+        // Note: Firebase dependencies repository is defined in settings.gradle
+        // and settings.gradle is configured to PREFER_SETTINGS repositories
     }
 
     dependencies {
