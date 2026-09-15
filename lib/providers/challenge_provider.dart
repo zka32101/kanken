@@ -398,7 +398,7 @@ class ChallengeNotifier extends StateNotifier<ChallengeState> {
 
 /// チャレンジ管理プロバイダー
 @riverpod
-StateNotifier<ChallengeState> challengeNotifier(
+ChallengeNotifier challengeNotifier(
   ChallengeNotifierRef ref,
 ) {
   return ChallengeNotifier();

@@ -204,7 +204,7 @@ class ParentDashboardNotifier extends StateNotifier<ParentDashboardState> {
 
 /// 保護者ダッシュボード Notifier Provider
 @riverpod
-StateNotifier<ParentDashboardState> parentDashboardNotifier(
+ParentDashboardNotifier parentDashboardNotifier(
   ParentDashboardNotifierRef ref,
 ) {
   return ParentDashboardNotifier();

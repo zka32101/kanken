@@ -213,7 +213,7 @@ class WeakAreaNotifier extends StateNotifier<WeakAreaState> {
 
 /// 苦手分野管理プロバイダー
 @riverpod
-StateNotifier<WeakAreaState> weakAreaNotifier(
+WeakAreaNotifier weakAreaNotifier(
   WeakAreaNotifierRef ref,
 ) {
   return WeakAreaNotifier();

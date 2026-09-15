@@ -264,7 +264,7 @@ class LearningPlanNotifier extends StateNotifier<LearningPlanState> {
 
 /// 学習推奨管理プロバイダー
 @riverpod
-StateNotifier<LearningPlanState> learningPlanNotifier(
+LearningPlanNotifier learningPlanNotifier(
   LearningPlanNotifierRef ref,
 ) {
   return LearningPlanNotifier();

@@ -248,7 +248,7 @@ class BadgeCollectionNotifier extends StateNotifier<BadgeCollectionState> {
 
 /// バッジコレクション管理プロバイダー
 @riverpod
-StateNotifier<BadgeCollectionState> badgeCollectionNotifier(
+BadgeCollectionNotifier badgeCollectionNotifier(
   BadgeCollectionNotifierRef ref,
 ) {
   return BadgeCollectionNotifier();

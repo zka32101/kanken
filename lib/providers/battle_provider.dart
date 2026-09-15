@@ -398,7 +398,7 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
 
 /// バトルルーム Notifier Provider
 @riverpod
-StateNotifier<BattleRoomState> battleRoomNotifier(
+BattleRoomNotifier battleRoomNotifier(
   BattleRoomNotifierRef ref,
 ) {
   return BattleRoomNotifier();

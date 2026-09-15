@@ -307,7 +307,7 @@ class EventNotifier extends StateNotifier<EventState> {
 
 /// イベント管理プロバイダー
 @riverpod
-StateNotifier<EventState> eventNotifier(
+EventNotifier eventNotifier(
   EventNotifierRef ref,
 ) {
   return EventNotifier();

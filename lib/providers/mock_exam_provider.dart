@@ -311,7 +311,7 @@ class ExamSessionNotifier extends StateNotifier<ExamSessionState> {
 
 /// 試験セッション Notifier Provider
 @riverpod
-StateNotifier<ExamSessionState> examSessionNotifier(
+ExamSessionNotifier examSessionNotifier(
   ExamSessionNotifierRef ref,
 ) {
   return ExamSessionNotifier();
