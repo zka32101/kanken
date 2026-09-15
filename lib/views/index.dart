@@ -3,4 +3,3 @@ export 'handwriting_practice_screen.dart';
 export 'weak_kanji_mode_screen.dart';
 export 'mock_exam_screen.dart';
 export 'collection_badge_screen.dart';
-export 'parent_dashboard_screen.dart';

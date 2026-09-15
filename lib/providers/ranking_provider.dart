@@ -91,7 +91,7 @@ final userRankProvider = FutureProvider.family<int?, RankingFilter>(
       query = query.where(sortField, isGreaterThan: userValue);
 
       final snapshot = await query.count().get();
-      return snapshot.count + 1; // ランク（0インデックスなので+1）
+      return (snapshot.count ?? 0) + 1; // ランク（0インデックスなので+1）
     } catch (e) {
       return null;
     }

@@ -183,7 +183,9 @@ class _ParentDashboardScreenState extends ConsumerState<ParentDashboardScreen> {
 
   /// 統計情報セクション
   Widget _buildStatisticsSection(List<ChildLearningStats> children) {
-    final state = ref.watch(parentDashboardNotifierProvider);
+    final state = ref.watch(
+      parentDashboardNotifierProvider.select((n) => n.state),
+    );
     final selectedChild = state.selectedChildId != null
         ? children.firstWhere(
             (c) => c.childId == state.selectedChildId,

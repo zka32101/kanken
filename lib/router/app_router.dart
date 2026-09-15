@@ -20,6 +20,7 @@ import '../screens/notification_center_screen.dart';
 import '../screens/shop_screen.dart';
 import '../screens/user_profile_screen.dart';
 import '../models/multiplayer.dart';
+import '../models/mock_exam.dart';
 import '../views/index.dart';
 
 /// アプリケーションのルーティング定義

@@ -209,7 +209,7 @@ class DailyChallengeScreen extends ConsumerWidget {
   ) {
     final isExpired = challenge.isExpired;
 
-    return ElevatedButton.large(
+    return ElevatedButton(
       onPressed: isExpired
           ? null
           : () {

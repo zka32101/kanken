@@ -21,6 +21,7 @@ final shopItemsProvider = FutureProvider<List<ShopItem>>((ref) async {
   final firestore = ref.watch(firebaseFirestoreProvider);
   final querySnapshot = await firestore
       .collection('shop')
+      .doc('default')
       .collection('items')
       .where('isAvailable', isEqualTo: true)
       .orderBy('rarity', descending: true)
@@ -37,6 +38,7 @@ final shopItemsByCategoryProvider =
   final firestore = ref.watch(firebaseFirestoreProvider);
   final querySnapshot = await firestore
       .collection('shop')
+      .doc('default')
       .collection('items')
       .where('category', isEqualTo: category)
       .where('isAvailable', isEqualTo: true)
@@ -100,6 +102,7 @@ final coinPackagesProvider =
   final firestore = ref.watch(firebaseFirestoreProvider);
   final querySnapshot = await firestore
       .collection('shop')
+      .doc('default')
       .collection('coinPackages')
       .orderBy('coins', descending: false)
       .get();
