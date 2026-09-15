@@ -1,28 +1,6 @@
-pluginManagement {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-
-dependencyResolutionManagement {
-    // PREFER_SETTINGS: settings.gradle repositories を優先
-    // FlutterPlugin が追加するリポジトリは settings.gradle に定義済みのもので優先
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
-    repositories {
-        google()
-        mavenCentral()
-        maven { url 'https://maven.google.com' }
-    }
-}
-
-rootProject.name = "kanken"
-include ":app"
-
-// Load Flutter plugins dynamically
+// Load Flutter SDK path first
 def localProperties = new Properties()
-def localPropertiesFile = new File(rootProject.projectDir, 'local.properties')
+def localPropertiesFile = new File(settingsDir, 'local.properties')
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader ->
         localProperties.load(reader)
@@ -33,5 +11,27 @@ def flutterSdkPath = localProperties.getProperty('flutter.sdk')
 if (flutterSdkPath == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
+
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    // Allow plugins to declare their own repositories
+    // to support Flutter SDK embedded artifacts
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://maven.google.com' }
+        maven { url "${flutterSdkPath}/bin/cache/artifacts/engine/android" }
+    }
+}
+
+rootProject.name = "kanken"
+include ":app"
 
 apply from: "$flutterSdkPath/packages/flutter_tools/gradle/app_plugin_loader.gradle"
