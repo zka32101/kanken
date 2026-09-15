@@ -35,6 +35,13 @@ jobs:
           grep -i "failed\|expected\|actual" test-output.log || echo "No specific failure pattern found"
           tail -100 test-output.log
 
+      - name: Upload test output log
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-output-log
+          path: test-output.log
+
       - name: Run integration tests
         if: success()
         run: flutter test integration_test --verbose || true
