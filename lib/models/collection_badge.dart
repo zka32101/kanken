@@ -31,6 +31,7 @@ class CollectionBadge {
   final bool isHidden;              // 隠しバッジ
   final int rewardCoins;            // 獲得時のコイン報酬
   final DateTime createdAt;
+  final String? level;              // 級レベル（例：LEVEL_10, LEVEL_9）
 
   const CollectionBadge({
     required this.badgeId,
@@ -44,6 +45,7 @@ class CollectionBadge {
     this.isHidden = false,
     this.rewardCoins = 0,
     required this.createdAt,
+    this.level,
   });
 
   /// レアリティラベル（日本語）
@@ -110,6 +112,7 @@ class CollectionBadge {
       createdAt: json['createdAt'] is Timestamp
           ? (json['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
+      level: json['level'] as String?,
     );
   }
 
@@ -126,6 +129,7 @@ class CollectionBadge {
     'isHidden': isHidden,
     'rewardCoins': rewardCoins,
     'createdAt': Timestamp.fromDate(createdAt),
+    'level': level,
   };
 
   @override

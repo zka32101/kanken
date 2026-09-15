@@ -48,6 +48,7 @@ class MockExamService {
           isHidden: false,
           rewardCoins: 100,
           createdAt: DateTime.now(),
+          level: 'LEVEL_${exam.level}',
         );
         await _firestoreService.addCollectionBadge(badge);
       }
