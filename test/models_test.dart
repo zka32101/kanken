@@ -202,7 +202,7 @@ void main() {
       final reward = Reward.streakBonus(5);
 
       expect(reward.type, RewardType.streakBonus);
-      expect(reward.amount, 50); // 基本50 EXP
+      expect(reward.amount, 60); // 5日目で 50 + 10 = 60 EXP
       expect(reward.message, contains('5日'));
     });
 
