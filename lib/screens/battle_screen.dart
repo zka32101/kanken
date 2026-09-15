@@ -44,7 +44,9 @@ class _BattleScreenState extends ConsumerState<BattleScreen>
 
   @override
   Widget build(BuildContext context) {
-    final battleState = ref.watch(battleRoomNotifierProvider);
+    final battleState = ref.watch(
+      battleRoomNotifierProvider.select((n) => n.state),
+    );
 
     if (battleState.currentRoom == null || battleState.currentSession == null) {
       return Scaffold(

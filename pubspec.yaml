@@ -32,6 +32,9 @@ dependencies:
   # Audio & Haptics
   audioplayers: ^5.0.0
 
+  # Charts
+  fl_chart: ^0.68.0
+
   # Utils
   intl: ^0.19.0
   logger: ^2.0.0

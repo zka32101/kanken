@@ -292,9 +292,12 @@ class _FriendListScreenState extends ConsumerState<FriendListScreen>
                     vertical: 8,
                   ),
                 ),
-                onPressed: () => ref.read(friendNotifierProvider.notifier)
+                onPressed: () => ref.read(friendNotifierProvider)
                     .rejectFriendRequest(request),
-                child: const Text('拒否', fontSize: 12),
+                child: const Text(
+                  '拒否',
+                  style: TextStyle(fontSize: 12),
+                ),
               ),
             ],
           ),
@@ -348,9 +351,12 @@ class _FriendListScreenState extends ConsumerState<FriendListScreen>
                 vertical: 8,
               ),
             ),
-            onPressed: () => ref.read(friendNotifierProvider.notifier)
+            onPressed: () => ref.read(friendNotifierProvider)
                 .removeFriend(friend.userId),
-            child: const Text('キャンセル', fontSize: 12),
+            child: const Text(
+              'キャンセル',
+              style: TextStyle(fontSize: 12),
+            ),
           ),
         ],
       ),
@@ -446,7 +452,7 @@ class _FriendListScreenState extends ConsumerState<FriendListScreen>
               }
 
               // チャレンジを送信
-              await ref.read(challengeNotifierProvider.notifier).sendChallenge(
+              await ref.read(challengeNotifierProvider).sendChallenge(
                 toUserId: friend.userId,
                 toUserName: friend.userName,
                 fromUserName: currentUser.displayName ?? 'Unknown',

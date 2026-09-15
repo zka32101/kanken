@@ -29,7 +29,9 @@ class _ParentDashboardScreenState extends ConsumerState<ParentDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final childrenAsync = ref.watch(linkedChildrenProvider);
-    final dashboardState = ref.watch(parentDashboardNotifierProvider);
+    final dashboardState = ref.watch(
+      parentDashboardNotifierProvider.select((n) => n.state),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -156,7 +158,7 @@ class _ParentDashboardScreenState extends ConsumerState<ParentDashboardScreen> {
                     onSelected: (selected) {
                       if (selected) {
                         ref
-                            .read(parentDashboardNotifierProvider.notifier)
+                            .read(parentDashboardNotifierProvider)
                             .selectChild(child.childId);
                       }
                     },
@@ -591,7 +593,7 @@ class _ParentDashboardScreenState extends ConsumerState<ParentDashboardScreen> {
             onPressed: () {
               if (_emailController.text.isNotEmpty) {
                 ref
-                    .read(parentDashboardNotifierProvider.notifier)
+                    .read(parentDashboardNotifierProvider)
                     .linkChild(childEmail: _emailController.text);
                 Navigator.pop(context);
               }
