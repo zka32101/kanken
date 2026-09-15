@@ -278,7 +278,7 @@ class _GlobalRankingScreenState extends ConsumerState<GlobalRankingScreen>
   Widget _buildEventParticipantCard(
     EventParticipation participant,
     int rank,
-    {required bool isCurrentUser},
+    {required bool isCurrentUser}
   ) {
     final isMedal = rank <= 3;
     final medalEmoji = participant.getRankBadge();
