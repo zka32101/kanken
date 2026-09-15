@@ -183,7 +183,7 @@ class LearningPlanNotifier extends StateNotifier<LearningPlanState> {
             .collection('learningRecommendations')
             .doc(recommendation.recommendationId);
 
-        batch.set(recommendation.toJson(), SetOptions(merge: true));
+        batch.set(docRef, recommendation.toJson(), SetOptions(merge: true));
       }
 
       await batch.commit();

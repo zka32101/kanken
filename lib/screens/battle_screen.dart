@@ -192,7 +192,7 @@ class _BattleScreenState extends ConsumerState<BattleScreen>
         children: participants.map((participant) {
           final score = session.participantScores[participant.userId] ?? 0;
           final isCurrentUser = participant.userId ==
-              ref.read(battleRoomNotifierProvider).currentRoom?.creatorId;
+              ref.read(battleRoomNotifierProvider).state.currentRoom?.creatorId;
 
           return Column(
             children: [
@@ -234,14 +234,14 @@ class _BattleScreenState extends ConsumerState<BattleScreen>
   }
 
   Future<void> _endBattle(BuildContext context) async {
-    final battleState = ref.read(battleRoomNotifierProvider);
+    final battleState = ref.read(battleRoomNotifierProvider).state;
     if (battleState.currentRoom == null ||
         battleState.currentSession == null) {
       return;
     }
 
     final result = await ref
-        .read(battleRoomNotifierProvider.notifier)
+        .read(battleRoomNotifierProvider)
         .completeBattle(
           roomId: battleState.currentRoom!.roomId,
           sessionId: battleState.currentSession!.sessionId,
