@@ -375,11 +375,11 @@ class CollectionBadgeScreen extends ConsumerWidget {
                 ),
               ),
 
-              // 獲得日時（獲得済みの場合）
+              // 作成日時（バッジの作成日）
               if (badge != null) ...[
                 const SizedBox(height: 12),
                 Text(
-                  '獲得日: ${badge.unlockedAt.year}年${badge.unlockedAt.month}月${badge.unlockedAt.day}日',
+                  '作成日: ${badge.createdAt.year}年${badge.createdAt.month}月${badge.createdAt.day}日',
                   style: const TextStyle(
                     fontSize: 12,
                     color: Colors.grey,

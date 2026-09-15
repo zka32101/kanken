@@ -37,10 +37,17 @@ class MockExamService {
       final exam = await _firestoreService.getMockExam(examId);
       if (exam != null) {
         final badge = CollectionBadge(
-          id: '', // Firestoreで自動生成
-          uid: uid,
-          level: exam.level,
-          unlockedAt: DateTime.now(),
+          badgeId: 'exam_pass_${exam.level}_${DateTime.now().millisecondsSinceEpoch}',
+          name: '${exam.level} 級 合格バッジ',
+          description: '${exam.level} 級試験に合格しました',
+          rarity: BadgeRarity.uncommon,
+          category: BadgeCategory.achievement,
+          iconEmoji: '🎖️',
+          requiredCount: 1,
+          conditionText: '${exam.level} 級試験に合格',
+          isHidden: false,
+          rewardCoins: 100,
+          createdAt: DateTime.now(),
         );
         await _firestoreService.addCollectionBadge(badge);
       }
