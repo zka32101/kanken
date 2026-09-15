@@ -40,7 +40,8 @@ class Reward {
 
   /// 連続日数ボーナス
   factory Reward.streakBonus(int streak, {String? id}) {
-    final bonus = (streak ~/ 5) * 10 + 50; // 5日ごとに10 EXP追加
+    // 基本50 EXP、5日ごとに10 EXP追加（5日目から）
+    final bonus = 50 + ((streak - 1) ~/ 5) * 10;
     return Reward(
       id: id ?? DateTime.now().millisecondsSinceEpoch.toString(),
       type: RewardType.streakBonus,
