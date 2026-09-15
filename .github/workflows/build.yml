@@ -24,7 +24,9 @@ jobs:
         run: flutter pub get --verbose
 
       - name: Run unit tests
-        run: flutter test --verbose 2>&1 | tee test-output.log
+        run: |
+          set -o pipefail
+          flutter test --verbose 2>&1 | tee test-output.log
 
       - name: Extract and display failed tests
         if: failure()
