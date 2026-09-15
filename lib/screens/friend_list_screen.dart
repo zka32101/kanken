@@ -292,7 +292,7 @@ class _FriendListScreenState extends ConsumerState<FriendListScreen>
                     vertical: 8,
                   ),
                 ),
-                onPressed: () => ref.read(friendNotifierProvider)
+                onPressed: () => ref.read(friendNotifierProvider.notifier)
                     .rejectFriendRequest(request),
                 child: const Text(
                   '拒否',
@@ -351,7 +351,7 @@ class _FriendListScreenState extends ConsumerState<FriendListScreen>
                 vertical: 8,
               ),
             ),
-            onPressed: () => ref.read(friendNotifierProvider)
+            onPressed: () => ref.read(friendNotifierProvider.notifier)
                 .removeFriend(friend.userId),
             child: const Text(
               'キャンセル',

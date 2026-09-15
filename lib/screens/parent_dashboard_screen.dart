@@ -133,7 +133,9 @@ class _ParentDashboardScreenState extends ConsumerState<ParentDashboardScreen> {
 
   /// 子ども選択セクション
   Widget _buildChildSelector(List<ChildLearningStats> children) {
-    final state = ref.watch(parentDashboardNotifierProvider);
+    final state = ref.watch(
+      parentDashboardNotifierProvider.select((n) => n.state),
+    );
 
     return Padding(
       padding: const EdgeInsets.all(16),
