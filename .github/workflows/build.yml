@@ -50,3 +50,20 @@ jobs:
       - name: Run integration tests
         if: success()
         run: flutter test integration_test --verbose || true
+
+      - name: Build Android APK
+        if: success()
+        run: flutter build apk --release
+
+      - name: Build Android App Bundle
+        if: success()
+        run: flutter build appbundle --release
+
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build
+          path: |
+            build/app/outputs/apk/release/
+            build/app/outputs/bundle/release/
