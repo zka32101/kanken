@@ -1,8 +1,8 @@
 buildscript {
     ext {
         kotlin_version = '1.8.22'
-        // Downgrade Gradle from 8.1.0 to 8.0.2 for better stability
-        gradle_version = '8.0.2'
+        // Use AGP 7.4.2 for Java 11 compatibility (AGP 8.x requires Java 17)
+        gradle_version = '7.4.2'
     }
 
     repositories {
