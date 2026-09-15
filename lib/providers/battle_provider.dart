@@ -233,10 +233,12 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
       final sessionId =
           _firestore.collection('battleSessions').doc().id;
 
-      final participantScores =
-          Map.fromIterable(room.participants, key: (p) => p.userId, value: (p) => 0);
-      final participantCorrectAnswers =
-          Map.fromIterable(room.participants, key: (p) => p.userId, value: (p) => 0);
+      final participantScores = <String, int>{
+        for (var p in room.participants) p.userId: 0,
+      };
+      final participantCorrectAnswers = <String, int>{
+        for (var p in room.participants) p.userId: 0,
+      };
 
       final session = BattleSession(
         sessionId: sessionId,
