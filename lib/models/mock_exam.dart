@@ -319,3 +319,56 @@ class ExamStatistics {
     'levelStatistics': levelStatistics,
   };
 }
+
+/// 試験（メタデータ）
+class MockExam {
+  final String examId;
+  final String level;
+  final String title;
+  final String description;
+  final int questionCount;
+  final int timeLimit; // 秒単位
+  final int passScore; // 合格点
+  final DateTime createdAt;
+  final bool isPublished;
+
+  const MockExam({
+    required this.examId,
+    required this.level,
+    required this.title,
+    required this.description,
+    required this.questionCount,
+    required this.timeLimit,
+    required this.passScore,
+    required this.createdAt,
+    required this.isPublished,
+  });
+
+  factory MockExam.fromJson(Map<String, dynamic> json) {
+    return MockExam(
+      examId: json['examId'] as String? ?? '',
+      level: json['level'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      questionCount: json['questionCount'] as int? ?? 0,
+      timeLimit: json['timeLimit'] as int? ?? 1800,
+      passScore: json['passScore'] as int? ?? 60,
+      createdAt: json['createdAt'] is Timestamp
+          ? (json['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      isPublished: json['isPublished'] as bool? ?? true,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'examId': examId,
+    'level': level,
+    'title': title,
+    'description': description,
+    'questionCount': questionCount,
+    'timeLimit': timeLimit,
+    'passScore': passScore,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'isPublished': isPublished,
+  };
+}
