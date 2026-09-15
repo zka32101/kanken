@@ -153,6 +153,30 @@ class LearningGoal {
   double get progress => currentValue / targetValue;
   bool get isAchieved => currentValue >= targetValue;
 
+  LearningGoal copyWith({
+    String? goalId,
+    String? userId,
+    String? type,
+    int? targetValue,
+    int? currentValue,
+    String? goalType,
+    DateTime? deadline,
+    bool? isCompleted,
+    DateTime? createdAt,
+  }) {
+    return LearningGoal(
+      goalId: goalId ?? this.goalId,
+      userId: userId ?? this.userId,
+      type: type ?? this.type,
+      targetValue: targetValue ?? this.targetValue,
+      currentValue: currentValue ?? this.currentValue,
+      goalType: goalType ?? this.goalType,
+      deadline: deadline ?? this.deadline,
+      isCompleted: isCompleted ?? this.isCompleted,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
   Map<String, dynamic> toJson() => {
     'goalId': goalId,
     'userId': userId,

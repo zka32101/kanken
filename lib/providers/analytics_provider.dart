@@ -164,7 +164,7 @@ class AnalyticsDashboardNotifier extends StateNotifier<AnalyticsDashboardState> 
     final deadline = _calculateDeadline(type);
     final goal = LearningGoal(
       goalId: _firestore.collection('users').doc().id,
-      userId: _userId,
+      userId: _userId!,
       type: type,
       targetValue: targetValue,
       currentValue: 0,
