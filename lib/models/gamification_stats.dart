@@ -32,7 +32,7 @@ class GamificationStats {
   String getRank() {
     if (experience < 500) return '新米受験生';
     if (experience < 1000) return '見習い学生';
-    if (experience < 2000) return '中堅学生';
+    if (experience < 3000) return '中堅学生';
     if (experience < 5000) return '精鋭受験生';
     return 'マスター';
   }
