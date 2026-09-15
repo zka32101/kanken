@@ -20,6 +20,11 @@ jobs:
           flutter-version: '3.13.0'
           channel: 'stable'
 
+      - name: Setup Firebase configuration
+        run: |
+          echo "Generating firebase_options.dart from google-services.json..."
+          bash scripts/generate-firebase-options.sh
+
       - name: Get dependencies
         run: flutter pub get --verbose
 
