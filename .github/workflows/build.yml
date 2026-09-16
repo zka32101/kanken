@@ -71,8 +71,24 @@ jobs:
       - name: Build Android APK
         if: success()
         run: |
+          echo "=== Environment Variables ==="
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          echo "ANDROID_NDK=$ANDROID_NDK"
+          echo "JAVA_HOME=$JAVA_HOME"
+          echo ""
+          echo "=== local.properties content ==="
+          cat android/local.properties || echo "local.properties not found!"
+          echo ""
+          echo "=== Starting APK build ==="
           set -o pipefail
-          flutter build apk --verbose 2>&1 | tee apk-build.log || (tail -200 apk-build.log && exit 1)
+          flutter build apk --verbose 2>&1 | tee apk-build.log
+          BUILD_EXIT_CODE=$?
+          echo "Build exit code: $BUILD_EXIT_CODE"
+          if [ $BUILD_EXIT_CODE -ne 0 ]; then
+            echo "=== LAST 300 LINES OF BUILD LOG ==="
+            tail -300 apk-build.log
+            exit $BUILD_EXIT_CODE
+          fi
 
       - name: Build Android App Bundle
         if: success()
