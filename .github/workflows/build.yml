@@ -88,15 +88,16 @@ jobs:
           echo ""
           echo "=== Starting APK build with debug ==="
           set -o pipefail
-          flutter build apk --debug --verbose --no-tree-shake-icons 2>&1 | tee apk-build.log
+          flutter build apk --debug --verbose --no-tree-shake-icons 2>stderr.log 1>stdout.log
           BUILD_EXIT_CODE=$?
           echo "Build exit code: $BUILD_EXIT_CODE"
+          echo ""
+          echo "=== STDOUT ==="
+          cat stdout.log
+          echo ""
+          echo "=== STDERR ==="
+          cat stderr.log
           if [ $BUILD_EXIT_CODE -ne 0 ]; then
-            echo "=== GREP FOR ERROR KEYWORDS ==="
-            grep -i "error\|failed\|exception" apk-build.log | head -50 || echo "No error keywords found"
-            echo ""
-            echo "=== LAST 500 LINES OF BUILD LOG ==="
-            tail -500 apk-build.log
             exit $BUILD_EXIT_CODE
           fi
 
