@@ -40,10 +40,25 @@ jobs:
           bash scripts/generate-firebase-options.sh
 
       - name: Get dependencies
-        run: flutter pub get --verbose
+        run: |
+          flutter pub get --verbose
+          echo "=== Verify Android platform dependencies ==="
+          flutter pub get --platform android --verbose || echo "Android platform verification completed"
 
       - name: Generate Riverpod files
         run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      - name: Debug Flutter Build Environment
+        run: |
+          echo "=== Dart version ==="
+          dart --version
+          echo ""
+          echo "=== Flutter build environment info ==="
+          flutter config --no-analytics
+          flutter config
+          echo ""
+          echo "=== Check for pubspec.lock issues ==="
+          grep -A 5 "firebase\|cloud_firestore\|firebase_core" pubspec.lock | head -50
 
       - name: Run unit tests
         run: |
@@ -80,18 +95,22 @@ jobs:
       - name: Build Android APK (Release)
         if: success()
         run: |
-          echo "=== Building Release APK ==="
+          echo "=== Building Release APK via flutter ==="
           set -o pipefail
-          flutter build apk --release 2>&1 | tee release-build.log
+          flutter build apk --release 2>&1 | tail -200 | tee release-build.log
           BUILD_EXIT_CODE=$?
           echo ""
           echo "Build exit code: $BUILD_EXIT_CODE"
           echo ""
           if [ $BUILD_EXIT_CODE -ne 0 ]; then
-            echo "Release build failed. Attempting debug build..."
-            echo "=== Attempting Debug APK build as fallback ==="
-            flutter build apk --debug 2>&1 | tee debug-build.log
-            exit $?
+            echo "Flutter build failed. Trying direct gradle build..."
+            echo "=== Attempting direct Gradle build ==="
+            cd android
+            bash ./gradlew assembleRelease 2>&1 | tail -200 | tee gradle-build.log
+            GRADLE_EXIT=$?
+            cd ..
+            echo "Gradle exit code: $GRADLE_EXIT"
+            exit $GRADLE_EXIT
           else
             echo "Release build succeeded!"
             ls -lah build/app/outputs/apk/release/app-release.apk 2>/dev/null && echo "Release APK found"
