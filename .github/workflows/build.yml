@@ -42,6 +42,8 @@ jobs:
       - name: Get dependencies
         run: |
           flutter pub get --verbose
+          echo "=== Repair Dart/Flutter cache ==="
+          flutter pub cache repair || echo "Cache repair completed"
           echo "=== Verify Android platform dependencies ==="
           flutter pub get --platform android --verbose || echo "Android platform verification completed"
 
@@ -94,6 +96,8 @@ jobs:
 
       - name: Build Android App Bundle
         if: success()
+        env:
+          GRADLE_OPTS: "-Xmx2048m"
         run: |
           echo "=== Building App Bundle (AAB) ==="
           set -o pipefail
