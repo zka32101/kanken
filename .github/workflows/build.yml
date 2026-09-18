@@ -86,17 +86,19 @@ jobs:
           echo "=== Gradle wrapper check ==="
           ls -lah android/gradle/wrapper/gradle-wrapper.jar || echo "gradle-wrapper.jar not found"
           echo ""
+          echo "=== Clean Flutter build cache ==="
+          flutter clean
+          flutter pub get --verbose
+          echo ""
           echo "=== Starting APK build with debug ==="
           set -o pipefail
-          flutter build apk --debug --verbose --no-tree-shake-icons 2>stderr.log 1>stdout.log
+          flutter build apk --debug --verbose --no-tree-shake-icons 2>&1 | tee apk-build.log
           BUILD_EXIT_CODE=$?
+          echo ""
           echo "Build exit code: $BUILD_EXIT_CODE"
           echo ""
-          echo "=== STDOUT ==="
-          cat stdout.log
-          echo ""
-          echo "=== STDERR ==="
-          cat stderr.log
+          echo "=== Last 500 lines of build output ==="
+          tail -500 apk-build.log
           if [ $BUILD_EXIT_CODE -ne 0 ]; then
             exit $BUILD_EXIT_CODE
           fi
