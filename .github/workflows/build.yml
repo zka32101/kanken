@@ -77,43 +77,24 @@ jobs:
           echo "=== Running Dart Analyze ==="
           dart analyze lib/ || echo "Dart analysis completed with warnings"
 
-      - name: Try Release Build
+      - name: Build Android APK (Release)
         if: success()
         run: |
-          echo "=== Attempting Release APK build (diagnostic) ==="
-          set +e
-          flutter build apk --release --verbose 2>&1 | tee release-build.log || echo "Release build also failed"
-          set -e
-
-      - name: Build Android APK
-        if: success()
-        run: |
-          echo "=== Environment Variables ==="
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          echo "ANDROID_NDK=$ANDROID_NDK"
-          echo "JAVA_HOME=$JAVA_HOME"
-          echo "PATH=$PATH"
-          echo ""
-          echo "=== local.properties content ==="
-          cat android/local.properties || echo "local.properties not found!"
-          echo ""
-          echo "=== Verify Flutter executable ==="
-          which flutter && flutter --version && flutter doctor -v || echo "Flutter not found"
-          echo ""
-          echo "=== Gradle wrapper check ==="
-          ls -lah android/gradle/wrapper/gradle-wrapper.jar || echo "gradle-wrapper.jar not found"
-          echo ""
-          echo "=== Starting APK build with debug (minimal flags) ==="
+          echo "=== Building Release APK ==="
           set -o pipefail
-          flutter build apk --debug 2>&1 | tee apk-build.log
+          flutter build apk --release 2>&1 | tee release-build.log
           BUILD_EXIT_CODE=$?
           echo ""
           echo "Build exit code: $BUILD_EXIT_CODE"
           echo ""
-          echo "=== Last 500 lines of build output ==="
-          tail -500 apk-build.log
           if [ $BUILD_EXIT_CODE -ne 0 ]; then
-            exit $BUILD_EXIT_CODE
+            echo "Release build failed. Attempting debug build..."
+            echo "=== Attempting Debug APK build as fallback ==="
+            flutter build apk --debug 2>&1 | tee debug-build.log
+            exit $?
+          else
+            echo "Release build succeeded!"
+            ls -lah build/app/outputs/apk/release/app-release.apk 2>/dev/null && echo "Release APK found"
           fi
 
       - name: Build Android App Bundle
@@ -128,7 +109,8 @@ jobs:
         with:
           name: build-logs
           path: |
-            apk-build.log
+            release-build.log
+            debug-build.log
             aab-build.log
 
       - name: Upload build artifacts
@@ -137,5 +119,6 @@ jobs:
         with:
           name: android-build
           path: |
+            build/app/outputs/apk/release/
             build/app/outputs/apk/debug/
             build/app/outputs/bundle/debug/
