@@ -77,6 +77,14 @@ jobs:
           echo "=== Running Dart Analyze ==="
           dart analyze lib/ || echo "Dart analysis completed with warnings"
 
+      - name: Try Release Build
+        if: success()
+        run: |
+          echo "=== Attempting Release APK build (diagnostic) ==="
+          set +e
+          flutter build apk --release --verbose 2>&1 | tee release-build.log || echo "Release build also failed"
+          set -e
+
       - name: Build Android APK
         if: success()
         run: |
@@ -95,16 +103,9 @@ jobs:
           echo "=== Gradle wrapper check ==="
           ls -lah android/gradle/wrapper/gradle-wrapper.jar || echo "gradle-wrapper.jar not found"
           echo ""
-          echo "=== Clean Flutter build cache ==="
-          flutter clean
-          flutter pub get --verbose
-          echo ""
-          echo "=== Check Pubspec Lock ==="
-          head -20 pubspec.lock || echo "pubspec.lock not found"
-          echo ""
-          echo "=== Starting APK build with debug ==="
+          echo "=== Starting APK build with debug (minimal flags) ==="
           set -o pipefail
-          ORG_GRADLE_PROJECT_ANDROID_BUILD_TOOLS_VERSION=34.0.0 flutter build apk --debug --verbose --no-tree-shake-icons 2>&1 | tee apk-build.log
+          flutter build apk --debug 2>&1 | tee apk-build.log
           BUILD_EXIT_CODE=$?
           echo ""
           echo "Build exit code: $BUILD_EXIT_CODE"
