@@ -102,9 +102,9 @@ jobs:
           echo "=== Check Pubspec Lock ==="
           head -20 pubspec.lock || echo "pubspec.lock not found"
           echo ""
-          echo "=== Starting APK build with debug and Gradle stacktrace ==="
+          echo "=== Starting APK build with debug ==="
           set -o pipefail
-          flutter build apk --debug --verbose --no-tree-shake-icons -- --stacktrace 2>&1 | tee apk-build.log
+          ORG_GRADLE_PROJECT_ANDROID_BUILD_TOOLS_VERSION=34.0.0 flutter build apk --debug --verbose --no-tree-shake-icons 2>&1 | tee apk-build.log
           BUILD_EXIT_CODE=$?
           echo ""
           echo "Build exit code: $BUILD_EXIT_CODE"
