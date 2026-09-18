@@ -92,35 +92,27 @@ jobs:
           echo "=== Running Dart Analyze ==="
           dart analyze lib/ || echo "Dart analysis completed with warnings"
 
-      - name: Build Android APK (Release)
-        if: success()
-        run: |
-          echo "=== Building Release APK via flutter ==="
-          set -o pipefail
-          flutter build apk --release 2>&1 | tail -200 | tee release-build.log
-          BUILD_EXIT_CODE=$?
-          echo ""
-          echo "Build exit code: $BUILD_EXIT_CODE"
-          echo ""
-          if [ $BUILD_EXIT_CODE -ne 0 ]; then
-            echo "Flutter build failed. Trying direct gradle build..."
-            echo "=== Attempting direct Gradle build ==="
-            cd android
-            bash ./gradlew assembleRelease 2>&1 | tail -200 | tee gradle-build.log
-            GRADLE_EXIT=$?
-            cd ..
-            echo "Gradle exit code: $GRADLE_EXIT"
-            exit $GRADLE_EXIT
-          else
-            echo "Release build succeeded!"
-            ls -lah build/app/outputs/apk/release/app-release.apk 2>/dev/null && echo "Release APK found"
-          fi
-
       - name: Build Android App Bundle
         if: success()
         run: |
+          echo "=== Building App Bundle (AAB) ==="
           set -o pipefail
-          flutter build appbundle --verbose 2>&1 | tee aab-build.log || (tail -200 aab-build.log && exit 1)
+          flutter build appbundle --release 2>&1 | tail -200 | tee aab-build.log
+          AAB_EXIT=$?
+          echo ""
+          echo "AAB Build exit code: $AAB_EXIT"
+          if [ $AAB_EXIT -eq 0 ]; then
+            echo "AAB build succeeded!"
+            ls -lah build/app/outputs/bundle/release/app-release.aab 2>/dev/null && echo "AAB found"
+            exit 0
+          fi
+
+          echo ""
+          echo "=== AAB build failed. Trying APK release ==="
+          flutter build apk --release 2>&1 | tail -200 | tee release-apk.log
+          APK_EXIT=$?
+          echo "APK Build exit code: $APK_EXIT"
+          exit $APK_EXIT
 
       - name: Upload build logs
         if: always()
@@ -128,9 +120,11 @@ jobs:
         with:
           name: build-logs
           path: |
+            aab-build.log
+            release-apk.log
+            gradle-build.log
             release-build.log
             debug-build.log
-            aab-build.log
 
       - name: Upload build artifacts
         if: success()
@@ -139,5 +133,6 @@ jobs:
           name: android-build
           path: |
             build/app/outputs/apk/release/
+            build/app/outputs/bundle/release/
             build/app/outputs/apk/debug/
             build/app/outputs/bundle/debug/
