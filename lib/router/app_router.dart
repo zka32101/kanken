@@ -20,6 +20,8 @@ import '../screens/notification_center_screen.dart';
 import '../screens/shop_screen.dart';
 import '../screens/user_profile_screen.dart';
 import '../screens/mock_exam_modes_screen.dart';
+import '../screens/leaderboard_screen.dart';
+import '../screens/friend_challenges_screen.dart';
 import '../models/multiplayer.dart';
 import '../models/mock_exam.dart';
 import '../views/index.dart';
@@ -219,6 +221,20 @@ final appRouter = GoRouter(
           name: 'profile',
           builder: (context, state) => const UserProfileScreen(),
         ),
+
+        // リーダーボード
+        GoRoute(
+          path: 'leaderboard',
+          name: 'leaderboard',
+          builder: (context, state) => const LeaderboardScreen(),
+        ),
+
+        // フレンドチャレンジ
+        GoRoute(
+          path: 'friend-challenges',
+          name: 'friendChallenges',
+          builder: (context, state) => const FriendChallengesScreen(),
+        ),
       ],
     ),
   ],
@@ -320,4 +336,10 @@ extension NavigationExtension on BuildContext {
 
   /// ユーザープロフィールに遷移
   void goProfile() => push('/profile');
+
+  /// リーダーボードに遷移
+  void goLeaderboard() => push('/leaderboard');
+
+  /// フレンドチャレンジに遷移
+  void goFriendChallenges() => push('/friend-challenges');
 }

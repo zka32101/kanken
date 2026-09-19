@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/mock_exam_modes.dart';
+import '../models/achievement.dart';
 import '../providers/exam_session_provider.dart';
 import '../providers/exam_analysis_provider.dart';
 import '../providers/achievement_provider.dart';
+import '../providers/leaderboard_provider.dart';
 import '../widgets/achievement_unlock_dialog.dart';
 
 class MockExamResultScreen extends ConsumerStatefulWidget {
@@ -27,6 +29,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
   void initState() {
     super.initState();
     _createAndSaveAnalysis();
+    _updateLeaderboardScore();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndShowAchievements();
     });
@@ -169,6 +172,22 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
 
   bool _isUnlocked(String id, List<Achievement> achievements) {
     return achievements.any((a) => a.id == id && a.isUnlocked);
+  }
+
+  Future<void> _updateLeaderboardScore() async {
+    try {
+      final analysis = await _buildAnalysisFromSession();
+      final accuracy = analysis.overallAccuracy;
+      final score = (accuracy * 100).toInt();
+
+      await updateUserScore(
+        score: score,
+        examsCompleted: 1,
+        averageAccuracy: accuracy,
+      );
+    } catch (e) {
+      // エラーサイレント処理
+    }
   }
 
   Future<void> _createAndSaveAnalysis() async {
