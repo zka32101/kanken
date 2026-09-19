@@ -1,0 +1,225 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/achievement.dart';
+import '../providers/exam_analysis_provider.dart';
+
+/// ユーザーのアチーブメント一覧を取得
+final userAchievementsProvider = FutureProvider<List<Achievement>>((ref) async {
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  if (userId == null) return [];
+
+  try {
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('achievements')
+        .get();
+
+    return doc.docs
+        .map((d) => Achievement.fromJson(d.data()))
+        .toList();
+  } catch (e) {
+    return [];
+  }
+});
+
+/// 新しく獲得したアチーブメントを判定
+final newAchievementsProvider = FutureProvider.family<
+    List<Achievement>,
+    (ExamAnalysisResult, List<Achievement>)
+>((ref, params) async {
+  final analysis = params.$1;
+  final currentAchievements = params.$2;
+
+  return _detectNewAchievements(analysis, currentAchievements);
+});
+
+/// アチーブメント統計
+class AchievementStats {
+  final int totalAchievements;
+  final int unlockedCount;
+  final int totalPoints;
+  final List<Achievement> recentlyUnlocked;
+
+  const AchievementStats({
+    required this.totalAchievements,
+    required this.unlockedCount,
+    required this.totalPoints,
+    required this.recentlyUnlocked,
+  });
+}
+
+/// アチーブメント統計プロバイダー
+final achievementStatsProvider = FutureProvider<AchievementStats>((ref) async {
+  final achievements = await ref.watch(userAchievementsProvider.future);
+
+  final unlockedAchievements = achievements.where((a) => a.isUnlocked).toList();
+  final totalPoints =
+      unlockedAchievements.fold<int>(0, (sum, a) => sum + a.points);
+
+  // 最近獲得したアチーブメント（30日以内）
+  final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
+  final recentlyUnlocked = unlockedAchievements
+      .where((a) =>
+          a.unlockedAt != null && a.unlockedAt!.isAfter(thirtyDaysAgo))
+      .toList()
+    ..sort((a, b) => (b.unlockedAt ?? DateTime(0))
+        .compareTo(a.unlockedAt ?? DateTime(0)));
+
+  return AchievementStats(
+    totalAchievements: AchievementDefinition.allAchievements.length,
+    unlockedCount: unlockedAchievements.length,
+    totalPoints: totalPoints,
+    recentlyUnlocked: recentlyUnlocked,
+  );
+});
+
+/// 新しいアチーブメントを検出
+Future<List<Achievement>> _detectNewAchievements(
+  ExamAnalysisResult analysis,
+  List<Achievement> currentAchievements,
+) async {
+  final newAchievements = <Achievement>[];
+
+  // 試験成績に基づくアチーブメント
+  final accuracy = analysis.overallAccuracy * 100;
+
+  if (accuracy >= 90 && !_isUnlocked('exam_90plus', currentAchievements)) {
+    newAchievements.add(
+      Achievement(
+        id: 'exam_90plus',
+        name: '優秀者',
+        description: '90点以上の成績を獲得',
+        icon: '⭐',
+        type: AchievementType.examScore,
+        points: 100,
+        isUnlocked: true,
+        unlockedAt: DateTime.now(),
+      ),
+    );
+  }
+
+  if (accuracy >= 80 && !_isUnlocked('exam_80plus', currentAchievements)) {
+    newAchievements.add(
+      Achievement(
+        id: 'exam_80plus',
+        name: '良好',
+        description: '80点以上の成績を獲得',
+        icon: '✨',
+        type: AchievementType.examScore,
+        points: 50,
+        isUnlocked: true,
+        unlockedAt: DateTime.now(),
+      ),
+    );
+  }
+
+  if (accuracy >= 100 && !_isUnlocked('exam_perfect', currentAchievements)) {
+    newAchievements.add(
+      Achievement(
+        id: 'exam_perfect',
+        name: '完璧',
+        description: '100点を獲得',
+        icon: '🏆',
+        type: AchievementType.examScore,
+        points: 200,
+        isUnlocked: true,
+        unlockedAt: DateTime.now(),
+      ),
+    );
+  }
+
+  // カテゴリ習得に基づくアチーブメント
+  for (final entry in analysis.categoryPerformance.entries) {
+    final category = entry.key;
+    final performance = entry.value;
+
+    if (performance.accuracy >= 0.9) {
+      if (category == 'reading' &&
+          !_isUnlocked('category_reading_master', currentAchievements)) {
+        newAchievements.add(
+          Achievement(
+            id: 'category_reading_master',
+            name: '読み方マスター',
+            description: '「読み」で90%以上の正答率を達成',
+            icon: '📖',
+            type: AchievementType.category,
+            points: 75,
+            isUnlocked: true,
+            unlockedAt: DateTime.now(),
+          ),
+        );
+      }
+
+      if (category == 'meaning' &&
+          !_isUnlocked('category_meaning_master', currentAchievements)) {
+        newAchievements.add(
+          Achievement(
+            id: 'category_meaning_master',
+            name: '意味マスター',
+            description: '「意味」で90%以上の正答率を達成',
+            icon: '📚',
+            type: AchievementType.category,
+            points: 75,
+            isUnlocked: true,
+            unlockedAt: DateTime.now(),
+          ),
+        );
+      }
+    }
+  }
+
+  // すべてのカテゴリでマスター達成をチェック
+  final allCategoriesMastered = analysis.categoryPerformance.values
+      .every((p) => p.accuracy >= 0.9);
+  if (allCategoriesMastered &&
+      !_isUnlocked('category_all_master', currentAchievements)) {
+    newAchievements.add(
+      Achievement(
+        id: 'category_all_master',
+        name: 'グランドマスター',
+        description: 'すべてのカテゴリで90%以上を達成',
+        icon: '👑',
+        type: AchievementType.category,
+        points: 300,
+        isUnlocked: true,
+        unlockedAt: DateTime.now(),
+      ),
+    );
+  }
+
+  return newAchievements;
+}
+
+bool _isUnlocked(String id, List<Achievement> achievements) {
+  return achievements.any((a) => a.id == id && a.isUnlocked);
+}
+
+/// アチーブメントをFirebaseに保存
+Future<void> saveAchievements(List<Achievement> achievements) async {
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  if (userId == null) return;
+
+  try {
+    final batch = FirebaseFirestore.instance.batch();
+
+    for (final achievement in achievements) {
+      final docRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('achievements')
+          .doc(achievement.id);
+
+      batch.set(
+        docRef,
+        achievement.toJson(),
+        SetOptions(merge: true),
+      );
+    }
+
+    await batch.commit();
+  } catch (e) {
+    // エラーログなど必要に応じて処理
+  }
+}
