@@ -88,6 +88,22 @@ class HomeScreen extends ConsumerWidget {
               _buildFriendPreview(context, ref),
               const SizedBox(height: 24),
 
+              // 模擬試験モード選択
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.assignment),
+                  label: const Text('模擬試験モード'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: Colors.green.shade600,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () => context.goMockExamModes(),
+                ),
+              ),
+              const SizedBox(height: 8),
+
               // P4・P5 機能クイックアクセス
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

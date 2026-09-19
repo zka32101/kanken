@@ -19,6 +19,7 @@ import '../screens/friend_management_screen.dart';
 import '../screens/notification_center_screen.dart';
 import '../screens/shop_screen.dart';
 import '../screens/user_profile_screen.dart';
+import '../screens/mock_exam_modes_screen.dart';
 import '../models/multiplayer.dart';
 import '../models/mock_exam.dart';
 import '../views/index.dart';
@@ -128,6 +129,13 @@ final appRouter = GoRouter(
           path: 'mock-exam',
           name: 'mockExam',
           builder: (context, state) => const MockExamScreen(),
+        ),
+
+        // 模擬試験モード選択
+        GoRoute(
+          path: 'mock-exam-modes',
+          name: 'mockExamModes',
+          builder: (context, state) => const MockExamModesScreen(),
         ),
 
         // 保護者ダッシュボード
@@ -280,6 +288,9 @@ extension NavigationExtension on BuildContext {
 
   /// 模擬試験に遷移
   void goMockExam() => push('/mock-exam');
+
+  /// 模擬試験モード選択に遷移
+  void goMockExamModes() => push('/mock-exam-modes');
 
   /// 保護者ダッシュボードに遷移
   void goParentDashboard() => push('/parent-dashboard');
