@@ -227,6 +227,12 @@ class NotificationCenterScreen extends ConsumerWidget {
         return Colors.red;
       case 'daily_challenge':
         return Colors.cyan;
+      case 'review_due':
+        return Colors.teal;
+      case 'goal_achieved':
+        return Colors.deepPurple;
+      case 'challenge_received':
+        return Colors.pinkAccent;
       default:
         return Colors.grey;
     }
@@ -250,6 +256,12 @@ class NotificationCenterScreen extends ConsumerWidget {
         return Icons.emoji_events;
       case 'daily_challenge':
         return Icons.today;
+      case 'review_due':
+        return Icons.repeat;
+      case 'goal_achieved':
+        return Icons.flag_circle;
+      case 'challenge_received':
+        return Icons.sports_kabaddi;
       default:
         return Icons.notifications;
     }
@@ -420,6 +432,25 @@ class _NotificationSettingsDialogState
                 setState(() {
                   _settings =
                       _settings.copyWith(dailyChallengeEnabled: value);
+                });
+              },
+            ),
+            _buildSettingTile(
+              '復習リマインダー',
+              _settings.reviewReminderEnabled,
+              (value) {
+                setState(() {
+                  _settings =
+                      _settings.copyWith(reviewReminderEnabled: value);
+                });
+              },
+            ),
+            _buildSettingTile(
+              '目標達成',
+              _settings.goalAchievedEnabled,
+              (value) {
+                setState(() {
+                  _settings = _settings.copyWith(goalAchievedEnabled: value);
                 });
               },
             ),

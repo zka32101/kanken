@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../models/learning_goal.dart';
+import '../models/notifications.dart';
 
 /// ユーザーのアクティブな学習目標一覧
 final activeLearningGoalsProvider = FutureProvider<List<LearningGoal>>((ref) async {
@@ -107,6 +108,37 @@ Future<void> updateGoalProgress({
       if (isNowAchieved) 'isAchieved': true,
       if (isNowAchieved) 'achievedAt': Timestamp.now(),
     });
+
+    if (isNowAchieved) {
+      await _createGoalAchievedNotification(userId, goal);
+    }
+  } catch (e) {
+    // エラーログなど必要に応じて処理
+  }
+}
+
+/// 目標達成通知を作成
+Future<void> _createGoalAchievedNotification(String userId, LearningGoal goal) async {
+  try {
+    final notificationId = FirebaseFirestore.instance.collection('users').doc().id;
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('notifications')
+        .doc(notificationId)
+        .set(
+          AppNotification(
+            notificationId: notificationId,
+            userId: userId,
+            type: NotificationType.goalAchieved.value,
+            title: '🎉 目標達成！',
+            message: '「${goal.typeLabel}」の目標（${goal.targetValue}${goal.unit}）を達成しました！',
+            relatedId: goal.goalId,
+            isRead: false,
+            createdAt: DateTime.now(),
+          ).toJson(),
+        );
   } catch (e) {
     // エラーログなど必要に応じて処理
   }

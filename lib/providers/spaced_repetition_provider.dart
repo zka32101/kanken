@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/spaced_repetition_item.dart';
+import '../models/notifications.dart';
 
 /// 今日復習すべきアイテム一覧プロバイダー
 final dueReviewItemsProvider = FutureProvider<List<SpacedRepetitionItem>>((ref) async {
@@ -112,6 +113,68 @@ Future<void> addToSpacedRepetition({
     // エラーログなど必要に応じて処理
   }
 }
+
+/// 復習リマインダー通知チェック（1日1回、期限アイテムがあれば通知）
+final reviewReminderCheckProvider = FutureProvider<void>((ref) async {
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  if (userId == null) return;
+
+  try {
+    final today = DateTime.now();
+    final todayKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+
+    final markerRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('reviewReminderMarkers')
+        .doc(todayKey);
+
+    final markerDoc = await markerRef.get();
+    if (markerDoc.exists) return; // 本日は既にチェック済み
+
+    await markerRef.set({'checkedAt': Timestamp.now()});
+
+    final dueSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('spacedRepetitionItems')
+        .where('nextReviewDate', isLessThanOrEqualTo: Timestamp.now())
+        .limit(1)
+        .get();
+
+    if (dueSnapshot.docs.isEmpty) return;
+
+    final countSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('spacedRepetitionItems')
+        .where('nextReviewDate', isLessThanOrEqualTo: Timestamp.now())
+        .count()
+        .get();
+
+    final dueCount = countSnapshot.count ?? 1;
+    final notificationId = FirebaseFirestore.instance.collection('users').doc().id;
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('notifications')
+        .doc(notificationId)
+        .set(
+          AppNotification(
+            notificationId: notificationId,
+            userId: userId,
+            type: NotificationType.reviewDue.value,
+            title: '📚 復習の時間です',
+            message: '$dueCount問の復習期限が来ています。忘れないうちに復習しましょう！',
+            isRead: false,
+            createdAt: DateTime.now(),
+          ).toJson(),
+        );
+  } catch (e) {
+    // エラーログなど必要に応じて処理
+  }
+});
 
 /// 復習結果を記録し、次回の間隔を計算して保存
 /// quality: 0-5 (0-2=不正解, 3-5=正解)

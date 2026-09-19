@@ -8,6 +8,7 @@ import '../widgets/index.dart';
 import '../router/app_router.dart';
 import '../providers/ranking_provider.dart';
 import '../providers/friend_provider.dart';
+import '../providers/spaced_repetition_provider.dart';
 import '../models/user_ranking.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -36,6 +37,7 @@ class HomeScreen extends ConsumerWidget {
     final currentLevel = ref.watch(currentLevelProvider);
     final user = ref.watch(currentUserProvider);
     final weakKanjiCount = ref.watch(_weakKanjiCountProvider);
+    ref.watch(reviewReminderCheckProvider); // 復習リマインダーの自動チェック
 
     return Scaffold(
       appBar: AppBar(

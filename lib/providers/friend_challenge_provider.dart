@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../models/friend_challenge.dart';
+import '../models/notifications.dart';
 
 /// ユーザーが受け取ったチャレンジプロバイダー
 final receivedChallengesProvider = FutureProvider<List<FriendChallenge>>((ref) async {
@@ -97,6 +98,45 @@ Future<void> createChallenge({
           'createdAt': Timestamp.now(),
           'dueAt': Timestamp.fromDate(dueAt),
         });
+
+    await _createChallengeReceivedNotification(
+      challengeeUserId: challengeeUserId,
+      challengerName: userName,
+      targetScore: targetScore,
+      challengeId: challengeId,
+    );
+  } catch (e) {
+    // エラーログなど必要に応じて処理
+  }
+}
+
+/// チャレンジ受信通知を作成
+Future<void> _createChallengeReceivedNotification({
+  required String challengeeUserId,
+  required String challengerName,
+  required int targetScore,
+  required String challengeId,
+}) async {
+  try {
+    final notificationId = FirebaseFirestore.instance.collection('users').doc().id;
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(challengeeUserId)
+        .collection('notifications')
+        .doc(notificationId)
+        .set(
+          AppNotification(
+            notificationId: notificationId,
+            userId: challengeeUserId,
+            type: NotificationType.challengeReceived.value,
+            title: '🎯 新しいチャレンジ',
+            message: '$challengerNameさんから目標スコア$targetScore点のチャレンジが届きました！',
+            relatedId: challengeId,
+            isRead: false,
+            createdAt: DateTime.now(),
+          ).toJson(),
+        );
   } catch (e) {
     // エラーログなど必要に応じて処理
   }

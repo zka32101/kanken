@@ -9,7 +9,10 @@ enum NotificationType {
   friendRequest('friend_request', 'フレンド要求'),
   friendAccepted('friend_accepted', 'フレンド承認'),
   achievement('achievement', '実績達成'),
-  dailyChallenge('daily_challenge', 'デイリーチャレンジ');
+  dailyChallenge('daily_challenge', 'デイリーチャレンジ'),
+  reviewDue('review_due', '復習リマインダー'),
+  goalAchieved('goal_achieved', '目標達成'),
+  challengeReceived('challenge_received', 'チャレンジ受信');
 
   final String value;
   final String label;
@@ -79,6 +82,8 @@ class NotificationSettings {
   final bool friendRequestEnabled;
   final bool achievementEnabled;
   final bool dailyChallengeEnabled;
+  final bool reviewReminderEnabled;
+  final bool goalAchievedEnabled;
   final bool soundEnabled;
   final bool vibrationEnabled;
   final DateTime updatedAt;
@@ -92,6 +97,8 @@ class NotificationSettings {
     this.friendRequestEnabled = true,
     this.achievementEnabled = true,
     this.dailyChallengeEnabled = true,
+    this.reviewReminderEnabled = true,
+    this.goalAchievedEnabled = true,
     this.soundEnabled = true,
     this.vibrationEnabled = true,
     required this.updatedAt,
@@ -106,6 +113,8 @@ class NotificationSettings {
     'friendRequestEnabled': friendRequestEnabled,
     'achievementEnabled': achievementEnabled,
     'dailyChallengeEnabled': dailyChallengeEnabled,
+    'reviewReminderEnabled': reviewReminderEnabled,
+    'goalAchievedEnabled': goalAchievedEnabled,
     'soundEnabled': soundEnabled,
     'vibrationEnabled': vibrationEnabled,
     'updatedAt': Timestamp.fromDate(updatedAt),
@@ -121,6 +130,8 @@ class NotificationSettings {
         friendRequestEnabled: json['friendRequestEnabled'] as bool? ?? true,
         achievementEnabled: json['achievementEnabled'] as bool? ?? true,
         dailyChallengeEnabled: json['dailyChallengeEnabled'] as bool? ?? true,
+        reviewReminderEnabled: json['reviewReminderEnabled'] as bool? ?? true,
+        goalAchievedEnabled: json['goalAchievedEnabled'] as bool? ?? true,
         soundEnabled: json['soundEnabled'] as bool? ?? true,
         vibrationEnabled: json['vibrationEnabled'] as bool? ?? true,
         updatedAt: json['updatedAt'] is Timestamp
@@ -136,6 +147,8 @@ class NotificationSettings {
     bool? friendRequestEnabled,
     bool? achievementEnabled,
     bool? dailyChallengeEnabled,
+    bool? reviewReminderEnabled,
+    bool? goalAchievedEnabled,
     bool? soundEnabled,
     bool? vibrationEnabled,
   }) =>
@@ -150,6 +163,9 @@ class NotificationSettings {
         achievementEnabled: achievementEnabled ?? this.achievementEnabled,
         dailyChallengeEnabled:
             dailyChallengeEnabled ?? this.dailyChallengeEnabled,
+        reviewReminderEnabled:
+            reviewReminderEnabled ?? this.reviewReminderEnabled,
+        goalAchievedEnabled: goalAchievedEnabled ?? this.goalAchievedEnabled,
         soundEnabled: soundEnabled ?? this.soundEnabled,
         vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
         updatedAt: DateTime.now(),
