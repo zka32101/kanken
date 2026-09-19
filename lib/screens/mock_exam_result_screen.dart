@@ -239,6 +239,51 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
       );
     }
 
+    const categoryMasterInfo = {
+      'reading': ('category_reading_master', '読み方マスター', '「読み」で90%以上の正答率を達成', '📖', 75),
+      'meaning': ('category_meaning_master', '意味マスター', '「意味」で90%以上の正答率を達成', '📚', 75),
+      'stroke': ('category_stroke_master', '筆順マスター', '「筆順」で90%以上の正答率を達成', '✍️', 75),
+      'writing': ('category_writing_master', '書き取りマスター', '「書き取り」で90%以上の正答率を達成', '📝', 75),
+      'usage': ('category_usage_master', '使い方マスター', '「使い方」で90%以上の正答率を達成', '🈶', 75),
+    };
+
+    for (final entry in analysis.categoryPerformance.entries) {
+      final info = categoryMasterInfo[entry.key];
+      if (info == null || entry.value.accuracy < 0.9) continue;
+      if (_isUnlocked(info.$1, currentAchievements)) continue;
+
+      newAchievements.add(
+        Achievement(
+          id: info.$1,
+          name: info.$2,
+          description: info.$3,
+          icon: info.$4,
+          type: AchievementType.category,
+          points: info.$5,
+          isUnlocked: true,
+          unlockedAt: DateTime.now(),
+        ),
+      );
+    }
+
+    final allCategoriesMastered = analysis.categoryPerformance.isNotEmpty &&
+        analysis.categoryPerformance.values.every((p) => p.accuracy >= 0.9);
+    if (allCategoriesMastered &&
+        !_isUnlocked('category_all_master', currentAchievements)) {
+      newAchievements.add(
+        Achievement(
+          id: 'category_all_master',
+          name: 'グランドマスター',
+          description: 'すべてのカテゴリで90%以上を達成',
+          icon: '👑',
+          type: AchievementType.category,
+          points: 300,
+          isUnlocked: true,
+          unlockedAt: DateTime.now(),
+        ),
+      );
+    }
+
     return newAchievements;
   }
 

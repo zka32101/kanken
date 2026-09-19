@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/spaced_repetition_item.dart';
 import '../models/notifications.dart';
+import '../models/achievement.dart';
 
 /// 今日復習すべきアイテム一覧プロバイダー
 final dueReviewItemsProvider = FutureProvider<List<SpacedRepetitionItem>>((ref) async {
@@ -194,6 +195,88 @@ Future<void> recordReviewResult({
         .collection('spacedRepetitionItems')
         .doc(item.itemId)
         .set(updatedItem.toJson());
+
+    final justMastered = item.masteryLevel != 'マスター' && updatedItem.masteryLevel == 'マスター';
+    if (justMastered) {
+      await _incrementMasteredCountAndCheckAchievements(userId);
+    }
+  } catch (e) {
+    // エラーログなど必要に応じて処理
+  }
+}
+
+const _reviewMasterAchievements = {
+  10: ('review_master_10', '復習の達人', '間隔反復学習で10問マスター', '🔁', 75),
+  50: ('review_master_50', '復習マスター', '間隔反復学習で50問マスター', '🔂', 200),
+};
+
+/// マスター済み問題数を更新し、達成したバッジを付与
+Future<void> _incrementMasteredCountAndCheckAchievements(String userId) async {
+  try {
+    final statsRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('reviewStats')
+        .doc('summary');
+
+    final newMasteredCount = await FirebaseFirestore.instance.runTransaction<int>((tx) async {
+      final snapshot = await tx.get(statsRef);
+      final current = (snapshot.data()?['masteredCount'] as int?) ?? 0;
+      final updated = current + 1;
+      tx.set(statsRef, {'masteredCount': updated}, SetOptions(merge: true));
+      return updated;
+    });
+
+    final info = _reviewMasterAchievements[newMasteredCount];
+    if (info == null) return;
+
+    final achievementDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('achievements')
+        .doc(info.$1)
+        .get();
+
+    if (achievementDoc.exists && (achievementDoc.data()?['isUnlocked'] == true)) {
+      return;
+    }
+
+    final achievement = Achievement(
+      id: info.$1,
+      name: info.$2,
+      description: info.$3,
+      icon: info.$4,
+      type: AchievementType.review,
+      points: info.$5,
+      isUnlocked: true,
+      unlockedAt: DateTime.now(),
+    );
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('achievements')
+        .doc(info.$1)
+        .set(achievement.toJson(), SetOptions(merge: true));
+
+    final notificationId = FirebaseFirestore.instance.collection('users').doc().id;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('notifications')
+        .doc(notificationId)
+        .set(
+          AppNotification(
+            notificationId: notificationId,
+            userId: userId,
+            type: NotificationType.achievement.value,
+            title: '🎉 新しいバッジを獲得！',
+            message: '「${info.$2}」バッジを獲得しました！',
+            relatedId: info.$1,
+            isRead: false,
+            createdAt: DateTime.now(),
+          ).toJson(),
+        );
   } catch (e) {
     // エラーログなど必要に応じて処理
   }

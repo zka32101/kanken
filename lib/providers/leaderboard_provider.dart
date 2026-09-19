@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/leaderboard.dart';
 import '../models/achievement.dart';
+import '../models/notifications.dart';
 
 /// 日次リーダーボードプロバイダー
 final dailyLeaderboardProvider = FutureProvider<LeaderboardStats>((ref) async {
@@ -74,6 +75,10 @@ Future<LeaderboardStats> _fetchLeaderboard(LeaderboardPeriod period) async {
         final userData = userScoreDoc.data()!;
         final userRank = await _getUserRank(userId, period);
         currentUserEntry = LeaderboardEntry.fromJson(userData).copyWith(rank: userRank ?? 0);
+
+        if (period == LeaderboardPeriod.allTime && userRank != null && userRank > 0) {
+          await _checkLeaderboardRankAchievement(userId, userRank);
+        }
       }
     }
 
@@ -171,6 +176,72 @@ Future<void> updateUserScore({
     });
 
     await batch.commit();
+  } catch (e) {
+    // エラーログなど必要に応じて処理
+  }
+}
+
+const _leaderboardRankAchievements = {
+  10: ('social_leaderboard_top10', 'トップランカー', 'リーダーボードでTOP10入り', '📈', 150),
+  3: ('social_leaderboard_top3', 'エリート', 'リーダーボードでTOP3入り', '🥇', 300),
+};
+
+/// リーダーボード順位に応じたバッジ達成をチェック
+Future<void> _checkLeaderboardRankAchievement(String userId, int rank) async {
+  try {
+    for (final entry in _leaderboardRankAchievements.entries) {
+      final threshold = entry.key;
+      final info = entry.value;
+      if (rank > threshold) continue;
+
+      final achievementDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('achievements')
+          .doc(info.$1)
+          .get();
+
+      if (achievementDoc.exists && (achievementDoc.data()?['isUnlocked'] == true)) {
+        continue;
+      }
+
+      final achievement = Achievement(
+        id: info.$1,
+        name: info.$2,
+        description: info.$3,
+        icon: info.$4,
+        type: AchievementType.social,
+        points: info.$5,
+        isUnlocked: true,
+        unlockedAt: DateTime.now(),
+      );
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('achievements')
+          .doc(info.$1)
+          .set(achievement.toJson(), SetOptions(merge: true));
+
+      final notificationId = FirebaseFirestore.instance.collection('users').doc().id;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('notifications')
+          .doc(notificationId)
+          .set(
+            AppNotification(
+              notificationId: notificationId,
+              userId: userId,
+              type: NotificationType.achievement.value,
+              title: '🎉 新しいバッジを獲得！',
+              message: '「${info.$2}」バッジを獲得しました！',
+              relatedId: info.$1,
+              isRead: false,
+              createdAt: DateTime.now(),
+            ).toJson(),
+          );
+    }
   } catch (e) {
     // エラーログなど必要に応じて処理
   }

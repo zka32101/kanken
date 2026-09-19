@@ -55,6 +55,9 @@ enum AchievementType {
   challenge,       // チャレンジ完了
   speed,           // 速度
   accuracy,        // 正答率
+  social,          // ソーシャル
+  review,          // 復習・間隔反復
+  goal,            // 学習目標達成
 }
 
 /// アチーブメント定義
@@ -204,6 +207,133 @@ class AchievementDefinition {
       icon: '🎖️',
       type: AchievementType.accuracy,
       points: 100,
+      isUnlocked: false,
+    ),
+
+    // カテゴリ習得バッジ（追加分）
+    Achievement(
+      id: 'category_stroke_master',
+      name: '筆順マスター',
+      description: '「筆順」で90%以上の正答率を達成',
+      icon: '✍️',
+      type: AchievementType.category,
+      points: 75,
+      isUnlocked: false,
+    ),
+    Achievement(
+      id: 'category_writing_master',
+      name: '書き取りマスター',
+      description: '「書き取り」で90%以上の正答率を達成',
+      icon: '📝',
+      type: AchievementType.category,
+      points: 75,
+      isUnlocked: false,
+    ),
+    Achievement(
+      id: 'category_usage_master',
+      name: '使い方マスター',
+      description: '「使い方」で90%以上の正答率を達成',
+      icon: '🈶',
+      type: AchievementType.category,
+      points: 75,
+      isUnlocked: false,
+    ),
+
+    // チャレンジバッジ
+    Achievement(
+      id: 'challenge_win_1',
+      name: '初勝利',
+      description: 'フレンドチャレンジで初めて勝利',
+      icon: '🥊',
+      type: AchievementType.challenge,
+      points: 50,
+      isUnlocked: false,
+    ),
+    Achievement(
+      id: 'challenge_win_5',
+      name: '連戦連勝',
+      description: 'フレンドチャレンジで5勝達成',
+      icon: '🏅',
+      type: AchievementType.challenge,
+      points: 150,
+      isUnlocked: false,
+    ),
+    Achievement(
+      id: 'challenge_win_10',
+      name: 'チャンピオン',
+      description: 'フレンドチャレンジで10勝達成',
+      icon: '🏆',
+      type: AchievementType.challenge,
+      points: 300,
+      isUnlocked: false,
+    ),
+
+    // ソーシャルバッジ
+    Achievement(
+      id: 'social_friends_5',
+      name: '友達の輪',
+      description: 'フレンドを5人追加',
+      icon: '👫',
+      type: AchievementType.social,
+      points: 50,
+      isUnlocked: false,
+    ),
+    Achievement(
+      id: 'social_leaderboard_top10',
+      name: 'トップランカー',
+      description: 'リーダーボードでTOP10入り',
+      icon: '📈',
+      type: AchievementType.social,
+      points: 150,
+      isUnlocked: false,
+    ),
+    Achievement(
+      id: 'social_leaderboard_top3',
+      name: 'エリート',
+      description: 'リーダーボードでTOP3入り',
+      icon: '🥇',
+      type: AchievementType.social,
+      points: 300,
+      isUnlocked: false,
+    ),
+
+    // 復習バッジ
+    Achievement(
+      id: 'review_master_10',
+      name: '復習の達人',
+      description: '間隔反復学習で10問マスター',
+      icon: '🔁',
+      type: AchievementType.review,
+      points: 75,
+      isUnlocked: false,
+    ),
+    Achievement(
+      id: 'review_master_50',
+      name: '復習マスター',
+      description: '間隔反復学習で50問マスター',
+      icon: '🔂',
+      type: AchievementType.review,
+      points: 200,
+      isUnlocked: false,
+    ),
+
+    // 学習目標バッジ
+    Achievement(
+      id: 'goal_first',
+      name: '目標達成',
+      description: '学習目標を初めて達成',
+      icon: '🚩',
+      type: AchievementType.goal,
+      points: 50,
+      isUnlocked: false,
+    ),
+    Achievement(
+      id: 'goal_5',
+      name: 'ゴールゲッター',
+      description: '学習目標を5個達成',
+      icon: '🎌',
+      type: AchievementType.goal,
+      points: 200,
       isUnlocked: false,
     ),
   ];

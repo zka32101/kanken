@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/achievement.dart';
 import '../providers/exam_analysis_provider.dart';
 
-/// ユーザーのアチーブメント一覧を取得
+/// ユーザーのアチーブメント一覧を取得（全定義バッジと獲得状況をマージ）
 final userAchievementsProvider = FutureProvider<List<Achievement>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
-  if (userId == null) return [];
+  if (userId == null) return AchievementDefinition.allAchievements;
 
   try {
     final doc = await FirebaseFirestore.instance
@@ -16,11 +16,15 @@ final userAchievementsProvider = FutureProvider<List<Achievement>>((ref) async {
         .collection('achievements')
         .get();
 
-    return doc.docs
-        .map((d) => Achievement.fromJson(d.data()))
+    final unlockedById = {
+      for (final d in doc.docs) d.id: Achievement.fromJson(d.data()),
+    };
+
+    return AchievementDefinition.allAchievements
+        .map((defined) => unlockedById[defined.id] ?? defined)
         .toList();
   } catch (e) {
-    return [];
+    return AchievementDefinition.allAchievements;
   }
 });
 
@@ -160,6 +164,54 @@ Future<List<Achievement>> _detectNewAchievements(
             name: '意味マスター',
             description: '「意味」で90%以上の正答率を達成',
             icon: '📚',
+            type: AchievementType.category,
+            points: 75,
+            isUnlocked: true,
+            unlockedAt: DateTime.now(),
+          ),
+        );
+      }
+
+      if (category == 'stroke' &&
+          !_isUnlocked('category_stroke_master', currentAchievements)) {
+        newAchievements.add(
+          Achievement(
+            id: 'category_stroke_master',
+            name: '筆順マスター',
+            description: '「筆順」で90%以上の正答率を達成',
+            icon: '✍️',
+            type: AchievementType.category,
+            points: 75,
+            isUnlocked: true,
+            unlockedAt: DateTime.now(),
+          ),
+        );
+      }
+
+      if (category == 'writing' &&
+          !_isUnlocked('category_writing_master', currentAchievements)) {
+        newAchievements.add(
+          Achievement(
+            id: 'category_writing_master',
+            name: '書き取りマスター',
+            description: '「書き取り」で90%以上の正答率を達成',
+            icon: '📝',
+            type: AchievementType.category,
+            points: 75,
+            isUnlocked: true,
+            unlockedAt: DateTime.now(),
+          ),
+        );
+      }
+
+      if (category == 'usage' &&
+          !_isUnlocked('category_usage_master', currentAchievements)) {
+        newAchievements.add(
+          Achievement(
+            id: 'category_usage_master',
+            name: '使い方マスター',
+            description: '「使い方」で90%以上の正答率を達成',
+            icon: '🈶',
             type: AchievementType.category,
             points: 75,
             isUnlocked: true,

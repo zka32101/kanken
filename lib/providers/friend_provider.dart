@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kanken/models/friend.dart';
+import 'package:kanken/models/achievement.dart';
+import 'package:kanken/models/notifications.dart';
 import 'firebase_provider.dart';
 
 /// フレンドリストプロバイダー
@@ -191,6 +193,8 @@ class FriendNotifier extends StateNotifier<AsyncValue<void>> {
           .doc(request.requestId)
           .delete();
 
+      await _checkFriendCountAchievement(_firestore, _currentUserId!);
+
       state = const AsyncValue.data(null);
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
@@ -252,5 +256,75 @@ class FriendNotifier extends StateNotifier<AsyncValue<void>> {
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     }
+  }
+}
+
+/// フレンド数に応じたバッジ達成をチェック
+Future<void> _checkFriendCountAchievement(
+  FirebaseFirestore firestore,
+  String userId,
+) async {
+  try {
+    const achievementId = 'social_friends_5';
+
+    final achievementDoc = await firestore
+        .collection('users')
+        .doc(userId)
+        .collection('achievements')
+        .doc(achievementId)
+        .get();
+
+    if (achievementDoc.exists && (achievementDoc.data()?['isUnlocked'] == true)) {
+      return;
+    }
+
+    final countSnapshot = await firestore
+        .collection('users')
+        .doc(userId)
+        .collection('friends')
+        .where('status', isEqualTo: 'friend')
+        .count()
+        .get();
+
+    if ((countSnapshot.count ?? 0) < 5) return;
+
+    final achievement = Achievement(
+      id: achievementId,
+      name: '友達の輪',
+      description: 'フレンドを5人追加',
+      icon: '👫',
+      type: AchievementType.social,
+      points: 50,
+      isUnlocked: true,
+      unlockedAt: DateTime.now(),
+    );
+
+    await firestore
+        .collection('users')
+        .doc(userId)
+        .collection('achievements')
+        .doc(achievementId)
+        .set(achievement.toJson(), SetOptions(merge: true));
+
+    final notificationId = firestore.collection('users').doc().id;
+    await firestore
+        .collection('users')
+        .doc(userId)
+        .collection('notifications')
+        .doc(notificationId)
+        .set(
+          AppNotification(
+            notificationId: notificationId,
+            userId: userId,
+            type: NotificationType.achievement.value,
+            title: '🎉 新しいバッジを獲得！',
+            message: '「友達の輪」バッジを獲得しました！',
+            relatedId: achievementId,
+            isRead: false,
+            createdAt: DateTime.now(),
+          ).toJson(),
+        );
+  } catch (e) {
+    // エラーログなど必要に応じて処理
   }
 }

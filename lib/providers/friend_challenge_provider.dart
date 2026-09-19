@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../models/friend_challenge.dart';
 import '../models/notifications.dart';
+import '../models/achievement.dart';
 
 /// ユーザーが受け取ったチャレンジプロバイダー
 final receivedChallengesProvider = FutureProvider<List<FriendChallenge>>((ref) async {
@@ -201,6 +202,12 @@ Future<void> submitChallengeScore({
           .update({
             'status': 'completed',
           });
+
+      final challenge = FriendChallenge.fromJson(data);
+      final winnerId = challenge.getWinner();
+      if (winnerId != null) {
+        await _incrementChallengeWinsAndCheckAchievements(winnerId);
+      }
     }
   } catch (e) {
     // エラーログなど必要に応じて処理
@@ -214,6 +221,84 @@ Future<void> deleteChallenge(String challengeId) async {
         .collection('friendChallenges')
         .doc(challengeId)
         .delete();
+  } catch (e) {
+    // エラーログなど必要に応じて処理
+  }
+}
+
+const _challengeWinAchievements = {
+  1: ('challenge_win_1', '初勝利', 'フレンドチャレンジで初めて勝利', '🥊', 50),
+  5: ('challenge_win_5', '連戦連勝', 'フレンドチャレンジで5勝達成', '🏅', 150),
+  10: ('challenge_win_10', 'チャンピオン', 'フレンドチャレンジで10勝達成', '🏆', 300),
+};
+
+/// チャレンジ勝利数を更新し、達成したバッジを付与
+Future<void> _incrementChallengeWinsAndCheckAchievements(String winnerId) async {
+  try {
+    final statsRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(winnerId)
+        .collection('challengeStats')
+        .doc('summary');
+
+    final newWins = await FirebaseFirestore.instance.runTransaction<int>((tx) async {
+      final snapshot = await tx.get(statsRef);
+      final currentWins = (snapshot.data()?['wins'] as int?) ?? 0;
+      final updatedWins = currentWins + 1;
+      tx.set(statsRef, {'wins': updatedWins}, SetOptions(merge: true));
+      return updatedWins;
+    });
+
+    final info = _challengeWinAchievements[newWins];
+    if (info == null) return;
+
+    final achievementDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(winnerId)
+        .collection('achievements')
+        .doc(info.$1)
+        .get();
+
+    if (achievementDoc.exists && (achievementDoc.data()?['isUnlocked'] == true)) {
+      return; // 既に獲得済み
+    }
+
+    final achievement = Achievement(
+      id: info.$1,
+      name: info.$2,
+      description: info.$3,
+      icon: info.$4,
+      type: AchievementType.challenge,
+      points: info.$5,
+      isUnlocked: true,
+      unlockedAt: DateTime.now(),
+    );
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(winnerId)
+        .collection('achievements')
+        .doc(info.$1)
+        .set(achievement.toJson(), SetOptions(merge: true));
+
+    final notificationId = FirebaseFirestore.instance.collection('users').doc().id;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(winnerId)
+        .collection('notifications')
+        .doc(notificationId)
+        .set(
+          AppNotification(
+            notificationId: notificationId,
+            userId: winnerId,
+            type: NotificationType.achievement.value,
+            title: '🎉 新しいバッジを獲得！',
+            message: '「${info.$2}」バッジを獲得しました！',
+            relatedId: info.$1,
+            isRead: false,
+            createdAt: DateTime.now(),
+          ).toJson(),
+        );
   } catch (e) {
     // エラーログなど必要に応じて処理
   }
