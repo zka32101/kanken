@@ -93,6 +93,12 @@ class HomeScreen extends ConsumerWidget {
               const SizedBox(height: 12),
               MenuGrid(children: [
                 MenuGridCard(
+                  icon: Icons.edit_note,
+                  label: '書き順\nガイド',
+                  color: AppColors.study,
+                  onTap: () => context.goStrokeOrder(),
+                ),
+                MenuGridCard(
                   icon: Icons.repeat,
                   label: '復習\n(間隔反復)',
                   color: AppColors.study,

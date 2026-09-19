@@ -28,6 +28,7 @@ dependencies:
 
   # Animation & Lottie
   lottie: ^2.4.0
+  path_drawing: ^1.0.1
 
   # Audio & Haptics
   audioplayers: ^5.0.0

@@ -24,6 +24,7 @@ import '../screens/leaderboard_screen.dart';
 import '../screens/friend_challenges_screen.dart';
 import '../screens/spaced_repetition_review_screen.dart';
 import '../screens/learning_goals_screen.dart';
+import '../screens/stroke_order_screen.dart';
 import '../models/multiplayer.dart';
 import '../models/mock_exam.dart';
 import '../views/index.dart';
@@ -251,6 +252,13 @@ final appRouter = GoRouter(
           name: 'learningGoals',
           builder: (context, state) => const LearningGoalsScreen(),
         ),
+
+        // 書き順ガイド
+        GoRoute(
+          path: 'stroke-order',
+          name: 'strokeOrder',
+          builder: (context, state) => const StrokeOrderScreen(),
+        ),
       ],
     ),
   ],
@@ -364,4 +372,7 @@ extension NavigationExtension on BuildContext {
 
   /// 学習目標管理に遷移
   void goLearningGoals() => push('/learning-goals');
+
+  /// 書き順ガイドに遷移
+  void goStrokeOrder() => push('/stroke-order');
 }
