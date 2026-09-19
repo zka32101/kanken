@@ -1,0 +1,280 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../models/mock_exam_modes.dart';
+
+part 'mock_exam_enhanced_provider.g.dart';
+
+/// Enhanced exam questions with full dataset
+@riverpod
+Future<List<EnhancedExamQuestion>> enhancedExamQuestions(
+  EnhancedExamQuestionsRef ref,
+  ExamConfig config,
+) async {
+  try {
+    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
+        .collection('examQuestions')
+        .where('level', isEqualTo: config.targetLevel);
+
+    // Filter by difficulty if not all difficulties
+    if (config.difficulty != ExamDifficulty.medium) {
+      query = query.where(
+        'difficulty',
+        isEqualTo: config.difficulty.toString(),
+      );
+    }
+
+    // Filter by categories if specific ones selected
+    if (config.categories.length < ExamCategory.values.length) {
+      query = query.where(
+        'category',
+        whereIn: config.categories.map((c) => c.toString()).toList(),
+      );
+    }
+
+    // Fetch more questions to allow randomization
+    final limit = (config.questionCount * 1.5).toInt();
+    final snapshot = await query.limit(limit).get();
+
+    var questions = snapshot.docs
+        .map((doc) => EnhancedExamQuestion.fromJson(doc.data()))
+        .toList();
+
+    // Randomize if configured
+    if (config.randomizeOrder) {
+      questions.shuffle();
+    }
+
+    // Return only the requested number
+    return questions.take(config.questionCount).toList();
+  } catch (e) {
+    throw Exception('Failed to load enhanced exam questions: $e');
+  }
+}
+
+/// Weak area questions (adaptive based on user performance)
+@riverpod
+Future<List<EnhancedExamQuestion>> weakAreaQuestions(
+  WeakAreaQuestionsRef ref,
+  String userId,
+  int examLevel,
+) async {
+  try {
+    // Get user's weak areas from their history
+    final userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('weakAreas')
+        .get();
+
+    final weakAreas = userSnapshot.docs
+        .map((doc) => doc['category'] as String?)
+        .whereType<String>()
+        .toList();
+
+    // Query questions from weak areas with high difficulty
+    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
+        .collection('examQuestions')
+        .where('level', isEqualTo: examLevel)
+        .where('difficulty', isEqualTo: 'ExamDifficulty.hard');
+
+    if (weakAreas.isNotEmpty) {
+      query = query.where('category', whereIn: weakAreas);
+    }
+
+    final snapshot = await query.limit(100).get();
+
+    var questions = snapshot.docs
+        .map((doc) => EnhancedExamQuestion.fromJson(doc.data()))
+        .toList();
+
+    questions.shuffle();
+    return questions.take(30).toList();
+  } catch (e) {
+    throw Exception('Failed to load weak area questions: $e');
+  }
+}
+
+/// Progressive exam questions (difficulty increases with correct answers)
+@riverpod
+Future<List<EnhancedExamQuestion>> progressiveExamQuestions(
+  ProgressiveExamQuestionsRef ref,
+  int examLevel,
+) async {
+  try {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('examQuestions')
+        .where('level', isEqualTo: examLevel)
+        .limit(200)
+        .get();
+
+    final questions = snapshot.docs
+        .map((doc) => EnhancedExamQuestion.fromJson(doc.data()))
+        .toList();
+
+    // Sort by difficulty for progressive ordering
+    questions.sort((a, b) {
+      final difficultyOrder = {
+        'ExamDifficulty.easy': 0,
+        'ExamDifficulty.medium': 1,
+        'ExamDifficulty.hard': 2,
+        'ExamDifficulty.veryHard': 3,
+      };
+      return (difficultyOrder[a.difficulty.toString()] ?? 0)
+          .compareTo(difficultyOrder[b.difficulty.toString()] ?? 0);
+    });
+
+    return questions.take(60).toList();
+  } catch (e) {
+    throw Exception('Failed to load progressive exam questions: $e');
+  }
+}
+
+/// Exam statistics with detailed breakdowns
+@riverpod
+Future<DetailedExamStatistics> detailedExamStatistics(
+  DetailedExamStatisticsRef ref,
+  String userId,
+) async {
+  try {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('examStatistics')
+        .doc('detailed')
+        .get();
+
+    if (!snapshot.exists) {
+      return DetailedExamStatistics.empty(userId);
+    }
+
+    return DetailedExamStatistics.fromJson(snapshot.data() ?? {});
+  } catch (e) {
+    throw Exception('Failed to load detailed exam statistics: $e');
+  }
+}
+
+/// Category-wise exam results
+@riverpod
+Future<Map<String, dynamic>> categoryExamResults(
+  CategoryExamResultsRef ref,
+  String userId,
+  int examLevel,
+) async {
+  try {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('examResults')
+        .where('examLevel', isEqualTo: examLevel)
+        .get();
+
+    final results = <String, dynamic>{};
+
+    for (final category in ExamCategory.values) {
+      int total = 0;
+      int correct = 0;
+      double avgTime = 0;
+
+      for (final doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        final answers = (data['answers'] as List?)
+            ?.map((a) => a as Map<String, dynamic>)
+            .toList() ?? [];
+
+        for (final answer in answers) {
+          if (answer['category'] == category.toString()) {
+            total++;
+            if (answer['isCorrect'] as bool?) == true {
+              correct++;
+            }
+            avgTime += (answer['timeSpent'] as num?)?.toDouble() ?? 0;
+          }
+        }
+      }
+
+      if (total > 0) {
+        results[category.toString()] = {
+          'total': total,
+          'correct': correct,
+          'accuracy': (correct / total * 100).toStringAsFixed(1),
+          'averageTime': (avgTime / total).toStringAsFixed(1),
+        };
+      }
+    }
+
+    return results;
+  } catch (e) {
+    throw Exception('Failed to load category exam results: $e');
+  }
+}
+
+/// Detailed exam statistics model
+class DetailedExamStatistics {
+  final String userId;
+  final int totalExamsTaken;
+  final int totalPassed;
+  final double averageAccuracy;
+  final int bestScore;
+  final int worstScore;
+  final Map<String, dynamic> levelStatistics;
+  final Map<String, dynamic> categoryStatistics;
+  final List<Map<String, dynamic>> recentExams;
+  final double averageTimePerQuestion;
+
+  DetailedExamStatistics({
+    required this.userId,
+    required this.totalExamsTaken,
+    required this.totalPassed,
+    required this.averageAccuracy,
+    required this.bestScore,
+    required this.worstScore,
+    required this.levelStatistics,
+    required this.categoryStatistics,
+    required this.recentExams,
+    required this.averageTimePerQuestion,
+  });
+
+  factory DetailedExamStatistics.empty(String userId) => DetailedExamStatistics(
+    userId: userId,
+    totalExamsTaken: 0,
+    totalPassed: 0,
+    averageAccuracy: 0.0,
+    bestScore: 0,
+    worstScore: 0,
+    levelStatistics: {},
+    categoryStatistics: {},
+    recentExams: [],
+    averageTimePerQuestion: 0.0,
+  );
+
+  factory DetailedExamStatistics.fromJson(Map<String, dynamic> json) =>
+    DetailedExamStatistics(
+      userId: json['userId'] as String? ?? '',
+      totalExamsTaken: json['totalExamsTaken'] as int? ?? 0,
+      totalPassed: json['totalPassed'] as int? ?? 0,
+      averageAccuracy: (json['averageAccuracy'] as num?)?.toDouble() ?? 0.0,
+      bestScore: json['bestScore'] as int? ?? 0,
+      worstScore: json['worstScore'] as int? ?? 0,
+      levelStatistics: json['levelStatistics'] as Map<String, dynamic>? ?? {},
+      categoryStatistics: json['categoryStatistics'] as Map<String, dynamic>? ?? {},
+      recentExams: (json['recentExams'] as List?)
+          ?.map((e) => e as Map<String, dynamic>)
+          .toList() ?? [],
+      averageTimePerQuestion:
+        (json['averageTimePerQuestion'] as num?)?.toDouble() ?? 0.0,
+    );
+
+  Map<String, dynamic> toJson() => {
+    'userId': userId,
+    'totalExamsTaken': totalExamsTaken,
+    'totalPassed': totalPassed,
+    'averageAccuracy': averageAccuracy,
+    'bestScore': bestScore,
+    'worstScore': worstScore,
+    'levelStatistics': levelStatistics,
+    'categoryStatistics': categoryStatistics,
+    'recentExams': recentExams,
+    'averageTimePerQuestion': averageTimePerQuestion,
+  };
+}
