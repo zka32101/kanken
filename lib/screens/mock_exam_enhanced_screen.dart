@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/mock_exam_modes.dart';
 import '../providers/exam_session_provider.dart';
+import 'mock_exam_result_screen.dart';
 
 class MockExamEnhancedScreen extends ConsumerStatefulWidget {
   final ExamConfig config;
@@ -73,14 +74,7 @@ class _MockExamEnhancedScreenState extends ConsumerState<MockExamEnhancedScreen>
 
   void _handleTimeUp() {
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('時間切れです')),
-      );
-      Future.delayed(const Duration(seconds: 1), () {
-        if (mounted) {
-          _showResults();
-        }
-      });
+      _showResults();
     }
   }
 
@@ -88,55 +82,12 @@ class _MockExamEnhancedScreenState extends ConsumerState<MockExamEnhancedScreen>
     final session = ref.read(examSessionProvider);
     if (session == null) return;
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: const Text('試験完了'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildResultStat('正解数', '${session.getCorrectAnswerCount()}/${session.questions.length}'),
-              _buildResultStat('正答率', '${(session.getAccuracyRate() * 100).toStringAsFixed(1)}%'),
-              _buildResultStat('経過時間', _formatTime(_elapsedSeconds)),
-              if (session.config.passThreshold > 0)
-                _buildResultStat(
-                  '合否',
-                  (session.getAccuracyRate() * 100) >= session.config.passThreshold
-                      ? '✅ 合格'
-                      : '❌ 不合格',
-                ),
-            ],
-          ),
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => MockExamResultScreen(
+          session: session,
+          elapsedSeconds: _elapsedSeconds,
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ref.read(examSessionProvider.notifier).reset();
-              Navigator.pop(context);
-            },
-            child: const Text('完了'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildResultStat(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label),
-          Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ],
       ),
     );
   }

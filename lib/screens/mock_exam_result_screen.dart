@@ -1,0 +1,477 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../models/mock_exam_modes.dart';
+import '../providers/exam_session_provider.dart';
+
+class MockExamResultScreen extends StatelessWidget {
+  final ExamSessionState session;
+  final int elapsedSeconds;
+
+  const MockExamResultScreen({
+    required this.session,
+    required this.elapsedSeconds,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final accuracy = session.getAccuracyRate();
+    final isPassed = (accuracy * 100) >= session.config.passThreshold;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('試験結果'),
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildResultStatus(context, isPassed, accuracy),
+              const SizedBox(height: 32),
+              _buildScoreCard(context, accuracy),
+              const SizedBox(height: 24),
+              _buildDetailedStats(context),
+              const SizedBox(height: 24),
+              _buildCategoryAnalysis(context),
+              const SizedBox(height: 24),
+              _buildWeakPointAnalysis(context),
+              const SizedBox(height: 32),
+              _buildActionButtons(context),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResultStatus(BuildContext context, bool isPassed, double accuracy) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isPassed
+              ? [Colors.green.shade400, Colors.green.shade700]
+              : [Colors.red.shade400, Colors.red.shade700],
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            isPassed ? Icons.check_circle : Icons.cancel,
+            size: 64,
+            color: Colors.white,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            isPassed ? '合格🎉' : '不合格',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '正答率: ${(accuracy * 100).toStringAsFixed(1)}%',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.white70,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScoreCard(BuildContext context, double accuracy) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'スコア',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildScoreTile(
+                  context,
+                  '${session.getCorrectAnswerCount()}',
+                  '正解数',
+                  Colors.blue,
+                ),
+                _buildScoreTile(
+                  context,
+                  '${(accuracy * 100).toStringAsFixed(1)}%',
+                  '正答率',
+                  Colors.green,
+                ),
+                _buildScoreTile(
+                  context,
+                  '${session.getCorrectAnswerCount()}/${session.questions.length}',
+                  '出題数',
+                  Colors.orange,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildScoreTile(
+    BuildContext context,
+    String value,
+    String label,
+    Color color,
+  ) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.labelSmall,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailedStats(BuildContext context) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '詳細情報',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 16),
+            _buildStatRow(
+              '所要時間',
+              _formatTime(elapsedSeconds),
+            ),
+            const Divider(),
+            _buildStatRow(
+              '平均回答時間',
+              '${(elapsedSeconds / session.questions.length).toStringAsFixed(1)}秒/問',
+            ),
+            const Divider(),
+            _buildStatRow(
+              '出題モード',
+              _getModeNameJp(session.config.mode),
+            ),
+            const Divider(),
+            _buildStatRow(
+              '合否ライン',
+              '${session.config.passThreshold.toStringAsFixed(0)}%以上',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label),
+          Text(
+            value,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryAnalysis(BuildContext context) {
+    final categoryStats = _calculateCategoryStats();
+    if (categoryStats.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'カテゴリ別分析',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 16),
+            ...categoryStats.entries.map((entry) {
+              final category = entry.key;
+              final stats = entry.value;
+              final accuracy = stats['total'] > 0
+                  ? stats['correct'] / stats['total']
+                  : 0.0;
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          category,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          '${stats['correct']}/${stats['total']} (${(accuracy * 100).toStringAsFixed(1)}%)',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: accuracy >= 0.8
+                                ? Colors.green
+                                : accuracy >= 0.6
+                                    ? Colors.orange
+                                    : Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: accuracy,
+                        minHeight: 6,
+                        backgroundColor: Colors.grey.shade300,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          accuracy >= 0.8
+                              ? Colors.green
+                              : accuracy >= 0.6
+                                  ? Colors.orange
+                                  : Colors.red,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWeakPointAnalysis(BuildContext context) {
+    final weakPoints = _identifyWeakPoints();
+    if (weakPoints.isEmpty) {
+      return Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '弱点分析',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                '🎉 すべてのカテゴリで80%以上の正答率です。素晴らしい!',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '弱点分析',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 16),
+            ...weakPoints.map((point) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.red.shade200),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.warning,
+                            color: Colors.red,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            point['category'],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        point['recommendation'],
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey.shade700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ElevatedButton.icon(
+          icon: const Icon(Icons.refresh),
+          label: const Text('もう一度受験'),
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
+          ),
+          onPressed: () {
+            context.pop();
+            context.pop();
+          },
+        ),
+        const SizedBox(height: 12),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.home),
+          label: const Text('ホームに戻る'),
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+          ),
+          onPressed: () {
+            context.go('/');
+          },
+        ),
+      ],
+    );
+  }
+
+  Map<String, Map<String, int>> _calculateCategoryStats() {
+    final stats = <String, Map<String, int>>{};
+
+    for (int i = 0; i < session.questions.length; i++) {
+      final question = session.questions[i];
+      final category = question.category.toString().split('.').last;
+
+      if (!stats.containsKey(category)) {
+        stats[category] = {'correct': 0, 'total': 0};
+      }
+
+      stats[category]!['total'] = stats[category]!['total']! + 1;
+
+      if (session.userAnswers[i] == question.correctAnswer) {
+        stats[category]!['correct'] = stats[category]!['correct']! + 1;
+      }
+    }
+
+    return stats;
+  }
+
+  List<Map<String, String>> _identifyWeakPoints() {
+    final categoryStats = _calculateCategoryStats();
+    final weakPoints = <Map<String, String>>[];
+
+    categoryStats.forEach((category, stats) {
+      if (stats['total']! > 0) {
+        final accuracy = stats['correct']! / stats['total']!;
+        if (accuracy < 0.8) {
+          weakPoints.add({
+            'category': category,
+            'recommendation': _getRecommendation(category, accuracy),
+          });
+        }
+      }
+    });
+
+    weakPoints.sort((a, b) => a['category'].compareTo(b['category']));
+    return weakPoints;
+  }
+
+  String _getRecommendation(String category, double accuracy) {
+    final percentage = (accuracy * 100).toStringAsFixed(1);
+    return '「$category」の正答率は$percentage%です。このカテゴリを重点的に復習することをお勧めします。';
+  }
+
+  String _formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+    return '$minutes分${secs}秒';
+  }
+
+  String _getModeNameJp(ExamMode mode) {
+    const modeNames = {
+      ExamMode.standardExam: '標準試験',
+      ExamMode.speedExam: '速度試験',
+      ExamMode.focusedExam: '集中試験',
+      ExamMode.weakAreasExam: '弱点対策',
+      ExamMode.randomExam: 'ランダム試験',
+      ExamMode.progressiveExam: '段階式試験',
+    };
+    return modeNames[mode] ?? '試験';
+  }
+}
