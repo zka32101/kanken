@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/mock_exam_modes.dart';
 import '../providers/exam_session_provider.dart';
+import '../providers/exam_analysis_provider.dart';
 
-class MockExamResultScreen extends StatelessWidget {
+class MockExamResultScreen extends ConsumerStatefulWidget {
   final ExamSessionState session;
   final int elapsedSeconds;
 
@@ -12,6 +14,101 @@ class MockExamResultScreen extends StatelessWidget {
     required this.elapsedSeconds,
     Key? key,
   }) : super(key: key);
+
+  @override
+  ConsumerState<MockExamResultScreen> createState() =>
+      _MockExamResultScreenState();
+}
+
+class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _createAndSaveAnalysis();
+  }
+
+  Future<void> _createAndSaveAnalysis() async {
+    final categoryStats = <String, Map<String, dynamic>>{};
+
+    for (int i = 0; i < widget.session.questions.length; i++) {
+      final question = widget.session.questions[i];
+      final category = question.category.toString().split('.').last;
+
+      if (!categoryStats.containsKey(category)) {
+        categoryStats[category] = {
+          'correct': 0,
+          'total': 0,
+        };
+      }
+
+      categoryStats[category]!['total'] += 1;
+      if (widget.session.userAnswers[i] == question.correctAnswer) {
+        categoryStats[category]!['correct'] += 1;
+      }
+    }
+
+    final categoryPerformance = <String, CategoryPerformance>{};
+    int totalCorrect = 0;
+    int totalQuestions = 0;
+
+    categoryStats.forEach((category, stats) {
+      final correct = stats['correct'] as int;
+      final total = stats['total'] as int;
+      final accuracy = total > 0 ? correct / total : 0.0;
+      final avgTime = total > 0 ? widget.elapsedSeconds / total : 0.0;
+
+      categoryPerformance[category] = CategoryPerformance(
+        category: category,
+        correct: correct,
+        total: total,
+        accuracy: accuracy,
+        averageTimePerQuestion: avgTime,
+      );
+
+      totalCorrect += correct;
+      totalQuestions += total;
+    });
+
+    final weakPoints = <WeakPointRecommendation>[];
+    categoryPerformance.forEach((category, perf) {
+      if (perf.accuracy < 0.6) {
+        weakPoints.add(
+          WeakPointRecommendation(
+            category: category,
+            accuracy: perf.accuracy,
+            recommendation: '「$category」は正答率${(perf.accuracy * 100).toStringAsFixed(1)}%です。重点的な復習が必要です。',
+            priority: 1,
+          ),
+        );
+      } else if (perf.accuracy < 0.8) {
+        weakPoints.add(
+          WeakPointRecommendation(
+            category: category,
+            accuracy: perf.accuracy,
+            recommendation: '「$category」をさらに強化できます。追加練習をお勧めします。',
+            priority: 2,
+          ),
+        );
+      }
+    });
+
+    final overallAccuracy = totalQuestions > 0 ? totalCorrect / totalQuestions : 0.0;
+
+    final analysis = ExamAnalysisResult(
+      categoryPerformance: categoryPerformance,
+      weakPoints: weakPoints,
+      overallAccuracy: overallAccuracy,
+      elapsedSeconds: widget.elapsedSeconds,
+      examMode: widget.session.config.mode,
+      analyzedAt: DateTime.now(),
+    );
+
+    try {
+      await saveExamAnalysis(analysis);
+    } catch (e) {
+      // エラーサイレント処理
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
