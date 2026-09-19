@@ -188,6 +188,50 @@ class HomeScreen extends ConsumerWidget {
                   onPressed: () => context.goParentDashboard(),
                 ),
               ),
+              const SizedBox(height: 8),
+
+              // Phase 6・7 機能クイックアクセス
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.emoji_events),
+                      label: const Text('スコアボード'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple.shade400,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () => context.goLeaderboard(),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.sports_kabaddi),
+                      label: const Text('チャレンジ'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.pink.shade400,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () => context.goFriendChallenges(),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.repeat),
+                  label: const Text('復習する（間隔反復学習）'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.cyan.shade600,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () => context.goSpacedRepetitionReview(),
+                ),
+              ),
               const SizedBox(height: 24),
 
               // 級選択セクション

@@ -22,6 +22,7 @@ import '../screens/user_profile_screen.dart';
 import '../screens/mock_exam_modes_screen.dart';
 import '../screens/leaderboard_screen.dart';
 import '../screens/friend_challenges_screen.dart';
+import '../screens/spaced_repetition_review_screen.dart';
 import '../models/multiplayer.dart';
 import '../models/mock_exam.dart';
 import '../views/index.dart';
@@ -235,6 +236,13 @@ final appRouter = GoRouter(
           name: 'friendChallenges',
           builder: (context, state) => const FriendChallengesScreen(),
         ),
+
+        // 間隔反復復習
+        GoRoute(
+          path: 'spaced-repetition-review',
+          name: 'spacedRepetitionReview',
+          builder: (context, state) => const SpacedRepetitionReviewScreen(),
+        ),
       ],
     ),
   ],
@@ -342,4 +350,7 @@ extension NavigationExtension on BuildContext {
 
   /// フレンドチャレンジに遷移
   void goFriendChallenges() => push('/friend-challenges');
+
+  /// 間隔反復復習に遷移
+  void goSpacedRepetitionReview() => push('/spaced-repetition-review');
 }

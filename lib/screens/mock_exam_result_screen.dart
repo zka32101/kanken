@@ -7,6 +7,7 @@ import '../providers/exam_session_provider.dart';
 import '../providers/exam_analysis_provider.dart';
 import '../providers/achievement_provider.dart';
 import '../providers/leaderboard_provider.dart';
+import '../providers/spaced_repetition_provider.dart';
 import '../widgets/achievement_unlock_dialog.dart';
 
 class MockExamResultScreen extends ConsumerStatefulWidget {
@@ -30,9 +31,32 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
     super.initState();
     _createAndSaveAnalysis();
     _updateLeaderboardScore();
+    _registerWrongAnswersForReview();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndShowAchievements();
     });
+  }
+
+  Future<void> _registerWrongAnswersForReview() async {
+    try {
+      for (int i = 0; i < widget.session.questions.length; i++) {
+        final question = widget.session.questions[i];
+        final userAnswer = widget.session.userAnswers[i];
+
+        if (userAnswer != question.correctAnswer) {
+          await addToSpacedRepetition(
+            questionId: question.questionId,
+            kanji: question.kanji,
+            category: question.category.toString().split('.').last,
+            question: question.question,
+            options: question.options,
+            correctAnswer: question.correctAnswer,
+          );
+        }
+      }
+    } catch (e) {
+      // エラーサイレント処理
+    }
   }
 
   Future<void> _checkAndShowAchievements() async {
