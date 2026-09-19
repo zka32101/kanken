@@ -10,6 +10,8 @@ import '../providers/ranking_provider.dart';
 import '../providers/friend_provider.dart';
 import '../providers/spaced_repetition_provider.dart';
 import '../models/user_ranking.dart';
+import '../theme/app_theme.dart';
+import '../widgets/menu_grid_card.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -42,7 +44,6 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('小学漢検チャレンジ'),
-        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -52,196 +53,29 @@ class HomeScreen extends ConsumerWidget {
             children: [
               // ユーザー情報・進捗セクション
               _buildProgressCard(context, ref, user, weakKanjiCount),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
-              // ランキングセクション
+              // メインCTA（演習・模擬試験）
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'ランキング 🏆',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  TextButton(
-                    onPressed: () => context.goRanking(),
-                    child: const Text('全て見る'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              _buildRankingPreview(context, ref),
-              const SizedBox(height: 24),
-
-              // フレンド・チャレンジセクション
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'フレンド 👥',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  TextButton(
-                    onPressed: () => context.goFriends(),
-                    child: const Text('全て見る'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              _buildFriendPreview(context, ref),
-              const SizedBox(height: 24),
-
-              // 模擬試験モード選択
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.assignment),
-                  label: const Text('模擬試験モード'),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.green.shade600,
-                    foregroundColor: Colors.white,
-                  ),
-                  onPressed: () => context.goMockExamModes(),
-                ),
-              ),
-              const SizedBox(height: 8),
-
-              // P4・P5 機能クイックアクセス
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Icons.analytics),
-                      label: const Text('苦手分析'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange.shade400,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () => context.goWeakAreas(),
+                    child: _buildPrimaryActionCard(
+                      icon: Icons.play_circle_fill,
+                      label: '演習を始める',
+                      color: AppColors.primary,
+                      onTap: () => _navigateToPractice(context, ref),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 12),
                   Expanded(
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Icons.lightbulb),
-                      label: const Text('学習計画'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.teal.shade400,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () => context.goLearningPlan(),
+                    child: _buildPrimaryActionCard(
+                      icon: Icons.assignment,
+                      label: '模擬試験モード',
+                      color: AppColors.study,
+                      onTap: () => context.goMockExamModes(),
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Icons.event),
-                      label: const Text('イベント'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purple.shade400,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () => context.goEvents(),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Icons.leaderboard),
-                      label: const Text('ランキング'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.indigo.shade400,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () => context.goGlobalRanking(),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.card_giftcard),
-                  label: const Text('バッジコレクション'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.amber.shade600,
-                    foregroundColor: Colors.white,
-                  ),
-                  onPressed: () => context.goCollectionBadge(),
-                ),
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.supervisor_account),
-                  label: const Text('保護者ダッシュボード'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade600,
-                    foregroundColor: Colors.white,
-                  ),
-                  onPressed: () => context.goParentDashboard(),
-                ),
-              ),
-              const SizedBox(height: 8),
-
-              // Phase 6・7 機能クイックアクセス
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Icons.emoji_events),
-                      label: const Text('スコアボード'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepPurple.shade400,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () => context.goLeaderboard(),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Icons.sports_kabaddi),
-                      label: const Text('チャレンジ'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.pink.shade400,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () => context.goFriendChallenges(),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.repeat),
-                  label: const Text('復習する（間隔反復学習）'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.cyan.shade600,
-                    foregroundColor: Colors.white,
-                  ),
-                  onPressed: () => context.goSpacedRepetitionReview(),
-                ),
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  icon: const Icon(Icons.flag),
-                  label: const Text('学習目標を設定'),
-                  onPressed: () => context.goLearningGoals(),
-                ),
               ),
               const SizedBox(height: 24),
 
@@ -252,22 +86,130 @@ class HomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
               _buildLevelGrid(context, ref, currentLevel),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
 
-              // 演習開始ボタン
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.play_arrow),
-                  label: const Text('演習を始める'),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                  ),
-                  onPressed: () {
-                    _navigateToPractice(context, ref);
-                  },
+              // 学習セクション
+              const SectionHeader(title: '学習 📖'),
+              const SizedBox(height: 12),
+              MenuGrid(children: [
+                MenuGridCard(
+                  icon: Icons.repeat,
+                  label: '復習\n(間隔反復)',
+                  color: AppColors.study,
+                  onTap: () => context.goSpacedRepetitionReview(),
+                ),
+                MenuGridCard(
+                  icon: Icons.analytics,
+                  label: '苦手分析',
+                  color: AppColors.analysis,
+                  onTap: () => context.goWeakAreas(),
+                ),
+                MenuGridCard(
+                  icon: Icons.lightbulb,
+                  label: '学習計画',
+                  color: AppColors.analysis,
+                  onTap: () => context.goLearningPlan(),
+                ),
+                MenuGridCard(
+                  icon: Icons.flag,
+                  label: '学習目標',
+                  color: AppColors.analysis,
+                  onTap: () => context.goLearningGoals(),
+                ),
+              ]),
+              const SizedBox(height: 28),
+
+              // ソーシャルセクション
+              const SectionHeader(title: 'ソーシャル 👥'),
+              const SizedBox(height: 12),
+              MenuGrid(children: [
+                MenuGridCard(
+                  icon: Icons.people,
+                  label: 'フレンド',
+                  color: AppColors.social,
+                  onTap: () => context.goFriends(),
+                ),
+                MenuGridCard(
+                  icon: Icons.sports_kabaddi,
+                  label: 'チャレンジ',
+                  color: AppColors.social,
+                  onTap: () => context.goFriendChallenges(),
+                ),
+                MenuGridCard(
+                  icon: Icons.leaderboard,
+                  label: 'ランキング',
+                  color: AppColors.social,
+                  onTap: () => context.goGlobalRanking(),
+                ),
+                MenuGridCard(
+                  icon: Icons.emoji_events,
+                  label: 'スコアボード',
+                  color: AppColors.social,
+                  onTap: () => context.goLeaderboard(),
+                ),
+              ]),
+              const SizedBox(height: 20),
+              _buildRankingPreview(context, ref),
+              const SizedBox(height: 12),
+              _buildFriendPreview(context, ref),
+              const SizedBox(height: 28),
+
+              // コレクション・その他セクション
+              const SectionHeader(title: 'その他 ⭐'),
+              const SizedBox(height: 12),
+              MenuGrid(children: [
+                MenuGridCard(
+                  icon: Icons.card_giftcard,
+                  label: 'バッジ',
+                  color: AppColors.reward,
+                  onTap: () => context.goCollectionBadge(),
+                ),
+                MenuGridCard(
+                  icon: Icons.event,
+                  label: 'イベント',
+                  color: AppColors.reward,
+                  onTap: () => context.goEvents(),
+                ),
+                MenuGridCard(
+                  icon: Icons.supervisor_account,
+                  label: '保護者\nダッシュボード',
+                  color: AppColors.info,
+                  onTap: () => context.goParentDashboard(),
+                ),
+              ]),
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPrimaryActionCard({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: color,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+          child: Column(
+            children: [
+              Icon(icon, color: Colors.white, size: 32),
+              const SizedBox(height: 8),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
               ),
             ],
@@ -283,51 +225,60 @@ class HomeScreen extends ConsumerWidget {
     AsyncValue<User?> user,
     AsyncValue<int> weakKanjiCount,
   ) {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'あなたの進捗',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildStatItem(
-                  '🔥 ストリーク',
-                  user.when(
-                    data: (u) => '${u?.streakCount ?? 0}日',
-                    loading: () => '-',
-                    error: (_, __) => 'エラー',
-                  ),
-                ),
-                _buildStatItem(
-                  '⚠️ 苦手漢字',
-                  weakKanjiCount.when(
-                    data: (count) => '$count個',
-                    loading: () => '-',
-                    error: (_, __) => 'エラー',
-                  ),
-                ),
-                _buildStatItem(
-                  '🎯 合格級',
-                  user.when(
-                    data: (u) =>
-                        levelNames[u?.currentLevel ?? 'LEVEL_10'] ??
-                        'LEVEL_10',
-                    loading: () => '-',
-                    error: (_, __) => 'エラー',
-                  ),
-                ),
-              ],
-            ),
-          ],
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.primary, AppColors.primaryDark],
         ),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'あなたの進捗',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.white70,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildStatItem(
+                '🔥 ストリーク',
+                user.when(
+                  data: (u) => '${u?.streakCount ?? 0}日',
+                  loading: () => '-',
+                  error: (_, __) => 'エラー',
+                ),
+              ),
+              _buildStatItem(
+                '⚠️ 苦手漢字',
+                weakKanjiCount.when(
+                  data: (count) => '$count個',
+                  loading: () => '-',
+                  error: (_, __) => 'エラー',
+                ),
+              ),
+              _buildStatItem(
+                '🎯 合格級',
+                user.when(
+                  data: (u) =>
+                      levelNames[u?.currentLevel ?? 'LEVEL_10'] ??
+                      'LEVEL_10',
+                  loading: () => '-',
+                  error: (_, __) => 'エラー',
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -335,9 +286,19 @@ class HomeScreen extends ConsumerWidget {
   Widget _buildStatItem(String label, String value) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         const SizedBox(height: 4),
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, color: Colors.white70),
+        ),
       ],
     );
   }
@@ -357,12 +318,12 @@ class HomeScreen extends ConsumerWidget {
           },
           child: Container(
             decoration: BoxDecoration(
-              color: isSelected ? Colors.blue : Colors.grey[100],
+              color: isSelected ? AppColors.primary : Colors.white,
               border: Border.all(
-                color: isSelected ? Colors.blue : Colors.grey[300]!,
+                color: isSelected ? AppColors.primary : Colors.grey[300]!,
                 width: isSelected ? 2 : 1,
               ),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
               child: Text(
