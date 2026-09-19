@@ -1,17 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../models/challenge_invitation.dart';
 import '../models/gamification_stats.dart';
 
-part 'challenge_provider.g.dart';
-
 /// アクティブなチャレンジ一覧を取得
-@riverpod
-Future<List<ChallengeInvitation>> activeChallenges(
-  ActiveChallengesRef ref,
-) async {
+final activeChallengesProvider = FutureProvider<List<ChallengeInvitation>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
@@ -26,13 +20,10 @@ Future<List<ChallengeInvitation>> activeChallenges(
   return snapshot.docs
       .map((doc) => ChallengeInvitation.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// ペンディングのチャレンジリクエスト（受信）
-@riverpod
-Future<List<ChallengeInvitation>> incomingChallenges(
-  IncomingChallengesRef ref,
-) async {
+final incomingChallengesProvider = FutureProvider<List<ChallengeInvitation>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
@@ -48,13 +39,10 @@ Future<List<ChallengeInvitation>> incomingChallenges(
   return snapshot.docs
       .map((doc) => ChallengeInvitation.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// 送信済みのチャレンジリクエスト（送信）
-@riverpod
-Future<List<ChallengeInvitation>> outgoingChallenges(
-  OutgoingChallengesRef ref,
-) async {
+final outgoingChallengesProvider = FutureProvider<List<ChallengeInvitation>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
@@ -70,13 +58,10 @@ Future<List<ChallengeInvitation>> outgoingChallenges(
   return snapshot.docs
       .map((doc) => ChallengeInvitation.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// 完了済みのチャレンジ（勝敗判定済み）
-@riverpod
-Future<List<ChallengeInvitation>> completedChallenges(
-  CompletedChallengesRef ref,
-) async {
+final completedChallengesProvider = FutureProvider<List<ChallengeInvitation>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
@@ -92,7 +77,7 @@ Future<List<ChallengeInvitation>> completedChallenges(
   return snapshot.docs
       .map((doc) => ChallengeInvitation.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// チャレンジプロバイダー State
 class ChallengeState {
@@ -397,9 +382,6 @@ class ChallengeNotifier extends StateNotifier<ChallengeState> {
 }
 
 /// チャレンジ管理プロバイダー
-@riverpod
-ChallengeNotifier challengeNotifier(
-  ChallengeNotifierRef ref,
-) {
+final challengeNotifierProvider = StateNotifierProvider<ChallengeNotifier, ChallengeState>((ref) {
   return ChallengeNotifier();
-}
+});

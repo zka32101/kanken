@@ -1,16 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../models/multiplayer.dart';
 
-part 'battle_provider.g.dart';
-
 /// 利用可能なバトルルーム一覧を取得
-@riverpod
-Future<List<BattleRoom>> availableBattleRooms(
-  AvailableBattleRoomsRef ref,
-) async {
+final availableBattleRoomsProvider = FutureProvider<List<BattleRoom>>((ref) async {
   final snapshot = await FirebaseFirestore.instance
       .collection('battleRooms')
       .where('status', isEqualTo: 'waiting')
@@ -20,11 +14,10 @@ Future<List<BattleRoom>> availableBattleRooms(
   return snapshot.docs
       .map((doc) => BattleRoom.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// ユーザーの対戦統計を取得
-@riverpod
-Future<BattleRoomStats> userBattleStats(UserBattleStatsRef ref) async {
+final userBattleStatsProvider = FutureProvider<BattleRoomStats>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) {
     return BattleRoomStats(
@@ -58,7 +51,7 @@ Future<BattleRoomStats> userBattleStats(UserBattleStatsRef ref) async {
   }
 
   return BattleRoomStats.fromJson(snapshot.data() ?? {});
-}
+});
 
 /// 対戦ルーム State
 class BattleRoomState {
@@ -397,12 +390,9 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
 }
 
 /// バトルルーム Notifier Provider
-@riverpod
-BattleRoomNotifier battleRoomNotifier(
-  BattleRoomNotifierRef ref,
-) {
+final battleRoomNotifierProvider = StateNotifierProvider<BattleRoomNotifier, BattleRoomState>((ref) {
   return BattleRoomNotifier();
-}
+});
 
 /// BattleRoom copyWith ヘルパー
 extension BattleRoomCopyWith on BattleRoom {

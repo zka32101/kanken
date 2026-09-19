@@ -1,17 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../models/mock_exam.dart';
 
-part 'mock_exam_provider.g.dart';
-
 /// 試験問題を取得（指定した級）
-@riverpod
-Future<List<ExamQuestion>> examQuestions(
-  ExamQuestionsRef ref,
-  int examLevel,
-) async {
+final examQuestionsProvider = FutureProvider.family<List<ExamQuestion>, int>((ref, examLevel) async {
   final snapshot = await FirebaseFirestore.instance
       .collection('examQuestions')
       .where('level', isEqualTo: examLevel)
@@ -21,11 +14,10 @@ Future<List<ExamQuestion>> examQuestions(
   return snapshot.docs
       .map((doc) => ExamQuestion.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// ユーザーの試験結果を取得
-@riverpod
-Future<List<ExamResult>> userExamResults(UserExamResultsRef ref) async {
+final userExamResultsProvider = FutureProvider<List<ExamResult>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
@@ -39,11 +31,10 @@ Future<List<ExamResult>> userExamResults(UserExamResultsRef ref) async {
   return snapshot.docs
       .map((doc) => ExamResult.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// ユーザーの試験統計を取得
-@riverpod
-Future<ExamStatistics> userExamStatistics(UserExamStatisticsRef ref) async {
+final userExamStatisticsProvider = FutureProvider<ExamStatistics>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) {
     return ExamStatistics(
@@ -77,7 +68,7 @@ Future<ExamStatistics> userExamStatistics(UserExamStatisticsRef ref) async {
   }
 
   return ExamStatistics.fromJson(snapshot.data() ?? {});
-}
+});
 
 /// 試験セッション State
 class ExamSessionState {
@@ -310,9 +301,6 @@ class ExamSessionNotifier extends StateNotifier<ExamSessionState> {
 }
 
 /// 試験セッション Notifier Provider
-@riverpod
-ExamSessionNotifier examSessionNotifier(
-  ExamSessionNotifierRef ref,
-) {
+final examSessionNotifierProvider = StateNotifierProvider<ExamSessionNotifier, ExamSessionState>((ref) {
   return ExamSessionNotifier();
-}
+});

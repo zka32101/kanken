@@ -1,16 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../models/learning_recommendation.dart';
 import '../models/weak_area.dart';
 import 'weak_area_provider.dart';
 
-part 'learning_plan_provider.g.dart';
-
 /// 学習推奨プランを生成
-@riverpod
-Future<LearningPlan> learningPlan(LearningPlanRef ref) async {
+final learningPlanProvider = FutureProvider<LearningPlan>((ref) async {
   final analysis = await ref.watch(weakAreaAnalysisProvider.future);
 
   final recommendations = <LearningRecommendation>[];
@@ -88,13 +84,10 @@ Future<LearningPlan> learningPlan(LearningPlanRef ref) async {
     recommendations: recommendations,
     generatedAt: DateTime.now(),
   );
-}
+});
 
 /// 学習推奨を取得（Firestore から）
-@riverpod
-Future<List<LearningRecommendation>> activeLearningRecommendations(
-  ActiveLearningRecommendationsRef ref,
-) async {
+final activeLearningRecommendationsProvider = FutureProvider<List<LearningRecommendation>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
@@ -110,13 +103,10 @@ Future<List<LearningRecommendation>> activeLearningRecommendations(
   return snapshot.docs
       .map((doc) => LearningRecommendation.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// 完了した推奨を取得
-@riverpod
-Future<List<LearningRecommendation>> completedLearningRecommendations(
-  CompletedLearningRecommendationsRef ref,
-) async {
+final completedLearningRecommendationsProvider = FutureProvider<List<LearningRecommendation>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
@@ -132,7 +122,7 @@ Future<List<LearningRecommendation>> completedLearningRecommendations(
   return snapshot.docs
       .map((doc) => LearningRecommendation.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// 学習推奨プロバイダー State
 class LearningPlanState {
@@ -263,9 +253,6 @@ class LearningPlanNotifier extends StateNotifier<LearningPlanState> {
 }
 
 /// 学習推奨管理プロバイダー
-@riverpod
-LearningPlanNotifier learningPlanNotifier(
-  LearningPlanNotifierRef ref,
-) {
+final learningPlanNotifierProvider = StateNotifierProvider<LearningPlanNotifier, LearningPlanState>((ref) {
   return LearningPlanNotifier();
-}
+});

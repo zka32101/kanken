@@ -1,14 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../models/collection_badge.dart';
 
-part 'collection_badge_provider.g.dart';
-
 /// すべてのバッジ定義を取得
-@riverpod
-Future<List<CollectionBadge>> allBadges(AllBadgesRef ref) async {
+final allBadgesProvider = FutureProvider<List<CollectionBadge>>((ref) async {
   final snapshot = await FirebaseFirestore.instance
       .collection('badges')
       .orderBy('rarity')
@@ -18,13 +14,10 @@ Future<List<CollectionBadge>> allBadges(AllBadgesRef ref) async {
   return snapshot.docs
       .map((doc) => CollectionBadge.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// ユーザーのバッジ取得状況を取得
-@riverpod
-Future<List<UserBadgeProgress>> userBadgeProgress(
-  UserBadgeProgressRef ref,
-) async {
+final userBadgeProgressProvider = FutureProvider<List<UserBadgeProgress>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
@@ -38,11 +31,10 @@ Future<List<UserBadgeProgress>> userBadgeProgress(
   return snapshot.docs
       .map((doc) => UserBadgeProgress.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// ユーザーの取得済みバッジを取得
-@riverpod
-Future<List<CollectionBadge>> acquiredBadges(AcquiredBadgesRef ref) async {
+final acquiredBadgesProvider = FutureProvider<List<CollectionBadge>>((ref) async {
   final progress = await ref.watch(userBadgeProgressProvider.future);
   final allBadgesList = await ref.watch(allBadgesProvider.future);
 
@@ -52,13 +44,10 @@ Future<List<CollectionBadge>> acquiredBadges(AcquiredBadgesRef ref) async {
   return allBadgesList
       .where((badge) => acquiredIds.contains(badge.badgeId))
       .toList();
-}
+});
 
 /// ユーザーのバッジコレクション統計を取得
-@riverpod
-Future<BadgeCollectionStats> badgeCollectionStats(
-  BadgeCollectionStatsRef ref,
-) async {
+final badgeCollectionStatsProvider = FutureProvider<BadgeCollectionStats>((ref) async {
   final allBadgesList = await ref.watch(allBadgesProvider.future);
   final progress = await ref.watch(userBadgeProgressProvider.future);
 
@@ -80,7 +69,7 @@ Future<BadgeCollectionStats> badgeCollectionStats(
     acquiredHiddenCount: acquiredHiddenCount,
     allProgress: progress,
   );
-}
+});
 
 /// バッジコレクション管理 State
 class BadgeCollectionState {
@@ -247,9 +236,6 @@ class BadgeCollectionNotifier extends StateNotifier<BadgeCollectionState> {
 }
 
 /// バッジコレクション管理プロバイダー
-@riverpod
-BadgeCollectionNotifier badgeCollectionNotifier(
-  BadgeCollectionNotifierRef ref,
-) {
+final badgeCollectionNotifierProvider = StateNotifierProvider<BadgeCollectionNotifier, BadgeCollectionState>((ref) {
   return BadgeCollectionNotifier();
-}
+});

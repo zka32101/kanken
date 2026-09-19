@@ -1,14 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../models/parent_dashboard.dart';
 
-part 'parent_dashboard_provider.g.dart';
-
 /// 保護者がリンクしている子どもの一覧を取得
-@riverpod
-Future<List<ChildLearningStats>> linkedChildren(LinkedChildrenRef ref) async {
+final linkedChildrenProvider = FutureProvider<List<ChildLearningStats>>((ref) async {
   final parentId = FirebaseAuth.instance.currentUser?.uid;
   if (parentId == null) return [];
 
@@ -54,14 +50,10 @@ Future<List<ChildLearningStats>> linkedChildren(LinkedChildrenRef ref) async {
   }
 
   return childrenStats;
-}
+});
 
 /// 子どもの学習グラフデータを取得（過去30日間）
-@riverpod
-Future<List<LearningDataPoint>> childLearningGraph(
-  ChildLearningGraphRef ref,
-  String childId,
-) async {
+final childLearningGraphProvider = FutureProvider.family<List<LearningDataPoint>, String>((ref, childId) async {
   final startDate = DateTime.now().subtract(const Duration(days: 30));
 
   final snapshot = await FirebaseFirestore.instance
@@ -75,14 +67,10 @@ Future<List<LearningDataPoint>> childLearningGraph(
   return snapshot.docs
       .map((doc) => LearningDataPoint.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// 子どもの弱点分野を取得
-@riverpod
-Future<List<ChildWeakArea>> childWeakAreas(
-  ChildWeakAreasRef ref,
-  String childId,
-) async {
+final childWeakAreasProvider = FutureProvider.family<List<ChildWeakArea>, String>((ref, childId) async {
   final snapshot = await FirebaseFirestore.instance
       .collection('users')
       .doc(childId)
@@ -93,7 +81,7 @@ Future<List<ChildWeakArea>> childWeakAreas(
   return snapshot.docs
       .map((doc) => ChildWeakArea.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// 保護者ダッシュボード State
 class ParentDashboardState {
@@ -203,9 +191,6 @@ class ParentDashboardNotifier extends StateNotifier<ParentDashboardState> {
 }
 
 /// 保護者ダッシュボード Notifier Provider
-@riverpod
-ParentDashboardNotifier parentDashboardNotifier(
-  ParentDashboardNotifierRef ref,
-) {
+final parentDashboardNotifierProvider = StateNotifierProvider<ParentDashboardNotifier, ParentDashboardState>((ref) {
   return ParentDashboardNotifier();
-}
+});

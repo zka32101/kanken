@@ -1,14 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../models/global_event.dart';
 
-part 'event_provider.g.dart';
-
 /// アクティブなイベント一覧を取得
-@riverpod
-Future<List<GlobalEvent>> activeEvents(ActiveEventsRef ref) async {
+final activeEventsProvider = FutureProvider<List<GlobalEvent>>((ref) async {
   final snapshot = await FirebaseFirestore.instance
       .collection('events')
       .where('status', isEqualTo: 'active')
@@ -18,11 +14,10 @@ Future<List<GlobalEvent>> activeEvents(ActiveEventsRef ref) async {
   return snapshot.docs
       .map((doc) => GlobalEvent.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// 開始前のイベント一覧を取得
-@riverpod
-Future<List<GlobalEvent>> upcomingEvents(UpcomingEventsRef ref) async {
+final upcomingEventsProvider = FutureProvider<List<GlobalEvent>>((ref) async {
   final snapshot = await FirebaseFirestore.instance
       .collection('events')
       .where('status', isEqualTo: 'upcoming')
@@ -32,11 +27,10 @@ Future<List<GlobalEvent>> upcomingEvents(UpcomingEventsRef ref) async {
   return snapshot.docs
       .map((doc) => GlobalEvent.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// 終了したイベント一覧を取得
-@riverpod
-Future<List<GlobalEvent>> pastEvents(PastEventsRef ref) async {
+final pastEventsProvider = FutureProvider<List<GlobalEvent>>((ref) async {
   final snapshot = await FirebaseFirestore.instance
       .collection('events')
       .where('status', isEqualTo: 'ended')
@@ -47,14 +41,10 @@ Future<List<GlobalEvent>> pastEvents(PastEventsRef ref) async {
   return snapshot.docs
       .map((doc) => GlobalEvent.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// イベント参加情報を取得
-@riverpod
-Future<List<EventParticipation>> eventParticipants(
-  EventParticipantsRef ref,
-  String eventId,
-) async {
+final eventParticipantsProvider = FutureProvider.family<List<EventParticipation>, String>((ref, eventId) async {
   final snapshot = await FirebaseFirestore.instance
       .collection('events')
       .doc(eventId)
@@ -65,13 +55,10 @@ Future<List<EventParticipation>> eventParticipants(
   return snapshot.docs
       .map((doc) => EventParticipation.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// ユーザーのイベント参加記録を取得
-@riverpod
-Future<List<EventParticipation>> userEventParticipations(
-  UserEventParticipationsRef ref,
-) async {
+final userEventParticipationsProvider = FutureProvider<List<EventParticipation>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
@@ -85,7 +72,7 @@ Future<List<EventParticipation>> userEventParticipations(
   return snapshot.docs
       .map((doc) => EventParticipation.fromJson(doc.data()))
       .toList();
-}
+});
 
 /// イベント管理 State
 class EventState {
@@ -306,9 +293,6 @@ class EventNotifier extends StateNotifier<EventState> {
 }
 
 /// イベント管理プロバイダー
-@riverpod
-EventNotifier eventNotifier(
-  EventNotifierRef ref,
-) {
+final eventNotifierProvider = StateNotifierProvider<EventNotifier, EventState>((ref) {
   return EventNotifier();
-}
+});

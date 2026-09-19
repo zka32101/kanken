@@ -1,14 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../models/weak_area.dart';
 
-part 'weak_area_provider.g.dart';
-
 /// 苦手分野分析を取得
-@riverpod
-Future<WeakAreaAnalysis> weakAreaAnalysis(WeakAreaAnalysisRef ref) async {
+final weakAreaAnalysisProvider = FutureProvider<WeakAreaAnalysis>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) {
     return WeakAreaAnalysis(
@@ -43,21 +39,19 @@ Future<WeakAreaAnalysis> weakAreaAnalysis(WeakAreaAnalysisRef ref) async {
     overallAccuracy: overallAccuracy,
     analyzedAt: DateTime.now(),
   );
-}
+});
 
 /// 苦手分野のみを取得
-@riverpod
-Future<List<WeakArea>> weakAreas(WeakAreasRef ref) async {
+final weakAreasProvider = FutureProvider<List<WeakArea>>((ref) async {
   final analysis = await ref.watch(weakAreaAnalysisProvider.future);
   return analysis.weakAreas;
-}
+});
 
 /// 最も苦手な分野を取得
-@riverpod
-Future<WeakArea?> worstWeakArea(WorstWeakAreaRef ref) async {
+final worstWeakAreaProvider = FutureProvider<WeakArea?>((ref) async {
   final analysis = await ref.watch(weakAreaAnalysisProvider.future);
   return analysis.getWorstArea();
-}
+});
 
 /// 苦手分野プロバイダー StateNotifier
 class WeakAreaState {
@@ -212,9 +206,6 @@ class WeakAreaNotifier extends StateNotifier<WeakAreaState> {
 }
 
 /// 苦手分野管理プロバイダー
-@riverpod
-WeakAreaNotifier weakAreaNotifier(
-  WeakAreaNotifierRef ref,
-) {
+final weakAreaNotifierProvider = StateNotifierProvider<WeakAreaNotifier, WeakAreaState>((ref) {
   return WeakAreaNotifier();
-}
+});
