@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/mock_exam_modes.dart';
 import '../providers/mock_exam_enhanced_provider.dart';
 import '../providers/firebase_provider.dart';
+import '../providers/exam_session_provider.dart';
+import 'mock_exam_enhanced_screen.dart';
 
 class MockExamModesScreen extends ConsumerWidget {
   const MockExamModesScreen({Key? key}) : super(key: key);
@@ -290,11 +292,13 @@ class MockExamModesScreen extends ConsumerWidget {
       return;
     }
 
-    // Navigate to exam with config
-    // This will be integrated with your exam flow
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${config.mode.toString().split('.').last} を開始します'),
+    // 試験モード設定を更新
+    ref.read(currentExamConfigProvider.notifier).state = config;
+
+    // Enhanced exam screen へ遷移
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => MockExamEnhancedScreen(config: config),
       ),
     );
   }

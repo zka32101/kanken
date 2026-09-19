@@ -1,0 +1,352 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/mock_exam_modes.dart';
+import '../providers/exam_session_provider.dart';
+
+class MockExamEnhancedScreen extends ConsumerStatefulWidget {
+  final ExamConfig config;
+
+  const MockExamEnhancedScreen({
+    required this.config,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  ConsumerState<MockExamEnhancedScreen> createState() =>
+      _MockExamEnhancedScreenState();
+}
+
+class _MockExamEnhancedScreenState extends ConsumerState<MockExamEnhancedScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _timerController;
+  int _elapsedSeconds = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 試験を開始
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startExam();
+    });
+
+    // タイマーを初期化（最大時間制限）
+    final maxDuration = Duration(minutes: widget.config.timeLimit);
+    _timerController = AnimationController(
+      duration: maxDuration,
+      vsync: this,
+    )..forward();
+
+    _timerController.addListener(() {
+      setState(() {
+        _elapsedSeconds = (_timerController.value * maxDuration.inSeconds).toInt();
+      });
+      ref
+          .read(examSessionProvider.notifier)
+          .updateElapsedTime(_elapsedSeconds);
+
+      // 時間切れチェック
+      if (_elapsedSeconds >= maxDuration.inSeconds) {
+        _handleTimeUp();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timerController.dispose();
+    super.dispose();
+  }
+
+  void _startExam() async {
+    try {
+      await ref.read(examSessionProvider.notifier).startExam(widget.config);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('試験の開始に失敗しました: $e')),
+        );
+        Navigator.pop(context);
+      }
+    }
+  }
+
+  void _handleTimeUp() {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('時間切れです')),
+      );
+      Future.delayed(const Duration(seconds: 1), () {
+        if (mounted) {
+          _showResults();
+        }
+      });
+    }
+  }
+
+  void _showResults() {
+    final session = ref.read(examSessionProvider);
+    if (session == null) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('試験完了'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildResultStat('正解数', '${session.getCorrectAnswerCount()}/${session.questions.length}'),
+              _buildResultStat('正答率', '${(session.getAccuracyRate() * 100).toStringAsFixed(1)}%'),
+              _buildResultStat('経過時間', _formatTime(_elapsedSeconds)),
+              if (session.config.passThreshold > 0)
+                _buildResultStat(
+                  '合否',
+                  (session.getAccuracyRate() * 100) >= session.config.passThreshold
+                      ? '✅ 合格'
+                      : '❌ 不合格',
+                ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ref.read(examSessionProvider.notifier).reset();
+              Navigator.pop(context);
+            },
+            child: const Text('完了'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildResultStat(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label),
+          Text(
+            value,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final sessionAsync = ref.watch(examSessionProvider);
+    final modeName = ref.watch(currentExamModeNameProvider);
+
+    if (sessionAsync == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('試験読み込み中')),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final session = sessionAsync;
+    final currentQuestion = session.getCurrentQuestion();
+    final remainingTime = session.getRemainingTime();
+    final isTimeWarning = remainingTime < 300; // 5分以下で警告
+
+    return WillPopScope(
+      onWillPop: () async {
+        final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('試験を中断しますか？'),
+            content: const Text('進捗が失われます'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('続ける'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('中断'),
+              ),
+            ],
+          ),
+        );
+        if (confirmed == true) {
+          ref.read(examSessionProvider.notifier).reset();
+        }
+        return confirmed ?? false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(modeName),
+          centerTitle: true,
+          elevation: 0,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '残り時間',
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                    Text(
+                      _formatTime(remainingTime),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: isTimeWarning ? Colors.red : Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        body: currentQuestion == null
+            ? const Center(child: Text('試験が終了しました'))
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 進捗バー
+                      LinearProgressIndicator(
+                        value: session.getProgressPercentage(),
+                        minHeight: 8,
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '問題 ${session.currentQuestionIndex + 1} / ${session.questions.length}',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          Text(
+                            '正解: ${session.getCorrectAnswerCount()}',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+
+                      // 問題表示
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.blue.shade300),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '【${currentQuestion.questionType}】',
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              currentQuestion.kanji,
+                              style: Theme.of(context).textTheme.displayMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // 問題文
+                      Text(
+                        currentQuestion.question,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(height: 16),
+
+                      // 選択肢
+                      ...currentQuestion.options.asMap().entries.map((entry) {
+                        final idx = entry.key;
+                        final option = entry.value;
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                backgroundColor: Colors.grey[200],
+                                foregroundColor: Colors.black,
+                              ),
+                              onPressed: () {
+                                ref
+                                    .read(examSessionProvider.notifier)
+                                    .recordAnswer(
+                                      session.currentQuestionIndex,
+                                      option,
+                                    );
+
+                                // 次の問題へ
+                                ref
+                                    .read(examSessionProvider.notifier)
+                                    .moveToNextQuestion();
+
+                                // 最後の問題の場合は結果表示
+                                if (session.currentQuestionIndex >=
+                                    session.questions.length - 1) {
+                                  Future.delayed(
+                                    const Duration(milliseconds: 500),
+                                    _showResults,
+                                  );
+                                }
+                              },
+                              child: Text(option),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+
+                      const SizedBox(height: 24),
+
+                      // ナビゲーションボタン
+                      if (session.currentQuestionIndex > 0)
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: () {
+                              ref
+                                  .read(examSessionProvider.notifier)
+                                  .moveToPreviousQuestion();
+                            },
+                            child: const Text('前へ'),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+      ),
+    );
+  }
+}
