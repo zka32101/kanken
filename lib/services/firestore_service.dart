@@ -1,23 +1,31 @@
-// Firestore service disabled - cloud_firestore dependency removed
-// Database functionality will be added in a future update
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/index.dart';
 
 class FirestoreService {
-  FirestoreService({dynamic firestore});
+  final FirebaseFirestore _firestore;
+
+  FirestoreService({FirebaseFirestore? firestore})
+      : _firestore = firestore ?? FirebaseFirestore.instance;
 
   // User operations
   Future<User?> getUser(String uid) async {
-    // Placeholder - will be implemented with database
-    return null;
+    final doc = await _firestore.collection('users').doc(uid).get();
+    if (!doc.exists) return null;
+    return User.fromJson(doc.data()!);
   }
 
   Future<void> createUser(User user) async {
-    // Placeholder - will be implemented with database
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .set(user.toJson(), SetOptions(merge: true));
   }
 
   Future<void> updateUser(User user) async {
-    // Placeholder - will be implemented with database
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .set(user.toJson(), SetOptions(merge: true));
   }
 
   // Kanji operations

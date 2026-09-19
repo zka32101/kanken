@@ -1,16 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/index.dart';
 import '../services/index.dart';
+import '../providers/firebase_provider.dart' show currentUserIdProvider;
 import 'services_provider.dart';
+
+export '../providers/firebase_provider.dart' show currentUserIdProvider;
 
 // ユーザー情報Provider
 final userProvider = FutureProvider.family<User?, String>((ref, uid) async {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return await firestoreService.getUser(uid);
 });
-
-// 現在ログイン中のUID（仮：AuthServiceが必要）
-final currentUserIdProvider = StateProvider<String?>((ref) => null);
 
 // 現在のユーザー情報
 final currentUserProvider = FutureProvider<User?>((ref) async {

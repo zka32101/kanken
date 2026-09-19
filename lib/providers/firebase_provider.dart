@@ -18,7 +18,7 @@ final currentUserIdProvider = Provider<String?>((ref) {
   return auth.currentUser?.uid;
 });
 
-/// 現在のユーザー provider
+/// 現在のユーザー provider（FirebaseAuthのUser、認証状態の変化に追従）
 final currentUserProvider = StreamProvider<User?>((ref) {
   final auth = ref.watch(firebaseAuthProvider);
   return auth.authStateChanges();

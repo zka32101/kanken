@@ -25,6 +25,7 @@ import '../screens/friend_challenges_screen.dart';
 import '../screens/spaced_repetition_review_screen.dart';
 import '../screens/learning_goals_screen.dart';
 import '../screens/stroke_order_screen.dart';
+import '../screens/auth_gate_screen.dart';
 import '../models/multiplayer.dart';
 import '../models/mock_exam.dart';
 import '../views/index.dart';
@@ -36,7 +37,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/',
       name: 'home',
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) => const AuthGateScreen(),
       routes: [
         // デイリーチャレンジ画面
         GoRoute(

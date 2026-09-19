@@ -6,6 +6,11 @@ final firestoreServiceProvider = Provider<FirestoreService>((ref) {
   return FirestoreService();
 });
 
+// AuthServiceProvider
+final authServiceProvider = Provider<AuthService>((ref) {
+  return AuthService();
+});
+
 // MockExamServiceProvider
 final mockExamServiceProvider = Provider<MockExamService>((ref) {
   final firestoreService = ref.watch(firestoreServiceProvider);
