@@ -47,9 +47,6 @@ jobs:
           echo "=== Verify Android platform dependencies ==="
           flutter pub get --platform android --verbose || echo "Android platform verification completed"
 
-      - name: Generate Riverpod files
-        run: flutter pub run build_runner build --delete-conflicting-outputs
-
       - name: Debug Flutter Build Environment
         run: |
           echo "=== Dart version ==="
