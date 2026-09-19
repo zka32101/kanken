@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/mock_exam_modes.dart';
 import '../providers/exam_session_provider.dart';
 import '../providers/exam_analysis_provider.dart';
+import '../providers/achievement_provider.dart';
+import '../widgets/achievement_unlock_dialog.dart';
 
 class MockExamResultScreen extends ConsumerStatefulWidget {
   final ExamSessionState session;
@@ -25,6 +27,148 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
   void initState() {
     super.initState();
     _createAndSaveAnalysis();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndShowAchievements();
+    });
+  }
+
+  Future<void> _checkAndShowAchievements() async {
+    try {
+      final currentAchievements =
+          await ref.read(userAchievementsProvider.future);
+      final analysis = await _buildAnalysisFromSession();
+
+      final newAchievements =
+          await _detectNewAchievements(analysis, currentAchievements);
+
+      if (newAchievements.isNotEmpty && mounted) {
+        await saveAchievements(newAchievements);
+
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AchievementUnlockDialog(
+            achievements: newAchievements,
+            onComplete: () {},
+          ),
+        );
+      }
+    } catch (e) {
+      // エラーサイレント処理
+    }
+  }
+
+  Future<ExamAnalysisResult> _buildAnalysisFromSession() async {
+    final categoryStats = <String, Map<String, dynamic>>{};
+
+    for (int i = 0; i < widget.session.questions.length; i++) {
+      final question = widget.session.questions[i];
+      final category = question.category.toString().split('.').last;
+
+      if (!categoryStats.containsKey(category)) {
+        categoryStats[category] = {
+          'correct': 0,
+          'total': 0,
+        };
+      }
+
+      categoryStats[category]!['total'] += 1;
+      if (widget.session.userAnswers[i] == question.correctAnswer) {
+        categoryStats[category]!['correct'] += 1;
+      }
+    }
+
+    final categoryPerformance = <String, CategoryPerformance>{};
+    int totalCorrect = 0;
+    int totalQuestions = 0;
+
+    categoryStats.forEach((category, stats) {
+      final correct = stats['correct'] as int;
+      final total = stats['total'] as int;
+      final accuracy = total > 0 ? correct / total : 0.0;
+      final avgTime = total > 0 ? widget.elapsedSeconds / total : 0.0;
+
+      categoryPerformance[category] = CategoryPerformance(
+        category: category,
+        correct: correct,
+        total: total,
+        accuracy: accuracy,
+        averageTimePerQuestion: avgTime,
+      );
+
+      totalCorrect += correct;
+      totalQuestions += total;
+    });
+
+    final overallAccuracy = totalQuestions > 0 ? totalCorrect / totalQuestions : 0.0;
+
+    return ExamAnalysisResult(
+      categoryPerformance: categoryPerformance,
+      weakPoints: [],
+      overallAccuracy: overallAccuracy,
+      elapsedSeconds: widget.elapsedSeconds,
+      examMode: widget.session.config.mode,
+      analyzedAt: DateTime.now(),
+    );
+  }
+
+  Future<List<Achievement>> _detectNewAchievements(
+    ExamAnalysisResult analysis,
+    List<Achievement> currentAchievements,
+  ) async {
+    final newAchievements = <Achievement>[];
+    final accuracy = analysis.overallAccuracy * 100;
+
+    if (accuracy >= 90 && !_isUnlocked('exam_90plus', currentAchievements)) {
+      newAchievements.add(
+        Achievement(
+          id: 'exam_90plus',
+          name: '優秀者',
+          description: '90点以上の成績を獲得',
+          icon: '⭐',
+          type: AchievementType.examScore,
+          points: 100,
+          isUnlocked: true,
+          unlockedAt: DateTime.now(),
+        ),
+      );
+    }
+
+    if (accuracy >= 80 && !_isUnlocked('exam_80plus', currentAchievements)) {
+      newAchievements.add(
+        Achievement(
+          id: 'exam_80plus',
+          name: '良好',
+          description: '80点以上の成績を獲得',
+          icon: '✨',
+          type: AchievementType.examScore,
+          points: 50,
+          isUnlocked: true,
+          unlockedAt: DateTime.now(),
+        ),
+      );
+    }
+
+    if (accuracy >= 100 && !_isUnlocked('exam_perfect', currentAchievements)) {
+      newAchievements.add(
+        Achievement(
+          id: 'exam_perfect',
+          name: '完璧',
+          description: '100点を獲得',
+          icon: '🏆',
+          type: AchievementType.examScore,
+          points: 200,
+          isUnlocked: true,
+          unlockedAt: DateTime.now(),
+        ),
+      );
+    }
+
+    return newAchievements;
+  }
+
+  bool _isUnlocked(String id, List<Achievement> achievements) {
+    return achievements.any((a) => a.id == id && a.isUnlocked);
   }
 
   Future<void> _createAndSaveAnalysis() async {
