@@ -23,6 +23,7 @@ import '../screens/mock_exam_modes_screen.dart';
 import '../screens/leaderboard_screen.dart';
 import '../screens/friend_challenges_screen.dart';
 import '../screens/spaced_repetition_review_screen.dart';
+import '../screens/learning_goals_screen.dart';
 import '../models/multiplayer.dart';
 import '../models/mock_exam.dart';
 import '../views/index.dart';
@@ -243,6 +244,13 @@ final appRouter = GoRouter(
           name: 'spacedRepetitionReview',
           builder: (context, state) => const SpacedRepetitionReviewScreen(),
         ),
+
+        // 学習目標管理
+        GoRoute(
+          path: 'learning-goals',
+          name: 'learningGoals',
+          builder: (context, state) => const LearningGoalsScreen(),
+        ),
       ],
     ),
   ],
@@ -353,4 +361,7 @@ extension NavigationExtension on BuildContext {
 
   /// 間隔反復復習に遷移
   void goSpacedRepetitionReview() => push('/spaced-repetition-review');
+
+  /// 学習目標管理に遷移
+  void goLearningGoals() => push('/learning-goals');
 }

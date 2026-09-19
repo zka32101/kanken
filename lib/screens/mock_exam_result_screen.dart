@@ -8,6 +8,8 @@ import '../providers/exam_analysis_provider.dart';
 import '../providers/achievement_provider.dart';
 import '../providers/leaderboard_provider.dart';
 import '../providers/spaced_repetition_provider.dart';
+import '../models/learning_goal.dart';
+import '../providers/learning_goal_provider.dart';
 import '../widgets/achievement_unlock_dialog.dart';
 
 class MockExamResultScreen extends ConsumerStatefulWidget {
@@ -32,9 +34,55 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
     _createAndSaveAnalysis();
     _updateLeaderboardScore();
     _registerWrongAnswersForReview();
+    _updateLearningGoalsProgress();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndShowAchievements();
     });
+  }
+
+  Future<void> _updateLearningGoalsProgress() async {
+    try {
+      final analysis = await _buildAnalysisFromSession();
+      final accuracy = analysis.overallAccuracy * 100;
+      final score = analysis.overallAccuracy * 100;
+      final questionCount = widget.session.questions.length;
+
+      final activeGoals = await ref.read(activeLearningGoalsProvider.future);
+
+      for (final goal in activeGoals) {
+        switch (goal.type) {
+          case GoalType.dailyQuestions:
+            await updateGoalProgress(
+              goalId: goal.goalId,
+              newValue: goal.currentValue + questionCount,
+            );
+            break;
+          case GoalType.accuracyRate:
+            if (accuracy > goal.currentValue) {
+              await updateGoalProgress(
+                goalId: goal.goalId,
+                newValue: accuracy.toInt(),
+              );
+            }
+            break;
+          case GoalType.examScore:
+            if (score > goal.currentValue) {
+              await updateGoalProgress(
+                goalId: goal.goalId,
+                newValue: score.toInt(),
+              );
+            }
+            break;
+          case GoalType.weeklyStudyMinutes:
+          case GoalType.streakDays:
+            break;
+        }
+      }
+
+      ref.invalidate(activeLearningGoalsProvider);
+    } catch (e) {
+      // エラーサイレント処理
+    }
   }
 
   Future<void> _registerWrongAnswersForReview() async {

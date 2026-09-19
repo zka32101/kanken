@@ -232,6 +232,15 @@ class HomeScreen extends ConsumerWidget {
                   onPressed: () => context.goSpacedRepetitionReview(),
                 ),
               ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  icon: const Icon(Icons.flag),
+                  label: const Text('学習目標を設定'),
+                  onPressed: () => context.goLearningGoals(),
+                ),
+              ),
               const SizedBox(height: 24),
 
               // 級選択セクション

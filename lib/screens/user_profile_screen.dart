@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../models/profile.dart';
 import '../providers/profile_provider.dart';
 
@@ -94,6 +95,16 @@ class UserProfileScreen extends ConsumerWidget {
                 foregroundColor: Colors.white,
               ),
               onPressed: () => _showEditDialog(context, ref, profile),
+            ),
+          ),
+          const SizedBox(height: 8),
+          // 学習目標管理ボタン
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              icon: const Icon(Icons.flag),
+              label: const Text('学習目標を管理'),
+              onPressed: () => context.push('/learning-goals'),
             ),
           ),
         ],
