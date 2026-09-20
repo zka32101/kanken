@@ -21,6 +21,19 @@ buildscript {
 }
 
 
+// 各moduleのビルド出力をリポジトリ直下のbuild/にまとめる（Flutter標準構成）。
+// これが無いとAABは android/app/build/outputs/... に生成されるが、
+// flutter buildツールは <repo>/build/app/outputs/... を探すためファイルが
+// 見つからず「Gradle build failed to produce an .aab file」と誤って
+// 報告される（Gradle自体は正常に成功している）。
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(':app')
+}
+
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
