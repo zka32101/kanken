@@ -22,14 +22,14 @@ class AdService {
     );
   }
 
-  /// バナー広告ユニットID
-  ///
-  /// 現在はGoogle公式のテスト用IDを使用している。
-  /// 本番リリース前に、AdMob Consoleで作成した自分の広告ユニットIDに
-  /// 差し替えること（差し替えないとテスト広告のまま収益が発生しない）。
-  static String get bannerAdUnitId => 'ca-app-pub-3940256099942544/6300978111';
+  /// バナー広告ユニットID（本番用）
+  static String get bannerAdUnitId => 'ca-app-pub-5058227312086483/5220932812';
 
-  /// インタースティシャル（全画面）広告ユニットID（テスト用）
+  /// インタースティシャル（全画面）広告ユニットID
+  ///
+  /// 現在は未使用のためGoogle公式のテスト用IDのまま。
+  /// 実際に使用する場合は、AdMob Consoleでインタースティシャル用の
+  /// 広告ユニットを別途作成し、そのIDに差し替えること。
   static String get interstitialAdUnitId =>
       'ca-app-pub-3940256099942544/1033173712';
 

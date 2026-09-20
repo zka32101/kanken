@@ -32,12 +32,10 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <!-- AdMob App ID -->
-        <!-- 以下はGoogle公式のテスト用App IDです。本番リリース前に、
-             AdMob Consoleで取得した自分のApp IDに差し替えてください。 -->
+        <!-- AdMob App ID（本番用） -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="ca-app-pub-5058227312086483~5887147228" />
 
         <!-- 児童向けアプリのため、広告リクエストはコード側で常に
              非パーソナライズ・子供向け設定を強制する（lib/services/ad_service.dart参照） -->
