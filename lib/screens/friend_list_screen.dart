@@ -452,7 +452,7 @@ class _FriendListScreenState extends ConsumerState<FriendListScreen>
               }
 
               // チャレンジを送信
-              await ref.read(challengeNotifierProvider).sendChallenge(
+              await ref.read(challengeNotifierProvider.notifier).sendChallenge(
                 toUserId: friend.userId,
                 toUserName: friend.userName,
                 fromUserName: currentUser.displayName ?? 'Unknown',

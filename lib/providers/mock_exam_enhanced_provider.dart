@@ -176,7 +176,7 @@ final categoryExamResultsProvider = FutureProvider.family<
           for (final answer in answers) {
             if (answer['category'] == category.toString()) {
               total++;
-              if (answer['isCorrect'] as bool?) == true {
+              if ((answer['isCorrect'] as bool?) == true) {
                 correct++;
               }
               avgTime += (answer['timeSpent'] as num?)?.toDouble() ?? 0;

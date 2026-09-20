@@ -134,7 +134,10 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'mock-exam',
           name: 'mockExam',
-          builder: (context, state) => const MockExamScreen(),
+          builder: (context, state) {
+            final level = state.extra as String? ?? 'LEVEL_10';
+            return MockExamScreen(level: level);
+          },
         ),
 
         // 模擬試験モード選択
@@ -328,7 +331,7 @@ extension NavigationExtension on BuildContext {
   void goHandwriting() => push('/handwriting');
 
   /// 模擬試験に遷移
-  void goMockExam() => push('/mock-exam');
+  void goMockExam(String level) => push('/mock-exam', extra: level);
 
   /// 模擬試験モード選択に遷移
   void goMockExamModes() => push('/mock-exam-modes');
