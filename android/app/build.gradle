@@ -103,13 +103,11 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
 
-    // Firebase using BOM - version 32.x compatible with Flutter 3.13
-    implementation platform('com.google.firebase:firebase-bom:32.8.0')
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-remote-config'
-    implementation 'com.google.firebase:firebase-functions'
+    // Firebase: 各firebase_*パッケージ（firebase_core, firebase_auth等）が
+    // それぞれ自身のFlutterFire Gradleプラグイン経由でBOMとネイティブ依存
+    // (正しいartifact名)を自動追加するため、ここでの手動指定は不要かつ
+    // バージョン/artifact名の不整合(firebase-remote-configは誤りで
+    // 正しくはfirebase-config)を招くため削除。
 
     // Google Play Services
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
