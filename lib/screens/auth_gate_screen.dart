@@ -1,56 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../viewmodels/services_provider.dart';
-import '../viewmodels/user_viewmodel.dart';
+import '../providers/firebase_provider.dart' as fb;
+import '../viewmodels/user_viewmodel.dart' as vm;
 import '../views/home_screen.dart';
+import 'login_choice_screen.dart';
 import 'nickname_setup_screen.dart';
 
 /// アプリ起動時の認証ゲート
 ///
-/// 未ログインなら自動で匿名サインインし、初回はニックネーム設定画面を、
-/// 設定済みならホーム画面を表示する。
-class AuthGateScreen extends ConsumerStatefulWidget {
+/// 未ログインならログイン方法選択画面（ゲスト or Google）を表示し、
+/// サインイン済みで初回ならニックネーム設定画面を、設定済みならホーム画面を表示する。
+class AuthGateScreen extends ConsumerWidget {
   const AuthGateScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<AuthGateScreen> createState() => _AuthGateScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authUserAsync = ref.watch(fb.currentUserProvider);
 
-class _AuthGateScreenState extends ConsumerState<AuthGateScreen> {
-  late final Future<void> _signInFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _signInFuture = ref.read(authServiceProvider).ensureSignedIn();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<void>(
-      future: _signInFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const _LoadingScaffold();
-        }
-        if (snapshot.hasError) {
-          return _ErrorScaffold(onRetry: () => setState(() {}));
+    return authUserAsync.when(
+      data: (authUser) {
+        if (authUser == null) {
+          return const LoginChoiceScreen();
         }
 
-        final userAsync = ref.watch(currentUserProvider);
-        return userAsync.when(
+        final profileAsync = ref.watch(vm.currentUserProvider);
+        return profileAsync.when(
           data: (user) {
             if (user == null) {
-              return NicknameSetupScreen(
-                onComplete: () => setState(() {}),
-              );
+              return NicknameSetupScreen(onComplete: () {});
             }
             return const HomeScreen();
           },
           loading: () => const _LoadingScaffold(),
-          error: (_, __) => _ErrorScaffold(onRetry: () => setState(() {})),
+          error: (_, __) => const _ErrorScaffold(),
         );
       },
+      loading: () => const _LoadingScaffold(),
+      error: (_, __) => const _ErrorScaffold(),
     );
   }
 }
@@ -67,23 +53,12 @@ class _LoadingScaffold extends StatelessWidget {
 }
 
 class _ErrorScaffold extends StatelessWidget {
-  final VoidCallback onRetry;
-
-  const _ErrorScaffold({required this.onRetry});
+  const _ErrorScaffold();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('ログインに失敗しました'),
-            const SizedBox(height: 16),
-            ElevatedButton(onPressed: onRetry, child: const Text('もう一度試す')),
-          ],
-        ),
-      ),
+    return const Scaffold(
+      body: Center(child: Text('読み込みに失敗しました')),
     );
   }
 }

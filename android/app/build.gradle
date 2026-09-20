@@ -38,7 +38,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.example.kanken"
+    namespace "com.yourwish.kankenchallenge"
     compileSdkVersion 34
 
     compileOptions {
@@ -55,7 +55,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.kanken"
+        applicationId "com.yourwish.kankenchallenge"
         minSdkVersion 21
         targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()

@@ -1,4 +1,4 @@
-package com.example.kanken
+package com.yourwish.kankenchallenge
 
 import io.flutter.embedding.android.FlutterActivity
 
