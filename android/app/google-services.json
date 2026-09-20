@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "940359560531-trun5k6ek9vkhsrdh6ice5488rkp3h7v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yourwish.kankenchallenge",
+            "certificate_hash": "381a20e7b88544ea477357da69d10284922d9999"
+          }
+        },
+        {
           "client_id": "940359560531-21hicomuvifi918vopeq0dm8ovhfkhit.apps.googleusercontent.com",
           "client_type": 3
         }
