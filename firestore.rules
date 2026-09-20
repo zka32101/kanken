@@ -1,0 +1,97 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // ユーザー本体ドキュメントと配下の全サブコレクション（achievements, notifications,
+    // friends, friendRequests, learningGoals, spacedRepetitionItems, examResults 等）
+    // はすべて本人のみ読み書き可能
+    match /users/{uid} {
+      allow read, write: if isOwner(uid);
+
+      match /{subcollection}/{document=**} {
+        allow read, write: if isOwner(uid);
+      }
+    }
+
+    // リーダーボード: ランキング表示のため読み取りはログインユーザー全員に許可、
+    // 書き込みは自分のスコアのみ
+    match /leaderboard/{period}/scores/{uid} {
+      allow read: if isSignedIn();
+      allow write: if isOwner(uid);
+    }
+
+    // フレンドチャレンジ: 当事者（送信者・受信者）のみ読み書き可能
+    match /friendChallenges/{challengeId} {
+      allow read, update, delete: if isSignedIn() &&
+        (resource.data.challengerUserId == request.auth.uid ||
+         resource.data.challengeeUserId == request.auth.uid);
+      allow create: if isSignedIn() &&
+        request.resource.data.challengerUserId == request.auth.uid;
+    }
+
+    // 模擬試験セッション: 本人のみ読み書き可能
+    match /examSessions/{sessionId} {
+      allow read, update, delete: if isSignedIn() &&
+        resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() &&
+        request.resource.data.userId == request.auth.uid;
+    }
+
+    // 保護者アカウントと子どものリンク: 保護者本人のみ読み書き可能
+    match /parentLinks/{linkId} {
+      allow read, delete: if isSignedIn() && resource.data.parentId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.parentId == request.auth.uid;
+      allow update: if isSignedIn() &&
+        resource.data.parentId == request.auth.uid &&
+        request.resource.data.parentId == request.auth.uid;
+    }
+
+    // マスターデータ系コレクション: ログインユーザーは読み取りのみ可能。
+    // 書き込みはAdmin SDK/Firebaseコンソール経由のみ（クライアントからは不可）
+    match /questions/{id} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+    match /examQuestions/{id} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+    match /challenges/{id} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+    match /badges/{id} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+    match /config/{id} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+
+    // グローバルイベント: 内容は読み取りのみ、参加登録は本人のみ
+    match /events/{eventId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+
+      match /participants/{uid} {
+        allow read: if isSignedIn();
+        allow write: if isOwner(uid);
+      }
+    }
+
+    // 上記以外のパスはすべて拒否（デフォルト拒否）
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
