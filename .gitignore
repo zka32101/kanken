@@ -76,5 +76,10 @@ lib/generated_plugin_registrant.dart
 # Coverage
 coverage/
 
+# Signing keys (never commit release keystores or credentials)
+android/key.properties
+*.jks
+*.keystore
+
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
