@@ -105,20 +105,8 @@ jobs:
         if: success()
         run: |
           set -o pipefail
-          echo "=== Memory before build ==="
-          free -h
           echo "=== Building Android App Bundle (AAB) ==="
-          flutter build appbundle --release --verbose 2>&1 | tee aab-build.log || true
-          echo "=== Memory after build ==="
-          free -h
-          echo "=== Checking dmesg for OOM kills ==="
-          dmesg 2>/dev/null | grep -i "killed process\|out of memory" || echo "(dmesg unavailable or no OOM entries)"
-          echo "=== Searching for any .aab file under build/ ==="
-          find build -iname "*.aab" -exec ls -lah {} \; || true
-          if [ ! -f build/app/outputs/bundle/release/app-release.aab ]; then
-            echo "::error::app-release.aab not found at the expected path"
-            exit 1
-          fi
+          flutter build appbundle --release 2>&1 | tee aab-build.log
           ls -lah build/app/outputs/bundle/release/app-release.aab
           echo "✅ AAB build succeeded"
 
