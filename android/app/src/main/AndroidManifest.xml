@@ -32,9 +32,24 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <!-- Firebase config -->
+        <!-- AdMob App ID -->
+        <!-- 以下はGoogle公式のテスト用App IDです。本番リリース前に、
+             AdMob Consoleで取得した自分のApp IDに差し替えてください。 -->
         <meta-data
-            android:name="google_analytics_adunit_id"
-            android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy" />
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
+
+        <!-- 児童向けアプリのため、広告リクエストはコード側で常に
+             非パーソナライズ・子供向け設定を強制する（lib/services/ad_service.dart参照） -->
+        <meta-data
+            android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT"
+            android:value="true" />
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
 </manifest>

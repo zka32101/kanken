@@ -12,6 +12,7 @@ import '../providers/spaced_repetition_provider.dart';
 import '../models/user_ranking.dart';
 import '../theme/app_theme.dart';
 import '../widgets/menu_grid_card.dart';
+import '../widgets/banner_ad_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -45,6 +46,7 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('小学漢検チャレンジ'),
       ),
+      bottomNavigationBar: const SafeArea(child: BannerAdWidget()),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
