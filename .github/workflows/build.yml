@@ -108,7 +108,7 @@ jobs:
           echo "=== Memory before build ==="
           free -h
           echo "=== Building Android App Bundle (AAB) ==="
-          flutter build appbundle --release 2>&1 | tee aab-build.log || true
+          flutter build appbundle --release --verbose 2>&1 | tee aab-build.log || true
           echo "=== Memory after build ==="
           free -h
           echo "=== Checking dmesg for OOM kills ==="
