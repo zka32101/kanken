@@ -85,7 +85,10 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            signingConfig signingConfigs.release
+            // key.properties（本番keystore情報）が無い環境ではdebug署名にフォールバックし、
+            // ビルドが通るかどうかの検証のみ行う（CI向け）。実際のPlay Store提出用AABは
+            // key.propertiesを用意したローカル環境でビルドすること。
+            signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
         }
     }
 
