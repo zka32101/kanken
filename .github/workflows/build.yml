@@ -101,6 +101,37 @@ jobs:
               -dname "CN=Android Debug,O=Android,C=US"
           fi
 
+      - name: Decode release keystore (if configured)
+        if: success()
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 --decode > android/app/kanken-release.jks
+            echo "Release keystore decoded."
+          else
+            echo "ANDROID_KEYSTORE_BASE64 not set; this build will fall back to debug signing."
+          fi
+
+      - name: Create key.properties (if configured)
+        if: success()
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -f android/app/kanken-release.jks ] && [ -n "$ANDROID_KEYSTORE_PASSWORD" ] && [ -n "$ANDROID_KEY_ALIAS" ] && [ -n "$ANDROID_KEY_PASSWORD" ]; then
+            cat > android/key.properties << EOF
+          storePassword=$ANDROID_KEYSTORE_PASSWORD
+          keyPassword=$ANDROID_KEY_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          storeFile=kanken-release.jks
+          EOF
+            echo "key.properties created; release build will use production signing."
+          else
+            echo "Signing secrets incomplete; this build will fall back to debug signing."
+          fi
+
       - name: Build Android App Bundle
         if: success()
         run: |
@@ -109,6 +140,10 @@ jobs:
           flutter build appbundle --release 2>&1 | tee aab-build.log
           ls -lah build/app/outputs/bundle/release/app-release.aab
           echo "✅ AAB build succeeded"
+
+      - name: Clean up signing secrets
+        if: always()
+        run: rm -f android/app/kanken-release.jks android/key.properties
 
       - name: Upload build logs
         if: always()
