@@ -326,7 +326,7 @@ class BattleRoomListScreen extends ConsumerWidget {
                 return;
               }
 
-              ref.read(battleRoomNotifierProvider).createRoom(
+              ref.read(battleRoomNotifierProvider.notifier).createRoom(
                     roomName: roomName,
                     examLevel: selectedLevel,
                     maxParticipants: maxParticipants,
@@ -351,7 +351,7 @@ class BattleRoomListScreen extends ConsumerWidget {
     WidgetRef ref,
     String roomId,
   ) async {
-    ref.read(battleRoomNotifierProvider).joinRoom(roomId: roomId);
+    ref.read(battleRoomNotifierProvider.notifier).joinRoom(roomId: roomId);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('ルームに参加しました')),
     );

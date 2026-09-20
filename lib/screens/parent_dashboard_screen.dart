@@ -30,7 +30,7 @@ class _ParentDashboardScreenState extends ConsumerState<ParentDashboardScreen> {
   Widget build(BuildContext context) {
     final childrenAsync = ref.watch(linkedChildrenProvider);
     final dashboardState = ref.watch(
-      parentDashboardNotifierProvider.select((n) => n.state),
+      parentDashboardNotifierProvider,
     );
 
     return Scaffold(
@@ -134,7 +134,7 @@ class _ParentDashboardScreenState extends ConsumerState<ParentDashboardScreen> {
   /// 子ども選択セクション
   Widget _buildChildSelector(List<ChildLearningStats> children) {
     final state = ref.watch(
-      parentDashboardNotifierProvider.select((n) => n.state),
+      parentDashboardNotifierProvider,
     );
 
     return Padding(
@@ -160,7 +160,7 @@ class _ParentDashboardScreenState extends ConsumerState<ParentDashboardScreen> {
                     onSelected: (selected) {
                       if (selected) {
                         ref
-                            .read(parentDashboardNotifierProvider)
+                            .read(parentDashboardNotifierProvider.notifier)
                             .selectChild(child.childId);
                       }
                     },
@@ -184,7 +184,7 @@ class _ParentDashboardScreenState extends ConsumerState<ParentDashboardScreen> {
   /// 統計情報セクション
   Widget _buildStatisticsSection(List<ChildLearningStats> children) {
     final state = ref.watch(
-      parentDashboardNotifierProvider.select((n) => n.state),
+      parentDashboardNotifierProvider,
     );
     final selectedChild = state.selectedChildId != null
         ? children.firstWhere(
@@ -597,7 +597,7 @@ class _ParentDashboardScreenState extends ConsumerState<ParentDashboardScreen> {
             onPressed: () {
               if (_emailController.text.isNotEmpty) {
                 ref
-                    .read(parentDashboardNotifierProvider)
+                    .read(parentDashboardNotifierProvider.notifier)
                     .linkChild(childEmail: _emailController.text);
                 Navigator.pop(context);
               }

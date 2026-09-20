@@ -28,6 +28,9 @@ class MockExamResultScreen extends ConsumerStatefulWidget {
 }
 
 class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
+  ExamSessionState get session => widget.session;
+  int get elapsedSeconds => widget.elapsedSeconds;
+
   @override
   void initState() {
     super.initState();
@@ -564,7 +567,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
             const Divider(),
             _buildStatRow(
               '合否ライン',
-              '${session.config.passThreshold.toStringAsFixed(0)}%以上',
+              '${session.config.passThreshold}%以上',
             ),
           ],
         ),
@@ -610,8 +613,8 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
             ...categoryStats.entries.map((entry) {
               final category = entry.key;
               final stats = entry.value;
-              final accuracy = stats['total'] > 0
-                  ? stats['correct'] / stats['total']
+              final accuracy = (stats['total'] ?? 0) > 0
+                  ? stats['correct']! / stats['total']!
                   : 0.0;
 
               return Padding(
@@ -729,7 +732,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            point['category'],
+                            point['category'] ?? '',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.red,
@@ -739,7 +742,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        point['recommendation'],
+                        point['recommendation'] ?? '',
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.grey.shade700,
@@ -825,7 +828,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
       }
     });
 
-    weakPoints.sort((a, b) => a['category'].compareTo(b['category']));
+    weakPoints.sort((a, b) => (a['category'] ?? '').compareTo(b['category'] ?? ''));
     return weakPoints;
   }
 

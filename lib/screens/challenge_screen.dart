@@ -445,7 +445,7 @@ class _ChallengeCardState extends ConsumerState<_ChallengeCard> {
   Future<void> _submitScore(BuildContext context) async {
     if (_myScore == null) return;
 
-    final notifier = ref.read(challengeNotifierProvider);
+    final notifier = ref.read(challengeNotifierProvider.notifier);
     await notifier.submitScore(
       invitationId: widget.challenge.invitationId,
       opponentUserId: widget.challenge.fromUserId == widget.challenge.toUserId
@@ -634,7 +634,7 @@ class _RequestCard extends ConsumerWidget {
   }
 
   Future<void> _acceptChallenge(BuildContext context, WidgetRef ref) async {
-    final notifier = ref.read(challengeNotifierProvider);
+    final notifier = ref.read(challengeNotifierProvider.notifier);
     await notifier.acceptChallenge(
       invitationId: challenge.invitationId,
       fromUserId: challenge.fromUserId,
@@ -647,7 +647,7 @@ class _RequestCard extends ConsumerWidget {
   }
 
   Future<void> _declineChallenge(BuildContext context, WidgetRef ref) async {
-    final notifier = ref.read(challengeNotifierProvider);
+    final notifier = ref.read(challengeNotifierProvider.notifier);
     await notifier.declineChallenge(
       invitationId: challenge.invitationId,
       fromUserId: challenge.fromUserId,

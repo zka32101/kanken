@@ -500,7 +500,7 @@ class _EventScreenState extends ConsumerState<EventScreen>
 
   /// イベント参加処理
   Future<void> _joinEvent(GlobalEvent event) async {
-    final notifier = ref.read(eventNotifierProvider);
+    final notifier = ref.read(eventNotifierProvider.notifier);
     await notifier.joinEvent(
       eventId: event.eventId,
       event: event,

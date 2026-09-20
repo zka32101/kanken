@@ -116,7 +116,7 @@ Future<int?> _getUserRank(String userId, LeaderboardPeriod period) async {
         .count()
         .get();
 
-    return snapshot.count + 1;
+    return (snapshot.count ?? 0) + 1;
   } catch (e) {
     return null;
   }

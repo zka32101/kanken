@@ -35,7 +35,7 @@ class ExamConfig {
   final bool showExplanations; // 解説表示
   final bool allowReview; // 見直し可能
   final bool randomizeOrder; // 問題順序ランダム
-  final bool passThreshold; // 合格ライン（%）
+  final int passThreshold; // 合格ライン（%）
 
   ExamConfig({
     required this.questionCount,

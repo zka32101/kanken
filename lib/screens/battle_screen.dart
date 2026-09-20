@@ -44,9 +44,7 @@ class _BattleScreenState extends ConsumerState<BattleScreen>
 
   @override
   Widget build(BuildContext context) {
-    final battleState = ref.watch(
-      battleRoomNotifierProvider.select((n) => n.state),
-    );
+    final battleState = ref.watch(battleRoomNotifierProvider);
 
     if (battleState.currentRoom == null || battleState.currentSession == null) {
       return Scaffold(
@@ -194,7 +192,7 @@ class _BattleScreenState extends ConsumerState<BattleScreen>
         children: participants.map((participant) {
           final score = session.participantScores[participant.userId] ?? 0;
           final isCurrentUser = participant.userId ==
-              ref.read(battleRoomNotifierProvider).state.currentRoom?.creatorId;
+              ref.read(battleRoomNotifierProvider).currentRoom?.creatorId;
 
           return Column(
             children: [
@@ -236,14 +234,14 @@ class _BattleScreenState extends ConsumerState<BattleScreen>
   }
 
   Future<void> _endBattle(BuildContext context) async {
-    final battleState = ref.read(battleRoomNotifierProvider).state;
+    final battleState = ref.read(battleRoomNotifierProvider);
     if (battleState.currentRoom == null ||
         battleState.currentSession == null) {
       return;
     }
 
     final result = await ref
-        .read(battleRoomNotifierProvider)
+        .read(battleRoomNotifierProvider.notifier)
         .completeBattle(
           roomId: battleState.currentRoom!.roomId,
           sessionId: battleState.currentSession!.sessionId,

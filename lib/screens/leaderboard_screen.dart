@@ -15,7 +15,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final leaderboardAsync = _getLeaderboardProvider(_selectedPeriod).watch(ref);
+    final leaderboardAsync = ref.watch(_getLeaderboardProvider(_selectedPeriod));
 
     return Scaffold(
       appBar: AppBar(
