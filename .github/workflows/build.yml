@@ -103,12 +103,16 @@ jobs:
 
       - name: Build Android App Bundle
         if: success()
-        env:
-          GRADLE_OPTS: "-Xmx2048m"
         run: |
           set -o pipefail
+          echo "=== Memory before build ==="
+          free -h
           echo "=== Building Android App Bundle (AAB) ==="
           flutter build appbundle --release 2>&1 | tee aab-build.log || true
+          echo "=== Memory after build ==="
+          free -h
+          echo "=== Checking dmesg for OOM kills ==="
+          dmesg 2>/dev/null | grep -i "killed process\|out of memory" || echo "(dmesg unavailable or no OOM entries)"
           echo "=== Searching for any .aab file under build/ ==="
           find build -iname "*.aab" -exec ls -lah {} \; || true
           if [ ! -f build/app/outputs/bundle/release/app-release.aab ]; then
