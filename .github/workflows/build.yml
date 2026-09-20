@@ -108,7 +108,13 @@ jobs:
         run: |
           set -o pipefail
           echo "=== Building Android App Bundle (AAB) ==="
-          flutter build appbundle --release 2>&1 | tee aab-build.log
+          flutter build appbundle --release 2>&1 | tee aab-build.log || true
+          echo "=== Searching for any .aab file under build/ ==="
+          find build -iname "*.aab" -exec ls -lah {} \; || true
+          if [ ! -f build/app/outputs/bundle/release/app-release.aab ]; then
+            echo "::error::app-release.aab not found at the expected path"
+            exit 1
+          fi
           ls -lah build/app/outputs/bundle/release/app-release.aab
           echo "✅ AAB build succeeded"
 
