@@ -1,34 +1,11 @@
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
-    }
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // Flutter Gradle Plugin は Android/Kotlin プラグインの後に適用する
+    id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
+    id "com.google.firebase.crashlytics"
 }
-
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
-
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
-
-// Repository configuration moved to settings.gradle for Gradle 8.1+ compatibility
-// Do NOT declare repositories here - use settings.gradle dependencyResolutionManagement instead
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
 
 // Signing configuration
 def keystoreProperties = new Properties()
@@ -39,15 +16,16 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.yourwish.kankenchallenge"
-    compileSdkVersion 34
+    // Google Play の要件: targetSdk 36 以上（2026年〜）
+    compileSdk 36
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 
     sourceSets {
@@ -56,10 +34,10 @@ android {
 
     defaultConfig {
         applicationId "com.yourwish.kankenchallenge"
-        minSdkVersion 21
-        targetSdkVersion 34
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion 36
+        versionCode flutter.versionCode
+        versionName flutter.versionName
         multiDexEnabled true
     }
 
@@ -89,6 +67,11 @@ android {
             // ビルドが通るかどうかの検証のみ行う（CI向け）。実際のPlay Store提出用AABは
             // key.propertiesを用意したローカル環境でビルドすること。
             signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
+
+            // ネイティブコードのデバッグシンボルをAABに含める（Play Consoleの警告対応）
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
         }
     }
 
@@ -102,9 +85,9 @@ flutter {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
 
     // Firebase: 各firebase_*パッケージ（firebase_core, firebase_auth等）が
     // それぞれ自身のFlutterFire Gradleプラグイン経由でBOMとネイティブ依存

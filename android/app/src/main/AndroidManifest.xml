@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yourwish.kankenchallenge">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -42,6 +42,13 @@
         <meta-data
             android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT"
             android:value="true" />
+
+        <!-- Firebase Analytics(play-services-measurement)とAdMob(play-services-ads)が
+             それぞれ別のAD_SERVICES_CONFIGを宣言して衝突するため、AdMob側を採用して上書きする -->
+        <property
+            android:name="android.adservices.AD_SERVICES_CONFIG"
+            android:resource="@xml/gma_ad_services_config"
+            tools:replace="android:resource" />
     </application>
 
     <queries>

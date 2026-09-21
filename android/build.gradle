@@ -1,25 +1,9 @@
-buildscript {
-    ext {
-        kotlin_version = '1.8.22'
-        // Use AGP 7.4.2 for Java 11 compatibility (AGP 8.x requires Java 17)
-        gradle_version = '7.4.2'
-    }
-
+allprojects {
     repositories {
         google()
         mavenCentral()
-        // Firebase dependencies repository
-        maven { url 'https://maven.google.com' }
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.android.tools.build:gradle:$gradle_version"
-        classpath 'com.google.gms:google-services:4.4.0'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
     }
 }
-
 
 // 各moduleのビルド出力をリポジトリ直下のbuild/にまとめる（Flutter標準構成）。
 // これが無いとAABは android/app/build/outputs/... に生成されるが、

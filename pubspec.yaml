@@ -35,7 +35,7 @@ dependencies:
   audioplayers: ^5.0.0
 
   # Charts
-  fl_chart: ^0.60.0
+  fl_chart: ^1.0.0
 
   # Ads
   google_mobile_ads: ^4.0.0
