@@ -46,14 +46,12 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAbcDefGhIjKlMnOpQrStUvWxYz1234567',
-    appId: '1:123456789012:android:abcdef1234567890abcd',
-    messagingSenderId: '123456789012',
-    projectId: 'kanken-dev',
-    databaseURL: 'https://kanken-dev.firebaseio.com',
-    storageBucket: 'kanken-dev.appspot.com',
+    apiKey: 'AIzaSyBuRizUC5hDKn4Fbf5NatFuMGnl215QYkk',
+    appId: '1:940359560531:android:d2025d69c40d70131145a6',
+    messagingSenderId: '940359560531',
+    projectId: 'kanken-b5ac9',
+    storageBucket: 'kanken-b5ac9.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'YOUR_IOS_API_KEY',
     appId: 'YOUR_IOS_APP_ID',
