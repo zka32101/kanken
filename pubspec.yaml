@@ -2,8 +2,7 @@ name: kanken
 description: "漢検チャレンジ - 漢字検定学習アプリ"
 publish_to: 'none'
 
-version: 1.0.0+1
-
+version: 1.0.1+2
 environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: '>=3.10.0'
