@@ -85,6 +85,32 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
     });
   }
 
+  /// 統計を Firestore に保存する。
+  /// users/{uid}/stats/current（本人のみ）に加えて、ランキング表示用に
+  /// rankings/{uid}（全員読み取り可）へ level/experience/coins/accuracyRate/streak
+  /// のみを merge でミラーする（userName はニックネーム設定側が別途書き込む）。
+  Future<void> _saveStats(GamificationStats stats) async {
+    await _firestore
+        .collection('users')
+        .doc(_userId)
+        .collection('stats')
+        .doc('current')
+        .set(stats.toJson());
+
+    await _firestore.collection('rankings').doc(_userId).set(
+      {
+        'userId': _userId,
+        'level': stats.level,
+        'experience': stats.experience,
+        'coins': stats.coins,
+        'accuracyRate': stats.accuracyRate,
+        'streak': stats.streak,
+        'lastPlayedAt': Timestamp.fromDate(stats.lastPlayedAt),
+      },
+      SetOptions(merge: true),
+    );
+  }
+
   /// 正解時に統計を更新
   Future<void> recordCorrectAnswer() async {
     state = await AsyncValue.guard(() async {
@@ -106,13 +132,7 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
         lastPlayedAt: DateTime.now(),
       );
 
-      // Firestore に保存
-      await _firestore
-          .collection('users')
-          .doc(_userId)
-          .collection('stats')
-          .doc('current')
-          .set(updatedStats.toJson());
+      await _saveStats(updatedStats);
 
       // ご褒美を記録
       await _recordReward(Reward.correctAnswer());
@@ -137,13 +157,7 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
         lastPlayedAt: DateTime.now(),
       );
 
-      // Firestore に保存
-      await _firestore
-          .collection('users')
-          .doc(_userId)
-          .collection('stats')
-          .doc('current')
-          .set(updatedStats.toJson());
+      await _saveStats(updatedStats);
 
       return updatedStats;
     });
@@ -169,13 +183,7 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
         experience: newExperience,
       );
 
-      // Firestore に保存
-      await _firestore
-          .collection('users')
-          .doc(_userId)
-          .collection('stats')
-          .doc('current')
-          .set(updatedStats.toJson());
+      await _saveStats(updatedStats);
 
       // ボーナスご褒美を記録
       if (bonus > 0) {
@@ -195,13 +203,7 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
       final updatedStats =
           current.copyWith(coins: current.coins + amount);
 
-      // Firestore に保存
-      await _firestore
-          .collection('users')
-          .doc(_userId)
-          .collection('stats')
-          .doc('current')
-          .set(updatedStats.toJson());
+      await _saveStats(updatedStats);
 
       return updatedStats;
     });

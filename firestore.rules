@@ -29,6 +29,15 @@ service cloud.firestore {
       allow write: if isOwner(uid);
     }
 
+    // ランキング公開用ミラー: users/{uid} 本体（メール等を含みうる）は非公開のため、
+    // ランキング表示に必要な最小限のフィールド（ニックネーム・レベル・経験値・
+    // 正答率・ストリーク・コイン）だけを本人が書き込む公開ドキュメント。
+    // 読み取りはログインユーザー全員、書き込みは本人のみ。
+    match /rankings/{uid} {
+      allow read: if isSignedIn();
+      allow write: if isOwner(uid);
+    }
+
     // フレンドチャレンジ: 当事者（送信者・受信者）のみ読み書き可能
     match /friendChallenges/{challengeId} {
       allow read, update, delete: if isSignedIn() &&

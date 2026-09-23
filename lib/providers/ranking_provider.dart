@@ -20,13 +20,15 @@ final rankingProvider = FutureProvider.family<List<UserRanking>, RankingFilter>(
       // ソート対象フィールドを決定
       final sortField = _getSortField(filter.type);
 
-      // Firestoreクエリを構築
-      Query query = firestore.collection('users');
+      // Firestoreクエリを構築。
+      // users/{uid} 本体はメール等を含みうるため本人のみ読み書き可能。
+      // ランキング表示には rankings/{uid}（全員読み取り可の公開ミラー）を使う。
+      Query query = firestore.collection('rankings');
 
       // 期間フィルター（週間・月間の場合）
       if (filter.period != RankingPeriod.allTime) {
         query = query.where(
-          'stats.lastPlayedAt',
+          'lastPlayedAt',
           isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
         );
       }
@@ -42,18 +44,17 @@ final rankingProvider = FutureProvider.family<List<UserRanking>, RankingFilter>(
         final doc = snapshot.docs[i];
         final data = doc.data() as Map<String, dynamic>;
 
-        // ユーザー情報と統計情報を結合
         final userRanking = UserRanking(
           userId: doc.id,
-          userName: data['profile']?['name'] ?? 'Unknown',
+          userName: data['userName'] as String? ?? 'Unknown',
           rank: i + 1, // ランク（1位から順に）
-          level: data['stats']?['level'] ?? 1,
-          experience: data['stats']?['experience'] ?? 0,
-          coins: data['profile']?['coins'] ?? 0,
-          accuracyRate: (data['stats']?['accuracyRate'] as num?)?.toDouble() ?? 0.0,
-          streak: data['stats']?['streak'] ?? 0,
-          lastPlayedAt: data['stats']?['lastPlayedAt'] is Timestamp
-              ? (data['stats']['lastPlayedAt'] as Timestamp).toDate()
+          level: data['level'] as int? ?? 1,
+          experience: data['experience'] as int? ?? 0,
+          coins: data['coins'] as int? ?? 0,
+          accuracyRate: (data['accuracyRate'] as num?)?.toDouble() ?? 0.0,
+          streak: data['streak'] as int? ?? 0,
+          lastPlayedAt: data['lastPlayedAt'] is Timestamp
+              ? (data['lastPlayedAt'] as Timestamp).toDate()
               : DateTime.now(),
         );
 
@@ -79,15 +80,15 @@ final userRankProvider = FutureProvider.family<int?, RankingFilter>(
     try {
       final sortField = _getSortField(filter.type);
 
-      // 現在のユーザーの値を取得
-      final userDoc = await firestore.collection('users').doc(currentUserId).get();
+      // 現在のユーザーの値を取得（公開ミラーの rankings/{uid} を参照）
+      final userDoc = await firestore.collection('rankings').doc(currentUserId).get();
       if (!userDoc.exists) return null;
 
       final userData = userDoc.data() as Map<String, dynamic>;
       final userValue = _extractSortValue(userData, filter.type);
 
       // より高い値を持つユーザーをカウント
-      Query query = firestore.collection('users');
+      Query query = firestore.collection('rankings');
       query = query.where(sortField, isGreaterThan: userValue);
 
       final snapshot = await query.count().get();
@@ -98,19 +99,19 @@ final userRankProvider = FutureProvider.family<int?, RankingFilter>(
   },
 );
 
-/// ソート対象フィールドを返す
+/// ソート対象フィールドを返す（rankings/{uid} のフラットなフィールド名）
 String _getSortField(RankingType type) {
   switch (type) {
     case RankingType.level:
-      return 'stats.level';
+      return 'level';
     case RankingType.experience:
-      return 'stats.experience';
+      return 'experience';
     case RankingType.accuracy:
-      return 'stats.accuracyRate';
+      return 'accuracyRate';
     case RankingType.streak:
-      return 'stats.streak';
+      return 'streak';
     case RankingType.coins:
-      return 'profile.coins';
+      return 'coins';
   }
 }
 
@@ -118,14 +119,14 @@ String _getSortField(RankingType type) {
 dynamic _extractSortValue(Map<String, dynamic> data, RankingType type) {
   switch (type) {
     case RankingType.level:
-      return data['stats']?['level'] ?? 0;
+      return data['level'] ?? 0;
     case RankingType.experience:
-      return data['stats']?['experience'] ?? 0;
+      return data['experience'] ?? 0;
     case RankingType.accuracy:
-      return (data['stats']?['accuracyRate'] as num?)?.toDouble() ?? 0.0;
+      return (data['accuracyRate'] as num?)?.toDouble() ?? 0.0;
     case RankingType.streak:
-      return data['stats']?['streak'] ?? 0;
+      return data['streak'] ?? 0;
     case RankingType.coins:
-      return data['profile']?['coins'] ?? 0;
+      return data['coins'] ?? 0;
   }
 }
