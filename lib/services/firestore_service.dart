@@ -19,6 +19,7 @@ class FirestoreService {
         .collection('users')
         .doc(user.uid)
         .set(user.toJson(), SetOptions(merge: true));
+    await _mirrorUserNameToRanking(user.uid, user.displayName);
   }
 
   Future<void> updateUser(User user) async {
@@ -26,6 +27,18 @@ class FirestoreService {
         .collection('users')
         .doc(user.uid)
         .set(user.toJson(), SetOptions(merge: true));
+    await _mirrorUserNameToRanking(user.uid, user.displayName);
+  }
+
+  /// users/{uid} 本体（メール等を含みうる）は本人のみ読み書き可能なため、
+  /// ランキング表示に使うニックネームだけを rankings/{uid}（全員読み取り可）へミラーする。
+  /// レベル・経験値・コイン等の統計は GamificationNotifier が別途同じドキュメントへ
+  /// merge するので、ここでは触れない。
+  Future<void> _mirrorUserNameToRanking(String uid, String userName) async {
+    await _firestore.collection('rankings').doc(uid).set(
+      {'userId': uid, 'userName': userName},
+      SetOptions(merge: true),
+    );
   }
 
   // Kanji operations
