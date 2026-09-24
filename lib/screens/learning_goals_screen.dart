@@ -206,6 +206,7 @@ class LearningGoalsScreen extends ConsumerWidget {
         label: Text('おすすめ目標: 1日 $perDay 問を目標に設定'),
         onPressed: () async {
           await createLearningGoal(
+            ref,
             type: GoalType.dailyQuestions,
             targetValue: perDay,
             deadline: DateTime.now().add(Duration(days: daysLeft)),
@@ -292,7 +293,7 @@ class LearningGoalsScreen extends ConsumerWidget {
                 IconButton(
                   icon: const Icon(Icons.delete_outline, size: 20),
                   onPressed: () async {
-                    await deactivateLearningGoal(goal.goalId);
+                    await deactivateLearningGoal(ref, goal.goalId);
                     ref.invalidate(activeLearningGoalsProvider);
                   },
                 ),
@@ -434,6 +435,7 @@ class LearningGoalsScreen extends ConsumerWidget {
                   if (targetValue == null || targetValue <= 0) return;
 
                   await createLearningGoal(
+                    ref,
                     type: selectedType,
                     targetValue: targetValue,
                   );

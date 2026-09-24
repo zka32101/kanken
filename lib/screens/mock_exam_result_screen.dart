@@ -57,6 +57,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
         switch (goal.type) {
           case GoalType.dailyQuestions:
             await updateGoalProgress(
+              ref,
               goalId: goal.goalId,
               newValue: goal.currentValue + questionCount,
             );
@@ -64,6 +65,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
           case GoalType.accuracyRate:
             if (accuracy > goal.currentValue) {
               await updateGoalProgress(
+                ref,
                 goalId: goal.goalId,
                 newValue: accuracy.toInt(),
               );
@@ -72,6 +74,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
           case GoalType.examScore:
             if (score > goal.currentValue) {
               await updateGoalProgress(
+                ref,
                 goalId: goal.goalId,
                 newValue: score.toInt(),
               );
@@ -83,6 +86,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
             final minutesSpent = (elapsedSeconds / 60).ceil();
             if (minutesSpent > 0) {
               await updateGoalProgress(
+                ref,
                 goalId: goal.goalId,
                 newValue: goal.currentValue + minutesSpent,
               );
@@ -93,6 +97,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
             final streak = user?.streakCount ?? 0;
             if (streak > goal.currentValue) {
               await updateGoalProgress(
+                ref,
                 goalId: goal.goalId,
                 newValue: streak,
               );
@@ -320,6 +325,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
       final score = (accuracy * 100).toInt();
 
       await updateUserScore(
+        ref,
         score: score,
         examsCompleted: 1,
         averageAccuracy: accuracy,

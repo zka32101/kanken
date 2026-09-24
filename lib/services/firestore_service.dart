@@ -128,6 +128,7 @@ class FirestoreService {
     String level, {
     int limit = 50,
     String? uid,
+    String profileId = 'default',
     int masteryThreshold = 3,
   }) async {
     final snapshot = await _firestore
@@ -141,8 +142,11 @@ class FirestoreService {
         .toList();
 
     if (uid != null) {
-      final excludeIds =
-          await getMasteredQuestionIds(uid, masteryThreshold: masteryThreshold);
+      final excludeIds = await getMasteredQuestionIds(
+        uid,
+        profileId: profileId,
+        masteryThreshold: masteryThreshold,
+      );
       if (excludeIds.isNotEmpty) {
         questions = questions.where((q) => !excludeIds.contains(q.id)).toList();
       }
@@ -164,21 +168,15 @@ class FirestoreService {
   // 連続正解数(correctStreak)を別途集計しておく。正解なら+1、
   // 不正解なら0にリセットする。「N問連続正解したら出題除外」
   // (User.masteryThreshold)の判定に使う。
+  // いずれも users/{uid}/profiles/{profileId}/... 配下（プロフィール単位）。
   Future<void> addAnswerLog(UserAnswerLog log) async {
     final batch = _firestore.batch();
+    final profileRef = _profileDoc(log.uid, log.profileId);
 
-    final logRef = _firestore
-        .collection('users')
-        .doc(log.uid)
-        .collection('answerLogs')
-        .doc(log.id);
+    final logRef = profileRef.collection('answerLogs').doc(log.id);
     batch.set(logRef, log.toJson());
 
-    final statsRef = _firestore
-        .collection('users')
-        .doc(log.uid)
-        .collection('questionStats')
-        .doc(log.questionId);
+    final statsRef = profileRef.collection('questionStats').doc(log.questionId);
     batch.set(
       statsRef,
       {
@@ -191,10 +189,11 @@ class FirestoreService {
     await batch.commit();
   }
 
-  Future<List<UserAnswerLog>> getUserAnswerLogs(String uid) async {
-    final snapshot = await _firestore
-        .collection('users')
-        .doc(uid)
+  Future<List<UserAnswerLog>> getUserAnswerLogs(
+    String uid, {
+    String profileId = 'default',
+  }) async {
+    final snapshot = await _profileDoc(uid, profileId)
         .collection('answerLogs')
         .orderBy('answeredAt', descending: true)
         .limit(200)
@@ -220,35 +219,41 @@ class FirestoreService {
   }
 
   // Learned kanji tracking（演習後にユーザーが手動でチェックする「覚えた」機能）
-  Future<List<String>> getUserLearnedKanjis(String uid) async {
-    final snapshot = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('learnedKanjis')
-        .get();
+  // プロフィール単位（users/{uid}/profiles/{profileId}/learnedKanjis）
+  Future<List<String>> getUserLearnedKanjis(
+    String uid, {
+    String profileId = 'default',
+  }) async {
+    final snapshot =
+        await _profileDoc(uid, profileId).collection('learnedKanjis').get();
     return snapshot.docs
         .map((doc) => doc.data()['questionId'] as String? ?? doc.id)
         .toList();
   }
 
-  Future<void> markAsLearned(String uid, String kanjiId) async {
-    await _firestore
-        .collection('users')
-        .doc(uid)
+  Future<void> markAsLearned(
+    String uid,
+    String kanjiId, {
+    String profileId = 'default',
+  }) async {
+    await _profileDoc(uid, profileId)
         .collection('learnedKanjis')
         .doc(kanjiId)
         .set({
       'uid': uid,
+      'profileId': profileId,
       'questionId': kanjiId,
       'learnedAt': DateTime.now().toIso8601String(),
     });
   }
 
   /// 「覚えた」チェックを取り消す
-  Future<void> unmarkAsLearned(String uid, String kanjiId) async {
-    await _firestore
-        .collection('users')
-        .doc(uid)
+  Future<void> unmarkAsLearned(
+    String uid,
+    String kanjiId, {
+    String profileId = 'default',
+  }) async {
+    await _profileDoc(uid, profileId)
         .collection('learnedKanjis')
         .doc(kanjiId)
         .delete();
@@ -258,22 +263,18 @@ class FirestoreService {
   /// （手動で「覚えた」チェックされた問題 + masteryThreshold回以上連続正解した問題）
   Future<Set<String>> getMasteredQuestionIds(
     String uid, {
+    String profileId = 'default',
     int masteryThreshold = 3,
   }) async {
     final excludeIds = <String>{};
+    final profileRef = _profileDoc(uid, profileId);
 
-    final learnedSnapshot = await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('learnedKanjis')
-        .get();
+    final learnedSnapshot = await profileRef.collection('learnedKanjis').get();
     excludeIds.addAll(
       learnedSnapshot.docs.map((d) => d.data()['questionId'] as String? ?? d.id),
     );
 
-    final statsSnapshot = await _firestore
-        .collection('users')
-        .doc(uid)
+    final statsSnapshot = await profileRef
         .collection('questionStats')
         .where('correctStreak', isGreaterThanOrEqualTo: masteryThreshold)
         .get();

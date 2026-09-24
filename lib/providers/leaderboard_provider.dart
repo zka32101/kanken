@@ -4,25 +4,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/leaderboard.dart';
 import '../models/achievement.dart';
 import '../models/notifications.dart';
+import '../services/firestore_service.dart';
+import '../viewmodels/user_viewmodel.dart' as user_vm;
 
 /// 日次リーダーボードプロバイダー
 final dailyLeaderboardProvider = FutureProvider<LeaderboardStats>((ref) async {
-  return _fetchLeaderboard(LeaderboardPeriod.daily);
+  return _fetchLeaderboard(ref, LeaderboardPeriod.daily);
 });
 
 /// 週次リーダーボードプロバイダー
 final weeklyLeaderboardProvider = FutureProvider<LeaderboardStats>((ref) async {
-  return _fetchLeaderboard(LeaderboardPeriod.weekly);
+  return _fetchLeaderboard(ref, LeaderboardPeriod.weekly);
 });
 
 /// 月次リーダーボードプロバイダー
 final monthlyLeaderboardProvider = FutureProvider<LeaderboardStats>((ref) async {
-  return _fetchLeaderboard(LeaderboardPeriod.monthly);
+  return _fetchLeaderboard(ref, LeaderboardPeriod.monthly);
 });
 
 /// 全期間リーダーボードプロバイダー
 final allTimeLeaderboardProvider = FutureProvider<LeaderboardStats>((ref) async {
-  return _fetchLeaderboard(LeaderboardPeriod.allTime);
+  return _fetchLeaderboard(ref, LeaderboardPeriod.allTime);
 });
 
 /// ユーザーの現在のリーダーボード順位プロバイダー
@@ -31,7 +33,7 @@ final userLeaderboardRankProvider = FutureProvider.family<int?, LeaderboardPerio
   if (userId == null) return null;
 
   try {
-    final leaderboard = await _fetchLeaderboard(period);
+    final leaderboard = await _fetchLeaderboard(ref, period);
     return leaderboard.currentUserEntry?.rank;
   } catch (e) {
     return null;
@@ -39,8 +41,13 @@ final userLeaderboardRankProvider = FutureProvider.family<int?, LeaderboardPerio
 });
 
 /// リーダーボード取得のコア処理
-Future<LeaderboardStats> _fetchLeaderboard(LeaderboardPeriod period) async {
+/// リーダーボードのドキュメントIDはプロフィール単位で分けるため
+/// FirestoreService.rankingDocId(uid, profileId) の複合IDを使う。
+Future<LeaderboardStats> _fetchLeaderboard(Ref ref, LeaderboardPeriod period) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
+  final profileId = ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+  );
 
   try {
     final db = FirebaseFirestore.instance;
@@ -61,23 +68,24 @@ Future<LeaderboardStats> _fetchLeaderboard(LeaderboardPeriod period) async {
       rank++;
     }
 
-    // 現在のユーザーの順位を取得
+    // 現在のユーザー（プロフィール）の順位を取得
     LeaderboardEntry? currentUserEntry;
     if (userId != null) {
+      final docId = FirestoreService.rankingDocId(userId, profileId);
       final userScoreDoc = await db
           .collection('leaderboard')
           .doc(period.toString())
           .collection('scores')
-          .doc(userId)
+          .doc(docId)
           .get();
 
       if (userScoreDoc.exists) {
         final userData = userScoreDoc.data()!;
-        final userRank = await _getUserRank(userId, period);
+        final userRank = await _getUserRank(docId, period);
         currentUserEntry = LeaderboardEntry.fromJson(userData).copyWith(rank: userRank ?? 0);
 
         if (period == LeaderboardPeriod.allTime && userRank != null && userRank > 0) {
-          await _checkLeaderboardRankAchievement(userId, userRank);
+          await _checkLeaderboardRankAchievement(userId, profileId, userRank);
         }
       }
     }
@@ -98,14 +106,14 @@ Future<LeaderboardStats> _fetchLeaderboard(LeaderboardPeriod period) async {
   }
 }
 
-/// ユーザーの順位を取得
-Future<int?> _getUserRank(String userId, LeaderboardPeriod period) async {
+/// ユーザー（プロフィール）の順位を取得
+Future<int?> _getUserRank(String docId, LeaderboardPeriod period) async {
   try {
     final db = FirebaseFirestore.instance;
     final query = db.collection('leaderboard').doc(period.toString()).collection('scores');
 
     // ユーザーのスコアを取得
-    final userDoc = await query.doc(userId).get();
+    final userDoc = await query.doc(docId).get();
     if (!userDoc.exists) return null;
 
     final userScore = (userDoc.data()?['totalScore'] as num?)?.toInt() ?? 0;
@@ -123,7 +131,8 @@ Future<int?> _getUserRank(String userId, LeaderboardPeriod period) async {
 }
 
 /// ユーザースコアを更新
-Future<void> updateUserScore({
+Future<void> updateUserScore(
+  WidgetRef ref, {
   required int score,
   required int examsCompleted,
   required double averageAccuracy,
@@ -133,12 +142,13 @@ Future<void> updateUserScore({
 
   try {
     final db = FirebaseFirestore.instance;
+    final user = await ref.read(user_vm.currentUserProvider.future);
+    final profileId = user?.profileId ?? 'default';
 
-    // ランキング参加設定(rankingOptIn)がオフのユーザーはリーダーボードに載せない
-    final userDoc = await db.collection('users').doc(userId).get();
-    final rankingOptIn = userDoc.data()?['rankingOptIn'] as bool? ?? false;
-    if (!rankingOptIn) return;
+    // ランキング参加設定(rankingOptIn)がオフのプロフィールはリーダーボードに載せない
+    if (!(user?.rankingOptIn ?? false)) return;
 
+    final docId = FirestoreService.rankingDocId(userId, profileId);
     final batch = db.batch();
 
     // 複数の期間（日次、週次、月次、全期間）に対してスコアを更新
@@ -147,7 +157,7 @@ Future<void> updateUserScore({
           .collection('leaderboard')
           .doc(period.toString())
           .collection('scores')
-          .doc(userId);
+          .doc(docId);
 
       // 既存のスコアを取得
       final existingDoc = await docRef.get();
@@ -163,6 +173,7 @@ Future<void> updateUserScore({
         docRef,
         {
           'userId': userId,
+          'profileId': profileId,
           'totalScore': newScore,
           'examsCompleted': examsCompleted,
           'averageAccuracy': averageAccuracy,
@@ -172,9 +183,16 @@ Future<void> updateUserScore({
       );
     }
 
-    // スコア履歴を記録
-    await db.collection('users').doc(userId).collection('scoreHistory').add({
+    // スコア履歴を記録（プロフィール単位）
+    await db
+        .collection('users')
+        .doc(userId)
+        .collection('profiles')
+        .doc(profileId)
+        .collection('scoreHistory')
+        .add({
       'userId': userId,
+      'profileId': profileId,
       'score': score,
       'examsCompleted': examsCompleted,
       'averageAccuracy': averageAccuracy,
@@ -193,19 +211,25 @@ const _leaderboardRankAchievements = {
 };
 
 /// リーダーボード順位に応じたバッジ達成をチェック
-Future<void> _checkLeaderboardRankAchievement(String userId, int rank) async {
+Future<void> _checkLeaderboardRankAchievement(
+  String userId,
+  String profileId,
+  int rank,
+) async {
   try {
+    final profileRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('profiles')
+        .doc(profileId);
+
     for (final entry in _leaderboardRankAchievements.entries) {
       final threshold = entry.key;
       final info = entry.value;
       if (rank > threshold) continue;
 
-      final achievementDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('achievements')
-          .doc(info.$1)
-          .get();
+      final achievementsRef = profileRef.collection('achievements');
+      final achievementDoc = await achievementsRef.doc(info.$1).get();
 
       if (achievementDoc.exists && (achievementDoc.data()?['isUnlocked'] == true)) {
         continue;
@@ -222,20 +246,11 @@ Future<void> _checkLeaderboardRankAchievement(String userId, int rank) async {
         unlockedAt: DateTime.now(),
       );
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('achievements')
-          .doc(info.$1)
-          .set(achievement.toJson(), SetOptions(merge: true));
+      await achievementsRef.doc(info.$1).set(achievement.toJson(), SetOptions(merge: true));
 
-      final notificationId = FirebaseFirestore.instance.collection('users').doc().id;
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('notifications')
-          .doc(notificationId)
-          .set(
+      final notificationsRef = profileRef.collection('notifications');
+      final notificationId = notificationsRef.doc().id;
+      await notificationsRef.doc(notificationId).set(
             AppNotification(
               notificationId: notificationId,
               userId: userId,

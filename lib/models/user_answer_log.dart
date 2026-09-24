@@ -3,6 +3,7 @@ enum AnswerMode { normal, handwriting, weakKanjiFocus }
 class UserAnswerLog {
   final String id;
   final String uid;
+  final String profileId;
   final String questionId;
   final bool isCorrect;
   final AnswerMode mode;
@@ -11,6 +12,7 @@ class UserAnswerLog {
   UserAnswerLog({
     required this.id,
     required this.uid,
+    this.profileId = 'default',
     required this.questionId,
     required this.isCorrect,
     required this.mode,
@@ -21,6 +23,7 @@ class UserAnswerLog {
     return UserAnswerLog(
       id: json['id'] ?? '',
       uid: json['uid'] ?? '',
+      profileId: json['profileId'] as String? ?? 'default',
       questionId: json['questionId'] ?? '',
       isCorrect: json['isCorrect'] ?? false,
       mode: _parseAnswerMode(json['mode']),
@@ -45,6 +48,7 @@ class UserAnswerLog {
     return {
       'id': id,
       'uid': uid,
+      'profileId': profileId,
       'questionId': questionId,
       'isCorrect': isCorrect,
       'mode': mode.toString().split('.').last,

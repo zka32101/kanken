@@ -3,7 +3,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/learning_recommendation.dart';
 import '../models/weak_area.dart';
+import '../viewmodels/user_viewmodel.dart' as user_vm;
 import 'weak_area_provider.dart';
+
+/// users/{uid}/profiles/{profileId} 配下のドキュメント参照
+DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection('profiles')
+      .doc(profileId);
+}
 
 /// 学習推奨プランを生成
 final learningPlanProvider = FutureProvider<LearningPlan>((ref) async {
@@ -86,14 +96,16 @@ final learningPlanProvider = FutureProvider<LearningPlan>((ref) async {
   );
 });
 
-/// 学習推奨を取得（Firestore から）
+/// 学習推奨を取得（Firestore から、プロフィール単位）
 final activeLearningRecommendationsProvider = FutureProvider<List<LearningRecommendation>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
-  final snapshot = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(userId)
+  final profileId = ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+  );
+
+  final snapshot = await _profileDoc(userId, profileId)
       .collection('learningRecommendations')
       .where('isCompleted', isEqualTo: false)
       .orderBy('priority')
@@ -105,14 +117,16 @@ final activeLearningRecommendationsProvider = FutureProvider<List<LearningRecomm
       .toList();
 });
 
-/// 完了した推奨を取得
+/// 完了した推奨を取得（プロフィール単位）
 final completedLearningRecommendationsProvider = FutureProvider<List<LearningRecommendation>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
-  final snapshot = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(userId)
+  final profileId = ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+  );
+
+  final snapshot = await _profileDoc(userId, profileId)
       .collection('learningRecommendations')
       .where('isCompleted', isEqualTo: true)
       .orderBy('completedAt', descending: true)
@@ -149,12 +163,17 @@ class LearningPlanState {
   }
 }
 
-/// 学習推奨管理の StateNotifier
+/// 学習推奨管理の StateNotifier（プロフィール単位）
 class LearningPlanNotifier extends StateNotifier<LearningPlanState> {
-  LearningPlanNotifier() : super(LearningPlanState());
+  LearningPlanNotifier(this._ref) : super(LearningPlanState());
 
-  final _firestore = FirebaseFirestore.instance;
+  final Ref _ref;
   final _auth = FirebaseAuth.instance;
+
+  Future<String> _currentProfileId() async {
+    final user = await _ref.read(user_vm.currentUserProvider.future);
+    return user?.profileId ?? 'default';
+  }
 
   /// 推奨を Firestore に保存
   Future<void> saveLearningPlan(LearningPlan plan) async {
@@ -164,12 +183,11 @@ class LearningPlanNotifier extends StateNotifier<LearningPlanState> {
       final currentUser = _auth.currentUser;
       if (currentUser == null) throw Exception('ユーザーがログインしていません');
 
-      final batch = _firestore.batch();
+      final profileId = await _currentProfileId();
+      final batch = FirebaseFirestore.instance.batch();
 
       for (final recommendation in plan.recommendations) {
-        final docRef = _firestore
-            .collection('users')
-            .doc(currentUser.uid)
+        final docRef = _profileDoc(currentUser.uid, profileId)
             .collection('learningRecommendations')
             .doc(recommendation.recommendationId);
 
@@ -195,9 +213,8 @@ class LearningPlanNotifier extends StateNotifier<LearningPlanState> {
       final currentUser = _auth.currentUser;
       if (currentUser == null) throw Exception('ユーザーがログインしていません');
 
-      await _firestore
-          .collection('users')
-          .doc(currentUser.uid)
+      final profileId = await _currentProfileId();
+      await _profileDoc(currentUser.uid, profileId)
           .collection('learningRecommendations')
           .doc(recommendationId)
           .update({
@@ -216,9 +233,8 @@ class LearningPlanNotifier extends StateNotifier<LearningPlanState> {
       final currentUser = _auth.currentUser;
       if (currentUser == null) throw Exception('ユーザーがログインしていません');
 
-      await _firestore
-          .collection('users')
-          .doc(currentUser.uid)
+      final profileId = await _currentProfileId();
+      await _profileDoc(currentUser.uid, profileId)
           .collection('learningRecommendations')
           .doc(recommendationId)
           .update({
@@ -238,9 +254,8 @@ class LearningPlanNotifier extends StateNotifier<LearningPlanState> {
       final currentUser = _auth.currentUser;
       if (currentUser == null) throw Exception('ユーザーがログインしていません');
 
-      await _firestore
-          .collection('users')
-          .doc(currentUser.uid)
+      final profileId = await _currentProfileId();
+      await _profileDoc(currentUser.uid, profileId)
           .collection('learningRecommendations')
           .doc(recommendationId)
           .delete();
@@ -254,5 +269,5 @@ class LearningPlanNotifier extends StateNotifier<LearningPlanState> {
 
 /// 学習推奨管理プロバイダー
 final learningPlanNotifierProvider = StateNotifierProvider<LearningPlanNotifier, LearningPlanState>((ref) {
-  return LearningPlanNotifier();
+  return LearningPlanNotifier(ref);
 });

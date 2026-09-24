@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/gamification_stats.dart';
 import '../models/reward.dart';
+import '../services/firestore_service.dart';
 import '../viewmodels/user_viewmodel.dart' as user_vm;
 import 'firebase_provider.dart';
 
@@ -14,10 +15,16 @@ final gamificationStatsProvider = FutureProvider<GamificationStats>((ref) async 
     throw Exception('User not authenticated');
   }
 
+  final profileId = ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+  );
+
   try {
     final doc = await firestore
         .collection('users')
         .doc(userId)
+        .collection('profiles')
+        .doc(profileId)
         .collection('stats')
         .doc('current')
         .get();
@@ -49,13 +56,16 @@ final gamificationStatsProvider = FutureProvider<GamificationStats>((ref) async 
 class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> {
   final FirebaseFirestore _firestore;
   final String _userId;
+  final String _profileId;
   final bool _rankingOptIn;
 
   GamificationNotifier(
     this._firestore,
     this._userId, {
+    String profileId = 'default',
     bool rankingOptIn = false,
-  })  : _rankingOptIn = rankingOptIn,
+  })  : _profileId = profileId,
+        _rankingOptIn = rankingOptIn,
         super(const AsyncValue.loading());
 
   /// 統計を読み込む
@@ -65,6 +75,8 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
       final doc = await _firestore
           .collection('users')
           .doc(_userId)
+          .collection('profiles')
+          .doc(_profileId)
           .collection('stats')
           .doc('current')
           .get();
@@ -98,15 +110,21 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
     await _firestore
         .collection('users')
         .doc(_userId)
+        .collection('profiles')
+        .doc(_profileId)
         .collection('stats')
         .doc('current')
         .set(stats.toJson());
 
     if (!_rankingOptIn) return;
 
-    await _firestore.collection('rankings').doc(_userId).set(
+    await _firestore
+        .collection('rankings')
+        .doc(FirestoreService.rankingDocId(_userId, _profileId))
+        .set(
       {
         'userId': _userId,
+        'profileId': _profileId,
         'level': stats.level,
         'experience': stats.experience,
         'coins': stats.coins,
@@ -222,6 +240,8 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
       await _firestore
           .collection('users')
           .doc(_userId)
+          .collection('profiles')
+          .doc(_profileId)
           .collection('rewards')
           .add(reward.toJson());
     } catch (e) {
@@ -230,27 +250,32 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
   }
 }
 
-/// ゲーミフィケーション StateNotifier provider
+/// ゲーミフィケーション StateNotifier provider（uid, profileIdの組ごと）
 final gamificationNotifierProvider = StateNotifierProvider.family<
     GamificationNotifier,
     AsyncValue<GamificationStats>,
-    String>((ref, userId) {
+    ({String uid, String profileId})>((ref, key) {
   final firestore = ref.watch(firebaseProvider);
-  return GamificationNotifier(firestore, userId);
+  return GamificationNotifier(firestore, key.uid, profileId: key.profileId);
 });
 
-/// 現在のユーザーの統計用 provider (userId 自動取得)
+/// 現在のユーザー（アクティブなプロフィール）の統計用 provider
 final currentGamificationNotifierProvider =
     StateNotifierProvider<GamificationNotifier, AsyncValue<GamificationStats>>((ref) {
   final firestore = ref.watch(firebaseProvider);
   final userId = ref.watch(currentUserIdProvider);
+  final profileId = ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+  );
   final rankingOptIn = ref.watch(
     user_vm.currentUserProvider.select((async) => async.value?.rankingOptIn ?? false),
   );
 
   if (userId == null) {
-    return GamificationNotifier(firestore, 'anonymous', rankingOptIn: rankingOptIn);
+    return GamificationNotifier(firestore, 'anonymous',
+        profileId: profileId, rankingOptIn: rankingOptIn);
   }
 
-  return GamificationNotifier(firestore, userId, rankingOptIn: rankingOptIn);
+  return GamificationNotifier(firestore, userId,
+      profileId: profileId, rankingOptIn: rankingOptIn);
 });

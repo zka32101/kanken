@@ -17,6 +17,7 @@ final practiceQuestionsProvider =
     level,
     limit: 100,
     uid: uid,
+    profileId: user?.profileId ?? 'default',
     masteryThreshold: user?.masteryThreshold ?? 3,
   );
   all.shuffle();
@@ -68,6 +69,7 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
     try {
       final questionAsync = ref.read(currentQuestionProvider);
       final firestoreService = ref.read(firestoreServiceProvider);
+      final user = await ref.read(currentUserProvider.future);
 
       // Handle AsyncValue<KanjiQuestion?>
       KanjiQuestion? question;
@@ -80,6 +82,7 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
         final log = UserAnswerLog(
           id: '',
           uid: uid,
+          profileId: user?.profileId ?? 'default',
           questionId: question.id,
           isCorrect: isCorrect,
           mode: AnswerMode.normal,
