@@ -11,21 +11,20 @@ final activeLearningGoalsProvider = FutureProvider<List<LearningGoal>>((ref) asy
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
-  try {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('learningGoals')
-        .where('isActive', isEqualTo: true)
-        .orderBy('createdAt', descending: true)
-        .get();
+  // ここで例外を握りつぶすと、Firestoreの複合インデックス未作成等の
+  // 本物のエラーが「目標が0件」に見えてしまい原因追跡ができなくなるため、
+  // 呼び出し元のFutureProvider.errorとしてそのまま伝播させる。
+  final snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('learningGoals')
+      .where('isActive', isEqualTo: true)
+      .orderBy('createdAt', descending: true)
+      .get();
 
-    return snapshot.docs
-        .map((doc) => LearningGoal.fromJson(doc.data()))
-        .toList();
-  } catch (e) {
-    return [];
-  }
+  return snapshot.docs
+      .map((doc) => LearningGoal.fromJson(doc.data()))
+      .toList();
 });
 
 /// ユーザーの達成済み学習目標一覧
@@ -33,22 +32,18 @@ final achievedLearningGoalsProvider = FutureProvider<List<LearningGoal>>((ref) a
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
-  try {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('learningGoals')
-        .where('isAchieved', isEqualTo: true)
-        .orderBy('achievedAt', descending: true)
-        .limit(20)
-        .get();
+  final snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('learningGoals')
+      .where('isAchieved', isEqualTo: true)
+      .orderBy('achievedAt', descending: true)
+      .limit(20)
+      .get();
 
-    return snapshot.docs
-        .map((doc) => LearningGoal.fromJson(doc.data()))
-        .toList();
-  } catch (e) {
-    return [];
-  }
+  return snapshot.docs
+      .map((doc) => LearningGoal.fromJson(doc.data()))
+      .toList();
 });
 
 /// 学習目標を作成

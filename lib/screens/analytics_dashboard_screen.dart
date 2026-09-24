@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/analytics.dart';
 import '../providers/analytics_provider.dart';
+import '../router/app_router.dart';
 
 class AnalyticsDashboardScreen extends ConsumerStatefulWidget {
   const AnalyticsDashboardScreen({Key? key}) : super(key: key);
@@ -507,230 +508,42 @@ class _AnalyticsDashboardScreenState
     }
   }
 
+  // 学習目標の作成・一覧・達成管理は「学習目標」画面(learning_goals_screen.dart)
+  // に一本化している。以前はここにも独自の目標設定UIがあったが、
+  // 同じFirestoreコレクション(users/{uid}/learningGoals)に非互換な
+  // スキーマで書き込んでしまい、片方の画面で作った目標がもう片方の
+  // 一覧に出てこない・保存したはずが消えるという不具合の原因になっていたため、
+  // 学習目標画面への案内のみに変更した。
   Widget _buildGoalsTab() {
-    final dashboardState = ref.watch(analyticsDashboardProvider);
-    final goals = ref.watch(userLearningGoalsProvider);
-
-    return goals.when(
-      data: (goalList) => SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(Icons.flag_outlined, size: 48, color: Colors.grey.shade400),
+            const SizedBox(height: 16),
             Text(
-              '学習目標',
+              '学習目標の設定・確認は\n「学習目標」画面から行えます',
+              textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            const SizedBox(height: 12),
-            if (goalList.isEmpty)
-              _buildEmptyGoalsState()
-            else
-              _buildGoalsList(goalList),
             const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.add),
-                label: const Text('新しい目標を設定'),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
+            ElevatedButton.icon(
+              icon: const Icon(Icons.flag),
+              label: const Text('学習目標を開く'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
                 ),
-                onPressed: () => _showGoalDialog(context, ref),
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
               ),
+              onPressed: () => context.goLearningGoals(),
             ),
           ],
         ),
-      ),
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) => const Center(child: Text('エラーが発生しました')),
-    );
-  }
-
-  Widget _buildEmptyGoalsState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.flag_outlined,
-            size: 48,
-            color: Colors.grey.shade400,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            '目標を設定して学習を頑張ろう！',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGoalsList(List<LearningGoal> goals) {
-    return Column(
-      children: goals.map((goal) {
-        return Card(
-          margin: const EdgeInsets.only(bottom: 12),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _getGoalTypeLabel(goal.goalType),
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${goal.type} - 目標: ${goal.targetValue}',
-                          style: Theme.of(context).textTheme.labelSmall,
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.done),
-                      onPressed: () {
-                        ref
-                            .read(analyticsDashboardProvider.notifier)
-                            .completeGoal(goal.goalId);
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                // 進捗バー
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: goal.progress.clamp(0, 1),
-                    minHeight: 8,
-                    backgroundColor: Colors.grey.shade300,
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      Colors.blue,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '${goal.currentValue} / ${goal.targetValue}',
-                  style: Theme.of(context).textTheme.labelSmall,
-                ),
-              ],
-            ),
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  String _getGoalTypeLabel(String goalType) {
-    switch (goalType) {
-      case 'accuracy':
-        return '正答率';
-      case 'questions':
-        return '問題数';
-      case 'time':
-        return '学習時間';
-      default:
-        return '目標';
-    }
-  }
-
-  Future<void> _showGoalDialog(BuildContext context, WidgetRef ref) async {
-    String selectedType = 'daily';
-    String selectedGoalType = 'accuracy';
-    int targetValue = 80;
-
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('新しい目標を設定'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('期間', style: Theme.of(context).textTheme.labelMedium),
-              const SizedBox(height: 8),
-              StatefulBuilder(
-                builder: (context, setState) => Column(
-                  children: [
-                    SegmentedButton<String>(
-                      segments: const [
-                        ButtonSegment(value: 'daily', label: Text('日次')),
-                        ButtonSegment(value: 'weekly', label: Text('週次')),
-                        ButtonSegment(value: 'monthly', label: Text('月次')),
-                      ],
-                      selected: {selectedType},
-                      onSelectionChanged: (value) {
-                        setState(() => selectedType = value.first);
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    Text('目標種別',
-                        style: Theme.of(context).textTheme.labelMedium),
-                    const SizedBox(height: 8),
-                    SegmentedButton<String>(
-                      segments: const [
-                        ButtonSegment(value: 'accuracy', label: Text('正答率')),
-                        ButtonSegment(value: 'questions', label: Text('問題数')),
-                        ButtonSegment(value: 'time', label: Text('時間')),
-                      ],
-                      selected: {selectedGoalType},
-                      onSelectionChanged: (value) {
-                        setState(() => selectedGoalType = value.first);
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    Text('目標値: $targetValue',
-                        style: Theme.of(context).textTheme.labelMedium),
-                    Slider(
-                      value: targetValue.toDouble(),
-                      min: 10,
-                      max: 200,
-                      divisions: 19,
-                      onChanged: (value) {
-                        setState(() => targetValue = value.toInt());
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('キャンセル'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () {
-              ref.read(analyticsDashboardProvider.notifier).setGoal(
-                    type: selectedType,
-                    targetValue: targetValue,
-                    goalType: selectedGoalType,
-                  );
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('目標を設定しました')),
-              );
-            },
-            child: const Text('設定'),
-          ),
-        ],
       ),
     );
   }

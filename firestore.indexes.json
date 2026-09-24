@@ -24,6 +24,39 @@
         { "fieldPath": "difficulty", "order": "ASCENDING" },
         { "fieldPath": "category", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "learningGoals",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isActive", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "learningGoals",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isAchieved", "order": "ASCENDING" },
+        { "fieldPath": "achievedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "learningRecommendations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isCompleted", "order": "ASCENDING" },
+        { "fieldPath": "priority", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "learningRecommendations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isCompleted", "order": "ASCENDING" },
+        { "fieldPath": "completedAt", "order": "DESCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []
