@@ -26,6 +26,7 @@ import '../screens/spaced_repetition_review_screen.dart';
 import '../screens/learning_goals_screen.dart';
 import '../screens/stroke_order_screen.dart';
 import '../screens/auth_gate_screen.dart';
+import '../screens/settings_screen.dart';
 import '../models/multiplayer.dart';
 import '../models/mock_exam.dart';
 import '../views/index.dart';
@@ -263,6 +264,13 @@ final appRouter = GoRouter(
           name: 'strokeOrder',
           builder: (context, state) => const StrokeOrderScreen(),
         ),
+
+        // 設定
+        GoRoute(
+          path: 'settings',
+          name: 'settings',
+          builder: (context, state) => const SettingsScreen(),
+        ),
       ],
     ),
   ],
@@ -379,4 +387,7 @@ extension NavigationExtension on BuildContext {
 
   /// 書き順ガイドに遷移
   void goStrokeOrder() => push('/stroke-order');
+
+  /// 設定画面に遷移
+  void goSettings() => push('/settings');
 }

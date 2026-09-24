@@ -184,6 +184,12 @@ class HomeScreen extends ConsumerWidget {
                   color: AppColors.info,
                   onTap: () => context.goParentDashboard(),
                 ),
+                MenuGridCard(
+                  icon: Icons.settings,
+                  label: '設定',
+                  color: AppColors.info,
+                  onTap: () => context.goSettings(),
+                ),
               ]),
               const SizedBox(height: 16),
             ],
