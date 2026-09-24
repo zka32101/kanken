@@ -8,6 +8,11 @@ enum FriendStatus {
 }
 
 /// フレンド情報
+///
+/// フレンドは「アカウント」ではなく「プロフィール」単位の関係として扱う
+/// （兄弟等で1つのアカウントを共有していても、フレンドは別々に持てる）。
+/// そのため userId には素のuidではなく、FirestoreService.rankingDocId()
+/// と同じ "{uid}_{profileId}" 複合IDを保持する。
 class Friend {
   final String userId;
   final String userName;
@@ -123,7 +128,7 @@ FriendStatus _statusFromString(String status) {
   }
 }
 
-/// フレンドリクエスト
+/// フレンドリクエスト（fromUserId/toUserIdもFriend.userIdと同じ複合ID）
 class FriendRequest {
   final String requestId;
   final String fromUserId;

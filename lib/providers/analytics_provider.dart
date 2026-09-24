@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/analytics.dart';
+import '../viewmodels/user_viewmodel.dart' as user_vm;
 
 final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
   return FirebaseAuth.instance;
@@ -16,14 +17,30 @@ final currentUserIdProvider = Provider<String?>((ref) {
   return auth.currentUser?.uid;
 });
 
-/// ユーザーの学習分析データを取得
+/// 現在のプロフィールIDを取得
+final _currentProfileIdProvider = Provider<String>((ref) {
+  return ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+  );
+});
+
+/// users/{uid}/profiles/{profileId} 配下のドキュメント参照
+DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection('profiles')
+      .doc(profileId);
+}
+
+/// ユーザーの学習分析データを取得（プロフィール単位）
 final userLearningAnalyticsProvider =
     FutureProvider<LearningAnalytics?>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return null;
 
-  final firestore = ref.watch(firebaseFirestoreProvider);
-  final doc = await firestore.collection('users').doc(userId).get();
+  final profileId = ref.watch(_currentProfileIdProvider);
+  final doc = await _profileDoc(userId, profileId).get();
 
   if (!doc.exists) return null;
 
@@ -33,18 +50,16 @@ final userLearningAnalyticsProvider =
   });
 });
 
-/// ユーザーの成長データ（過去30日）を取得
+/// ユーザーの成長データ（過去30日）を取得（プロフィール単位）
 final userGrowthDataProvider =
     FutureProvider<List<GrowthData>>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return [];
 
-  final firestore = ref.watch(firebaseFirestoreProvider);
+  final profileId = ref.watch(_currentProfileIdProvider);
   final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
 
-  final querySnapshot = await firestore
-      .collection('users')
-      .doc(userId)
+  final querySnapshot = await _profileDoc(userId, profileId)
       .collection('growthData')
       .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(thirtyDaysAgo))
       .orderBy('date', descending: false)
@@ -55,16 +70,14 @@ final userGrowthDataProvider =
       .toList();
 });
 
-/// ユーザーの学習トレンド
+/// ユーザーの学習トレンド（プロフィール単位）
 final userLearningTrendsProvider =
     FutureProvider<List<LearningTrend>>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return [];
 
-  final firestore = ref.watch(firebaseFirestoreProvider);
-  final querySnapshot = await firestore
-      .collection('users')
-      .doc(userId)
+  final profileId = ref.watch(_currentProfileIdProvider);
+  final querySnapshot = await _profileDoc(userId, profileId)
       .collection('learningTrends')
       .orderBy('averageTrend', descending: true)
       .get();
@@ -74,16 +87,14 @@ final userLearningTrendsProvider =
       .toList();
 });
 
-/// ユーザーの学習効率
+/// ユーザーの学習効率（プロフィール単位）
 final userStudyEfficiencyProvider =
     FutureProvider<StudyEfficiency?>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return null;
 
-  final firestore = ref.watch(firebaseFirestoreProvider);
-  final doc = await firestore
-      .collection('users')
-      .doc(userId)
+  final profileId = ref.watch(_currentProfileIdProvider);
+  final doc = await _profileDoc(userId, profileId)
       .collection('studyEfficiency')
       .doc('current')
       .get();

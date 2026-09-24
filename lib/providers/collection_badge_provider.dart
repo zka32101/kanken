@@ -2,6 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/collection_badge.dart';
+import '../viewmodels/user_viewmodel.dart' as user_vm;
+
+/// users/{uid}/profiles/{profileId} 配下のドキュメント参照
+DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection('profiles')
+      .doc(profileId);
+}
 
 /// すべてのバッジ定義を取得
 final allBadgesProvider = FutureProvider<List<CollectionBadge>>((ref) async {
@@ -16,14 +26,16 @@ final allBadgesProvider = FutureProvider<List<CollectionBadge>>((ref) async {
       .toList();
 });
 
-/// ユーザーのバッジ取得状況を取得
+/// ユーザーのバッジ取得状況を取得（プロフィール単位）
 final userBadgeProgressProvider = FutureProvider<List<UserBadgeProgress>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
-  final snapshot = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(userId)
+  final profileId = ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+  );
+
+  final snapshot = await _profileDoc(userId, profileId)
       .collection('badgeProgress')
       .orderBy('lastUpdatedAt', descending: true)
       .get();
@@ -92,12 +104,17 @@ class BadgeCollectionState {
   }
 }
 
-/// バッジコレクション管理 StateNotifier
+/// バッジコレクション管理 StateNotifier（プロフィール単位）
 class BadgeCollectionNotifier extends StateNotifier<BadgeCollectionState> {
-  BadgeCollectionNotifier() : super(BadgeCollectionState());
+  BadgeCollectionNotifier(this._ref) : super(BadgeCollectionState());
 
-  final _firestore = FirebaseFirestore.instance;
+  final Ref _ref;
   final _auth = FirebaseAuth.instance;
+
+  Future<String> _currentProfileId() async {
+    final user = await _ref.read(user_vm.currentUserProvider.future);
+    return user?.profileId ?? 'default';
+  }
 
   /// バッジを取得
   Future<void> acquireBadge({
@@ -110,16 +127,13 @@ class BadgeCollectionNotifier extends StateNotifier<BadgeCollectionState> {
       final currentUser = _auth.currentUser;
       if (currentUser == null) throw Exception('ユーザーがログインしていません');
 
-      final progressId =
-          _firestore.collection('users').doc(currentUser.uid).collection('badgeProgress').doc().id;
+      final profileId = await _currentProfileId();
+      final badgeProgressRef =
+          _profileDoc(currentUser.uid, profileId).collection('badgeProgress');
+      final progressId = badgeProgressRef.doc().id;
 
       // バッジの取得記録を保存
-      await _firestore
-          .collection('users')
-          .doc(currentUser.uid)
-          .collection('badgeProgress')
-          .doc(progressId)
-          .set({
+      await badgeProgressRef.doc(progressId).set({
         'progressId': progressId,
         'userId': currentUser.uid,
         'badgeId': badgeId,
@@ -131,12 +145,10 @@ class BadgeCollectionNotifier extends StateNotifier<BadgeCollectionState> {
 
       // ユーザーのコインを加算
       if (rewardCoins > 0) {
-        await _firestore
-            .collection('users')
-            .doc(currentUser.uid)
-            .update({
-          'coins': FieldValue.increment(rewardCoins),
-        });
+        await _profileDoc(currentUser.uid, profileId)
+            .collection('wallet')
+            .doc('balance')
+            .set({'coins': FieldValue.increment(rewardCoins)}, SetOptions(merge: true));
       }
 
       state = state.copyWith(isLoading: false);
@@ -158,24 +170,17 @@ class BadgeCollectionNotifier extends StateNotifier<BadgeCollectionState> {
       final currentUser = _auth.currentUser;
       if (currentUser == null) throw Exception('ユーザーがログインしていません');
 
+      final profileId = await _currentProfileId();
+      final badgeProgressRef = _profileDoc(userId, profileId).collection('badgeProgress');
+
       // 既存の進捗を取得または作成
-      final existingDocs = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('badgeProgress')
-          .where('badgeId', isEqualTo: badgeId)
-          .get();
+      final existingDocs =
+          await badgeProgressRef.where('badgeId', isEqualTo: badgeId).get();
 
       if (existingDocs.docs.isEmpty) {
         // 新規作成
-        final progressId =
-            _firestore.collection('users').doc(userId).collection('badgeProgress').doc().id;
-        await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('badgeProgress')
-            .doc(progressId)
-            .set({
+        final progressId = badgeProgressRef.doc().id;
+        await badgeProgressRef.doc(progressId).set({
           'progressId': progressId,
           'userId': userId,
           'badgeId': badgeId,
@@ -187,12 +192,7 @@ class BadgeCollectionNotifier extends StateNotifier<BadgeCollectionState> {
       } else {
         // 既存を更新
         final docId = existingDocs.docs[0].id;
-        await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('badgeProgress')
-            .doc(docId)
-            .update({
+        await badgeProgressRef.doc(docId).update({
           'currentCount': newCount,
           'lastUpdatedAt': Timestamp.now(),
         });
@@ -214,9 +214,8 @@ class BadgeCollectionNotifier extends StateNotifier<BadgeCollectionState> {
       final currentUser = _auth.currentUser;
       if (currentUser == null) throw Exception('ユーザーがログインしていません');
 
-      final docs = await _firestore
-          .collection('users')
-          .doc(currentUser.uid)
+      final profileId = await _currentProfileId();
+      final docs = await _profileDoc(currentUser.uid, profileId)
           .collection('badgeProgress')
           .where('badgeId', isEqualTo: badgeId)
           .get();
@@ -237,5 +236,5 @@ class BadgeCollectionNotifier extends StateNotifier<BadgeCollectionState> {
 
 /// バッジコレクション管理プロバイダー
 final badgeCollectionNotifierProvider = StateNotifierProvider<BadgeCollectionNotifier, BadgeCollectionState>((ref) {
-  return BadgeCollectionNotifier();
+  return BadgeCollectionNotifier(ref);
 });

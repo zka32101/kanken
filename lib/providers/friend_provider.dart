@@ -3,19 +3,31 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kanken/models/friend.dart';
 import 'package:kanken/models/achievement.dart';
 import 'package:kanken/models/notifications.dart';
+import 'package:kanken/services/firestore_service.dart';
+import 'package:kanken/viewmodels/services_provider.dart';
+import 'package:kanken/viewmodels/user_viewmodel.dart' as user_vm;
 import 'firebase_provider.dart';
 
-/// フレンドリストプロバイダー
+/// users/{uid}/profiles/{profileId} 配下のドキュメント参照
+DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection('profiles')
+      .doc(profileId);
+}
+
+/// 現在のプロフィールのフレンドリストプロバイダー
 final friendListProvider = FutureProvider<List<Friend>>((ref) async {
   final currentUserId = ref.watch(currentUserIdProvider);
   if (currentUserId == null) return [];
 
-  final firestore = ref.watch(firebaseProvider);
+  final profileId = ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+  );
 
   try {
-    final snapshot = await firestore
-        .collection('users')
-        .doc(currentUserId)
+    final snapshot = await _profileDoc(currentUserId, profileId)
         .collection('friends')
         .where('status', isEqualTo: 'friend')
         .get();
@@ -38,12 +50,12 @@ final incomingRequestsProvider = FutureProvider<List<FriendRequest>>((ref) async
   final currentUserId = ref.watch(currentUserIdProvider);
   if (currentUserId == null) return [];
 
-  final firestore = ref.watch(firebaseProvider);
+  final profileId = ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+  );
 
   try {
-    final snapshot = await firestore
-        .collection('users')
-        .doc(currentUserId)
+    final snapshot = await _profileDoc(currentUserId, profileId)
         .collection('friendRequests')
         .orderBy('createdAt', descending: true)
         .get();
@@ -61,12 +73,12 @@ final outgoingRequestsProvider = FutureProvider<List<Friend>>((ref) async {
   final currentUserId = ref.watch(currentUserIdProvider);
   if (currentUserId == null) return [];
 
-  final firestore = ref.watch(firebaseProvider);
+  final profileId = ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+  );
 
   try {
-    final snapshot = await firestore
-        .collection('users')
-        .doc(currentUserId)
+    final snapshot = await _profileDoc(currentUserId, profileId)
         .collection('friends')
         .where('status', isEqualTo: 'requested')
         .get();
@@ -81,38 +93,65 @@ final outgoingRequestsProvider = FutureProvider<List<Friend>>((ref) async {
 
 /// フレンドマネージャープロバイダー
 final friendNotifierProvider = StateNotifierProvider<FriendNotifier, AsyncValue<void>>((ref) {
-  final firestore = ref.watch(firebaseProvider);
   final currentUserId = ref.watch(currentUserIdProvider);
+  final profileId = ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+  );
+  final displayName = ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.displayName ?? 'Unknown'),
+  );
+  final firestoreService = ref.watch(firestoreServiceProvider);
 
-  return FriendNotifier(firestore, currentUserId);
+  return FriendNotifier(currentUserId, profileId, displayName, firestoreService);
 });
 
 /// フレンド管理ロジック
+///
+/// フレンドは「アカウント(uid)」ではなく「プロフィール」単位の関係として
+/// 扱うため、相手の識別には FirestoreService.rankingDocId() と同じ
+/// "{uid}_{profileId}" 複合IDを使う（Friend.userId / FriendRequest.
+/// fromUserId・toUserId も同様）。
 class FriendNotifier extends StateNotifier<AsyncValue<void>> {
-  FriendNotifier(this._firestore, this._currentUserId)
-      : super(const AsyncValue.data(null));
+  FriendNotifier(
+    this._currentUserId,
+    this._profileId,
+    this._displayName,
+    this._firestoreService,
+  ) : super(const AsyncValue.data(null));
 
-  final FirebaseFirestore _firestore;
   final String? _currentUserId;
+  final String _profileId;
+  final String _displayName;
+  final FirestoreService _firestoreService;
 
-  /// フレンドリクエスト送信
-  Future<void> sendFriendRequest(String targetUserId, String targetUserName) async {
+  String get _myCompositeId =>
+      FirestoreService.rankingDocId(_currentUserId!, _profileId);
+
+  /// フレンドリクエスト送信（targetCompositeIdは相手の "{uid}_{profileId}"）
+  Future<void> sendFriendRequest(String targetCompositeId) async {
     if (_currentUserId == null) return;
 
     state = const AsyncValue.loading();
 
     try {
-      final requestId = _firestore.collection('users').doc().id;
+      final target = FirestoreService.parseCompositeProfileId(targetCompositeId);
+      // 相手の users/{uid}/profiles/{profileId} 本体は本人のみ読み書き可能なため、
+      // 公開ミラーの profileDirectory から検索する（getUser()は使えない）。
+      final targetProfile = await _firestoreService.findProfileByCompositeId(targetCompositeId);
+      if (targetProfile == null) {
+        throw Exception('指定されたフレンドIDのプロフィールが見つかりません');
+      }
+      final targetDisplayName = targetProfile['displayName'] as String? ?? 'Unknown';
 
-      // 送信側: requests に追加
-      await _firestore
-          .collection('users')
-          .doc(_currentUserId)
+      final requestId = FirebaseFirestore.instance.collection('users').doc().id;
+
+      // 送信側: friends に「リクエスト送信済み」として追加
+      await _profileDoc(_currentUserId!, _profileId)
           .collection('friends')
-          .doc(targetUserId)
+          .doc(targetCompositeId)
           .set({
-        'userId': targetUserId,
-        'userName': targetUserName,
+        'userId': targetCompositeId,
+        'userName': targetDisplayName,
         'level': 1,
         'experience': 0,
         'accuracyRate': 0.0,
@@ -122,28 +161,21 @@ class FriendNotifier extends StateNotifier<AsyncValue<void>> {
       });
 
       // 受信側: 受け取るリクエストに追加
-      final currentUserDoc = await _firestore
-          .collection('users')
-          .doc(_currentUserId)
-          .get();
-      final currentUserName = (currentUserDoc.data()?['profile']?['name'] as String?) ?? 'Unknown';
-
-      await _firestore
-          .collection('users')
-          .doc(targetUserId)
+      await _profileDoc(target.uid, target.profileId)
           .collection('friendRequests')
           .doc(requestId)
           .set({
         'requestId': requestId,
-        'fromUserId': _currentUserId,
-        'fromUserName': currentUserName,
-        'toUserId': targetUserId,
+        'fromUserId': _myCompositeId,
+        'fromUserName': _displayName,
+        'toUserId': targetCompositeId,
         'createdAt': FieldValue.serverTimestamp(),
       });
 
       state = const AsyncValue.data(null);
-    } catch (e) {
-      state = AsyncValue.error(e, StackTrace.current);
+    } catch (e, stack) {
+      state = AsyncValue.error(e, stack);
+      rethrow;
     }
   }
 
@@ -157,10 +189,10 @@ class FriendNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
 
     try {
-      // 受信側: friend に追加
-      await _firestore
-          .collection('users')
-          .doc(_currentUserId)
+      final from = FirestoreService.parseCompositeProfileId(request.fromUserId);
+
+      // 受信側(自分): friend に追加
+      await _profileDoc(_currentUserId!, _profileId)
           .collection('friends')
           .doc(request.fromUserId)
           .set({
@@ -178,22 +210,18 @@ class FriendNotifier extends StateNotifier<AsyncValue<void>> {
       });
 
       // 送信側: status を更新
-      await _firestore
-          .collection('users')
-          .doc(request.fromUserId)
+      await _profileDoc(from.uid, from.profileId)
           .collection('friends')
-          .doc(_currentUserId)
+          .doc(_myCompositeId)
           .update({'status': 'friend'});
 
       // リクエスト削除
-      await _firestore
-          .collection('users')
-          .doc(_currentUserId)
+      await _profileDoc(_currentUserId!, _profileId)
           .collection('friendRequests')
           .doc(request.requestId)
           .delete();
 
-      await _checkFriendCountAchievement(_firestore, _currentUserId!);
+      await _checkFriendCountAchievement(_currentUserId!, _profileId);
 
       state = const AsyncValue.data(null);
     } catch (e) {
@@ -208,18 +236,16 @@ class FriendNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
 
     try {
+      final from = FirestoreService.parseCompositeProfileId(request.fromUserId);
+
       // 送信側から削除
-      await _firestore
-          .collection('users')
-          .doc(request.fromUserId)
+      await _profileDoc(from.uid, from.profileId)
           .collection('friends')
-          .doc(_currentUserId)
+          .doc(_myCompositeId)
           .delete();
 
       // リクエスト削除
-      await _firestore
-          .collection('users')
-          .doc(_currentUserId)
+      await _profileDoc(_currentUserId!, _profileId)
           .collection('friendRequests')
           .doc(request.requestId)
           .delete();
@@ -230,26 +256,24 @@ class FriendNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  /// フレンド削除
-  Future<void> removeFriend(String friendUserId) async {
+  /// フレンド削除（送信済みリクエストのキャンセルにも使う）
+  Future<void> removeFriend(String friendCompositeId) async {
     if (_currentUserId == null) return;
 
     state = const AsyncValue.loading();
 
     try {
+      final friend = FirestoreService.parseCompositeProfileId(friendCompositeId);
+
       // 両側から削除
-      await _firestore
-          .collection('users')
-          .doc(_currentUserId)
+      await _profileDoc(_currentUserId!, _profileId)
           .collection('friends')
-          .doc(friendUserId)
+          .doc(friendCompositeId)
           .delete();
 
-      await _firestore
-          .collection('users')
-          .doc(friendUserId)
+      await _profileDoc(friend.uid, friend.profileId)
           .collection('friends')
-          .doc(_currentUserId)
+          .doc(_myCompositeId)
           .delete();
 
       state = const AsyncValue.data(null);
@@ -260,27 +284,19 @@ class FriendNotifier extends StateNotifier<AsyncValue<void>> {
 }
 
 /// フレンド数に応じたバッジ達成をチェック
-Future<void> _checkFriendCountAchievement(
-  FirebaseFirestore firestore,
-  String userId,
-) async {
+Future<void> _checkFriendCountAchievement(String uid, String profileId) async {
   try {
     const achievementId = 'social_friends_5';
+    final profileRef = _profileDoc(uid, profileId);
 
-    final achievementDoc = await firestore
-        .collection('users')
-        .doc(userId)
-        .collection('achievements')
-        .doc(achievementId)
-        .get();
+    final achievementDoc =
+        await profileRef.collection('achievements').doc(achievementId).get();
 
     if (achievementDoc.exists && (achievementDoc.data()?['isUnlocked'] == true)) {
       return;
     }
 
-    final countSnapshot = await firestore
-        .collection('users')
-        .doc(userId)
+    final countSnapshot = await profileRef
         .collection('friends')
         .where('status', isEqualTo: 'friend')
         .count()
@@ -299,23 +315,17 @@ Future<void> _checkFriendCountAchievement(
       unlockedAt: DateTime.now(),
     );
 
-    await firestore
-        .collection('users')
-        .doc(userId)
+    await profileRef
         .collection('achievements')
         .doc(achievementId)
         .set(achievement.toJson(), SetOptions(merge: true));
 
-    final notificationId = firestore.collection('users').doc().id;
-    await firestore
-        .collection('users')
-        .doc(userId)
-        .collection('notifications')
-        .doc(notificationId)
-        .set(
+    final notificationsRef = profileRef.collection('notifications');
+    final notificationId = notificationsRef.doc().id;
+    await notificationsRef.doc(notificationId).set(
           AppNotification(
             notificationId: notificationId,
-            userId: userId,
+            userId: uid,
             type: NotificationType.achievement.value,
             title: '🎉 新しいバッジを獲得！',
             message: '「友達の輪」バッジを獲得しました！',

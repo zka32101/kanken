@@ -9,11 +9,18 @@ enum ChallengeStatus {
 }
 
 /// フレンドチャレンジ
+///
+/// challengerUserId/challengeeUserIdは素のuid（Firestoreルールの所有者判定に
+/// 使うため）。どのプロフィールが送受信したかはchallenger/challengeeProfileId
+/// に別途持たせ、通知・実績の書き込み先(users/{uid}/profiles/{profileId}/...)
+/// の特定に使う。
 class FriendChallenge {
   final String challengeId;
   final String challengerUserId;
+  final String challengerProfileId;
   final String challengerName;
   final String challengeeUserId;
+  final String challengeeProfileId;
   final String changetesName;
   final ChallengeStatus status;
   final int targetScore;
@@ -27,8 +34,10 @@ class FriendChallenge {
   const FriendChallenge({
     required this.challengeId,
     required this.challengerUserId,
+    this.challengerProfileId = 'default',
     required this.challengerName,
     required this.challengeeUserId,
+    this.challengeeProfileId = 'default',
     required this.changetesName,
     required this.status,
     required this.targetScore,
@@ -59,8 +68,10 @@ class FriendChallenge {
     return FriendChallenge(
       challengeId: json['challengeId'] as String? ?? '',
       challengerUserId: json['challengerUserId'] as String? ?? '',
+      challengerProfileId: json['challengerProfileId'] as String? ?? 'default',
       challengerName: json['challengerName'] as String? ?? 'Unknown',
       challengeeUserId: json['challengeeUserId'] as String? ?? '',
+      challengeeProfileId: json['challengeeProfileId'] as String? ?? 'default',
       changetesName: json['changetesName'] as String? ?? 'Unknown',
       status: _statusFromString(json['status'] as String? ?? 'pending'),
       targetScore: json['targetScore'] as int? ?? 0,
@@ -83,8 +94,10 @@ class FriendChallenge {
   Map<String, dynamic> toJson() => {
     'challengeId': challengeId,
     'challengerUserId': challengerUserId,
+    'challengerProfileId': challengerProfileId,
     'challengerName': challengerName,
     'challengeeUserId': challengeeUserId,
+    'challengeeProfileId': challengeeProfileId,
     'changetesName': changetesName,
     'status': _statusToString(status),
     'targetScore': targetScore,

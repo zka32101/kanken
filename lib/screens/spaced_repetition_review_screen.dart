@@ -45,6 +45,7 @@ class _SpacedRepetitionReviewScreenState
     if (quality >= 3) _correctCount++;
 
     await recordReviewResult(
+      ref,
       item: _reviewItems[_currentIndex],
       quality: quality,
     );

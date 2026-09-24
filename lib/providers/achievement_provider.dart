@@ -3,18 +3,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/achievement.dart';
 import '../providers/exam_analysis_provider.dart';
+import '../viewmodels/user_viewmodel.dart' as user_vm;
 
-/// ユーザーのアチーブメント一覧を取得（全定義バッジと獲得状況をマージ）
+/// users/{uid}/profiles/{profileId} 配下のドキュメント参照
+DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection('profiles')
+      .doc(profileId);
+}
+
+/// ユーザーのアチーブメント一覧を取得（全定義バッジと獲得状況をマージ、プロフィール単位）
 final userAchievementsProvider = FutureProvider<List<Achievement>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return AchievementDefinition.allAchievements;
 
   try {
-    final doc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('achievements')
-        .get();
+    final profileId = ref.watch(
+      user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+    );
+    final doc = await _profileDoc(userId, profileId).collection('achievements').get();
 
     final unlockedById = {
       for (final d in doc.docs) d.id: Achievement.fromJson(d.data()),
@@ -248,18 +257,17 @@ bool _isUnlocked(String id, List<Achievement> achievements) {
   return achievements.any((a) => a.id == id && a.isUnlocked);
 }
 
-/// アチーブメントをFirebaseに保存
-Future<void> saveAchievements(List<Achievement> achievements) async {
+/// アチーブメントをFirebaseに保存（プロフィール単位）
+Future<void> saveAchievements(WidgetRef ref, List<Achievement> achievements) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return;
 
   try {
+    final profileId = (await ref.read(user_vm.currentUserProvider.future))?.profileId ?? 'default';
     final batch = FirebaseFirestore.instance.batch();
 
     for (final achievement in achievements) {
-      final docRef = FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
+      final docRef = _profileDoc(userId, profileId)
           .collection('achievements')
           .doc(achievement.id);
 

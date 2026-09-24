@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kanken/models/friend.dart';
 import 'package:kanken/providers/friend_provider.dart';
-import 'package:kanken/providers/challenge_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kanken/providers/friend_challenge_provider.dart';
+import 'package:kanken/services/firestore_service.dart';
 
 class FriendListScreen extends ConsumerStatefulWidget {
   const FriendListScreen({Key? key}) : super(key: key);
@@ -35,6 +35,13 @@ class _FriendListScreenState extends ConsumerState<FriendListScreen>
         title: const Text('フレンド'),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person_add),
+            tooltip: 'フレンドを追加',
+            onPressed: () => _showAddFriendDialog(context),
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -433,7 +440,7 @@ class _FriendListScreenState extends ConsumerState<FriendListScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('チャレンジを送信'),
-        content: Text('${friend.userName} にチャレンジを送信しますか？'),
+        content: Text('${friend.userName} に目標スコア80点のチャレンジを送信しますか？'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -443,19 +450,16 @@ class _FriendListScreenState extends ConsumerState<FriendListScreen>
             onPressed: () async {
               Navigator.pop(context);
 
-              final currentUser = FirebaseAuth.instance.currentUser;
-              if (currentUser == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('ログインしてください')),
-                );
-                return;
-              }
+              final target = FirestoreService.parseCompositeProfileId(friend.userId);
 
               // チャレンジを送信
-              await ref.read(challengeNotifierProvider.notifier).sendChallenge(
-                toUserId: friend.userId,
-                toUserName: friend.userName,
-                fromUserName: currentUser.displayName ?? 'Unknown',
+              await createChallenge(
+                ref,
+                challengeeUserId: target.uid,
+                challengeeProfileId: target.profileId,
+                challengeeName: friend.userName,
+                targetScore: 80,
+                description: '腕試しチャレンジ！',
               );
 
               if (!context.mounted) return;
@@ -470,6 +474,59 @@ class _FriendListScreenState extends ConsumerState<FriendListScreen>
               '送信',
               style: TextStyle(color: Colors.white),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddFriendDialog(BuildContext context) {
+    final controller = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('フレンドを追加'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('相手の「フレンドID」を入力してください（設定画面のプロフィールから確認できます）'),
+            const SizedBox(height: 12),
+            TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                labelText: 'フレンドID',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('キャンセル'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final targetId = controller.text.trim();
+              if (targetId.isEmpty) return;
+
+              Navigator.pop(context);
+              try {
+                await ref.read(friendNotifierProvider.notifier).sendFriendRequest(targetId);
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('フレンドリクエストを送信しました')),
+                );
+              } catch (e) {
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('送信に失敗しました: $e')),
+                );
+              }
+            },
+            child: const Text('送信'),
           ),
         ],
       ),

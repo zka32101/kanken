@@ -120,6 +120,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
 
         if (userAnswer != question.correctAnswer) {
           await addToSpacedRepetition(
+            ref,
             questionId: question.questionId,
             kanji: question.kanji,
             category: question.category.toString().split('.').last,
@@ -144,7 +145,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
           await _detectNewAchievements(analysis, currentAchievements);
 
       if (newAchievements.isNotEmpty && mounted) {
-        await saveAchievements(newAchievements);
+        await saveAchievements(ref, newAchievements);
 
         showDialog(
           context: context,

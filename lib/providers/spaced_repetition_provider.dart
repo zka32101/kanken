@@ -4,16 +4,30 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/spaced_repetition_item.dart';
 import '../models/notifications.dart';
 import '../models/achievement.dart';
+import '../viewmodels/user_viewmodel.dart' as user_vm;
 
-/// 今日復習すべきアイテム一覧プロバイダー
+/// users/{uid}/profiles/{profileId} 配下のドキュメント参照
+DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection('profiles')
+      .doc(profileId);
+}
+
+Future<String> _currentProfileId(Ref ref) async {
+  final user = await ref.watch(user_vm.currentUserProvider.future);
+  return user?.profileId ?? 'default';
+}
+
+/// 今日復習すべきアイテム一覧プロバイダー（プロフィール単位）
 final dueReviewItemsProvider = FutureProvider<List<SpacedRepetitionItem>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
   try {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
+    final profileId = await _currentProfileId(ref);
+    final snapshot = await _profileDoc(userId, profileId)
         .collection('spacedRepetitionItems')
         .where('nextReviewDate', isLessThanOrEqualTo: Timestamp.now())
         .orderBy('nextReviewDate')
@@ -28,15 +42,14 @@ final dueReviewItemsProvider = FutureProvider<List<SpacedRepetitionItem>>((ref) 
   }
 });
 
-/// 全ての間隔反復アイテムプロバイダー
+/// 全ての間隔反復アイテムプロバイダー（プロフィール単位）
 final allSpacedRepetitionItemsProvider = FutureProvider<List<SpacedRepetitionItem>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
   try {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
+    final profileId = await _currentProfileId(ref);
+    final snapshot = await _profileDoc(userId, profileId)
         .collection('spacedRepetitionItems')
         .get();
 
@@ -73,7 +86,8 @@ final reviewSessionStatsProvider = FutureProvider<ReviewSessionStats>((ref) asyn
 });
 
 /// 間違えた問題を間隔反復システムに追加（存在しない場合は新規作成）
-Future<void> addToSpacedRepetition({
+Future<void> addToSpacedRepetition(
+  WidgetRef ref, {
   required String questionId,
   required String kanji,
   required String category,
@@ -85,11 +99,8 @@ Future<void> addToSpacedRepetition({
   if (userId == null) return;
 
   try {
-    final docRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('spacedRepetitionItems')
-        .doc(questionId);
+    final profileId = (await ref.read(user_vm.currentUserProvider.future))?.profileId ?? 'default';
+    final docRef = _profileDoc(userId, profileId).collection('spacedRepetitionItems').doc(questionId);
 
     final existingDoc = await docRef.get();
     if (existingDoc.exists) {
@@ -121,23 +132,20 @@ final reviewReminderCheckProvider = FutureProvider<void>((ref) async {
   if (userId == null) return;
 
   try {
+    final profileId = await _currentProfileId(ref);
+    final profileRef = _profileDoc(userId, profileId);
+
     final today = DateTime.now();
     final todayKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
 
-    final markerRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('reviewReminderMarkers')
-        .doc(todayKey);
+    final markerRef = profileRef.collection('reviewReminderMarkers').doc(todayKey);
 
     final markerDoc = await markerRef.get();
     if (markerDoc.exists) return; // 本日は既にチェック済み
 
     await markerRef.set({'checkedAt': Timestamp.now()});
 
-    final dueSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
+    final dueSnapshot = await profileRef
         .collection('spacedRepetitionItems')
         .where('nextReviewDate', isLessThanOrEqualTo: Timestamp.now())
         .limit(1)
@@ -145,23 +153,17 @@ final reviewReminderCheckProvider = FutureProvider<void>((ref) async {
 
     if (dueSnapshot.docs.isEmpty) return;
 
-    final countSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
+    final countSnapshot = await profileRef
         .collection('spacedRepetitionItems')
         .where('nextReviewDate', isLessThanOrEqualTo: Timestamp.now())
         .count()
         .get();
 
     final dueCount = countSnapshot.count ?? 1;
-    final notificationId = FirebaseFirestore.instance.collection('users').doc().id;
+    final notificationsRef = profileRef.collection('notifications');
+    final notificationId = notificationsRef.doc().id;
 
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('notifications')
-        .doc(notificationId)
-        .set(
+    await notificationsRef.doc(notificationId).set(
           AppNotification(
             notificationId: notificationId,
             userId: userId,
@@ -179,7 +181,8 @@ final reviewReminderCheckProvider = FutureProvider<void>((ref) async {
 
 /// 復習結果を記録し、次回の間隔を計算して保存
 /// quality: 0-5 (0-2=不正解, 3-5=正解)
-Future<void> recordReviewResult({
+Future<void> recordReviewResult(
+  WidgetRef ref, {
   required SpacedRepetitionItem item,
   required int quality,
 }) async {
@@ -187,18 +190,17 @@ Future<void> recordReviewResult({
   if (userId == null) return;
 
   try {
+    final profileId = (await ref.read(user_vm.currentUserProvider.future))?.profileId ?? 'default';
     final updatedItem = item.calculateNext(quality);
 
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
+    await _profileDoc(userId, profileId)
         .collection('spacedRepetitionItems')
         .doc(item.itemId)
         .set(updatedItem.toJson());
 
     final justMastered = item.masteryLevel != 'マスター' && updatedItem.masteryLevel == 'マスター';
     if (justMastered) {
-      await _incrementMasteredCountAndCheckAchievements(userId);
+      await _incrementMasteredCountAndCheckAchievements(userId, profileId);
     }
   } catch (e) {
     // エラーログなど必要に応じて処理
@@ -211,13 +213,13 @@ const _reviewMasterAchievements = {
 };
 
 /// マスター済み問題数を更新し、達成したバッジを付与
-Future<void> _incrementMasteredCountAndCheckAchievements(String userId) async {
+Future<void> _incrementMasteredCountAndCheckAchievements(
+  String userId,
+  String profileId,
+) async {
   try {
-    final statsRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('reviewStats')
-        .doc('summary');
+    final profileRef = _profileDoc(userId, profileId);
+    final statsRef = profileRef.collection('reviewStats').doc('summary');
 
     final newMasteredCount = await FirebaseFirestore.instance.runTransaction<int>((tx) async {
       final snapshot = await tx.get(statsRef);
@@ -230,12 +232,8 @@ Future<void> _incrementMasteredCountAndCheckAchievements(String userId) async {
     final info = _reviewMasterAchievements[newMasteredCount];
     if (info == null) return;
 
-    final achievementDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('achievements')
-        .doc(info.$1)
-        .get();
+    final achievementsRef = profileRef.collection('achievements');
+    final achievementDoc = await achievementsRef.doc(info.$1).get();
 
     if (achievementDoc.exists && (achievementDoc.data()?['isUnlocked'] == true)) {
       return;
@@ -252,20 +250,11 @@ Future<void> _incrementMasteredCountAndCheckAchievements(String userId) async {
       unlockedAt: DateTime.now(),
     );
 
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('achievements')
-        .doc(info.$1)
-        .set(achievement.toJson(), SetOptions(merge: true));
+    await achievementsRef.doc(info.$1).set(achievement.toJson(), SetOptions(merge: true));
 
-    final notificationId = FirebaseFirestore.instance.collection('users').doc().id;
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('notifications')
-        .doc(notificationId)
-        .set(
+    final notificationsRef = profileRef.collection('notifications');
+    final notificationId = notificationsRef.doc().id;
+    await notificationsRef.doc(notificationId).set(
           AppNotification(
             notificationId: notificationId,
             userId: userId,

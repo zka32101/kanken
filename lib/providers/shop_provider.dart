@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/shop.dart';
+import '../viewmodels/user_viewmodel.dart' as user_vm;
 
 final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
   return FirebaseAuth.instance;
@@ -15,6 +16,22 @@ final currentUserIdProvider = Provider<String?>((ref) {
   final auth = ref.watch(firebaseAuthProvider);
   return auth.currentUser?.uid;
 });
+
+/// 現在のプロフィールIDを取得
+final _currentProfileIdProvider = Provider<String>((ref) {
+  return ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+  );
+});
+
+/// users/{uid}/profiles/{profileId} 配下のドキュメント参照
+DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection('profiles')
+      .doc(profileId);
+}
 
 /// ショップのすべてのアイテムを取得
 final shopItemsProvider = FutureProvider<List<ShopItem>>((ref) async {
@@ -50,15 +67,13 @@ final shopItemsByCategoryProvider =
       .toList();
 });
 
-/// ユーザーのウォレット情報を取得
+/// ユーザーのウォレット情報を取得（プロフィール単位）
 final userWalletProvider = FutureProvider<UserWallet?>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return null;
 
-  final firestore = ref.watch(firebaseFirestoreProvider);
-  final doc = await firestore
-      .collection('users')
-      .doc(userId)
+  final profileId = ref.watch(_currentProfileIdProvider);
+  final doc = await _profileDoc(userId, profileId)
       .collection('wallet')
       .doc('balance')
       .get();
@@ -76,16 +91,14 @@ final userWalletProvider = FutureProvider<UserWallet?>((ref) async {
   return UserWallet.fromJson(doc.data() ?? {});
 });
 
-/// ユーザーの購入履歴を取得
+/// ユーザーの購入履歴を取得（プロフィール単位）
 final userPurchaseHistoryProvider =
     FutureProvider<List<Purchase>>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return [];
 
-  final firestore = ref.watch(firebaseFirestoreProvider);
-  final querySnapshot = await firestore
-      .collection('users')
-      .doc(userId)
+  final profileId = ref.watch(_currentProfileIdProvider);
+  final querySnapshot = await _profileDoc(userId, profileId)
       .collection('purchases')
       .orderBy('purchasedAt', descending: true)
       .limit(50)
@@ -112,16 +125,14 @@ final coinPackagesProvider =
       .toList();
 });
 
-/// ユーザーのインベントリを取得
+/// ユーザーのインベントリを取得（プロフィール単位）
 final userInventoryProvider =
     FutureProvider<List<UserInventoryItem>>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return [];
 
-  final firestore = ref.watch(firebaseFirestoreProvider);
-  final querySnapshot = await firestore
-      .collection('users')
-      .doc(userId)
+  final profileId = ref.watch(_currentProfileIdProvider);
+  final querySnapshot = await _profileDoc(userId, profileId)
       .collection('inventory')
       .orderBy('obtainedAt', descending: true)
       .get();
@@ -131,25 +142,24 @@ final userInventoryProvider =
       .toList();
 });
 
-/// ショップ Notifier
+/// ショップ Notifier（プロフィール単位）
 class ShopNotifier extends StateNotifier<void> {
   final FirebaseFirestore _firestore;
   final String? _userId;
+  final String _profileId;
 
-  ShopNotifier(this._firestore, this._userId) : super(null);
+  ShopNotifier(this._firestore, this._userId, this._profileId) : super(null);
 
   /// アイテムを購入
   Future<bool> purchaseItem(ShopItem item) async {
     if (_userId == null) return false;
 
     try {
+      final profileRef = _profileDoc(_userId!, _profileId);
+
       // トランザクションで購入処理を実行（race condition防止）
       final result = await _firestore.runTransaction<bool>((transaction) async {
-        final walletRef = _firestore
-            .collection('users')
-            .doc(_userId)
-            .collection('wallet')
-            .doc('balance');
+        final walletRef = profileRef.collection('wallet').doc('balance');
 
         // トランザクション内でウォレット情報を取得
         final walletDoc = await transaction.get(walletRef);
@@ -176,11 +186,7 @@ class ShopNotifier extends StateNotifier<void> {
         }
 
         transaction.update(
-          _firestore
-              .collection('users')
-              .doc(_userId)
-              .collection('wallet')
-              .doc('balance'),
+          walletRef,
           {
             'coins': newCoins,
             'diamonds': newDiamonds,
@@ -190,7 +196,8 @@ class ShopNotifier extends StateNotifier<void> {
         );
 
         // 購入履歴を記録
-        final purchaseId = _firestore.collection('users').doc().id;
+        final purchasesRef = profileRef.collection('purchases');
+        final purchaseId = purchasesRef.doc().id;
         final purchase = Purchase(
           purchaseId: purchaseId,
           userId: _userId!,
@@ -202,17 +209,11 @@ class ShopNotifier extends StateNotifier<void> {
           isRefunded: false,
         );
 
-        transaction.set(
-          _firestore
-              .collection('users')
-              .doc(_userId)
-              .collection('purchases')
-              .doc(purchaseId),
-          purchase.toJson(),
-        );
+        transaction.set(purchasesRef.doc(purchaseId), purchase.toJson());
 
         // インベントリに追加
-        final inventoryId = _firestore.collection('users').doc().id;
+        final inventoryRef = profileRef.collection('inventory');
+        final inventoryId = inventoryRef.doc().id;
         final inventoryItem = UserInventoryItem(
           inventoryId: inventoryId,
           userId: _userId!,
@@ -224,14 +225,7 @@ class ShopNotifier extends StateNotifier<void> {
           obtainedAt: DateTime.now(),
         );
 
-        transaction.set(
-          _firestore
-              .collection('users')
-              .doc(_userId)
-              .collection('inventory')
-              .doc(inventoryId),
-          inventoryItem.toJson(),
-        );
+        transaction.set(inventoryRef.doc(inventoryId), inventoryItem.toJson());
 
         return true;
       });
@@ -247,14 +241,10 @@ class ShopNotifier extends StateNotifier<void> {
     if (_userId == null) return false;
 
     try {
+      final walletRef = _profileDoc(_userId!, _profileId).collection('wallet').doc('balance');
+
       // トランザクション使用（race condition防止）
       await _firestore.runTransaction((transaction) async {
-        final walletRef = _firestore
-            .collection('users')
-            .doc(_userId)
-            .collection('wallet')
-            .doc('balance');
-
         final walletDoc = await transaction.get(walletRef);
 
         UserWallet wallet;
@@ -291,9 +281,7 @@ class ShopNotifier extends StateNotifier<void> {
     if (_userId == null) return false;
 
     try {
-      await _firestore
-          .collection('users')
-          .doc(_userId)
+      await _profileDoc(_userId!, _profileId)
           .collection('inventory')
           .doc(inventoryId)
           .update({'isEquipped': true});
@@ -309,9 +297,7 @@ class ShopNotifier extends StateNotifier<void> {
     if (_userId == null) return false;
 
     try {
-      await _firestore
-          .collection('users')
-          .doc(_userId)
+      await _profileDoc(_userId!, _profileId)
           .collection('inventory')
           .doc(inventoryId)
           .update({'isEquipped': false});
@@ -327,5 +313,6 @@ class ShopNotifier extends StateNotifier<void> {
 final shopProvider = StateNotifierProvider<ShopNotifier, void>((ref) {
   final firestore = ref.watch(firebaseFirestoreProvider);
   final userId = ref.watch(currentUserIdProvider);
-  return ShopNotifier(firestore, userId);
+  final profileId = ref.watch(_currentProfileIdProvider);
+  return ShopNotifier(firestore, userId, profileId);
 });

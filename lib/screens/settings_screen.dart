@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../models/user.dart';
+import '../services/firestore_service.dart';
 import '../viewmodels/user_viewmodel.dart';
 import '../viewmodels/services_provider.dart';
 
@@ -135,6 +137,11 @@ class _ProfileManagementSection extends ConsumerWidget {
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    IconButton(
+                      icon: const Icon(Icons.badge_outlined, size: 20),
+                      tooltip: 'フレンドIDを表示',
+                      onPressed: () => _showFriendIdDialog(context, uid, profile),
+                    ),
                     if (profile.profileId == activeProfileId)
                       const Icon(Icons.check_circle, color: Colors.blue)
                     else
@@ -176,6 +183,47 @@ class _ProfileManagementSection extends ConsumerWidget {
       error: (err, stack) => Padding(
         padding: const EdgeInsets.all(16),
         child: Text('プロフィールの読み込みに失敗しました: $err'),
+      ),
+    );
+  }
+
+  /// フレンド追加・ランキングで使う「フレンドID」を表示する。
+  /// friend_provider.dart / leaderboard_provider.dart と同じ
+  /// FirestoreService.rankingDocId(uid, profileId) の複合ID。
+  void _showFriendIdDialog(BuildContext context, String uid, User profile) {
+    final friendId = FirestoreService.rankingDocId(uid, profile.profileId);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('${profile.displayName}のフレンドID'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('このIDを友達に伝えると、フレンド追加やチャレンジができます。'),
+            const SizedBox(height: 12),
+            SelectableText(
+              friendId,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              await Clipboard.setData(ClipboardData(text: friendId));
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('フレンドIDをコピーしました')),
+              );
+            },
+            child: const Text('コピー'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('閉じる'),
+          ),
+        ],
       ),
     );
   }

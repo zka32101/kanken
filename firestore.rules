@@ -29,6 +29,35 @@ service cloud.firestore {
       match /{subcollection}/{document=**} {
         allow read, write: if isOwner(uid);
       }
+
+      // フレンド一覧: 通常は本人のみだが、フレンド関係は相手のプロフィールの
+      // friendsサブコレクションにも自分自身を表すエントリを書き込む必要がある
+      // （承認・拒否・削除の相互反映のため）。ドキュメントID自体が
+      // "{uid}_{profileId}" 複合IDであり、そのIDが表す本人だけが
+      // 他人のfriendsサブコレクション内の「自分の欄」を書き換えられる。
+      match /profiles/{profileId}/friends/{friendId} {
+        allow read, write: if isOwner(uid) || isOwnerOfCompositeDoc(friendId);
+      }
+
+      // フレンドリクエストの受信箱: 本人のみ閲覧・削除できる。
+      // 送信(create)は、fromUserIdが送信者自身を正しく指している場合のみ
+      // 誰でも行える（他人の受信箱に「あなたにリクエストが来た」旨を書き込むため）。
+      match /profiles/{profileId}/friendRequests/{requestId} {
+        allow read, update, delete: if isOwner(uid);
+        allow create: if isSignedIn() &&
+          isOwnerOfCompositeDoc(request.resource.data.fromUserId) &&
+          request.resource.data.toUserId == uid + '_' + profileId;
+      }
+
+      // 通知: 通常は本人のみだが、フレンドチャレンジの受信通知だけは
+      // 送信者が相手の受信箱に直接書き込む必要がある。
+      match /profiles/{profileId}/notifications/{notificationId} {
+        allow read, update, delete: if isOwner(uid);
+        allow create: if isOwner(uid) ||
+          (isSignedIn() &&
+           request.resource.data.type == 'challenge_received' &&
+           request.resource.data.userId == uid);
+      }
     }
 
     // リーダーボード: ランキング表示のため読み取りはログインユーザー全員に許可、
@@ -43,6 +72,13 @@ service cloud.firestore {
     // 正答率・ストリーク・コイン）だけを本人が書き込む公開ドキュメント。
     // 読み取りはログインユーザー全員、書き込みは本人のみ。
     match /rankings/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isOwnerOfCompositeDoc(docId);
+    }
+
+    // フレンド追加用の公開プロフィール検索（ニックネーム等の最小限の情報のみ）。
+    // ランキング参加設定(rankingOptIn)に関わらず全プロフィールが登録される。
+    match /profileDirectory/{docId} {
       allow read: if isSignedIn();
       allow write: if isOwnerOfCompositeDoc(docId);
     }

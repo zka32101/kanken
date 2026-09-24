@@ -16,6 +16,15 @@ class FirestoreService {
 
   static String rankingDocId(String uid, String profileId) => '${uid}_$profileId';
 
+  /// rankingDocId() の逆変換。フレンド・チャレンジ等、他プロフィールを
+  /// "{uid}_{profileId}" の複合IDで参照する箇所で使う。
+  /// uidにはアンダースコアを含まないため、最初の "_" で分割すれば安全。
+  static ({String uid, String profileId}) parseCompositeProfileId(String docId) {
+    final index = docId.indexOf('_');
+    if (index == -1) return (uid: docId, profileId: 'default');
+    return (uid: docId.substring(0, index), profileId: docId.substring(index + 1));
+  }
+
   Future<User?> getUser(String uid, {String profileId = 'default'}) async {
     final doc = await _profileDoc(uid, profileId).get();
     if (!doc.exists) return null;
@@ -36,6 +45,7 @@ class FirestoreService {
   Future<void> createUser(User user) async {
     await _profileDoc(user.uid, user.profileId)
         .set(user.toJson(), SetOptions(merge: true));
+    await _mirrorUserToProfileDirectory(user);
     if (user.rankingOptIn) {
       await _mirrorUserNameToRanking(user.uid, user.profileId, user.displayName);
     }
@@ -44,12 +54,38 @@ class FirestoreService {
   Future<void> updateUser(User user) async {
     await _profileDoc(user.uid, user.profileId)
         .set(user.toJson(), SetOptions(merge: true));
+    await _mirrorUserToProfileDirectory(user);
     if (user.rankingOptIn) {
       await _mirrorUserNameToRanking(user.uid, user.profileId, user.displayName);
     } else {
       // 参加をオフにした場合は既存のランキングエントリも削除する
       await _removeFromRanking(user.uid, user.profileId);
     }
+  }
+
+  /// フレンドIDによる検索用に、ランキング参加設定(rankingOptIn)に関わらず
+  /// ニックネーム等の最小限の情報だけを profileDirectory/{uid}_{profileId}
+  /// （全員読み取り可）へミラーする。詳しくは _mirrorUserNameToRanking 参照。
+  Future<void> _mirrorUserToProfileDirectory(User user) async {
+    await _firestore
+        .collection('profileDirectory')
+        .doc(rankingDocId(user.uid, user.profileId))
+        .set(
+      {
+        'uid': user.uid,
+        'profileId': user.profileId,
+        'displayName': user.displayName,
+        'avatarIcon': user.avatarIcon,
+        'currentLevel': user.currentLevel,
+      },
+      SetOptions(merge: true),
+    );
+  }
+
+  /// フレンドID（"{uid}_{profileId}"）から公開プロフィール情報を検索する
+  Future<Map<String, dynamic>?> findProfileByCompositeId(String compositeId) async {
+    final doc = await _firestore.collection('profileDirectory').doc(compositeId).get();
+    return doc.data();
   }
 
   DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {

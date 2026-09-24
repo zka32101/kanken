@@ -5,7 +5,6 @@ import '../screens/progress_dashboard_screen.dart';
 import '../screens/ranking_screen.dart';
 import '../screens/global_ranking_screen.dart';
 import '../screens/friend_list_screen.dart';
-import '../screens/challenge_screen.dart';
 import '../screens/weak_area_screen.dart';
 import '../screens/learning_plan_screen.dart';
 import '../screens/event_screen.dart';
@@ -15,10 +14,8 @@ import '../screens/battle_room_list_screen.dart';
 import '../screens/battle_screen.dart';
 import '../screens/battle_result_screen.dart';
 import '../screens/analytics_dashboard_screen.dart';
-import '../screens/friend_management_screen.dart';
 import '../screens/notification_center_screen.dart';
 import '../screens/shop_screen.dart';
-import '../screens/user_profile_screen.dart';
 import '../screens/mock_exam_modes_screen.dart';
 import '../screens/leaderboard_screen.dart';
 import '../screens/friend_challenges_screen.dart';
@@ -66,20 +63,6 @@ final appRouter = GoRouter(
           path: 'friends',
           name: 'friends',
           builder: (context, state) => const FriendListScreen(),
-        ),
-
-        // フレンド管理
-        GoRoute(
-          path: 'friend-management',
-          name: 'friendManagement',
-          builder: (context, state) => const FriendManagementScreen(),
-        ),
-
-        // チャレンジ
-        GoRoute(
-          path: 'challenges',
-          name: 'challenges',
-          builder: (context, state) => const ChallengeScreen(),
         ),
 
         // 苦手分野分析
@@ -223,13 +206,6 @@ final appRouter = GoRouter(
           builder: (context, state) => const ShopScreen(),
         ),
 
-        // ユーザープロフィール
-        GoRoute(
-          path: 'profile',
-          name: 'profile',
-          builder: (context, state) => const UserProfileScreen(),
-        ),
-
         // リーダーボード
         GoRoute(
           path: 'leaderboard',
@@ -311,12 +287,6 @@ extension NavigationExtension on BuildContext {
   /// フレンドリストに遷移
   void goFriends() => push('/friends');
 
-  /// フレンド管理画面に遷移
-  void goFriendManagement() => push('/friend-management');
-
-  /// チャレンジに遷移
-  void goChallenges() => push('/challenges');
-
   /// 苦手分野分析に遷移
   void goWeakAreas() => push('/weak-areas');
 
@@ -369,9 +339,6 @@ extension NavigationExtension on BuildContext {
 
   /// ショップに遷移
   void goShop() => push('/shop');
-
-  /// ユーザープロフィールに遷移
-  void goProfile() => push('/profile');
 
   /// リーダーボードに遷移
   void goLeaderboard() => push('/leaderboard');

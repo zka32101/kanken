@@ -57,6 +57,39 @@
         { "fieldPath": "isCompleted", "order": "ASCENDING" },
         { "fieldPath": "completedAt", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "notifications",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isRead", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "friendChallenges",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "challengeeUserId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "friendChallenges",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "challengerUserId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "friendChallenges",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "challengeeUserId", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "dueAt", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/notifications.dart';
+import '../viewmodels/user_viewmodel.dart' as user_vm;
 
 final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
   return FirebaseAuth.instance;
@@ -16,16 +17,30 @@ final currentUserIdProvider = Provider<String?>((ref) {
   return auth.currentUser?.uid;
 });
 
-/// ユーザーの未読通知を取得
+/// 現在のプロフィールIDを取得
+final _currentProfileIdProvider = Provider<String>((ref) {
+  return ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+  );
+});
+
+/// users/{uid}/profiles/{profileId} 配下のドキュメント参照
+DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection('profiles')
+      .doc(profileId);
+}
+
+/// ユーザーの未読通知を取得（プロフィール単位）
 final unreadNotificationsProvider =
     FutureProvider<List<AppNotification>>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return [];
 
-  final firestore = ref.watch(firebaseFirestoreProvider);
-  final querySnapshot = await firestore
-      .collection('users')
-      .doc(userId)
+  final profileId = ref.watch(_currentProfileIdProvider);
+  final querySnapshot = await _profileDoc(userId, profileId)
       .collection('notifications')
       .where('isRead', isEqualTo: false)
       .orderBy('createdAt', descending: true)
@@ -36,16 +51,14 @@ final unreadNotificationsProvider =
       .toList();
 });
 
-/// ユーザーのすべての通知を取得
+/// ユーザーのすべての通知を取得（プロフィール単位）
 final allNotificationsProvider =
     FutureProvider<List<AppNotification>>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return [];
 
-  final firestore = ref.watch(firebaseFirestoreProvider);
-  final querySnapshot = await firestore
-      .collection('users')
-      .doc(userId)
+  final profileId = ref.watch(_currentProfileIdProvider);
+  final querySnapshot = await _profileDoc(userId, profileId)
       .collection('notifications')
       .orderBy('createdAt', descending: true)
       .limit(100)
@@ -56,16 +69,14 @@ final allNotificationsProvider =
       .toList();
 });
 
-/// 通知統計を取得
+/// 通知統計を取得（プロフィール単位）
 final notificationStatsProvider =
     FutureProvider<NotificationStats?>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return null;
 
-  final firestore = ref.watch(firebaseFirestoreProvider);
-  final doc = await firestore
-      .collection('users')
-      .doc(userId)
+  final profileId = ref.watch(_currentProfileIdProvider);
+  final doc = await _profileDoc(userId, profileId)
       .collection('notificationStats')
       .doc('summary')
       .get();
@@ -84,16 +95,14 @@ final notificationStatsProvider =
   return NotificationStats.fromJson(doc.data() ?? {});
 });
 
-/// 通知設定を取得
+/// 通知設定を取得（プロフィール単位）
 final notificationSettingsProvider =
     FutureProvider<NotificationSettings?>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return null;
 
-  final firestore = ref.watch(firebaseFirestoreProvider);
-  final doc = await firestore
-      .collection('users')
-      .doc(userId)
+  final profileId = ref.watch(_currentProfileIdProvider);
+  final doc = await _profileDoc(userId, profileId)
       .collection('notificationSettings')
       .doc('settings')
       .get();
@@ -108,12 +117,15 @@ final notificationSettingsProvider =
   return NotificationSettings.fromJson(doc.data() ?? {});
 });
 
-/// 通知 Notifier
+/// 通知 Notifier（プロフィール単位）
 class NotificationNotifier extends StateNotifier<void> {
-  final FirebaseFirestore _firestore;
   final String? _userId;
+  final String _profileId;
 
-  NotificationNotifier(this._firestore, this._userId) : super(null);
+  NotificationNotifier(this._userId, this._profileId) : super(null);
+
+  DocumentReference<Map<String, dynamic>> get _profileRef =>
+      _profileDoc(_userId!, _profileId);
 
   /// 通知を作成
   Future<bool> createNotification({
@@ -126,7 +138,8 @@ class NotificationNotifier extends StateNotifier<void> {
     if (_userId == null) return false;
 
     try {
-      final notificationId = _firestore.collection('users').doc().id;
+      final notificationsRef = _profileRef.collection('notifications');
+      final notificationId = notificationsRef.doc().id;
       final notification = AppNotification(
         notificationId: notificationId,
         userId: _userId!,
@@ -139,12 +152,7 @@ class NotificationNotifier extends StateNotifier<void> {
         data: data,
       );
 
-      await _firestore
-          .collection('users')
-          .doc(_userId)
-          .collection('notifications')
-          .doc(notificationId)
-          .set(notification.toJson());
+      await notificationsRef.doc(notificationId).set(notification.toJson());
 
       // 統計を更新
       await _updateNotificationStats();
@@ -160,9 +168,7 @@ class NotificationNotifier extends StateNotifier<void> {
     if (_userId == null) return false;
 
     try {
-      await _firestore
-          .collection('users')
-          .doc(_userId)
+      await _profileRef
           .collection('notifications')
           .doc(notificationId)
           .update({'isRead': true});
@@ -181,9 +187,7 @@ class NotificationNotifier extends StateNotifier<void> {
     if (_userId == null) return false;
 
     try {
-      final querySnapshot = await _firestore
-          .collection('users')
-          .doc(_userId)
+      final querySnapshot = await _profileRef
           .collection('notifications')
           .where('isRead', isEqualTo: false)
           .get();
@@ -206,12 +210,7 @@ class NotificationNotifier extends StateNotifier<void> {
     if (_userId == null) return false;
 
     try {
-      await _firestore
-          .collection('users')
-          .doc(_userId)
-          .collection('notifications')
-          .doc(notificationId)
-          .delete();
+      await _profileRef.collection('notifications').doc(notificationId).delete();
 
       // 統計を更新
       await _updateNotificationStats();
@@ -229,9 +228,7 @@ class NotificationNotifier extends StateNotifier<void> {
     try {
       final thirtyDaysAgo =
           DateTime.now().subtract(const Duration(days: 30));
-      final querySnapshot = await _firestore
-          .collection('users')
-          .doc(_userId)
+      final querySnapshot = await _profileRef
           .collection('notifications')
           .where('createdAt',
               isLessThan: Timestamp.fromDate(thirtyDaysAgo))
@@ -256,9 +253,7 @@ class NotificationNotifier extends StateNotifier<void> {
     if (_userId == null) return false;
 
     try {
-      await _firestore
-          .collection('users')
-          .doc(_userId)
+      await _profileRef
           .collection('notificationSettings')
           .doc('settings')
           .set(settings.toJson());
@@ -274,11 +269,7 @@ class NotificationNotifier extends StateNotifier<void> {
     if (_userId == null) return;
 
     try {
-      final querySnapshot = await _firestore
-          .collection('users')
-          .doc(_userId)
-          .collection('notifications')
-          .get();
+      final querySnapshot = await _profileRef.collection('notifications').get();
 
       final unreadCount = querySnapshot.docs
           .where((doc) => doc['isRead'] == false)
@@ -305,9 +296,7 @@ class NotificationNotifier extends StateNotifier<void> {
         achievementCount: achievementCount,
       );
 
-      await _firestore
-          .collection('users')
-          .doc(_userId)
+      await _profileRef
           .collection('notificationStats')
           .doc('summary')
           .set(stats.toJson());
@@ -320,7 +309,7 @@ class NotificationNotifier extends StateNotifier<void> {
 /// 通知 StateNotifierProvider
 final notificationProvider =
     StateNotifierProvider<NotificationNotifier, void>((ref) {
-  final firestore = ref.watch(firebaseFirestoreProvider);
   final userId = ref.watch(currentUserIdProvider);
-  return NotificationNotifier(firestore, userId);
+  final profileId = ref.watch(_currentProfileIdProvider);
+  return NotificationNotifier(userId, profileId);
 });
