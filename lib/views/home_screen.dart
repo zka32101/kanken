@@ -727,6 +727,7 @@ class PracticeScreen extends ConsumerWidget {
   Future<void> _handleAnswer(BuildContext context, WidgetRef ref, bool isCorrect) async {
     final practiceVM = ref.read(practiceViewModelProvider.notifier);
     final level = ref.read(currentLevelProvider);
+    final question = ref.read(practiceViewModelProvider).currentQuestion;
 
     await practiceVM.answerQuestion(isCorrect);
 
@@ -737,7 +738,7 @@ class PracticeScreen extends ConsumerWidget {
       // ハプティクス（軽いタップ）
       await HapticFeedbackService.lightTap();
       // 正解演出表示
-      _showCorrectFeedback(context);
+      _showCorrectFeedback(context, question);
       // Analytics: 3問正解でAha Moment
       final ahaMoment = ref.read(ahaMomentReachedProvider);
       if (ahaMoment) {
@@ -749,7 +750,7 @@ class PracticeScreen extends ConsumerWidget {
       // ハプティクス（シェイク）
       await HapticFeedbackService.shake();
       // 不正解演出表示
-      _showIncorrectFeedback(context);
+      _showIncorrectFeedback(context, question);
     }
 
     // 少し待ってから次の問題へ
@@ -757,23 +758,43 @@ class PracticeScreen extends ConsumerWidget {
     practiceVM.moveToNextQuestion();
   }
 
-  void _showCorrectFeedback(BuildContext context) {
+  /// 読み仮名・用例があれば付け足した解説文を作る
+  String? _buildExplanation(KanjiQuestion? question) {
+    if (question == null) return null;
+    final parts = <String>[];
+    if (question.reading != null && question.reading!.isNotEmpty) {
+      parts.add('読み方: ${question.reading}');
+    }
+    if (question.example != null && question.example!.isNotEmpty) {
+      parts.add('例: ${question.example}');
+    }
+    if (parts.isEmpty) return null;
+    return parts.join(' / ');
+  }
+
+  void _showCorrectFeedback(BuildContext context, KanjiQuestion? question) {
+    final explanation = _buildExplanation(question);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('✨ 正解！'),
+      SnackBar(
+        content: Text(
+          explanation == null ? '✨ 正解！' : '✨ 正解！\n$explanation',
+        ),
         backgroundColor: Colors.green,
-        duration: Duration(milliseconds: 1500),
+        duration: const Duration(milliseconds: 1500),
         behavior: SnackBarBehavior.floating,
       ),
     );
   }
 
-  void _showIncorrectFeedback(BuildContext context) {
+  void _showIncorrectFeedback(BuildContext context, KanjiQuestion? question) {
+    final explanation = _buildExplanation(question);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('⚠️ 不正解'),
+      SnackBar(
+        content: Text(
+          explanation == null ? '⚠️ 不正解' : '⚠️ 不正解\n$explanation',
+        ),
         backgroundColor: Colors.red,
-        duration: Duration(milliseconds: 1500),
+        duration: const Duration(milliseconds: 1500),
         behavior: SnackBarBehavior.floating,
       ),
     );

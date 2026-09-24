@@ -82,13 +82,20 @@ class FirestoreService {
 
   // Question operations
   Future<List<KanjiQuestion>> getQuestionsByLevel(String level, {int limit = 50}) async {
-    // Placeholder - will be implemented with database
-    return [];
+    final snapshot = await _firestore
+        .collection('questions')
+        .where('level', isEqualTo: level)
+        .limit(limit)
+        .get();
+    return snapshot.docs
+        .map((doc) => KanjiQuestion.fromJson({...doc.data(), 'id': doc.id}))
+        .toList();
   }
 
   Future<KanjiQuestion?> getKanjiQuestion(String questionId) async {
-    // Placeholder - will be implemented with database
-    return null;
+    final doc = await _firestore.collection('questions').doc(questionId).get();
+    if (!doc.exists) return null;
+    return KanjiQuestion.fromJson({...doc.data()!, 'id': doc.id});
   }
 
   // Answer logging
