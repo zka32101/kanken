@@ -4,6 +4,7 @@ class User {
   final String currentLevel;
   final int streakCount;
   final DateTime createdAt;
+  final DateTime? examDate; // 受験予定日（未設定ならnull）
 
   User({
     required this.uid,
@@ -11,6 +12,7 @@ class User {
     required this.currentLevel,
     required this.streakCount,
     required this.createdAt,
+    this.examDate,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -22,6 +24,9 @@ class User {
       createdAt: json['createdAt'] != null
         ? DateTime.parse(json['createdAt'])
         : DateTime.now(),
+      examDate: json['examDate'] != null
+        ? DateTime.parse(json['examDate'])
+        : null,
     );
   }
 
@@ -32,6 +37,7 @@ class User {
       'currentLevel': currentLevel,
       'streakCount': streakCount,
       'createdAt': createdAt.toIso8601String(),
+      'examDate': examDate?.toIso8601String(),
     };
   }
 
@@ -41,6 +47,8 @@ class User {
     String? currentLevel,
     int? streakCount,
     DateTime? createdAt,
+    DateTime? examDate,
+    bool clearExamDate = false,
   }) {
     return User(
       uid: uid ?? this.uid,
@@ -48,6 +56,7 @@ class User {
       currentLevel: currentLevel ?? this.currentLevel,
       streakCount: streakCount ?? this.streakCount,
       createdAt: createdAt ?? this.createdAt,
+      examDate: clearExamDate ? null : (examDate ?? this.examDate),
     );
   }
 }

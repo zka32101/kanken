@@ -2,6 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/learning_goal.dart';
 import '../providers/learning_goal_provider.dart';
+import '../viewmodels/user_viewmodel.dart';
+
+// 各級の配当漢字数（累計）の目安。受験日から逆算した1日あたりの
+// 学習ペースを提案する際の参考値として使う簡略化された値であり、
+// 正式な漢検の出題範囲とは若干異なる場合がある。
+const Map<String, int> _levelKanjiCount = {
+  'LEVEL_10': 80,
+  'LEVEL_9': 160,
+  'LEVEL_8': 200,
+  'LEVEL_7': 202,
+  'LEVEL_6': 193,
+  'LEVEL_5': 191,
+};
 
 class LearningGoalsScreen extends ConsumerWidget {
   const LearningGoalsScreen({Key? key}) : super(key: key);
@@ -10,6 +23,8 @@ class LearningGoalsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final activeGoalsAsync = ref.watch(activeLearningGoalsProvider);
     final achievedGoalsAsync = ref.watch(achievedLearningGoalsProvider);
+    final currentUserAsync = ref.watch(currentUserProvider);
+    final currentLevel = ref.watch(currentLevelProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -24,6 +39,18 @@ class LearningGoalsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          currentUserAsync.when(
+            data: (user) => _buildExamDateCard(
+              context,
+              ref,
+              user?.examDate,
+              currentLevel,
+              activeGoalsAsync.value,
+            ),
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
+          const SizedBox(height: 24),
           Text(
             '設定中の目標',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -53,6 +80,162 @@ class LearningGoalsScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildExamDateCard(
+    BuildContext context,
+    WidgetRef ref,
+    DateTime? examDate,
+    String currentLevel,
+    List<LearningGoal>? activeGoals,
+  ) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.event, color: Colors.indigo),
+                const SizedBox(width: 8),
+                Text(
+                  '受験日',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const Spacer(),
+                TextButton(
+                  onPressed: () => _pickExamDate(context, ref, examDate),
+                  child: Text(examDate == null ? '登録する' : '変更'),
+                ),
+                if (examDate != null)
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 18),
+                    onPressed: () => updateExamDate(ref, null),
+                  ),
+              ],
+            ),
+            if (examDate == null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  '受験日を登録すると、残り日数に応じた学習目標を提案します',
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                ),
+              )
+            else
+              _buildExamCountdown(context, ref, examDate, currentLevel, activeGoals),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExamCountdown(
+    BuildContext context,
+    WidgetRef ref,
+    DateTime examDate,
+    String currentLevel,
+    List<LearningGoal>? activeGoals,
+  ) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final target = DateTime(examDate.year, examDate.month, examDate.day);
+    final daysLeft = target.difference(today).inDays;
+
+    final achievementRate = _averageAchievementRate(activeGoals);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 8),
+        Text(
+          _formatDate(examDate),
+          style: const TextStyle(fontSize: 14),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          daysLeft > 0
+              ? '受験まで残り $daysLeft 日'
+              : daysLeft == 0
+                  ? '本日が受験日です！'
+                  : '受験日を過ぎています',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: daysLeft <= 7 && daysLeft >= 0 ? Colors.red : Colors.indigo,
+          ),
+        ),
+        if (achievementRate != null) ...[
+          const SizedBox(height: 8),
+          Text(
+            '現在の目標達成率: ${(achievementRate * 100).round()}%',
+            style: const TextStyle(fontSize: 13),
+          ),
+        ],
+        if (daysLeft > 0) ...[
+          const SizedBox(height: 12),
+          _buildSuggestedGoalButton(context, ref, currentLevel, daysLeft),
+        ],
+      ],
+    );
+  }
+
+  double? _averageAchievementRate(List<LearningGoal>? goals) {
+    if (goals == null || goals.isEmpty) return null;
+    final total = goals.fold<double>(0, (sum, g) => sum + g.progressRate);
+    return total / goals.length;
+  }
+
+  Widget _buildSuggestedGoalButton(
+    BuildContext context,
+    WidgetRef ref,
+    String currentLevel,
+    int daysLeft,
+  ) {
+    final totalKanji = _levelKanjiCount[currentLevel] ?? 80;
+    final perDay = (totalKanji / daysLeft).ceil().clamp(1, totalKanji);
+
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        icon: const Icon(Icons.auto_awesome, size: 18),
+        label: Text('おすすめ目標: 1日 $perDay 問を目標に設定'),
+        onPressed: () async {
+          await createLearningGoal(
+            type: GoalType.dailyQuestions,
+            targetValue: perDay,
+            deadline: DateTime.now().add(Duration(days: daysLeft)),
+          );
+          ref.invalidate(activeLearningGoalsProvider);
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('1日 $perDay 問の目標を設定しました')),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Future<void> _pickExamDate(
+    BuildContext context,
+    WidgetRef ref,
+    DateTime? current,
+  ) async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: current ?? now.add(const Duration(days: 30)),
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 365 * 2)),
+    );
+    if (picked != null) {
+      await updateExamDate(ref, picked);
+    }
   }
 
   Widget _buildActiveGoalsList(
