@@ -19,7 +19,9 @@ class FirestoreService {
         .collection('users')
         .doc(user.uid)
         .set(user.toJson(), SetOptions(merge: true));
-    await _mirrorUserNameToRanking(user.uid, user.displayName);
+    if (user.rankingOptIn) {
+      await _mirrorUserNameToRanking(user.uid, user.displayName);
+    }
   }
 
   Future<void> updateUser(User user) async {
@@ -27,18 +29,29 @@ class FirestoreService {
         .collection('users')
         .doc(user.uid)
         .set(user.toJson(), SetOptions(merge: true));
-    await _mirrorUserNameToRanking(user.uid, user.displayName);
+    if (user.rankingOptIn) {
+      await _mirrorUserNameToRanking(user.uid, user.displayName);
+    } else {
+      // 参加をオフにした場合は既存のランキングエントリも削除する
+      await _removeFromRanking(user.uid);
+    }
   }
 
   /// users/{uid} 本体（メール等を含みうる）は本人のみ読み書き可能なため、
   /// ランキング表示に使うニックネームだけを rankings/{uid}（全員読み取り可）へミラーする。
   /// レベル・経験値・コイン等の統計は GamificationNotifier が別途同じドキュメントへ
-  /// merge するので、ここでは触れない。
+  /// merge するので、ここでは触れない。ランキング参加設定(rankingOptIn)が
+  /// オンのユーザーのみ呼び出すこと。
   Future<void> _mirrorUserNameToRanking(String uid, String userName) async {
     await _firestore.collection('rankings').doc(uid).set(
       {'userId': uid, 'userName': userName},
       SetOptions(merge: true),
     );
+  }
+
+  /// ランキング参加をオフにしたユーザーのエントリを削除する
+  Future<void> _removeFromRanking(String uid) async {
+    await _firestore.collection('rankings').doc(uid).delete();
   }
 
   // Kanji operations

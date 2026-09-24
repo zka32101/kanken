@@ -133,6 +133,12 @@ Future<void> updateUserScore({
 
   try {
     final db = FirebaseFirestore.instance;
+
+    // ランキング参加設定(rankingOptIn)がオフのユーザーはリーダーボードに載せない
+    final userDoc = await db.collection('users').doc(userId).get();
+    final rankingOptIn = userDoc.data()?['rankingOptIn'] as bool? ?? false;
+    if (!rankingOptIn) return;
+
     final batch = db.batch();
 
     // 複数の期間（日次、週次、月次、全期間）に対してスコアを更新

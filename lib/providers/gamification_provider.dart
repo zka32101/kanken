@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/gamification_stats.dart';
 import '../models/reward.dart';
+import '../viewmodels/user_viewmodel.dart' as user_vm;
 import 'firebase_provider.dart';
 
 /// ユーザーのゲーミフィケーション統計取得 provider
@@ -48,11 +49,14 @@ final gamificationStatsProvider = FutureProvider<GamificationStats>((ref) async 
 class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> {
   final FirebaseFirestore _firestore;
   final String _userId;
+  final bool _rankingOptIn;
 
   GamificationNotifier(
     this._firestore,
-    this._userId,
-  ) : super(const AsyncValue.loading());
+    this._userId, {
+    bool rankingOptIn = false,
+  })  : _rankingOptIn = rankingOptIn,
+        super(const AsyncValue.loading());
 
   /// 統計を読み込む
   Future<void> loadStats() async {
@@ -86,9 +90,10 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
   }
 
   /// 統計を Firestore に保存する。
-  /// users/{uid}/stats/current（本人のみ）に加えて、ランキング表示用に
-  /// rankings/{uid}（全員読み取り可）へ level/experience/coins/accuracyRate/streak
-  /// のみを merge でミラーする（userName はニックネーム設定側が別途書き込む）。
+  /// users/{uid}/stats/current（本人のみ）には常に保存する。
+  /// ランキング表示用の rankings/{uid}（全員読み取り可）への
+  /// level/experience/coins/accuracyRate/streak ミラーは、
+  /// ランキング参加設定(rankingOptIn)がオンのユーザーのみ行う。
   Future<void> _saveStats(GamificationStats stats) async {
     await _firestore
         .collection('users')
@@ -96,6 +101,8 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
         .collection('stats')
         .doc('current')
         .set(stats.toJson());
+
+    if (!_rankingOptIn) return;
 
     await _firestore.collection('rankings').doc(_userId).set(
       {
@@ -237,10 +244,13 @@ final currentGamificationNotifierProvider =
     StateNotifierProvider<GamificationNotifier, AsyncValue<GamificationStats>>((ref) {
   final firestore = ref.watch(firebaseProvider);
   final userId = ref.watch(currentUserIdProvider);
+  final rankingOptIn = ref.watch(
+    user_vm.currentUserProvider.select((async) => async.value?.rankingOptIn ?? false),
+  );
 
   if (userId == null) {
-    return GamificationNotifier(firestore, 'anonymous');
+    return GamificationNotifier(firestore, 'anonymous', rankingOptIn: rankingOptIn);
   }
 
-  return GamificationNotifier(firestore, userId);
+  return GamificationNotifier(firestore, userId, rankingOptIn: rankingOptIn);
 });
