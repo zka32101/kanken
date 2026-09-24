@@ -1,6 +1,11 @@
 class User {
   final String uid;
+  // 1つのFirebase Authアカウント(uid)の下に複数の学習者プロフィールを
+  // 持たせるためのID。users/{uid}/profiles/{profileId} に保存される。
+  // 既定は 'default'（プロフィール機能を使わない既存ユーザーもこれで動く）。
+  final String profileId;
   final String displayName;
+  final String avatarIcon; // プロフィール識別用の絵文字アイコン
   final String currentLevel;
   final int streakCount;
   final DateTime createdAt;
@@ -10,7 +15,9 @@ class User {
 
   User({
     required this.uid,
+    this.profileId = 'default',
     this.displayName = '',
+    this.avatarIcon = '🙂',
     required this.currentLevel,
     required this.streakCount,
     required this.createdAt,
@@ -22,7 +29,9 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       uid: json['uid'] ?? '',
+      profileId: json['profileId'] as String? ?? 'default',
       displayName: json['displayName'] ?? '',
+      avatarIcon: json['avatarIcon'] as String? ?? '🙂',
       currentLevel: json['currentLevel'] ?? 'LEVEL_10',
       streakCount: json['streakCount'] ?? 0,
       createdAt: json['createdAt'] != null
@@ -39,7 +48,9 @@ class User {
   Map<String, dynamic> toJson() {
     return {
       'uid': uid,
+      'profileId': profileId,
       'displayName': displayName,
+      'avatarIcon': avatarIcon,
       'currentLevel': currentLevel,
       'streakCount': streakCount,
       'createdAt': createdAt.toIso8601String(),
@@ -51,7 +62,9 @@ class User {
 
   User copyWith({
     String? uid,
+    String? profileId,
     String? displayName,
+    String? avatarIcon,
     String? currentLevel,
     int? streakCount,
     DateTime? createdAt,
@@ -62,7 +75,9 @@ class User {
   }) {
     return User(
       uid: uid ?? this.uid,
+      profileId: profileId ?? this.profileId,
       displayName: displayName ?? this.displayName,
+      avatarIcon: avatarIcon ?? this.avatarIcon,
       currentLevel: currentLevel ?? this.currentLevel,
       streakCount: streakCount ?? this.streakCount,
       createdAt: createdAt ?? this.createdAt,

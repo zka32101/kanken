@@ -7,51 +7,79 @@ class FirestoreService {
   FirestoreService({FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance;
 
-  // User operations
-  Future<User?> getUser(String uid) async {
-    final doc = await _firestore.collection('users').doc(uid).get();
+  // User(プロフィール) operations
+  //
+  // 1つのFirebase Authアカウント(uid)の下に複数の学習者プロフィールを
+  // 持たせるため、実データは users/{uid}/profiles/{profileId} に保存する。
+  // ランキングのドキュメントIDもプロフィール単位で分けるため
+  // "{uid}_{profileId}" の複合IDを使う。
+
+  static String rankingDocId(String uid, String profileId) => '${uid}_$profileId';
+
+  Future<User?> getUser(String uid, {String profileId = 'default'}) async {
+    final doc = await _profileDoc(uid, profileId).get();
     if (!doc.exists) return null;
     return User.fromJson(doc.data()!);
   }
 
+  /// uid配下の全プロフィール一覧を取得する
+  Future<List<User>> getUserProfiles(String uid) async {
+    final snapshot = await _profilesCollection(uid).get();
+    return snapshot.docs.map((doc) => User.fromJson(doc.data())).toList();
+  }
+
+  Future<void> deleteProfile(String uid, String profileId) async {
+    await _profileDoc(uid, profileId).delete();
+    await _removeFromRanking(uid, profileId);
+  }
+
   Future<void> createUser(User user) async {
-    await _firestore
-        .collection('users')
-        .doc(user.uid)
+    await _profileDoc(user.uid, user.profileId)
         .set(user.toJson(), SetOptions(merge: true));
     if (user.rankingOptIn) {
-      await _mirrorUserNameToRanking(user.uid, user.displayName);
+      await _mirrorUserNameToRanking(user.uid, user.profileId, user.displayName);
     }
   }
 
   Future<void> updateUser(User user) async {
-    await _firestore
-        .collection('users')
-        .doc(user.uid)
+    await _profileDoc(user.uid, user.profileId)
         .set(user.toJson(), SetOptions(merge: true));
     if (user.rankingOptIn) {
-      await _mirrorUserNameToRanking(user.uid, user.displayName);
+      await _mirrorUserNameToRanking(user.uid, user.profileId, user.displayName);
     } else {
       // 参加をオフにした場合は既存のランキングエントリも削除する
-      await _removeFromRanking(user.uid);
+      await _removeFromRanking(user.uid, user.profileId);
     }
   }
 
-  /// users/{uid} 本体（メール等を含みうる）は本人のみ読み書き可能なため、
-  /// ランキング表示に使うニックネームだけを rankings/{uid}（全員読み取り可）へミラーする。
+  DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {
+    return _profilesCollection(uid).doc(profileId);
+  }
+
+  CollectionReference<Map<String, dynamic>> _profilesCollection(String uid) {
+    return _firestore.collection('users').doc(uid).collection('profiles');
+  }
+
+  /// users/{uid}/profiles/{profileId} 本体（メール等を含みうる）は本人のみ
+  /// 読み書き可能なため、ランキング表示に使うニックネームだけを
+  /// rankings/{uid}_{profileId}（全員読み取り可）へミラーする。
   /// レベル・経験値・コイン等の統計は GamificationNotifier が別途同じドキュメントへ
   /// merge するので、ここでは触れない。ランキング参加設定(rankingOptIn)が
   /// オンのユーザーのみ呼び出すこと。
-  Future<void> _mirrorUserNameToRanking(String uid, String userName) async {
-    await _firestore.collection('rankings').doc(uid).set(
-      {'userId': uid, 'userName': userName},
+  Future<void> _mirrorUserNameToRanking(
+    String uid,
+    String profileId,
+    String userName,
+  ) async {
+    await _firestore.collection('rankings').doc(rankingDocId(uid, profileId)).set(
+      {'userId': uid, 'profileId': profileId, 'userName': userName},
       SetOptions(merge: true),
     );
   }
 
   /// ランキング参加をオフにしたユーザーのエントリを削除する
-  Future<void> _removeFromRanking(String uid) async {
-    await _firestore.collection('rankings').doc(uid).delete();
+  Future<void> _removeFromRanking(String uid, String profileId) async {
+    await _firestore.collection('rankings').doc(rankingDocId(uid, profileId)).delete();
   }
 
   // Kanji operations

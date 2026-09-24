@@ -11,6 +11,15 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == uid;
     }
 
+    // rankings/{docId} は複数プロフィール対応のため "{uid}_{profileId}" という
+    // 複合IDを使う。ドキュメントIDの先頭(uid部分)が本人かどうかで判定する。
+    // profileIdにはUUID等を使い、アンダースコアを含む値は避けること
+    // （先頭要素だけを見るためprofileId側に含まれても安全ではあるが、
+    // 可読性のため）。
+    function isOwnerOfCompositeDoc(docId) {
+      return isSignedIn() && docId.split('_')[0] == request.auth.uid;
+    }
+
     // ユーザー本体ドキュメントと配下の全サブコレクション（achievements, notifications,
     // friends, friendRequests, learningGoals, spacedRepetitionItems, examResults 等）
     // はすべて本人のみ読み書き可能
@@ -33,9 +42,9 @@ service cloud.firestore {
     // ランキング表示に必要な最小限のフィールド（ニックネーム・レベル・経験値・
     // 正答率・ストリーク・コイン）だけを本人が書き込む公開ドキュメント。
     // 読み取りはログインユーザー全員、書き込みは本人のみ。
-    match /rankings/{uid} {
+    match /rankings/{docId} {
       allow read: if isSignedIn();
-      allow write: if isOwner(uid);
+      allow write: if isOwnerOfCompositeDoc(docId);
     }
 
     // フレンドチャレンジ: 当事者（送信者・受信者）のみ読み書き可能

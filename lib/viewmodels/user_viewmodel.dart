@@ -6,17 +6,32 @@ import 'services_provider.dart';
 
 export '../providers/firebase_provider.dart' show currentUserIdProvider;
 
-// ユーザー情報Provider
-final userProvider = FutureProvider.family<User?, String>((ref, uid) async {
+/// 現在アクティブな学習者プロフィールID（兄弟等での使い分け用）。
+/// 1つのFirebase Authアカウント(uid)の下に複数のプロフィールを持てる。
+/// アプリ起動直後はプロフィール未選択(null)で、activeProfilesProviderが
+/// 解決した時点でホーム画面側が適切な初期値をセットする。
+final activeProfileIdProvider = StateProvider<String?>((ref) => null);
+
+/// (uid, profileId) の組でユーザー情報を取得するProvider
+final userProvider = FutureProvider.family<User?,
+    ({String uid, String profileId})>((ref, key) async {
   final firestoreService = ref.watch(firestoreServiceProvider);
-  return await firestoreService.getUser(uid);
+  return await firestoreService.getUser(key.uid, profileId: key.profileId);
 });
 
-// 現在のユーザー情報
+/// uid配下の全プロフィール一覧
+final userProfilesProvider = FutureProvider.family<List<User>, String>((ref, uid) async {
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  return await firestoreService.getUserProfiles(uid);
+});
+
+// 現在のユーザー（アクティブなプロフィール）情報
 final currentUserProvider = FutureProvider<User?>((ref) async {
   final uid = ref.watch(currentUserIdProvider);
   if (uid == null) return null;
-  return ref.watch(userProvider(uid)).when(
+
+  final profileId = ref.watch(activeProfileIdProvider) ?? 'default';
+  return ref.watch(userProvider((uid: uid, profileId: profileId))).when(
         data: (user) => user,
         loading: () => null,
         error: (err, stack) => null,
@@ -46,5 +61,5 @@ Future<void> updateExamDate(WidgetRef ref, DateTime? examDate) async {
   );
 
   ref.invalidate(currentUserProvider);
-  ref.invalidate(userProvider(uid));
+  ref.invalidate(userProvider((uid: uid, profileId: user.profileId)));
 }
