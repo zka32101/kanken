@@ -94,15 +94,33 @@ class FirestoreService {
   }
 
   // Question operations
-  Future<List<KanjiQuestion>> getQuestionsByLevel(String level, {int limit = 50}) async {
+  /// uidを指定すると、そのユーザーが「覚えた」問題(getMasteredQuestionIds参照)を
+  /// 出題対象から除外する。
+  Future<List<KanjiQuestion>> getQuestionsByLevel(
+    String level, {
+    int limit = 50,
+    String? uid,
+    int masteryThreshold = 3,
+  }) async {
     final snapshot = await _firestore
         .collection('questions')
         .where('level', isEqualTo: level)
         .limit(limit)
         .get();
-    return snapshot.docs
+
+    var questions = snapshot.docs
         .map((doc) => KanjiQuestion.fromJson({...doc.data(), 'id': doc.id}))
         .toList();
+
+    if (uid != null) {
+      final excludeIds =
+          await getMasteredQuestionIds(uid, masteryThreshold: masteryThreshold);
+      if (excludeIds.isNotEmpty) {
+        questions = questions.where((q) => !excludeIds.contains(q.id)).toList();
+      }
+    }
+
+    return questions;
   }
 
   Future<KanjiQuestion?> getKanjiQuestion(String questionId) async {
@@ -112,13 +130,50 @@ class FirestoreService {
   }
 
   // Answer logging
+  //
+  // answerLogs には履歴として1件ずつ記録する一方、出題除外の判定に
+  // 毎回全履歴を読むのは非効率なため、questionStats/{questionId} に
+  // 連続正解数(correctStreak)を別途集計しておく。正解なら+1、
+  // 不正解なら0にリセットする。「N問連続正解したら出題除外」
+  // (User.masteryThreshold)の判定に使う。
   Future<void> addAnswerLog(UserAnswerLog log) async {
-    // Placeholder - will be implemented with database
+    final batch = _firestore.batch();
+
+    final logRef = _firestore
+        .collection('users')
+        .doc(log.uid)
+        .collection('answerLogs')
+        .doc(log.id);
+    batch.set(logRef, log.toJson());
+
+    final statsRef = _firestore
+        .collection('users')
+        .doc(log.uid)
+        .collection('questionStats')
+        .doc(log.questionId);
+    batch.set(
+      statsRef,
+      {
+        'correctStreak': log.isCorrect ? FieldValue.increment(1) : 0,
+        'lastAnsweredAt': log.answeredAt.toIso8601String(),
+      },
+      SetOptions(merge: true),
+    );
+
+    await batch.commit();
   }
 
   Future<List<UserAnswerLog>> getUserAnswerLogs(String uid) async {
-    // Placeholder - will be implemented with database
-    return [];
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('answerLogs')
+        .orderBy('answeredAt', descending: true)
+        .limit(200)
+        .get();
+    return snapshot.docs
+        .map((doc) => UserAnswerLog.fromJson({...doc.data(), 'id': doc.id}))
+        .toList();
   }
 
   // Weak kanji tracking
@@ -136,14 +191,67 @@ class FirestoreService {
     // Placeholder - will be implemented with database
   }
 
-  // Learned kanji tracking
+  // Learned kanji tracking（演習後にユーザーが手動でチェックする「覚えた」機能）
   Future<List<String>> getUserLearnedKanjis(String uid) async {
-    // Placeholder - will be implemented with database
-    return [];
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('learnedKanjis')
+        .get();
+    return snapshot.docs
+        .map((doc) => doc.data()['questionId'] as String? ?? doc.id)
+        .toList();
   }
 
   Future<void> markAsLearned(String uid, String kanjiId) async {
-    // Placeholder - will be implemented with database
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('learnedKanjis')
+        .doc(kanjiId)
+        .set({
+      'uid': uid,
+      'questionId': kanjiId,
+      'learnedAt': DateTime.now().toIso8601String(),
+    });
+  }
+
+  /// 「覚えた」チェックを取り消す
+  Future<void> unmarkAsLearned(String uid, String kanjiId) async {
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('learnedKanjis')
+        .doc(kanjiId)
+        .delete();
+  }
+
+  /// 出題から除外すべき問題ID一覧
+  /// （手動で「覚えた」チェックされた問題 + masteryThreshold回以上連続正解した問題）
+  Future<Set<String>> getMasteredQuestionIds(
+    String uid, {
+    int masteryThreshold = 3,
+  }) async {
+    final excludeIds = <String>{};
+
+    final learnedSnapshot = await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('learnedKanjis')
+        .get();
+    excludeIds.addAll(
+      learnedSnapshot.docs.map((d) => d.data()['questionId'] as String? ?? d.id),
+    );
+
+    final statsSnapshot = await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('questionStats')
+        .where('correctStreak', isGreaterThanOrEqualTo: masteryThreshold)
+        .get();
+    excludeIds.addAll(statsSnapshot.docs.map((d) => d.id));
+
+    return excludeIds;
   }
 
   // Mock exam operations

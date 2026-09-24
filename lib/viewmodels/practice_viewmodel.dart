@@ -6,11 +6,19 @@ import 'user_viewmodel.dart';
 // 1回の演習セッションの問題数（達成感を出すため小さく区切る）
 const int practiceSessionSize = 10;
 
-// 現在の問題セット（その級の問題からランダムに10問だけ出題する）
+// 現在の問題セット（その級の問題からランダムに10問だけ出題する。
+// 「覚えた」チェック済み・連続正解でマスター済みの問題は除外される）
 final practiceQuestionsProvider =
     FutureProvider.family<List<KanjiQuestion>, String>((ref, level) async {
   final firestoreService = ref.watch(firestoreServiceProvider);
-  final all = await firestoreService.getQuestionsByLevel(level, limit: 100);
+  final uid = ref.watch(currentUserIdProvider);
+  final user = await ref.watch(currentUserProvider.future);
+  final all = await firestoreService.getQuestionsByLevel(
+    level,
+    limit: 100,
+    uid: uid,
+    masteryThreshold: user?.masteryThreshold ?? 3,
+  );
   all.shuffle();
   return all.take(practiceSessionSize).toList();
 });

@@ -669,7 +669,13 @@ class PracticeScreen extends ConsumerWidget {
             question.kanji,
             style: const TextStyle(fontSize: 80, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 4),
+          TextButton.icon(
+            onPressed: () => _markAsLearned(context, ref, question),
+            icon: const Icon(Icons.check_circle_outline, size: 18),
+            label: const Text('覚えた！ 次から出さない'),
+          ),
+          const SizedBox(height: 8),
 
           // 選択肢
           if (question.questionType == QuestionType.multipleChoice)
@@ -763,6 +769,24 @@ class PracticeScreen extends ConsumerWidget {
     // 少し待ってから次の問題へ
     await Future.delayed(const Duration(milliseconds: 1500));
     practiceVM.moveToNextQuestion();
+  }
+
+  Future<void> _markAsLearned(
+    BuildContext context,
+    WidgetRef ref,
+    KanjiQuestion question,
+  ) async {
+    final uid = ref.read(currentUserIdProvider);
+    if (uid == null) return;
+
+    final firestoreService = ref.read(firestoreServiceProvider);
+    await firestoreService.markAsLearned(uid, question.id);
+
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('「${question.kanji}」を覚えた問題にしました')),
+      );
+    }
   }
 
   /// 読み仮名・用例があれば付け足した解説文を作る
