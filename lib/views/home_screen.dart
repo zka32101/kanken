@@ -44,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('小学漢検チャレンジ'),
+        title: const Text('漢検チャレンジ'),
       ),
       bottomNavigationBar: const SafeArea(child: BannerAdWidget()),
       body: SingleChildScrollView(
@@ -593,7 +593,7 @@ class PracticeScreen extends ConsumerWidget {
                     const Icon(Icons.check_circle, size: 80, color: Colors.green),
                     const SizedBox(height: 16),
                     Text(
-                      '完了！\n正解数: $correctCount問',
+                      '🎉 ${qList.length}問クリア！\n正解数: $correctCount / ${qList.length}問',
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
@@ -616,6 +616,7 @@ class PracticeScreen extends ConsumerWidget {
               ref,
               question,
               currentIndex,
+              qList.length,
               correctCount,
               comboCount,
               ahaMomentReached,
@@ -633,6 +634,7 @@ class PracticeScreen extends ConsumerWidget {
     WidgetRef ref,
     KanjiQuestion question,
     int currentIndex,
+    int totalQuestions,
     int correctCount,
     int comboCount,
     bool ahaMomentReached,
@@ -643,7 +645,12 @@ class PracticeScreen extends ConsumerWidget {
         children: [
           // 進捗バー
           LinearProgressIndicator(
-            value: (currentIndex + 1) / 50,
+            value: (currentIndex + 1) / totalQuestions,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '問題 ${currentIndex + 1} / $totalQuestions',
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
           const SizedBox(height: 16),
 

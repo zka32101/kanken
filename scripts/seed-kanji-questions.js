@@ -576,7 +576,7 @@ const questions = [
       "高"
     ],
     "correctAnswer": "大",
-    "reading": "おおきい",
+    "reading": "おお（きい）",
     "example": "大きい（おおきい）",
     "version": 1
   },
@@ -592,7 +592,7 @@ const questions = [
       "高"
     ],
     "correctAnswer": "小",
-    "reading": "ちいさい",
+    "reading": "ちい（さい）",
     "example": "小さい（ちいさい）",
     "version": 1
   },
@@ -624,7 +624,7 @@ const questions = [
       "高"
     ],
     "correctAnswer": "高",
-    "reading": "たかい",
+    "reading": "たか（い）",
     "example": "高い（たかい）",
     "version": 1
   },
@@ -640,7 +640,7 @@ const questions = [
       "米"
     ],
     "correctAnswer": "食",
-    "reading": "たべもの",
+    "reading": "た（べる）",
     "example": "食事（しょくじ）",
     "version": 1
   },

@@ -44,7 +44,7 @@ class _LoginChoiceScreenState extends ConsumerState<LoginChoiceScreen> {
               const Text('🀄', style: TextStyle(fontSize: 64), textAlign: TextAlign.center),
               const SizedBox(height: 16),
               Text(
-                '小学漢検チャレンジ',
+                '漢検チャレンジ',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,

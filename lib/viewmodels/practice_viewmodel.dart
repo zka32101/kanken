@@ -3,11 +3,16 @@ import '../models/index.dart';
 import 'services_provider.dart';
 import 'user_viewmodel.dart';
 
-// 現在の問題セット
+// 1回の演習セッションの問題数（達成感を出すため小さく区切る）
+const int practiceSessionSize = 10;
+
+// 現在の問題セット（その級の問題からランダムに10問だけ出題する）
 final practiceQuestionsProvider =
     FutureProvider.family<List<KanjiQuestion>, String>((ref, level) async {
   final firestoreService = ref.watch(firestoreServiceProvider);
-  return await firestoreService.getQuestionsByLevel(level, limit: 50);
+  final all = await firestoreService.getQuestionsByLevel(level, limit: 100);
+  all.shuffle();
+  return all.take(practiceSessionSize).toList();
 });
 
 // 現在解いている問題インデックス

@@ -9,7 +9,11 @@ class KanjiQuestion {
   final String correctAnswer;
   final Map<String, dynamic>? strokeOrderData;
   final int version;
-  final String? reading; // 読み仮名（例: 「いち」）
+  // 読み仮名。送り仮名を伴う語（形容詞・動詞など）は、漢字部分の読みと
+  // 送り仮名部分を区別できるよう「ただ（しい）」のように送り仮名側を
+  // 括弧で表記する（漢検の出題形式に準拠）。送り仮名が無い語は
+  // 「いち」のようにそのまま書く。
+  final String? reading;
   final String? example; // 用例（例: 「一番目（いちばんめ）」）
 
   KanjiQuestion({
