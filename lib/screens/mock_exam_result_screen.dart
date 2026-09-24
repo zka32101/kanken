@@ -10,6 +10,7 @@ import '../providers/leaderboard_provider.dart';
 import '../providers/spaced_repetition_provider.dart';
 import '../models/learning_goal.dart';
 import '../providers/learning_goal_provider.dart';
+import '../viewmodels/user_viewmodel.dart';
 import '../widgets/achievement_unlock_dialog.dart';
 
 class MockExamResultScreen extends ConsumerStatefulWidget {
@@ -77,7 +78,25 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
             }
             break;
           case GoalType.weeklyStudyMinutes:
+            // 今回の試験にかかった時間(分)を積み上げる。週単位でのリセットは
+            // 未対応で、目標作成からの累積時間になる(今後の課題)。
+            final minutesSpent = (elapsedSeconds / 60).ceil();
+            if (minutesSpent > 0) {
+              await updateGoalProgress(
+                goalId: goal.goalId,
+                newValue: goal.currentValue + minutesSpent,
+              );
+            }
+            break;
           case GoalType.streakDays:
+            final user = await ref.read(currentUserProvider.future);
+            final streak = user?.streakCount ?? 0;
+            if (streak > goal.currentValue) {
+              await updateGoalProgress(
+                goalId: goal.goalId,
+                newValue: streak,
+              );
+            }
             break;
         }
       }
