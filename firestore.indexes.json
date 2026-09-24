@@ -1,0 +1,30 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "examQuestions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "level", "order": "ASCENDING" },
+        { "fieldPath": "difficulty", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "examQuestions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "level", "order": "ASCENDING" },
+        { "fieldPath": "category", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "examQuestions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "level", "order": "ASCENDING" },
+        { "fieldPath": "difficulty", "order": "ASCENDING" },
+        { "fieldPath": "category", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

@@ -64,8 +64,11 @@ class _MockExamEnhancedScreenState extends ConsumerState<MockExamEnhancedScreen>
       await ref.read(examSessionProvider.notifier).startExam(widget.config);
     } catch (e) {
       if (mounted) {
+        final message = e is NoExamQuestionsException
+            ? 'この級の問題はまだ準備中です。別の級や別のモードを試してみてください。'
+            : '試験を開始できませんでした。通信状態を確認して、もう一度お試しください。';
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('試験の開始に失敗しました: $e')),
+          SnackBar(content: Text(message)),
         );
         Navigator.pop(context);
       }

@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/mock_exam_modes.dart';
 import '../providers/mock_exam_enhanced_provider.dart';
-import '../providers/firebase_provider.dart';
 import '../providers/exam_session_provider.dart';
+import '../viewmodels/user_viewmodel.dart';
 import 'mock_exam_enhanced_screen.dart';
+
+/// 'LEVEL_10' 形式の級表記を、examQuestionsコレクションが使う
+/// int形式の級番号(10級=10, 1級=1)に変換する。
+int _levelStringToInt(String levelString) {
+  return int.tryParse(levelString.replaceFirst('LEVEL_', '')) ?? 10;
+}
 
 class MockExamModesScreen extends ConsumerWidget {
   const MockExamModesScreen({Key? key}) : super(key: key);
@@ -12,6 +18,7 @@ class MockExamModesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUserId = ref.watch(currentUserIdProvider);
+    final targetLevel = _levelStringToInt(ref.watch(currentLevelProvider));
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +51,7 @@ class MockExamModesScreen extends ConsumerWidget {
               description: '実際の試験に最も近い形式。全問題タイプをバランスよく出題します。',
               icon: Icons.description,
               color: Colors.blue,
-              onTap: () => _startExam(context, ref, ExamConfig.standard(), currentUserId),
+              onTap: () => _startExam(context, ref, ExamConfig.standard(level: targetLevel), currentUserId),
             ),
             const SizedBox(height: 12),
             _buildModeCard(
@@ -55,7 +62,7 @@ class MockExamModesScreen extends ConsumerWidget {
               description: '時間圧力の中で解く力を養います。スキマ時間での学習に最適。',
               icon: Icons.timer,
               color: Colors.orange,
-              onTap: () => _startExam(context, ref, ExamConfig.speed(), currentUserId),
+              onTap: () => _startExam(context, ref, ExamConfig.speed(level: targetLevel), currentUserId),
             ),
             const SizedBox(height: 12),
             _buildModeCard(
@@ -66,7 +73,7 @@ class MockExamModesScreen extends ConsumerWidget {
               description: '特定の分野に集中。カテゴリを選んで苦手を克服します。',
               icon: Icons.adjust,
               color: Colors.teal,
-              onTap: () => _showCategorySelection(context, ref, currentUserId),
+              onTap: () => _showCategorySelection(context, ref, currentUserId, targetLevel),
             ),
             const SizedBox(height: 12),
             _buildModeCard(
@@ -77,7 +84,7 @@ class MockExamModesScreen extends ConsumerWidget {
               description: 'あなたの苦手分野を重点的に出題。弱点を徹底克服。',
               icon: Icons.trending_up,
               color: Colors.red,
-              onTap: () => _startExam(context, ref, ExamConfig.weakAreas(), currentUserId),
+              onTap: () => _startExam(context, ref, ExamConfig.weakAreas(level: targetLevel), currentUserId),
             ),
             const SizedBox(height: 12),
             _buildModeCard(
@@ -88,7 +95,7 @@ class MockExamModesScreen extends ConsumerWidget {
               description: 'すべての問題タイプをランダムに出題。予測不可能な難問に挑戦。',
               icon: Icons.shuffle,
               color: Colors.purple,
-              onTap: () => _startExam(context, ref, ExamConfig.random(), currentUserId),
+              onTap: () => _startExam(context, ref, ExamConfig.random(level: targetLevel), currentUserId),
             ),
             const SizedBox(height: 12),
             _buildModeCard(
@@ -99,7 +106,7 @@ class MockExamModesScreen extends ConsumerWidget {
               description: '簡単から難しいへ。段階的に難易度が上がります。',
               icon: Icons.stacked_line_chart,
               color: Colors.indigo,
-              onTap: () => _startExam(context, ref, ExamConfig.progressive(), currentUserId),
+              onTap: () => _startExam(context, ref, ExamConfig.progressive(level: targetLevel), currentUserId),
             ),
             const SizedBox(height: 32),
             _buildStatisticsSection(context, ref, currentUserId),
@@ -307,6 +314,7 @@ class MockExamModesScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     String? userId,
+    int targetLevel,
   ) {
     showDialog(
       context: context,
@@ -335,7 +343,7 @@ class MockExamModesScreen extends ConsumerWidget {
                   _startExam(
                     context,
                     ref,
-                    ExamConfig.focused(category: category),
+                    ExamConfig.focused(category: category, level: targetLevel),
                     userId,
                   );
                 },

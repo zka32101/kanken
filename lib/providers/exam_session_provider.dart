@@ -3,6 +3,17 @@ import '../models/mock_exam_modes.dart';
 import 'mock_exam_enhanced_provider.dart';
 import 'firebase_provider.dart';
 
+/// この級・条件に該当する試験問題がまだ用意されていない場合の例外。
+/// Firestoreのエラーではなく「データ未整備」であることをUI側が
+/// 区別して分かりやすいメッセージを出せるようにする。
+class NoExamQuestionsException implements Exception {
+  final int level;
+  const NoExamQuestionsException(this.level);
+
+  @override
+  String toString() => 'No exam questions available for level $level';
+}
+
 /// 現在の試験モード設定
 final currentExamConfigProvider =
     StateProvider<ExamConfig?>((ref) => ExamConfig.standard());
@@ -152,6 +163,10 @@ class ExamSessionNotifier extends StateNotifier<ExamSessionState?> {
     try {
       // 問題を取得
       final questions = await ref.read(examModeQuestionsProvider.future);
+
+      if (questions.isEmpty) {
+        throw NoExamQuestionsException(config.targetLevel);
+      }
 
       state = ExamSessionState(
         config: config,

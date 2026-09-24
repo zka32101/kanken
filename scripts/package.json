@@ -1,0 +1,8 @@
+{
+  "name": "kanken-scripts",
+  "private": true,
+  "description": "kankenアプリの運用スクリプト（Firestoreデータ投入等）",
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}

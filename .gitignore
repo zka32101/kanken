@@ -66,6 +66,8 @@ app.*.map.json
 **/ios/**/Flutter/flutter_export_environment.sh
 **/ios/**/ServiceDefinitions.json
 **/ios/**/Runner/GeneratedPluginRegistrant.*
+**/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+**/android/local.properties
 
 # macOS
 **/macos/Flutter/GeneratedPluginRegistrant.swift
@@ -80,6 +82,14 @@ coverage/
 android/key.properties
 *.jks
 *.keystore
+
+# Firebase Admin SDK service account keys (never commit)
+serviceAccountKey.json
+*-service-account*.json
+*-firebase-adminsdk-*.json
+
+# Node.js (scripts/配下のデータ投入スクリプト用)
+node_modules/
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
