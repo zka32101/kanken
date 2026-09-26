@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../data/kanji_info_data.dart';
 import '../data/stroke_order_sample_data.dart';
 import '../widgets/stroke_order_animation.dart';
 import '../theme/app_theme.dart';
@@ -19,6 +20,7 @@ class _StrokeOrderScreenState extends State<StrokeOrderScreen> {
     final kanjiList = StrokeOrderSampleData.availableKanji;
     final selected = _selectedKanji ?? kanjiList.first;
     final data = StrokeOrderSampleData.getStrokeOrder(selected)!;
+    final info = KanjiInfoData.get(selected);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,6 +37,31 @@ class _StrokeOrderScreenState extends State<StrokeOrderScreen> {
               data: data,
               size: 260,
             ),
+            if (info != null) ...[
+              const SizedBox(height: 12),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '読み方: ${info.reading}',
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '例: ${info.example}',
+                      style: const TextStyle(fontSize: 13, color: Colors.black87),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: 24),
 
             // 漢字選択グリッド

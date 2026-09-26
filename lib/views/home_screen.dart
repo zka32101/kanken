@@ -772,8 +772,8 @@ class PracticeScreen extends ConsumerWidget {
       _showIncorrectFeedback(context, question);
     }
 
-    // 少し待ってから次の問題へ
-    await Future.delayed(const Duration(milliseconds: 1500));
+    // 読み方・用例を読む時間を確保してから次の問題へ
+    await Future.delayed(const Duration(milliseconds: 2200));
     practiceVM.moveToNextQuestion();
   }
 
@@ -817,7 +817,7 @@ class PracticeScreen extends ConsumerWidget {
           explanation == null ? '✨ 正解！' : '✨ 正解！\n$explanation',
         ),
         backgroundColor: Colors.green,
-        duration: const Duration(milliseconds: 1500),
+        duration: const Duration(milliseconds: 2200),
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -831,7 +831,7 @@ class PracticeScreen extends ConsumerWidget {
           explanation == null ? '⚠️ 不正解' : '⚠️ 不正解\n$explanation',
         ),
         backgroundColor: Colors.red,
-        duration: const Duration(milliseconds: 1500),
+        duration: const Duration(milliseconds: 2200),
         behavior: SnackBarBehavior.floating,
       ),
     );
