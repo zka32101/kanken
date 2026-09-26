@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user.dart';
@@ -46,17 +48,24 @@ class _NicknameSetupScreenState extends ConsumerState<NicknameSetupScreen> {
 
     try {
       final firestoreService = ref.read(firestoreServiceProvider);
-      await firestoreService.createUser(
-        User(
-          uid: uid,
-          displayName: name,
-          currentLevel: 'LEVEL_10',
-          streakCount: 0,
-          createdAt: DateTime.now(),
-        ),
-      );
+      await firestoreService
+          .createUser(
+            User(
+              uid: uid,
+              displayName: name,
+              currentLevel: 'LEVEL_10',
+              streakCount: 0,
+              createdAt: DateTime.now(),
+            ),
+          )
+          .timeout(const Duration(seconds: 15));
       ref.invalidate(currentUserProvider);
       widget.onComplete();
+    } on TimeoutException {
+      setState(() {
+        _isSaving = false;
+        _errorText = '通信がタイムアウトしました。電波状況を確認してもう一度お試しください';
+      });
     } catch (e) {
       setState(() {
         _isSaving = false;

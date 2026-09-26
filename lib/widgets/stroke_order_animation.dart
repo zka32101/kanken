@@ -85,6 +85,7 @@ class _StrokeOrderAnimationWidgetState
                 painter: _StrokeOrderPainter(
                   strokePaths: _strokePaths,
                   progress: _controller.value,
+                  gridSize: widget.data.viewBox,
                 ),
               );
             },
@@ -114,14 +115,17 @@ class _StrokeOrderAnimationWidgetState
 class _StrokeOrderPainter extends CustomPainter {
   final List<Path> strokePaths;
   final double progress; // 0.0 - 1.0（全体の進捗）
+  final double gridSize;
 
-  _StrokeOrderPainter({required this.strokePaths, required this.progress});
-
-  static const double _gridSize = 100;
+  _StrokeOrderPainter({
+    required this.strokePaths,
+    required this.progress,
+    required this.gridSize,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final scale = size.width / _gridSize;
+    final scale = size.width / gridSize;
     canvas.save();
     canvas.scale(scale, scale);
 
@@ -177,8 +181,8 @@ class _StrokeOrderPainter extends CustomPainter {
     final guidePaint = Paint()
       ..color = Colors.grey.shade200
       ..strokeWidth = 0.5;
-    canvas.drawLine(const Offset(0, _gridSize / 2), const Offset(_gridSize, _gridSize / 2), guidePaint);
-    canvas.drawLine(const Offset(_gridSize / 2, 0), const Offset(_gridSize / 2, _gridSize), guidePaint);
+    canvas.drawLine(Offset(0, gridSize / 2), Offset(gridSize, gridSize / 2), guidePaint);
+    canvas.drawLine(Offset(gridSize / 2, 0), Offset(gridSize / 2, gridSize), guidePaint);
   }
 
   void _drawStrokeNumber(Canvas canvas, Path path, int number, {required bool isActive}) {
