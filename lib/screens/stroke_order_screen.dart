@@ -4,7 +4,7 @@ import '../data/stroke_order_sample_data.dart';
 import '../widgets/stroke_order_animation.dart';
 import '../theme/app_theme.dart';
 
-/// 書き順ガイド画面（漢字一覧 → タップで書き順アニメーション表示）
+/// 漢字の学習画面（漢字一覧 → タップで書き順アニメーション・読み方・用例を表示）
 class StrokeOrderScreen extends StatefulWidget {
   const StrokeOrderScreen({Key? key}) : super(key: key);
 
@@ -24,10 +24,10 @@ class _StrokeOrderScreenState extends State<StrokeOrderScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('書き順ガイド'),
+        title: const Text('漢字の学習'),
         centerTitle: true,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
@@ -49,14 +49,36 @@ class _StrokeOrderScreenState extends State<StrokeOrderScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '読み方: ${info.reading}',
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    const Text(
+                      '読み方',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      '例: ${info.example}',
-                      style: const TextStyle(fontSize: 13, color: Colors.black87),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: info.readings.map((reading) {
+                        return Chip(
+                          label: Text(reading),
+                          backgroundColor: Colors.white,
+                          visualDensity: VisualDensity.compact,
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      '使い方の例',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                    const SizedBox(height: 4),
+                    ...info.examples.map(
+                      (example) => Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          '・$example',
+                          style: const TextStyle(fontSize: 13, color: Colors.black87),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -75,43 +97,43 @@ class _StrokeOrderScreenState extends State<StrokeOrderScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 1,
-                ),
-                itemCount: kanjiList.length,
-                itemBuilder: (context, index) {
-                  final kanji = kanjiList[index];
-                  final isSelected = kanji == selected;
-                  return GestureDetector(
-                    onTap: () => setState(() => _selectedKanji = kanji),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: isSelected ? AppColors.primary : Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: isSelected ? AppColors.primary : Colors.grey.shade300,
-                          width: isSelected ? 2 : 1,
-                        ),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 5,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1,
+              ),
+              itemCount: kanjiList.length,
+              itemBuilder: (context, index) {
+                final kanji = kanjiList[index];
+                final isSelected = kanji == selected;
+                return GestureDetector(
+                  onTap: () => setState(() => _selectedKanji = kanji),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppColors.primary : Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isSelected ? AppColors.primary : Colors.grey.shade300,
+                        width: isSelected ? 2 : 1,
                       ),
-                      child: Center(
-                        child: Text(
-                          kanji,
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: isSelected ? Colors.white : Colors.black87,
-                          ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        kanji,
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: isSelected ? Colors.white : Colors.black87,
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
           ],
         ),

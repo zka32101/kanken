@@ -96,7 +96,7 @@ class HomeScreen extends ConsumerWidget {
               MenuGrid(children: [
                 MenuGridCard(
                   icon: Icons.edit_note,
-                  label: '書き順\nガイド',
+                  label: '漢字の\n学習',
                   color: AppColors.study,
                   onTap: () => context.goStrokeOrder(),
                 ),
@@ -543,7 +543,46 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  void _navigateToPractice(BuildContext context, WidgetRef ref) {
+  Future<void> _navigateToPractice(BuildContext context, WidgetRef ref) async {
+    final mode = await showDialog<PracticeMode>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: const Text('出題形式をえらぼう'),
+        children: [
+          SimpleDialogOption(
+            onPressed: () => Navigator.pop(context, PracticeMode.mixed),
+            child: const ListTile(
+              leading: Icon(Icons.shuffle),
+              title: Text('まぜて出題'),
+              subtitle: Text('読みがな・書き取りをランダムに出題'),
+            ),
+          ),
+          SimpleDialogOption(
+            onPressed: () => Navigator.pop(context, PracticeMode.reading),
+            child: const ListTile(
+              leading: Icon(Icons.record_voice_over),
+              title: Text('読みがな'),
+              subtitle: Text('漢字を見て読み方を答える'),
+            ),
+          ),
+          SimpleDialogOption(
+            onPressed: () => Navigator.pop(context, PracticeMode.writing),
+            child: const ListTile(
+              leading: Icon(Icons.edit),
+              title: Text('漢字を書く'),
+              subtitle: Text('読み方を見て漢字を答える'),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (mode == null) return;
+
+    ref.read(practiceModeProvider.notifier).state = mode;
+    final level = ref.read(currentLevelProvider);
+    ref.invalidate(practiceQuestionsProvider(level));
+
+    if (!context.mounted) return;
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => const PracticeScreen(),
@@ -638,7 +677,7 @@ class PracticeScreen extends ConsumerWidget {
   Widget _buildPracticeContent(
     BuildContext context,
     WidgetRef ref,
-    KanjiQuestion question,
+    PracticeQuestion question,
     int currentIndex,
     int totalQuestions,
     int correctCount,
@@ -670,10 +709,20 @@ class PracticeScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
 
-          // 漢字表示（大きく）
+          // 出題形式の指示文
           Text(
-            question.kanji,
-            style: const TextStyle(fontSize: 80, fontWeight: FontWeight.bold),
+            question.instruction,
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+          ),
+          const SizedBox(height: 8),
+
+          // 問題表示（漢字 or 読み方、大きく）
+          Text(
+            question.prompt,
+            style: TextStyle(
+              fontSize: question.actualMode == PracticeMode.reading ? 80 : 40,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 4),
           TextButton.icon(
@@ -684,7 +733,7 @@ class PracticeScreen extends ConsumerWidget {
           const SizedBox(height: 8),
 
           // 選択肢
-          if (question.questionType == QuestionType.multipleChoice)
+          if (question.source.questionType == QuestionType.multipleChoice)
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -780,36 +829,37 @@ class PracticeScreen extends ConsumerWidget {
   Future<void> _markAsLearned(
     BuildContext context,
     WidgetRef ref,
-    KanjiQuestion question,
+    PracticeQuestion question,
   ) async {
     final uid = ref.read(currentUserIdProvider);
     if (uid == null) return;
 
     final firestoreService = ref.read(firestoreServiceProvider);
-    await firestoreService.markAsLearned(uid, question.id);
+    await firestoreService.markAsLearned(uid, question.source.id);
 
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('「${question.kanji}」を覚えた問題にしました')),
+        SnackBar(content: Text('「${question.source.kanji}」を覚えた問題にしました')),
       );
     }
   }
 
   /// 読み仮名・用例があれば付け足した解説文を作る
-  String? _buildExplanation(KanjiQuestion? question) {
+  String? _buildExplanation(PracticeQuestion? question) {
     if (question == null) return null;
+    final source = question.source;
     final parts = <String>[];
-    if (question.reading != null && question.reading!.isNotEmpty) {
-      parts.add('読み方: ${question.reading}');
+    if (source.reading != null && source.reading!.isNotEmpty) {
+      parts.add('読み方: ${source.reading}');
     }
-    if (question.example != null && question.example!.isNotEmpty) {
-      parts.add('例: ${question.example}');
+    if (source.example != null && source.example!.isNotEmpty) {
+      parts.add('例: ${source.example}');
     }
     if (parts.isEmpty) return null;
     return parts.join(' / ');
   }
 
-  void _showCorrectFeedback(BuildContext context, KanjiQuestion? question) {
+  void _showCorrectFeedback(BuildContext context, PracticeQuestion? question) {
     final explanation = _buildExplanation(question);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -823,7 +873,7 @@ class PracticeScreen extends ConsumerWidget {
     );
   }
 
-  void _showIncorrectFeedback(BuildContext context, KanjiQuestion? question) {
+  void _showIncorrectFeedback(BuildContext context, PracticeQuestion? question) {
     final explanation = _buildExplanation(question);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

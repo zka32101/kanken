@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/index.dart';
 import 'services_provider.dart';
@@ -6,13 +7,102 @@ import 'user_viewmodel.dart';
 // 1回の演習セッションの問題数（達成感を出すため小さく区切る）
 const int practiceSessionSize = 10;
 
+/// 漢検の出題形式に合わせた演習モード
+/// - reading: 漢字を見て読み方を答える（読みがな）
+/// - writing: 読み方を見て漢字を答える（書き取り）
+/// - mixed: 問題ごとにどちらかをランダムに出題
+enum PracticeMode { reading, writing, mixed }
+
+/// 選択中の演習モード（ホーム画面の演習開始ダイアログで選ぶ）
+final practiceModeProvider = StateProvider<PracticeMode>((ref) => PracticeMode.mixed);
+
+/// 実際に画面に表示する1問分のデータ。
+/// 元のKanjiQuestion(source)から、演習モードに応じて
+/// 「何を大きく表示するか」「選択肢に何を並べるか」を作り分ける。
+class PracticeQuestion {
+  final KanjiQuestion source;
+  final PracticeMode actualMode; // mixed選択時に実際に割り当てられたモード
+  final String prompt; // 大きく表示する文字（漢字 or 読み方）
+  final String instruction; // 「この漢字の読み方は？」等の指示文
+  final List<String> choices;
+  final String correctAnswer;
+
+  const PracticeQuestion({
+    required this.source,
+    required this.actualMode,
+    required this.prompt,
+    required this.instruction,
+    required this.choices,
+    required this.correctAnswer,
+  });
+}
+
+/// KanjiQuestionの一覧から、指定モードに沿ったPracticeQuestionを組み立てる。
+/// readingモードの選択肢（読み方）は、同じ一覧内の他の問題のreadingから
+/// ランダムに抽出して作る（Firestore側のchoicesは漢字の選択肢のため使えない）。
+List<PracticeQuestion> _buildPracticeQuestions(
+  List<KanjiQuestion> questions,
+  PracticeMode mode,
+) {
+  final random = Random();
+  final allReadings = questions
+      .map((q) => q.reading)
+      .whereType<String>()
+      .where((r) => r.isNotEmpty)
+      .toSet()
+      .toList();
+
+  return questions.map((question) {
+    var actualMode = mode;
+    if (mode == PracticeMode.mixed) {
+      actualMode = random.nextBool() ? PracticeMode.reading : PracticeMode.writing;
+    }
+
+    // 読み方データが無い問題はreading出題ができないため書き取りにフォールバック
+    if (actualMode == PracticeMode.reading &&
+        (question.reading == null || question.reading!.isEmpty)) {
+      actualMode = PracticeMode.writing;
+    }
+
+    if (actualMode == PracticeMode.reading) {
+      final correctReading = question.reading!;
+      final distractors = allReadings.where((r) => r != correctReading).toList()
+        ..shuffle(random);
+      final choices = [correctReading, ...distractors.take(3)]..shuffle(random);
+
+      return PracticeQuestion(
+        source: question,
+        actualMode: actualMode,
+        prompt: question.kanji,
+        instruction: 'この漢字の読み方はどれ？',
+        choices: choices,
+        correctAnswer: correctReading,
+      );
+    }
+
+    // 書き取り: 読み方を見て正しい漢字を選ぶ
+    final prompt = (question.reading != null && question.reading!.isNotEmpty)
+        ? question.reading!
+        : question.kanji;
+    return PracticeQuestion(
+      source: question,
+      actualMode: PracticeMode.writing,
+      prompt: prompt,
+      instruction: 'この読み方の漢字はどれ？',
+      choices: List<String>.from(question.choices),
+      correctAnswer: question.correctAnswer,
+    );
+  }).toList();
+}
+
 // 現在の問題セット（その級の問題からランダムに10問だけ出題する。
 // 「覚えた」チェック済み・連続正解でマスター済みの問題は除外される）
 final practiceQuestionsProvider =
-    FutureProvider.family<List<KanjiQuestion>, String>((ref, level) async {
+    FutureProvider.family<List<PracticeQuestion>, String>((ref, level) async {
   final firestoreService = ref.watch(firestoreServiceProvider);
   final uid = ref.watch(currentUserIdProvider);
   final user = await ref.watch(currentUserProvider.future);
+  final mode = ref.watch(practiceModeProvider);
   final all = await firestoreService.getQuestionsByLevel(
     level,
     limit: 100,
@@ -21,7 +111,8 @@ final practiceQuestionsProvider =
     masteryThreshold: user?.masteryThreshold ?? 3,
   );
   all.shuffle();
-  return all.take(practiceSessionSize).toList();
+  final selected = all.take(practiceSessionSize).toList();
+  return _buildPracticeQuestions(selected, mode);
 });
 
 // 現在解いている問題インデックス
@@ -71,8 +162,8 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
       final firestoreService = ref.read(firestoreServiceProvider);
       final user = await ref.read(currentUserProvider.future);
 
-      // Handle AsyncValue<KanjiQuestion?>
-      KanjiQuestion? question;
+      // Handle AsyncValue<PracticeQuestion?>
+      PracticeQuestion? question;
       if (questionAsync is AsyncData) {
         question = questionAsync.value;
       }
@@ -83,7 +174,7 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
           id: '',
           uid: uid,
           profileId: user?.profileId ?? 'default',
-          questionId: question.id,
+          questionId: question.source.id,
           isCorrect: isCorrect,
           mode: AnswerMode.normal,
           answeredAt: DateTime.now(),
@@ -143,7 +234,7 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
 
 class PracticeState {
   final bool isLoading;
-  final KanjiQuestion? currentQuestion;
+  final PracticeQuestion? currentQuestion;
   final bool? lastAnswerIsCorrect;
   final bool isAnswering;
 
@@ -156,7 +247,7 @@ class PracticeState {
 
   PracticeState copyWith({
     bool? isLoading,
-    KanjiQuestion? currentQuestion,
+    PracticeQuestion? currentQuestion,
     bool? lastAnswerIsCorrect,
     bool? isAnswering,
   }) {

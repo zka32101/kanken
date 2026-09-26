@@ -114,16 +114,6 @@ final appRouter = GoRouter(
           builder: (context, state) => const HandwritingPracticeScreen(),
         ),
 
-        // 模擬試験
-        GoRoute(
-          path: 'mock-exam',
-          name: 'mockExam',
-          builder: (context, state) {
-            final level = state.extra as String? ?? 'LEVEL_10';
-            return MockExamScreen(level: level);
-          },
-        ),
-
         // 模擬試験モード選択
         GoRoute(
           path: 'mock-exam-modes',
@@ -234,7 +224,7 @@ final appRouter = GoRouter(
           builder: (context, state) => const LearningGoalsScreen(),
         ),
 
-        // 書き順ガイド
+        // 漢字の学習（書き順・読み方・用例）
         GoRoute(
           path: 'stroke-order',
           name: 'strokeOrder',
@@ -308,9 +298,6 @@ extension NavigationExtension on BuildContext {
   /// 手書き練習に遷移
   void goHandwriting() => push('/handwriting');
 
-  /// 模擬試験に遷移
-  void goMockExam(String level) => push('/mock-exam', extra: level);
-
   /// 模擬試験モード選択に遷移
   void goMockExamModes() => push('/mock-exam-modes');
 
@@ -352,7 +339,7 @@ extension NavigationExtension on BuildContext {
   /// 学習目標管理に遷移
   void goLearningGoals() => push('/learning-goals');
 
-  /// 書き順ガイドに遷移
+  /// 漢字の学習画面に遷移
   void goStrokeOrder() => push('/stroke-order');
 
   /// 設定画面に遷移

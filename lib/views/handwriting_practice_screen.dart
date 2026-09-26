@@ -46,7 +46,7 @@ class _HandwritingPracticeScreenState
               return _buildCompletionScreen(correctCount);
             }
 
-            final question = qList[currentIndex];
+            final question = qList[currentIndex].source;
             return _buildHandwritingContent(context, ref, question, correctCount);
           },
           loading: () => const Center(child: CircularProgressIndicator()),
