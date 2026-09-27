@@ -46,36 +46,28 @@ final examModeQuestionsProvider =
   final userId = ref.watch(currentUserIdProvider);
 
   // モードに応じて適切なプロバイダーを使用
+  //
+  // 注意: ref.watch(xxxProvider).when(loading: () => throw ...) は誤り。
+  // watchは非同期の完了を待たず「現在のスナップショット」を同期的に返すため、
+  // 初回は必ずloading状態を観測してその場でthrowしてしまい、実際のFirestore
+  // クエリが完了する前に毎回「試験を開始できませんでした」エラーになっていた
+  // (9級・10級問わず100%再現する既知のバグだった)。
+  // .future を await することで、完了を正しく待つ。
   switch (config.mode) {
     case ExamMode.standardExam:
     case ExamMode.speedExam:
     case ExamMode.focusedExam:
     case ExamMode.randomExam:
-      // enhancedExamQuestionsProvider を使用
-      return ref.watch(enhancedExamQuestionsProvider(config)).when(
-        data: (questions) => questions,
-        loading: () => throw Exception('Loading questions'),
-        error: (err, stack) => throw err,
-      );
+      return await ref.watch(enhancedExamQuestionsProvider(config).future);
 
     case ExamMode.weakAreasExam:
       if (userId == null) throw Exception('User not authenticated');
-      // weakAreaQuestionsProvider を使用
-      return ref.watch(weakAreaQuestionsProvider(
+      return await ref.watch(weakAreaQuestionsProvider(
         (userId: userId, examLevel: config.targetLevel),
-      )).when(
-        data: (questions) => questions,
-        loading: () => throw Exception('Loading questions'),
-        error: (err, stack) => throw err,
-      );
+      ).future);
 
     case ExamMode.progressiveExam:
-      // progressiveExamQuestionsProvider を使用
-      return ref.watch(progressiveExamQuestionsProvider(config.targetLevel)).when(
-        data: (questions) => questions,
-        loading: () => throw Exception('Loading questions'),
-        error: (err, stack) => throw err,
-      );
+      return await ref.watch(progressiveExamQuestionsProvider(config.targetLevel).future);
   }
 });
 
