@@ -88,6 +88,10 @@ serviceAccountKey.json
 *-service-account*.json
 *-firebase-adminsdk-*.json
 
+# Firebase config files (contain project credentials; configured via GitHub Secrets for CI/CD)
+google-services.json
+GoogleService-Info.plist
+
 # Node.js (scripts/配下のデータ投入スクリプト用)
 node_modules/
 
