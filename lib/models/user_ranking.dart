@@ -108,6 +108,21 @@ class RankingFilter {
     this.period = RankingPeriod.allTime,
     this.limit = 100,
   });
+
+  // Riverpodのfamilyはキーの==でキャッシュを判定するため、値が同じでも
+  // デフォルトの(identity)比較のままだとbuildのたびに新規プロバイダとして
+  // 扱われ、無限ロードになる（グローバルランキング「全体」タブで発生していた）。
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RankingFilter &&
+          runtimeType == other.runtimeType &&
+          type == other.type &&
+          period == other.period &&
+          limit == other.limit;
+
+  @override
+  int get hashCode => Object.hash(type, period, limit);
 }
 
 /// ランキング期間
