@@ -10,9 +10,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Firebase初期化
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // google-services.jsonが存在する場合、ネイティブ側(FirebaseInitProvider)が
+  // アプリ起動時に自動でデフォルトアプリを初期化するため、Dart側で再度
+  // initializeAppを呼ぶと「A Firebase App named "[DEFAULT]" already exists」で
+  // クラッシュする(リリースビルドでは白/単色画面のままフリーズして見える)。
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
 
   // 広告初期化（児童向け設定を含む）
   await AdService.initialize();
