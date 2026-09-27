@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,6 +24,11 @@ void main() async {
   } on FirebaseException catch (e) {
     if (e.code != 'duplicate-app') rethrow;
   }
+
+  // ニックネーム登録時のFirestore書き込みが応答なしでハングする不具合の
+  // 原因調査用。gRPCレベルの詳細ログをlogcatへ出力する(release buildでも
+  // 有効にするため kDebugMode 等の条件を付けない。調査完了後に削除すること)。
+  FirebaseFirestore.setLoggingEnabled(true);
 
   // 広告初期化（児童向け設定を含む）
   await AdService.initialize();
