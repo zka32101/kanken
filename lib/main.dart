@@ -11,13 +11,17 @@ void main() async {
 
   // Firebase初期化
   // google-services.jsonが存在する場合、ネイティブ側(FirebaseInitProvider)が
-  // アプリ起動時に自動でデフォルトアプリを初期化するため、Dart側で再度
-  // initializeAppを呼ぶと「A Firebase App named "[DEFAULT]" already exists」で
-  // クラッシュする(リリースビルドでは白/単色画面のままフリーズして見える)。
-  if (Firebase.apps.isEmpty) {
+  // アプリ起動時に自動でデフォルトアプリを初期化する。この時点ではDart側の
+  // Firebase.appsキャッシュがネイティブ状態と同期していないため isEmpty
+  // チェックだけでは防げず、initializeApp呼び出し自体が
+  // 「A Firebase App named "[DEFAULT]" already exists」で失敗する
+  // (未捕捉例外のため、リリースビルドではスプラッシュ画面のままフリーズして見える)。
+  try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+  } on FirebaseException catch (e) {
+    if (e.code != 'duplicate-app') rethrow;
   }
 
   // 広告初期化（児童向け設定を含む）
