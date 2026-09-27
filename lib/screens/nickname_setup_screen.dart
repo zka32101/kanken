@@ -48,10 +48,12 @@ class _NicknameSetupScreenState extends ConsumerState<NicknameSetupScreen> {
 
     try {
       final firestoreService = ref.read(firestoreServiceProvider);
+      const profileId = 'default';
       await firestoreService
           .createUser(
             User(
               uid: uid,
+              profileId: profileId,
               displayName: name,
               currentLevel: 'LEVEL_10',
               streakCount: 0,
@@ -59,6 +61,12 @@ class _NicknameSetupScreenState extends ConsumerState<NicknameSetupScreen> {
             ),
           )
           .timeout(const Duration(seconds: 15));
+      // currentUserProvider自体をinvalidateしても、その内部でwatchしている
+      // userProvider((uid, profileId)) の家族インスタンスは別途無効化しないと
+      // プロフィール作成前の古いキャッシュ(null)を返し続け、AuthGateScreenが
+      // ニックネーム設定画面から遷移できず無限ローディングになる
+      // (updateExamDate()と同様に両方invalidateする必要がある)。
+      ref.invalidate(userProvider((uid: uid, profileId: profileId)));
       ref.invalidate(currentUserProvider);
       widget.onComplete();
     } on TimeoutException {
