@@ -544,6 +544,9 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Future<void> _navigateToPractice(BuildContext context, WidgetRef ref) async {
+    final level = ref.read(currentLevelProvider);
+    final singleModes = availableModesForLevel(level);
+
     final mode = await showDialog<PracticeMode>(
       context: context,
       builder: (context) => SimpleDialog(
@@ -554,32 +557,24 @@ class HomeScreen extends ConsumerWidget {
             child: const ListTile(
               leading: Icon(Icons.shuffle),
               title: Text('まぜて出題'),
-              subtitle: Text('読みがな・書き取りをランダムに出題'),
+              subtitle: Text('この級の出題形式をランダムに出題'),
             ),
           ),
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(context, PracticeMode.reading),
-            child: const ListTile(
-              leading: Icon(Icons.record_voice_over),
-              title: Text('読みがな'),
-              subtitle: Text('漢字を見て読み方を答える'),
+          for (final m in singleModes)
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, m),
+              child: ListTile(
+                leading: Icon(_practiceModeIcon(m)),
+                title: Text(_practiceModeLabel(m)),
+                subtitle: Text(_practiceModeDescription(m)),
+              ),
             ),
-          ),
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(context, PracticeMode.writing),
-            child: const ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('漢字を書く'),
-              subtitle: Text('読み方を見て漢字を答える'),
-            ),
-          ),
         ],
       ),
     );
     if (mode == null) return;
 
     ref.read(practiceModeProvider.notifier).state = mode;
-    final level = ref.read(currentLevelProvider);
     ref.invalidate(practiceQuestionsProvider(level));
 
     if (!context.mounted) return;
@@ -588,6 +583,64 @@ class HomeScreen extends ConsumerWidget {
         builder: (_) => const PracticeScreen(),
       ),
     );
+  }
+}
+
+double _promptFontSize(PracticeMode mode) {
+  switch (mode) {
+    case PracticeMode.reading:
+    case PracticeMode.radical:
+      return 80;
+    case PracticeMode.compoundStructure:
+      return 48;
+    case PracticeMode.writing:
+    case PracticeMode.mixed:
+      return 40;
+  }
+}
+
+IconData _practiceModeIcon(PracticeMode mode) {
+  switch (mode) {
+    case PracticeMode.reading:
+      return Icons.record_voice_over;
+    case PracticeMode.writing:
+      return Icons.edit;
+    case PracticeMode.radical:
+      return Icons.category;
+    case PracticeMode.compoundStructure:
+      return Icons.account_tree;
+    case PracticeMode.mixed:
+      return Icons.shuffle;
+  }
+}
+
+String _practiceModeLabel(PracticeMode mode) {
+  switch (mode) {
+    case PracticeMode.reading:
+      return '読みがな';
+    case PracticeMode.writing:
+      return '漢字を書く';
+    case PracticeMode.radical:
+      return '部首';
+    case PracticeMode.compoundStructure:
+      return '熟語の構成';
+    case PracticeMode.mixed:
+      return 'まぜて出題';
+  }
+}
+
+String _practiceModeDescription(PracticeMode mode) {
+  switch (mode) {
+    case PracticeMode.reading:
+      return '漢字を見て読み方を答える';
+    case PracticeMode.writing:
+      return '読み方を見て漢字を答える';
+    case PracticeMode.radical:
+      return '漢字の部首を答える';
+    case PracticeMode.compoundStructure:
+      return '二字熟語の成り立ちを答える';
+    case PracticeMode.mixed:
+      return 'この級の出題形式をランダムに出題';
   }
 }
 
@@ -716,11 +769,12 @@ class PracticeScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
 
-          // 問題表示（漢字 or 読み方、大きく）
+          // 問題表示（漢字 or 読み方 or 熟語など、大きく）
           Text(
             question.prompt,
+            textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: question.actualMode == PracticeMode.reading ? 80 : 40,
+              fontSize: _promptFontSize(question.actualMode),
               fontWeight: FontWeight.bold,
             ),
           ),

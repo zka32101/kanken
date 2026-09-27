@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/kanji_info_data.dart';
+import '../data/kanji_radical_data.dart';
 import '../data/stroke_order_sample_data.dart';
 import '../widgets/stroke_order_animation.dart';
 import '../theme/app_theme.dart';
@@ -21,6 +22,7 @@ class _StrokeOrderScreenState extends State<StrokeOrderScreen> {
     final selected = _selectedKanji ?? kanjiList.first;
     final data = StrokeOrderSampleData.getStrokeOrder(selected)!;
     final info = KanjiInfoData.get(selected);
+    final radicalInfo = KanjiRadicalData.get(selected);
 
     return Scaffold(
       appBar: AppBar(
@@ -65,6 +67,19 @@ class _StrokeOrderScreenState extends State<StrokeOrderScreen> {
                         );
                       }).toList(),
                     ),
+                    if (radicalInfo != null) ...[
+                      const SizedBox(height: 12),
+                      const Text(
+                        '部首',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      ),
+                      const SizedBox(height: 4),
+                      Chip(
+                        label: Text('${radicalInfo.radical}（${radicalInfo.radicalName}）'),
+                        backgroundColor: Colors.white,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ],
                     const SizedBox(height: 12),
                     const Text(
                       '使い方の例',

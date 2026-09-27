@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/compound_structure_data.dart';
+import '../data/kanji_radical_data.dart';
 import '../models/index.dart';
 import 'services_provider.dart';
 import 'user_viewmodel.dart';
@@ -10,8 +12,29 @@ const int practiceSessionSize = 10;
 /// 漢検の出題形式に合わせた演習モード
 /// - reading: 漢字を見て読み方を答える（読みがな）
 /// - writing: 読み方を見て漢字を答える（書き取り）
-/// - mixed: 問題ごとにどちらかをランダムに出題
-enum PracticeMode { reading, writing, mixed }
+/// - radical: 漢字を見て部首を答える（9級以上で出題）
+/// - compoundStructure: 二字熟語の構成（似た意味／対の意味／修飾／目的語）を答える（8級以下で出題）
+/// - mixed: 問題ごとにその級で出題可能な形式からランダムに出題
+enum PracticeMode { reading, writing, radical, compoundStructure, mixed }
+
+/// 級ごとに実際の漢検で出題される形式に合わせた、選択可能な出題形式一覧
+/// （mixedを除く）。10級は読み/書き取りのみ、9級から部首が加わり、
+/// 8級以下では熟語の構成も加わる。
+List<PracticeMode> availableModesForLevel(String level) {
+  switch (level) {
+    case 'LEVEL_10':
+      return const [PracticeMode.reading, PracticeMode.writing];
+    case 'LEVEL_9':
+      return const [PracticeMode.reading, PracticeMode.writing, PracticeMode.radical];
+    default: // LEVEL_8, LEVEL_7, LEVEL_6, LEVEL_5
+      return const [
+        PracticeMode.reading,
+        PracticeMode.writing,
+        PracticeMode.radical,
+        PracticeMode.compoundStructure,
+      ];
+  }
+}
 
 /// 選択中の演習モード（ホーム画面の演習開始ダイアログで選ぶ）
 final practiceModeProvider = StateProvider<PracticeMode>((ref) => PracticeMode.mixed);
@@ -40,9 +63,11 @@ class PracticeQuestion {
 /// KanjiQuestionの一覧から、指定モードに沿ったPracticeQuestionを組み立てる。
 /// readingモードの選択肢（読み方）は、同じ一覧内の他の問題のreadingから
 /// ランダムに抽出して作る（Firestore側のchoicesは漢字の選択肢のため使えない）。
+/// radical/compoundStructureも同様に、他の問題や級内のデータから選択肢を組み立てる。
 List<PracticeQuestion> _buildPracticeQuestions(
   List<KanjiQuestion> questions,
   PracticeMode mode,
+  String level,
 ) {
   final random = Random();
   final allReadings = questions
@@ -51,11 +76,18 @@ List<PracticeQuestion> _buildPracticeQuestions(
       .where((r) => r.isNotEmpty)
       .toSet()
       .toList();
+  final radicalsInSet = questions
+      .map((q) => KanjiRadicalData.get(q.kanji)?.radical)
+      .whereType<String>()
+      .toSet()
+      .toList();
+  final compoundPool = CompoundStructureData.forLevel(level);
+  final singleModes = availableModesForLevel(level);
 
   return questions.map((question) {
     var actualMode = mode;
     if (mode == PracticeMode.mixed) {
-      actualMode = random.nextBool() ? PracticeMode.reading : PracticeMode.writing;
+      actualMode = singleModes[random.nextInt(singleModes.length)];
     }
 
     // 読み方データが無い問題はreading出題ができないため書き取りにフォールバック
@@ -78,6 +110,45 @@ List<PracticeQuestion> _buildPracticeQuestions(
         choices: choices,
         correctAnswer: correctReading,
       );
+    }
+
+    if (actualMode == PracticeMode.radical) {
+      final info = KanjiRadicalData.get(question.kanji);
+      final radicalPool = radicalsInSet.length >= 4 ? radicalsInSet : KanjiRadicalData.allRadicals;
+      if (info == null || radicalPool.length < 4) {
+        actualMode = PracticeMode.writing;
+      } else {
+        final distractors = radicalPool.where((r) => r != info.radical).toList()
+          ..shuffle(random);
+        final choices = [info.radical, ...distractors.take(3)]..shuffle(random);
+
+        return PracticeQuestion(
+          source: question,
+          actualMode: actualMode,
+          prompt: question.kanji,
+          instruction: 'この漢字の部首はどれ？',
+          choices: choices,
+          correctAnswer: info.radical,
+        );
+      }
+    }
+
+    if (actualMode == PracticeMode.compoundStructure) {
+      if (compoundPool.isEmpty) {
+        actualMode = PracticeMode.writing;
+      } else {
+        final compound = compoundPool[random.nextInt(compoundPool.length)];
+        final choices = compoundStructureLabels.values.toList()..shuffle(random);
+
+        return PracticeQuestion(
+          source: question,
+          actualMode: actualMode,
+          prompt: '${compound.jukugo}（${compound.reading}）',
+          instruction: 'この熟語の構成として正しいものはどれ？',
+          choices: choices,
+          correctAnswer: compound.correctLabel,
+        );
+      }
     }
 
     // 書き取り: 読み方を見て正しい漢字を選ぶ
@@ -112,7 +183,7 @@ final practiceQuestionsProvider =
   );
   all.shuffle();
   final selected = all.take(practiceSessionSize).toList();
-  return _buildPracticeQuestions(selected, mode);
+  return _buildPracticeQuestions(selected, mode, level);
 });
 
 // 現在解いている問題インデックス
