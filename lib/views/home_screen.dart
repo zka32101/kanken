@@ -173,18 +173,6 @@ class HomeScreen extends ConsumerWidget {
                   onTap: () => context.goCollectionBadge(),
                 ),
                 MenuGridCard(
-                  icon: Icons.event,
-                  label: 'イベント',
-                  color: AppColors.reward,
-                  onTap: () => context.goEvents(),
-                ),
-                MenuGridCard(
-                  icon: Icons.supervisor_account,
-                  label: '保護者\nダッシュボード',
-                  color: AppColors.info,
-                  onTap: () => context.goParentDashboard(),
-                ),
-                MenuGridCard(
                   icon: Icons.settings,
                   label: '設定',
                   color: AppColors.info,

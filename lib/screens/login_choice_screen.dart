@@ -41,7 +41,11 @@ class _LoginChoiceScreenState extends ConsumerState<LoginChoiceScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text('🀄', style: TextStyle(fontSize: 64), textAlign: TextAlign.center),
+              const Text(
+                '漢字',
+                style: TextStyle(fontSize: 64, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 16),
               Text(
                 '漢検チャレンジ',

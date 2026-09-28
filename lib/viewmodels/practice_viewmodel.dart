@@ -189,16 +189,6 @@ final practiceQuestionsProvider =
 // 現在解いている問題インデックス
 final currentQuestionIndexProvider = StateProvider<int>((ref) => 0);
 
-// 現在の問題
-final currentQuestionProvider = FutureProvider((ref) async {
-  final level = ref.watch(currentLevelProvider);
-  final questions = await ref.watch(practiceQuestionsProvider(level).future);
-  final index = ref.watch(currentQuestionIndexProvider);
-
-  if (index >= questions.length) return null;
-  return questions[index];
-});
-
 // 正解数（セッション内）
 final correctCountProvider = StateProvider<int>((ref) => 0);
 
@@ -229,15 +219,14 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
     state = state.copyWith(isAnswering: true);
 
     try {
-      final questionAsync = ref.read(currentQuestionProvider);
+      final level = ref.read(currentLevelProvider);
+      final questions = ref.read(practiceQuestionsProvider(level)).valueOrNull;
+      final index = ref.read(currentQuestionIndexProvider);
       final firestoreService = ref.read(firestoreServiceProvider);
       final user = await ref.read(currentUserProvider.future);
 
-      // Handle AsyncValue<PracticeQuestion?>
-      PracticeQuestion? question;
-      if (questionAsync is AsyncData) {
-        question = questionAsync.value;
-      }
+      final PracticeQuestion? question =
+          (questions != null && index < questions.length) ? questions[index] : null;
 
       if (question != null) {
         // 答ログを保存
