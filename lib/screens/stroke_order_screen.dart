@@ -1,35 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/kanji_info_data.dart';
 import '../data/kanji_radical_data.dart';
 import '../data/stroke_order_sample_data.dart';
+import '../viewmodels/services_provider.dart';
+import '../viewmodels/user_viewmodel.dart';
 import '../widgets/stroke_order_animation.dart';
 import '../theme/app_theme.dart';
 
+/// 選択中の級で実際に出題される漢字のうち、書き順データがあるものだけに絞る。
+final _levelStrokeOrderKanjiProvider =
+    FutureProvider.family<List<String>, String>((ref, level) async {
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  final questions = await firestoreService.getQuestionsByLevel(level, limit: 200);
+  final available = StrokeOrderSampleData.availableKanji.toSet();
+  final levelKanji = questions.map((q) => q.kanji).where(available.contains).toSet().toList();
+  return levelKanji.isNotEmpty ? levelKanji : StrokeOrderSampleData.availableKanji;
+});
+
 /// 漢字の学習画面（漢字一覧 → タップで書き順アニメーション・読み方・用例を表示）
-class StrokeOrderScreen extends StatefulWidget {
+/// 一覧は現在選択中の級（currentLevelProvider）に出題される漢字のみに絞る。
+class StrokeOrderScreen extends ConsumerStatefulWidget {
   const StrokeOrderScreen({Key? key}) : super(key: key);
 
   @override
-  State<StrokeOrderScreen> createState() => _StrokeOrderScreenState();
+  ConsumerState<StrokeOrderScreen> createState() => _StrokeOrderScreenState();
 }
 
-class _StrokeOrderScreenState extends State<StrokeOrderScreen> {
+class _StrokeOrderScreenState extends ConsumerState<StrokeOrderScreen> {
   String? _selectedKanji;
+  String? _selectedForLevel;
 
   @override
   Widget build(BuildContext context) {
-    final kanjiList = StrokeOrderSampleData.availableKanji;
-    final selected = _selectedKanji ?? kanjiList.first;
-    final data = StrokeOrderSampleData.getStrokeOrder(selected)!;
-    final info = KanjiInfoData.get(selected);
-    final radicalInfo = KanjiRadicalData.get(selected);
+    final level = ref.watch(currentLevelProvider);
+    final kanjiListAsync = ref.watch(_levelStrokeOrderKanjiProvider(level));
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('漢字の学習'),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
+      body: kanjiListAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text('エラー: $err')),
+        data: (kanjiList) {
+          if (kanjiList.isEmpty) {
+            return const Center(child: Text('この級の漢字データがありません'));
+          }
+          // 級が変わったら選択をリセットする（別の級の漢字が選ばれたままにならないように）。
+          if (_selectedForLevel != level) {
+            _selectedForLevel = level;
+            _selectedKanji = null;
+          }
+          final selected =
+              (_selectedKanji != null && kanjiList.contains(_selectedKanji))
+                  ? _selectedKanji!
+                  : kanjiList.first;
+          return _buildContent(context, kanjiList, selected);
+        },
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context, List<String> kanjiList, String selected) {
+    final data = StrokeOrderSampleData.getStrokeOrder(selected)!;
+    final info = KanjiInfoData.get(selected);
+    final radicalInfo = KanjiRadicalData.get(selected);
+
+    return SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
@@ -152,7 +191,6 @@ class _StrokeOrderScreenState extends State<StrokeOrderScreen> {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }

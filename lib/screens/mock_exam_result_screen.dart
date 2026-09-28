@@ -258,7 +258,22 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
     final newAchievements = <Achievement>[];
     final accuracy = analysis.overallAccuracy * 100;
 
-    if (accuracy >= 90 && !_isUnlocked('exam_90plus', currentAchievements)) {
+    // スコア段位バッジは1回の試験につき最上位1つだけ付与する
+    // （90点以上と80点以上を同時に満たす場合に両方付与されないようにする）。
+    if (accuracy >= 100 && !_isUnlocked('exam_perfect', currentAchievements)) {
+      newAchievements.add(
+        Achievement(
+          id: 'exam_perfect',
+          name: '完璧',
+          description: '100点を獲得',
+          icon: '🏆',
+          type: AchievementType.examScore,
+          points: 200,
+          isUnlocked: true,
+          unlockedAt: DateTime.now(),
+        ),
+      );
+    } else if (accuracy >= 90 && !_isUnlocked('exam_90plus', currentAchievements)) {
       newAchievements.add(
         Achievement(
           id: 'exam_90plus',
@@ -271,9 +286,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
           unlockedAt: DateTime.now(),
         ),
       );
-    }
-
-    if (accuracy >= 80 && !_isUnlocked('exam_80plus', currentAchievements)) {
+    } else if (accuracy >= 80 && !_isUnlocked('exam_80plus', currentAchievements)) {
       newAchievements.add(
         Achievement(
           id: 'exam_80plus',
@@ -282,21 +295,6 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
           icon: '✨',
           type: AchievementType.examScore,
           points: 50,
-          isUnlocked: true,
-          unlockedAt: DateTime.now(),
-        ),
-      );
-    }
-
-    if (accuracy >= 100 && !_isUnlocked('exam_perfect', currentAchievements)) {
-      newAchievements.add(
-        Achievement(
-          id: 'exam_perfect',
-          name: '完璧',
-          description: '100点を獲得',
-          icon: '🏆',
-          type: AchievementType.examScore,
-          points: 200,
           isUnlocked: true,
           unlockedAt: DateTime.now(),
         ),

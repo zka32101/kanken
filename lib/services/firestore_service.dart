@@ -170,8 +170,13 @@ class FirestoreService {
     final batch = _firestore.batch();
     final profileRef = _profileDoc(log.uid, log.profileId);
 
-    final logRef = profileRef.collection('answerLogs').doc(log.id);
-    batch.set(logRef, log.toJson());
+    // log.id は呼び出し側（practiceViewModel等）では常に空文字列で渡ってくる
+    // （Firestore側で自動採番する想定）。.doc('') は無効なパスになり
+    // バッチ全体がエラーになるため、空ならIDを自動生成する。
+    final logRef = log.id.isEmpty
+        ? profileRef.collection('answerLogs').doc()
+        : profileRef.collection('answerLogs').doc(log.id);
+    batch.set(logRef, log.toJson()..['id'] = logRef.id);
 
     final statsRef = profileRef.collection('questionStats').doc(log.questionId);
     batch.set(
