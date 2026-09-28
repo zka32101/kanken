@@ -11,12 +11,6 @@ final authServiceProvider = Provider<AuthService>((ref) {
   return AuthService();
 });
 
-// MockExamServiceProvider
-final mockExamServiceProvider = Provider<MockExamService>((ref) {
-  final firestoreService = ref.watch(firestoreServiceProvider);
-  return MockExamService(firestoreService);
-});
-
 // AIWeakAnalysisServiceProvider
 final aiWeakAnalysisServiceProvider = Provider<AIWeakAnalysisService>((ref) {
   final firestoreService = ref.watch(firestoreServiceProvider);
