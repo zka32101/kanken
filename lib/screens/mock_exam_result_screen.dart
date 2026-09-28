@@ -10,6 +10,8 @@ import '../providers/leaderboard_provider.dart';
 import '../providers/spaced_repetition_provider.dart';
 import '../models/learning_goal.dart';
 import '../providers/learning_goal_provider.dart';
+import '../models/collection_badge.dart';
+import '../viewmodels/services_provider.dart';
 import '../viewmodels/user_viewmodel.dart';
 import '../widgets/achievement_unlock_dialog.dart';
 
@@ -39,9 +41,43 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
     _updateLeaderboardScore();
     _registerWrongAnswersForReview();
     _updateLearningGoalsProgress();
+    _awardBadgeIfPassed();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndShowAchievements();
     });
+  }
+
+  /// 合格ラインを超えていれば、その級の合格バッジを付与する
+  Future<void> _awardBadgeIfPassed() async {
+    final accuracy = session.getAccuracyRate();
+    final isPassed = (accuracy * 100) >= session.config.passThreshold;
+    if (!isPassed) return;
+
+    try {
+      final user = await ref.read(currentUserProvider.future);
+      if (user == null) return;
+
+      final level = 'LEVEL_${session.config.targetLevel}';
+      final badge = CollectionBadge(
+        badgeId: 'exam_pass_$level',
+        name: '$level 合格バッジ',
+        description: '$level の模擬試験に合格しました',
+        rarity: BadgeRarity.uncommon,
+        category: BadgeCategory.achievement,
+        iconEmoji: '🎖️',
+        requiredCount: 1,
+        conditionText: '$level の模擬試験に合格',
+        rewardCoins: 100,
+        createdAt: DateTime.now(),
+        level: level,
+      );
+
+      await ref
+          .read(firestoreServiceProvider)
+          .addCollectionBadge(user.uid, badge);
+    } catch (e) {
+      // エラーサイレント処理（他の結果画面処理と同様）
+    }
   }
 
   Future<void> _updateLearningGoalsProgress() async {

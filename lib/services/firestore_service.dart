@@ -118,45 +118,6 @@ class FirestoreService {
     await _firestore.collection('rankings').doc(rankingDocId(uid, profileId)).delete();
   }
 
-  // Kanji operations
-  Future<List<Map<String, dynamic>>> getKanjiList(int gradeLevel) async {
-    // Placeholder - will be implemented with database
-    return [];
-  }
-
-  // Practice session operations
-  Future<String> createPracticeSession(
-    String userId,
-    int gradeLevel,
-    String sessionType,
-  ) async {
-    // Placeholder - will be implemented with database
-    return '';
-  }
-
-  Future<void> savePracticeResult(
-    String sessionId,
-    int questionId,
-    bool isCorrect,
-    int timeSpent,
-  ) async {
-    // Placeholder - will be implemented with database
-  }
-
-  // Learning progress
-  Future<Map<String, dynamic>> getUserProgress(String uid) async {
-    // Placeholder - will be implemented with database
-    return {};
-  }
-
-  Future<void> updateProgress(
-    String userId,
-    int kanjiId,
-    bool mastered,
-  ) async {
-    // Placeholder - will be implemented with database
-  }
-
   // Question operations
   /// uidを指定すると、そのユーザーが「覚えた」問題(getMasteredQuestionIds参照)を
   /// 出題対象から除外する。
@@ -239,19 +200,38 @@ class FirestoreService {
         .toList();
   }
 
-  // Weak kanji tracking
-  Future<List<WeakKanjiList>> getWeakKanjiList(String uid) async {
-    // Placeholder - will be implemented with database
-    return [];
+  // Weak kanji tracking（誤答パターンから苦手漢字を分析・追跡）
+  // プロフィール単位（users/{uid}/profiles/{profileId}/weakKanjiList）
+  Future<List<WeakKanjiList>> getWeakKanjiList(
+    String uid, {
+    String profileId = 'default',
+  }) async {
+    final snapshot =
+        await _profileDoc(uid, profileId).collection('weakKanjiList').get();
+    return snapshot.docs
+        .map((doc) => WeakKanjiList.fromJson({...doc.data(), 'id': doc.id}))
+        .toList();
   }
 
-  Future<List<String>> getUserWeakKanjis(String uid) async {
-    // Placeholder - will be implemented with database
-    return [];
+  /// 未習得の苦手漢字IDを、誤答回数が多い順に返す
+  Future<List<String>> getUserWeakKanjis(
+    String uid, {
+    String profileId = 'default',
+  }) async {
+    final weakList = await getWeakKanjiList(uid, profileId: profileId);
+    final unmastered = weakList.where((w) => w.masteredAt == null).toList()
+      ..sort((a, b) => b.missCount.compareTo(a.missCount));
+    return unmastered.map((w) => w.kanjiId).toList();
   }
 
-  Future<void> upsertWeakKanjiList(WeakKanjiList item) async {
-    // Placeholder - will be implemented with database
+  Future<void> upsertWeakKanjiList(
+    WeakKanjiList item, {
+    String profileId = 'default',
+  }) async {
+    await _profileDoc(item.uid, profileId)
+        .collection('weakKanjiList')
+        .doc(item.kanjiId)
+        .set(item.toJson(), SetOptions(merge: true));
   }
 
   // Learned kanji tracking（演習後にユーザーが手動でチェックする「覚えた」機能）
@@ -319,39 +299,26 @@ class FirestoreService {
     return excludeIds;
   }
 
-  // Mock exam operations
-  Future<List<MockExam>> getMockExamsByLevel(String level) async {
-    // Placeholder - will be implemented with database
-    return [];
+  // Badge operations（級合格バッジ。プロフィール単位 users/{uid}/profiles/{profileId}/badges）
+  Future<void> addCollectionBadge(
+    String uid,
+    CollectionBadge badge, {
+    String profileId = 'default',
+  }) async {
+    await _profileDoc(uid, profileId)
+        .collection('badges')
+        .doc(badge.badgeId)
+        .set(badge.toJson(), SetOptions(merge: true));
   }
 
-  Future<MockExam?> getMockExam(String examId) async {
-    // Placeholder - will be implemented with database
-    return null;
-  }
-
-  Future<void> addMockExamResult(MockExamResult result) async {
-    // Placeholder - will be implemented with database
-  }
-
-  Future<List<MockExamResult>> getUserMockExamResults(String uid) async {
-    // Placeholder - will be implemented with database
-    return [];
-  }
-
-  // Badge operations
-  Future<void> addCollectionBadge(CollectionBadge badge) async {
-    // Placeholder - will be implemented with database
-  }
-
-  Future<List<CollectionBadge>> getUserBadges(String uid) async {
-    // Placeholder - will be implemented with database
-    return [];
-  }
-
-  // Parent account operations
-  Future<ParentAccount?> getParentAccount(String uid) async {
-    // Placeholder - will be implemented with database
-    return null;
+  Future<List<CollectionBadge>> getUserBadges(
+    String uid, {
+    String profileId = 'default',
+  }) async {
+    final snapshot =
+        await _profileDoc(uid, profileId).collection('badges').get();
+    return snapshot.docs
+        .map((doc) => CollectionBadge.fromJson(doc.data()))
+        .toList();
   }
 }

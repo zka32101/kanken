@@ -258,6 +258,12 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
           ref.read(comboCountProvider.notifier).state++;
         } else {
           ref.read(comboCountProvider.notifier).state = 0;
+          // 誤答時のみ苦手漢字リストを再分析（次の問題表示をブロックしないよう
+          // 完了を待たずバックグラウンドで実行）。
+          ref
+              .read(aiWeakAnalysisServiceProvider)
+              .analyzeWeakKanjis(uid)
+              .catchError((_) {});
         }
 
         ref.read(answeredCountProvider.notifier).state++;
