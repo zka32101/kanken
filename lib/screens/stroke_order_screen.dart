@@ -5,6 +5,7 @@ import '../data/kanji_radical_data.dart';
 import '../data/stroke_order_sample_data.dart';
 import '../viewmodels/services_provider.dart';
 import '../viewmodels/user_viewmodel.dart';
+import '../views/handwriting_practice_screen.dart';
 import '../widgets/stroke_order_animation.dart';
 import '../theme/app_theme.dart';
 
@@ -57,13 +58,18 @@ class _StrokeOrderScreenState extends ConsumerState<StrokeOrderScreen> {
               (_selectedKanji != null && kanjiList.contains(_selectedKanji))
                   ? _selectedKanji!
                   : kanjiList.first;
-          return _buildContent(context, kanjiList, selected);
+          return _buildContent(context, level, kanjiList, selected);
         },
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context, List<String> kanjiList, String selected) {
+  Widget _buildContent(
+    BuildContext context,
+    String level,
+    List<String> kanjiList,
+    String selected,
+  ) {
     final data = StrokeOrderSampleData.getStrokeOrder(selected)!;
     final info = KanjiInfoData.get(selected);
     final radicalInfo = KanjiRadicalData.get(selected);
@@ -77,6 +83,24 @@ class _StrokeOrderScreenState extends ConsumerState<StrokeOrderScreen> {
               key: ValueKey(selected),
               data: data,
               size: 260,
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                icon: const Icon(Icons.edit),
+                label: Text('「$selected」を書く練習'),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => HandwritingPracticeScreen(
+                        level: level,
+                        kanji: selected,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
             if (info != null) ...[
               const SizedBox(height: 12),

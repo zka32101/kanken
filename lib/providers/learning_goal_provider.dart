@@ -93,9 +93,39 @@ Future<void> createLearningGoal(
   }
 }
 
-/// 学習目標の進捗を更新
+/// 学習目標の進捗を更新（画面(WidgetRef)からの呼び出し用）
 Future<void> updateGoalProgress(
   WidgetRef ref, {
+  required String goalId,
+  required int newValue,
+}) async {
+  final profileId =
+      (await ref.read(user_vm.currentUserProvider.future))?.profileId;
+  await _updateGoalProgressForProfile(
+    profileId: profileId,
+    goalId: goalId,
+    newValue: newValue,
+  );
+}
+
+/// 学習目標の進捗を更新（PracticeViewModel等、Refしか持たないNotifierからの
+/// 呼び出し用。WidgetRefとRefはRiverpod上で別の型のため個別に用意している）
+Future<void> updateGoalProgressFromRef(
+  Ref ref, {
+  required String goalId,
+  required int newValue,
+}) async {
+  final profileId =
+      (await ref.read(user_vm.currentUserProvider.future))?.profileId;
+  await _updateGoalProgressForProfile(
+    profileId: profileId,
+    goalId: goalId,
+    newValue: newValue,
+  );
+}
+
+Future<void> _updateGoalProgressForProfile({
+  required String? profileId,
   required String goalId,
   required int newValue,
 }) async {
@@ -103,10 +133,9 @@ Future<void> updateGoalProgress(
   if (userId == null) return;
 
   try {
-    final profileId =
-        (await ref.read(user_vm.currentUserProvider.future))?.profileId ?? 'default';
-    final docRef =
-        _profileDoc(userId, profileId).collection('learningGoals').doc(goalId);
+    final docRef = _profileDoc(userId, profileId ?? 'default')
+        .collection('learningGoals')
+        .doc(goalId);
 
     final doc = await docRef.get();
     if (!doc.exists) return;
@@ -121,8 +150,51 @@ Future<void> updateGoalProgress(
     });
 
     if (isNowAchieved) {
-      await _createGoalAchievedNotification(userId, profileId, goal);
-      await _incrementGoalAchievedCountAndCheckAchievements(userId, profileId);
+      await _createGoalAchievedNotification(userId, profileId ?? 'default', goal);
+      await _incrementGoalAchievedCountAndCheckAchievements(userId, profileId ?? 'default');
+    }
+  } catch (e) {
+    // エラーログなど必要に応じて処理
+  }
+}
+
+/// 演習・間隔反復復習など、模擬試験以外で問題に解答した際に日次問題数の
+/// 学習目標を進める（画面(WidgetRef)からの呼び出し用）。模擬試験は完了時に
+/// まとめて加算する（mock_exam_result_screen.dart）ため、ここでは扱わない。
+Future<void> incrementDailyQuestionGoal(WidgetRef ref, {int count = 1}) async {
+  final profileId =
+      (await ref.read(user_vm.currentUserProvider.future))?.profileId;
+  await _incrementDailyQuestionGoalForProfile(
+    activeGoals: await ref.read(activeLearningGoalsProvider.future),
+    profileId: profileId,
+    count: count,
+  );
+}
+
+/// [incrementDailyQuestionGoal]のRef版（PracticeViewModel等からの呼び出し用）
+Future<void> incrementDailyQuestionGoalFromRef(Ref ref, {int count = 1}) async {
+  final profileId =
+      (await ref.read(user_vm.currentUserProvider.future))?.profileId;
+  await _incrementDailyQuestionGoalForProfile(
+    activeGoals: await ref.read(activeLearningGoalsProvider.future),
+    profileId: profileId,
+    count: count,
+  );
+}
+
+Future<void> _incrementDailyQuestionGoalForProfile({
+  required List<LearningGoal> activeGoals,
+  required String? profileId,
+  required int count,
+}) async {
+  try {
+    for (final goal in activeGoals) {
+      if (goal.type != GoalType.dailyQuestions) continue;
+      await _updateGoalProgressForProfile(
+        profileId: profileId,
+        goalId: goal.goalId,
+        newValue: goal.currentValue + count,
+      );
     }
   } catch (e) {
     // エラーログなど必要に応じて処理

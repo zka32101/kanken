@@ -1,4 +1,4 @@
-enum AnswerMode { normal, handwriting, weakKanjiFocus }
+enum AnswerMode { normal, handwriting, weakKanjiFocus, review }
 
 class UserAnswerLog {
   final String id;
@@ -39,6 +39,8 @@ class UserAnswerLog {
         return AnswerMode.handwriting;
       case 'weakKanjiFocus':
         return AnswerMode.weakKanjiFocus;
+      case 'review':
+        return AnswerMode.review;
       default:
         return AnswerMode.normal;
     }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/compound_structure_data.dart';
 import '../data/kanji_radical_data.dart';
 import '../models/index.dart';
+import '../providers/learning_goal_provider.dart';
 import 'services_provider.dart';
 import 'user_viewmodel.dart';
 
@@ -251,11 +252,14 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
           // 完了を待たずバックグラウンドで実行）。
           ref
               .read(aiWeakAnalysisServiceProvider)
-              .analyzeWeakKanjis(uid)
+              .analyzeWeakKanjis(uid, profileId: user?.profileId ?? 'default')
               .catchError((_) {});
         }
 
         ref.read(answeredCountProvider.notifier).state++;
+
+        // 日次問題数の学習目標を1問分進める（完了を待たずバックグラウンドで実行）
+        incrementDailyQuestionGoalFromRef(ref).catchError((_) {});
 
         // Aha Moment判定：初回3問正解
         final correctCount = ref.read(correctCountProvider);

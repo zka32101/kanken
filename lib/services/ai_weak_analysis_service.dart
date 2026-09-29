@@ -8,10 +8,11 @@ class AIWeakAnalysisService {
 
   /// ユーザーの誤答パターンから苦手漢字を分析・更新
   /// petit_ai経由でCloud Functionsから呼ばれる想定
-  Future<void> analyzeWeakKanjis(String uid) async {
+  Future<void> analyzeWeakKanjis(String uid, {String profileId = 'default'}) async {
     try {
       // ユーザーの全答ログを取得
-      final answerLogs = await _firestoreService.getUserAnswerLogs(uid);
+      final answerLogs =
+          await _firestoreService.getUserAnswerLogs(uid, profileId: profileId);
 
       // 誤答のみフィルタ
       final incorrectAnswers = answerLogs.where((log) => !log.isCorrect).toList();
@@ -24,7 +25,8 @@ class AIWeakAnalysisService {
 
       // WeakKanjiListを更新
       for (final entry in weakMap.entries) {
-        final weakList = await _firestoreService.getWeakKanjiList(uid);
+        final weakList =
+            await _firestoreService.getWeakKanjiList(uid, profileId: profileId);
         final existingWeak = weakList.firstWhere(
           (w) => w.kanjiId == entry.key,
           orElse: () => WeakKanjiList(
@@ -45,7 +47,7 @@ class AIWeakAnalysisService {
           masteredAt: existingWeak.masteredAt,
         );
 
-        await _firestoreService.upsertWeakKanjiList(updatedWeak);
+        await _firestoreService.upsertWeakKanjiList(updatedWeak, profileId: profileId);
       }
     } catch (e) {
       rethrow;
@@ -57,13 +59,15 @@ class AIWeakAnalysisService {
   Future<List<KanjiQuestion>> getWeakKanjiFocusQuestions(
     String uid, {
     int limit = 10,
+    String profileId = 'default',
   }) async {
     try {
       final weakKanjis =
-          await _firestoreService.getUserWeakKanjis(uid);
+          await _firestoreService.getUserWeakKanjis(uid, profileId: profileId);
 
       // 学習済み漢字を取得
-      final learnedKanjis = await _firestoreService.getUserLearnedKanjis(uid);
+      final learnedKanjis =
+          await _firestoreService.getUserLearnedKanjis(uid, profileId: profileId);
       final learnedKanjiIds = learnedKanjis.toSet();
 
       final questions = <KanjiQuestion>[];
@@ -84,8 +88,13 @@ class AIWeakAnalysisService {
   }
 
   /// 苦手漢字を習得済みとしてマーク
-  Future<void> markAsMatured(String uid, String kanjiId) async {
-    final weakList = await _firestoreService.getWeakKanjiList(uid);
+  Future<void> markAsMatured(
+    String uid,
+    String kanjiId, {
+    String profileId = 'default',
+  }) async {
+    final weakList =
+        await _firestoreService.getWeakKanjiList(uid, profileId: profileId);
     final weak = weakList.firstWhere(
       (w) => w.kanjiId == kanjiId,
       orElse: () => null as dynamic,
@@ -93,13 +102,14 @@ class AIWeakAnalysisService {
 
     if (weak != null) {
       final updated = weak.copyWith(masteredAt: DateTime.now());
-      await _firestoreService.upsertWeakKanjiList(updated);
+      await _firestoreService.upsertWeakKanjiList(updated, profileId: profileId);
     }
   }
 
   /// ユーザーの苦手漢字数を取得（Dashboard用）
-  Future<int> getWeakKanjiCount(String uid) async {
-    final weakKanjis = await _firestoreService.getWeakKanjiList(uid);
+  Future<int> getWeakKanjiCount(String uid, {String profileId = 'default'}) async {
+    final weakKanjis =
+        await _firestoreService.getWeakKanjiList(uid, profileId: profileId);
     final notMastered = weakKanjis.where((w) => w.masteredAt == null).length;
     return notMastered;
   }

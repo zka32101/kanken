@@ -205,9 +205,10 @@ class _MockExamEnhancedScreenState extends ConsumerState<MockExamEnhancedScreen>
                       const SizedBox(height: 24),
 
                       // 問題表示
-                      // writing（読み方から漢字を選ぶ）ではkanjiフィールド自体が
-                      // 正解のため、表示すると答えが漏洩してしまう。この形式では
-                      // 種別ラベルのみ表示し、実際の問い（読み方）は下の問題文で示す。
+                      // writing（読み方から漢字を選ぶ）・usage（文中の空欄に入る
+                      // 漢字を選ぶ）ではkanjiフィールド自体が正解のため、表示すると
+                      // 答えが漏洩してしまう。これらの形式では種別ラベルのみ表示し、
+                      // 実際の問い（読み方・文章）は下の問題文で示す。
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(24),
@@ -223,7 +224,8 @@ class _MockExamEnhancedScreenState extends ConsumerState<MockExamEnhancedScreen>
                               '【${currentQuestion.questionType}】',
                               style: Theme.of(context).textTheme.labelMedium,
                             ),
-                            if (currentQuestion.questionType != 'writing') ...[
+                            if (currentQuestion.questionType != 'writing' &&
+                                currentQuestion.questionType != 'usage') ...[
                               const SizedBox(height: 16),
                               Text(
                                 currentQuestion.kanji,

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/index.dart';
 import '../models/spaced_repetition_item.dart';
+import '../providers/learning_goal_provider.dart';
 import '../providers/spaced_repetition_provider.dart';
+import '../viewmodels/services_provider.dart';
+import '../viewmodels/user_viewmodel.dart';
 
 class SpacedRepetitionReviewScreen extends ConsumerStatefulWidget {
   const SpacedRepetitionReviewScreen({Key? key}) : super(key: key);
@@ -42,13 +46,43 @@ class _SpacedRepetitionReviewScreenState
   }
 
   Future<void> _submitQuality(int quality) async {
-    if (quality >= 3) _correctCount++;
+    final isCorrect = quality >= 3;
+    if (isCorrect) _correctCount++;
+
+    final item = _reviewItems[_currentIndex];
 
     await recordReviewResult(
       ref,
-      item: _reviewItems[_currentIndex],
+      item: item,
       quality: quality,
     );
+
+    // 演習と同様に答ログを残し、日次問題数の目標更新・苦手漢字分析の
+    // 対象にも含める（完了を待たずバックグラウンドで実行）。
+    final uid = ref.read(currentUserIdProvider);
+    if (uid != null) {
+      final user = await ref.read(currentUserProvider.future);
+      final profileId = user?.profileId ?? 'default';
+
+      ref.read(firestoreServiceProvider).addAnswerLog(UserAnswerLog(
+            id: '',
+            uid: uid,
+            profileId: profileId,
+            questionId: item.questionId,
+            isCorrect: isCorrect,
+            mode: AnswerMode.review,
+            answeredAt: DateTime.now(),
+          ));
+
+      incrementDailyQuestionGoal(ref).catchError((_) {});
+
+      if (!isCorrect) {
+        ref
+            .read(aiWeakAnalysisServiceProvider)
+            .analyzeWeakKanjis(uid, profileId: profileId)
+            .catchError((_) {});
+      }
+    }
 
     if (_currentIndex + 1 >= _reviewItems.length) {
       setState(() => _isFinished = true);
@@ -71,11 +105,13 @@ class _SpacedRepetitionReviewScreenState
         centerTitle: true,
         elevation: 0,
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _isFinished
-              ? _buildFinishedView(context)
-              : _buildReviewView(context),
+      body: SafeArea(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _isFinished
+                ? _buildFinishedView(context)
+                : _buildReviewView(context),
+      ),
     );
   }
 
@@ -196,23 +232,29 @@ class _SpacedRepetitionReviewScreenState
   }
 
   Widget _buildQualityButtons() {
-    return Column(
-      children: [
-        Text(
-          'どのくらい覚えていましたか？',
-          style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildQualityButton(0, '忘れた', Colors.red),
-            _buildQualityButton(3, '難しい', Colors.orange),
-            _buildQualityButton(4, '普通', Colors.blue),
-            _buildQualityButton(5, '簡単', Colors.green),
-          ],
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 16, bottom: 8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'どのくらい覚えていましたか？',
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _buildQualityButton(0, '忘れた', Colors.red),
+              _buildQualityButton(3, '難しい', Colors.orange),
+              _buildQualityButton(4, '普通', Colors.blue),
+              _buildQualityButton(5, '簡単', Colors.green),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

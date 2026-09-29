@@ -23,8 +23,14 @@ class WeakKanjiModeScreen extends ConsumerWidget {
 
     // 苦手漢字の問題セットを取得
     final weakQuestionsAsync = ref.watch(
-      FutureProvider((async) =>
-          aiWeakService.getWeakKanjiFocusQuestions(uid, limit: 20)),
+      FutureProvider((async) async {
+        final user = await async.watch(currentUserProvider.future);
+        return aiWeakService.getWeakKanjiFocusQuestions(
+          uid,
+          limit: 20,
+          profileId: user?.profileId ?? 'default',
+        );
+      }),
     );
 
     return WillPopScope(

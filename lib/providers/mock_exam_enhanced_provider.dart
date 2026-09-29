@@ -66,11 +66,13 @@ final weakAreaQuestionsProvider = FutureProvider.family<
           .whereType<String>()
           .toList();
 
-      // Query questions from weak areas with high difficulty
+      // 弱点カテゴリ・難易度で絞り込むが、現状の問題データ量
+      // （1級につき20問程度）では「hard」に限定すると数問しか
+      // 残らず試験が成立しないため、難易度は絞らず級とカテゴリのみで
+      // 抽出する（苦手カテゴリを優先しつつ、母数を確保する）。
       Query<Map<String, dynamic>> query = FirebaseFirestore.instance
           .collection('examQuestions')
-          .where('level', isEqualTo: params.examLevel)
-          .where('difficulty', isEqualTo: 'ExamDifficulty.hard');
+          .where('level', isEqualTo: params.examLevel);
 
       if (weakAreas.isNotEmpty) {
         query = query.where('category', whereIn: weakAreas);
@@ -83,7 +85,7 @@ final weakAreaQuestionsProvider = FutureProvider.family<
           .toList();
 
       questions.shuffle();
-      return questions.take(30).toList();
+      return questions.take(20).toList();
     } catch (e) {
       throw Exception('Failed to load weak area questions: $e');
     }
@@ -117,7 +119,7 @@ final progressiveExamQuestionsProvider =
             .compareTo(difficultyOrder[b.difficulty.toString()] ?? 0);
       });
 
-      return questions.take(60).toList();
+      return questions.take(20).toList();
     } catch (e) {
       throw Exception('Failed to load progressive exam questions: $e');
     }

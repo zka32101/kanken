@@ -637,8 +637,12 @@ final _weakKanjiCountProvider = FutureProvider<int>((ref) async {
   final uid = ref.watch(currentUserIdProvider);
   if (uid == null) return 0;
 
+  final user = await ref.watch(currentUserProvider.future);
   final aiWeakService = ref.watch(aiWeakAnalysisServiceProvider);
-  return await aiWeakService.getWeakKanjiCount(uid);
+  return await aiWeakService.getWeakKanjiCount(
+    uid,
+    profileId: user?.profileId ?? 'default',
+  );
 });
 
 // 練習画面

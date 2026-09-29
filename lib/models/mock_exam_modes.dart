@@ -50,9 +50,16 @@ class ExamConfig {
     this.passThreshold = 60,
   });
 
-  /// Standard 50-question exam (official format)
+  // 現状examQuestionsコレクションに投入済みのデータは1級につき20問
+  // （読み/意味/書き/使い方 各5問）のみのため、各モードの問題数は
+  // 実際に用意できる件数を超えないようにしている。件数を増やす場合は
+  // scripts/seed-exam-questions-l9-l5.js側のデータ拡充と合わせて
+  // ここも見直すこと（lib/screens/mock_exam_modes_screen.dartの
+  // サブタイトル表示もquestionCountと連動させている）。
+
+  /// Standard exam (official format)
   factory ExamConfig.standard({int level = 3}) => ExamConfig(
-    questionCount: 50,
+    questionCount: 20,
     timeLimit: 120,
     mode: ExamMode.standardExam,
     difficulty: ExamDifficulty.medium,
@@ -60,9 +67,9 @@ class ExamConfig {
     targetLevel: level,
   );
 
-  /// Speed exam: 30 questions in 60 minutes
+  /// Speed exam: time-limited
   factory ExamConfig.speed({int level = 3}) => ExamConfig(
-    questionCount: 30,
+    questionCount: 20,
     timeLimit: 60,
     mode: ExamMode.speedExam,
     difficulty: ExamDifficulty.medium,
@@ -70,12 +77,12 @@ class ExamConfig {
     targetLevel: level,
   );
 
-  /// Focused exam: 20 questions on specific category
+  /// Focused exam: questions on a specific category（1級・1カテゴリあたり5問のみ）
   factory ExamConfig.focused({
     required ExamCategory category,
     int level = 3,
   }) => ExamConfig(
-    questionCount: 20,
+    questionCount: 5,
     timeLimit: 45,
     mode: ExamMode.focusedExam,
     difficulty: ExamDifficulty.medium,
@@ -83,19 +90,19 @@ class ExamConfig {
     targetLevel: level,
   );
 
-  /// Weak areas exam: Adaptive difficulty based on user performance
+  /// Weak areas exam: Adaptive based on user performance
   factory ExamConfig.weakAreas({int level = 3}) => ExamConfig(
-    questionCount: 30,
+    questionCount: 20,
     timeLimit: 90,
     mode: ExamMode.weakAreasExam,
-    difficulty: ExamDifficulty.hard,
+    difficulty: ExamDifficulty.medium,
     categories: ExamCategory.values,
     targetLevel: level,
   );
 
   /// Random exam: Mix of all question types
   factory ExamConfig.random({int level = 3}) => ExamConfig(
-    questionCount: 40,
+    questionCount: 20,
     timeLimit: 90,
     mode: ExamMode.randomExam,
     difficulty: ExamDifficulty.medium,
@@ -105,7 +112,7 @@ class ExamConfig {
 
   /// Progressive exam: Difficulty increases with correct answers
   factory ExamConfig.progressive({int level = 3}) => ExamConfig(
-    questionCount: 60,
+    questionCount: 20,
     timeLimit: 150,
     mode: ExamMode.progressiveExam,
     difficulty: ExamDifficulty.medium,
