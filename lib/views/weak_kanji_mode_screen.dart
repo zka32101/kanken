@@ -269,7 +269,13 @@ class WeakKanjiModeScreen extends ConsumerWidget {
                 onLearnedToggle: (isLearned) async {
                   if (isLearned && uid != null) {
                     // 学習済みとしてマーク
-                    await firestoreService.markAsLearned(uid, question.id);
+                    final user = await ref.read(currentUserProvider.future);
+                    await firestoreService.markAsLearned(
+                      uid,
+                      question.id,
+                      profileId: user?.profileId ?? 'default',
+                    );
+                    ref.invalidate(learnedKanjiIdsProvider);
                   }
                 },
               ),

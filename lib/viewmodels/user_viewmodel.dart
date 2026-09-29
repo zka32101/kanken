@@ -44,6 +44,21 @@ final streakCountProvider = FutureProvider<int>((ref) async {
   return user?.streakCount ?? 0;
 });
 
+/// 現在のユーザー・プロフィールが「覚えた」チェック済みの問題ID一覧
+/// （questionsコレクションのドキュメントID、例:"LEVEL_9-毎"）
+final learnedKanjiIdsProvider = FutureProvider<Set<String>>((ref) async {
+  final uid = ref.watch(currentUserIdProvider);
+  if (uid == null) return {};
+
+  final user = await ref.watch(currentUserProvider.future);
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  final learned = await firestoreService.getUserLearnedKanjis(
+    uid,
+    profileId: user?.profileId ?? 'default',
+  );
+  return learned.toSet();
+});
+
 // 現在の受験級
 final currentLevelProvider = StateProvider<String>((ref) => 'LEVEL_10');
 

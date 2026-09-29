@@ -36,6 +36,7 @@ class _StrokeOrderScreenState extends ConsumerState<StrokeOrderScreen> {
   Widget build(BuildContext context) {
     final level = ref.watch(currentLevelProvider);
     final kanjiListAsync = ref.watch(_levelStrokeOrderKanjiProvider(level));
+    final learnedIds = ref.watch(learnedKanjiIdsProvider).valueOrNull ?? {};
 
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +59,7 @@ class _StrokeOrderScreenState extends ConsumerState<StrokeOrderScreen> {
               (_selectedKanji != null && kanjiList.contains(_selectedKanji))
                   ? _selectedKanji!
                   : kanjiList.first;
-          return _buildContent(context, level, kanjiList, selected);
+          return _buildContent(context, level, kanjiList, selected, learnedIds);
         },
       ),
     );
@@ -69,6 +70,7 @@ class _StrokeOrderScreenState extends ConsumerState<StrokeOrderScreen> {
     String level,
     List<String> kanjiList,
     String selected,
+    Set<String> learnedIds,
   ) {
     final data = StrokeOrderSampleData.getStrokeOrder(selected)!;
     final info = KanjiInfoData.get(selected);
@@ -188,27 +190,49 @@ class _StrokeOrderScreenState extends ConsumerState<StrokeOrderScreen> {
               itemBuilder: (context, index) {
                 final kanji = kanjiList[index];
                 final isSelected = kanji == selected;
+                final isLearned = learnedIds.contains('$level-$kanji');
                 return GestureDetector(
                   onTap: () => setState(() => _selectedKanji = kanji),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: isSelected ? AppColors.primary : Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isSelected ? AppColors.primary : Colors.grey.shade300,
-                        width: isSelected ? 2 : 1,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        kanji,
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: isSelected ? Colors.white : Colors.black87,
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: isSelected ? AppColors.primary : Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isSelected ? AppColors.primary : Colors.grey.shade300,
+                            width: isSelected ? 2 : 1,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            kanji,
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: isSelected ? Colors.white : Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      if (isLearned)
+                        Positioned(
+                          top: 2,
+                          right: 2,
+                          child: Container(
+                            padding: const EdgeInsets.all(1),
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.check_circle,
+                              size: 16,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 );
               },

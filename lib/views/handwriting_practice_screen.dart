@@ -51,13 +51,19 @@ class _HandwritingPracticeScreenState
     final questionAsync = ref.watch(
       _singleKanjiQuestionProvider((level: level, kanji: kanji)),
     );
+    final learnedIds = ref.watch(learnedKanjiIdsProvider).valueOrNull ?? {};
+    final questionId = '$level-$kanji';
 
     return Scaffold(
       appBar: AppBar(
         title: Text('「$kanji」の書く練習'),
       ),
       body: _singleKanjiDone
-          ? _buildCompletionScreen(null)
+          ? _buildSingleKanjiCompletionScreen(
+              kanji,
+              questionId,
+              learnedIds.contains(questionId),
+            )
           : questionAsync.when(
               data: (question) {
                 if (question == null) {
@@ -75,6 +81,71 @@ class _HandwritingPracticeScreenState
               error: (err, stack) => Center(child: Text('エラー: $err')),
             ),
     );
+  }
+
+  /// 単発練習（1字のみ）の完了画面。「覚えた」チェックを付けられるようにし、
+  /// チェック状況は「漢字の学習」画面の一覧のチェックマークと連動する
+  /// （learnedKanjiIdsProviderを共有しているため）。
+  Widget _buildSingleKanjiCompletionScreen(
+    String kanji,
+    String questionId,
+    bool isLearned,
+  ) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.check_circle, size: 80, color: Colors.green),
+            const SizedBox(height: 16),
+            const Text(
+              '完了！',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            if (isLearned)
+              Chip(
+                avatar: const Icon(Icons.check, color: Colors.white, size: 18),
+                label: Text('「$kanji」を覚えた漢字に登録済み'),
+                backgroundColor: Colors.green,
+                labelStyle: const TextStyle(color: Colors.white),
+              )
+            else
+              OutlinedButton.icon(
+                icon: const Icon(Icons.check_circle_outline),
+                label: Text('「$kanji」を覚えた漢字にする'),
+                onPressed: () => _markSingleKanjiLearned(questionId, kanji),
+              ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('戻る'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _markSingleKanjiLearned(String questionId, String kanji) async {
+    final uid = ref.read(currentUserIdProvider);
+    if (uid == null) return;
+
+    final user = await ref.read(currentUserProvider.future);
+    await ref.read(firestoreServiceProvider).markAsLearned(
+          uid,
+          questionId,
+          profileId: user?.profileId ?? 'default',
+        );
+
+    ref.invalidate(learnedKanjiIdsProvider);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('「$kanji」を覚えた漢字にしました')),
+      );
+    }
   }
 
   /// 演習セッションの問題を順に練習する（従来の動作）

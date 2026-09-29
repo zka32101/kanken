@@ -880,8 +880,14 @@ class PracticeScreen extends ConsumerWidget {
     final uid = ref.read(currentUserIdProvider);
     if (uid == null) return;
 
+    final user = await ref.read(currentUserProvider.future);
     final firestoreService = ref.read(firestoreServiceProvider);
-    await firestoreService.markAsLearned(uid, question.source.id);
+    await firestoreService.markAsLearned(
+      uid,
+      question.source.id,
+      profileId: user?.profileId ?? 'default',
+    );
+    ref.invalidate(learnedKanjiIdsProvider);
 
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
