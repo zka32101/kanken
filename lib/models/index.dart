@@ -5,3 +5,4 @@ export 'weak_kanji_list.dart';
 export 'mock_exam.dart';
 export 'collection_badge.dart';
 export 'learned_kanji.dart';
+export 'level_progress.dart';

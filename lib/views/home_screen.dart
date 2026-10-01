@@ -9,6 +9,8 @@ import '../router/app_router.dart';
 import '../providers/ranking_provider.dart';
 import '../providers/friend_provider.dart';
 import '../providers/spaced_repetition_provider.dart';
+import '../providers/purchases_provider.dart';
+import '../providers/level_progress_provider.dart';
 import '../models/user_ranking.dart';
 import '../theme/app_theme.dart';
 import '../widgets/menu_grid_card.dart';
@@ -44,7 +46,7 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('漢検チャレンジ'),
+        title: const Text('漢字マスター検定'),
       ),
       bottomNavigationBar: const SafeArea(child: BannerAdWidget()),
       body: SingleChildScrollView(
@@ -55,6 +57,17 @@ class HomeScreen extends ConsumerWidget {
             children: [
               // ユーザー情報・進捗セクション
               _buildProgressCard(context, ref, user, weakKanjiCount),
+              const SizedBox(height: 12),
+              user.when(
+                data: (u) => (u == null || u.streakCount <= 0)
+                    ? const SizedBox.shrink()
+                    : StreakWidget(
+                        streakDays: u.streakCount,
+                        lastActiveDate: u.lastStudyDate ?? DateTime.now(),
+                      ),
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
+              ),
               const SizedBox(height: 20),
 
               // メインCTA（演習・模擬試験）
@@ -84,10 +97,12 @@ class HomeScreen extends ConsumerWidget {
               // 級選択セクション
               const Text(
                 '受験級を選択',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               _buildLevelGrid(context, ref, currentLevel),
+              const SizedBox(height: 20),
+              _buildLevelProgressSection(context, ref),
               const SizedBox(height: 28),
 
               // 学習セクション
@@ -177,6 +192,12 @@ class HomeScreen extends ConsumerWidget {
                   label: '設定',
                   color: AppColors.info,
                   onTap: () => context.goSettings(),
+                ),
+                MenuGridCard(
+                  icon: Icons.block,
+                  label: '広告非表示\nプラン',
+                  color: AppColors.primary,
+                  onTap: () => context.goPaywall(),
                 ),
               ]),
               const SizedBox(height: 16),
@@ -332,7 +353,7 @@ class HomeScreen extends ConsumerWidget {
                 levelNames[level]?.split('（').first ?? level,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: isSelected ? Colors.white : Colors.black87,
                 ),
@@ -341,6 +362,55 @@ class HomeScreen extends ConsumerWidget {
           ),
         );
       }).toList(),
+    );
+  }
+
+  /// 級ごとの正答率進捗バー（現在選択中の級だけ表示）＋次の級までのカウントダウン
+  Widget _buildLevelProgressSection(BuildContext context, WidgetRef ref) {
+    final statsAsync = ref.watch(levelProgressProvider);
+    final currentLevel = ref.watch(currentLevelProvider);
+
+    return statsAsync.when(
+      data: (stats) {
+        final progress = levelProgressFor(stats, currentLevel);
+        final levelLabel = levelNames[currentLevel] ?? currentLevel;
+
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CategoryProgressBar(
+                category: levelLabel,
+                progress: progress.accuracyRate,
+                correctCount: progress.correctCount,
+                totalCount: progress.totalCount,
+              ),
+              if (progress.isCleared)
+                const Text(
+                  '✅ この級はクリア基準を達成しています！',
+                  style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 13),
+                )
+              else
+                Text(
+                  'あと${progress.remainingCorrectToClear}問正解で次の級へ！',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepOrange,
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
     );
   }
 
@@ -607,7 +677,7 @@ String _practiceModeLabel(PracticeMode mode) {
     case PracticeMode.reading:
       return '読みがな';
     case PracticeMode.writing:
-      return '漢字を書く';
+      return '漢字をあてる';
     case PracticeMode.radical:
       return '部首';
     case PracticeMode.compoundStructure:
@@ -657,6 +727,7 @@ class PracticeScreen extends ConsumerWidget {
     final correctCount = ref.watch(correctCountProvider);
     final comboCount = ref.watch(comboCountProvider);
     final ahaMomentReached = ref.watch(ahaMomentReachedProvider);
+    final levelStatsAsync = ref.watch(levelProgressProvider);
 
     return WillPopScope(
       onWillPop: () async {
@@ -710,6 +781,7 @@ class PracticeScreen extends ConsumerWidget {
               correctCount,
               comboCount,
               ahaMomentReached,
+              levelStatsAsync.valueOrNull,
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
@@ -728,7 +800,12 @@ class PracticeScreen extends ConsumerWidget {
     int correctCount,
     int comboCount,
     bool ahaMomentReached,
+    Map<String, LevelProgress>? levelStats,
   ) {
+    final level = ref.read(currentLevelProvider);
+    final levelProgress =
+        levelStats != null ? levelProgressFor(levelStats, level) : null;
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -742,6 +819,18 @@ class PracticeScreen extends ConsumerWidget {
             '問題 ${currentIndex + 1} / $totalQuestions',
             style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
+          if (levelProgress != null && !levelProgress.isCleared)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                'あと${levelProgress.remainingCorrectToClear}問正解で次の級へ！',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepOrange,
+                ),
+              ),
+            ),
           const SizedBox(height: 16),
 
           // 正解数・コンボ表示
@@ -869,6 +958,25 @@ class PracticeScreen extends ConsumerWidget {
 
     // 読み方・用例を読む時間を確保してから次の問題へ
     await Future.delayed(const Duration(milliseconds: 2200));
+
+    // 広告非表示（サブスク加入中）でなければ、10問ごとにインタースティシャルを挟む
+    final hasAdsRemoved = await ref.read(hasAdsRemovedProvider.future);
+    if (!hasAdsRemoved) {
+      await ref.read(interstitialAdManagerProvider).maybeShowAfterQuestion();
+    }
+
+    // 正解の場合のみ、級クリア（正答率80%以上）に達したか確認し、
+    // 新しく達成していれば証書風のお祝いダイアログを出す
+    if (isCorrect) {
+      final newlyCleared = await checkAndAwardLevelClearBadge(ref, level);
+      if (newlyCleared && context.mounted) {
+        await showLevelClearCelebration(
+          context,
+          levelName: HomeScreen.levelNames[level] ?? level,
+        );
+      }
+    }
+
     practiceVM.moveToNextQuestion();
   }
 

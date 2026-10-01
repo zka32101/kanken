@@ -24,6 +24,7 @@ import '../screens/learning_goals_screen.dart';
 import '../screens/stroke_order_screen.dart';
 import '../screens/auth_gate_screen.dart';
 import '../screens/settings_screen.dart';
+import '../screens/paywall_screen.dart';
 import '../models/multiplayer.dart';
 import '../models/mock_exam.dart';
 import '../views/index.dart';
@@ -107,11 +108,13 @@ final appRouter = GoRouter(
           builder: (context, state) => const WeakKanjiModeScreen(),
         ),
 
-        // 手書き練習
+        // 手書き練習（「漢字の学習」で選択中の漢字を練習する）
         GoRoute(
           path: 'handwriting',
           name: 'handwriting',
-          builder: (context, state) => const HandwritingPracticeScreen(),
+          builder: (context, state) => HandwritingPracticeScreen(
+            kanji: state.extra as String?,
+          ),
         ),
 
         // 模擬試験モード選択
@@ -237,6 +240,13 @@ final appRouter = GoRouter(
           name: 'settings',
           builder: (context, state) => const SettingsScreen(),
         ),
+
+        // 広告非表示プラン（サブスクリプション）
+        GoRoute(
+          path: 'paywall',
+          name: 'paywall',
+          builder: (context, state) => const PaywallScreen(),
+        ),
       ],
     ),
   ],
@@ -296,7 +306,7 @@ extension NavigationExtension on BuildContext {
   void goWeakKanji() => push('/weak-kanji');
 
   /// 手書き練習に遷移
-  void goHandwriting() => push('/handwriting');
+  void goHandwriting(String kanji) => push('/handwriting', extra: kanji);
 
   /// 模擬試験モード選択に遷移
   void goMockExamModes() => push('/mock-exam-modes');
@@ -344,4 +354,7 @@ extension NavigationExtension on BuildContext {
 
   /// 設定画面に遷移
   void goSettings() => push('/settings');
+
+  /// 広告非表示プラン購入画面に遷移
+  void goPaywall() => push('/paywall');
 }

@@ -188,7 +188,33 @@ class FirestoreService {
       SetOptions(merge: true),
     );
 
+    // 級ごとの正答率集計（進捗バー・次の級までのカウントダウンに使う）
+    if (log.level.isNotEmpty) {
+      final levelStatsRef = profileRef.collection('levelStats').doc(log.level);
+      batch.set(
+        levelStatsRef,
+        {
+          'totalCount': FieldValue.increment(1),
+          'correctCount': FieldValue.increment(log.isCorrect ? 1 : 0),
+        },
+        SetOptions(merge: true),
+      );
+    }
+
     await batch.commit();
+  }
+
+  // 級ごとの正答率集計（プロフィール単位 users/{uid}/profiles/{profileId}/levelStats）
+  Future<Map<String, LevelProgress>> getLevelStats(
+    String uid, {
+    String profileId = 'default',
+  }) async {
+    final snapshot =
+        await _profileDoc(uid, profileId).collection('levelStats').get();
+    return {
+      for (final doc in snapshot.docs)
+        doc.id: LevelProgress.fromJson(doc.id, doc.data()),
+    };
   }
 
   Future<List<UserAnswerLog>> getUserAnswerLogs(

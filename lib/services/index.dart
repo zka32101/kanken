@@ -6,3 +6,4 @@ export 'analytics_service.dart';
 export 'sound_effect_service.dart';
 export 'haptic_feedback_service.dart';
 export 'ad_service.dart';
+export 'badge_award_service.dart';

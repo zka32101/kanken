@@ -61,10 +61,15 @@ service cloud.firestore {
     }
 
     // リーダーボード: ランキング表示のため読み取りはログインユーザー全員に許可、
-    // 書き込みは自分のスコアのみ
-    match /leaderboard/{period}/scores/{uid} {
+    // 書き込みは自分のスコアのみ。
+    // ドキュメントIDはプロフィール単位で分けるため "{uid}_{profileId}" という
+    // 複合ID（FirestoreService.rankingDocId）を使っている。以前はここが
+    // isOwner(uid) になっており、request.auth.uid を複合ID文字列全体と
+    // 比較してしまうため常に false になり、スコア更新(updateUserScore)が
+    // 毎回 permission-denied で失敗していた（ランキング機能が壊れていた根本原因）。
+    match /leaderboard/{period}/scores/{docId} {
       allow read: if isSignedIn();
-      allow write: if isOwner(uid);
+      allow write: if isOwnerOfCompositeDoc(docId);
     }
 
     // ランキング公開用ミラー: users/{uid} 本体（メール等を含みうる）は非公開のため、

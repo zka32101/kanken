@@ -21,3 +21,13 @@ final aiWeakAnalysisServiceProvider = Provider<AIWeakAnalysisService>((ref) {
 final handwritingJudgeServiceProvider = Provider<HandwritingJudgeService>((ref) {
   return HandwritingJudgeService();
 });
+
+// InterstitialAdManagerProvider
+// アプリ全体で1つのインスタンスを共有し、演習・弱点モード・模試のどこから
+// 呼んでも「合計10問ごと」に1回インタースティシャルを表示する。
+final interstitialAdManagerProvider = Provider<InterstitialAdManager>((ref) {
+  final manager = InterstitialAdManager(questionInterval: 10);
+  manager.preload();
+  ref.onDispose(manager.dispose);
+  return manager;
+});

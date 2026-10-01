@@ -85,9 +85,10 @@ final reviewSessionStatsProvider = FutureProvider<ReviewSessionStats>((ref) asyn
   );
 });
 
-/// 間違えた問題を間隔反復システムに追加（存在しない場合は新規作成）
-Future<void> addToSpacedRepetition(
-  WidgetRef ref, {
+/// 間違えた問題を間隔反復システムに追加する実処理（uid/profileId解決済みの状態で呼ぶ）
+Future<void> _addToSpacedRepetitionImpl({
+  required String userId,
+  required String profileId,
   required String questionId,
   required String kanji,
   required String category,
@@ -95,11 +96,7 @@ Future<void> addToSpacedRepetition(
   required List<String> options,
   required String correctAnswer,
 }) async {
-  final userId = FirebaseAuth.instance.currentUser?.uid;
-  if (userId == null) return;
-
   try {
-    final profileId = (await ref.read(user_vm.currentUserProvider.future))?.profileId ?? 'default';
     final docRef = _profileDoc(userId, profileId).collection('spacedRepetitionItems').doc(questionId);
 
     final existingDoc = await docRef.get();
@@ -124,6 +121,60 @@ Future<void> addToSpacedRepetition(
   } catch (e) {
     // エラーログなど必要に応じて処理
   }
+}
+
+/// 間違えた問題を間隔反復システムに追加（存在しない場合は新規作成）
+/// 画面(ConsumerState/WidgetRef)側から呼ぶ版。模擬試験結果画面から使用。
+Future<void> addToSpacedRepetition(
+  WidgetRef ref, {
+  required String questionId,
+  required String kanji,
+  required String category,
+  required String question,
+  required List<String> options,
+  required String correctAnswer,
+}) async {
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  if (userId == null) return;
+
+  final profileId = (await ref.read(user_vm.currentUserProvider.future))?.profileId ?? 'default';
+  await _addToSpacedRepetitionImpl(
+    userId: userId,
+    profileId: profileId,
+    questionId: questionId,
+    kanji: kanji,
+    category: category,
+    question: question,
+    options: options,
+    correctAnswer: correctAnswer,
+  );
+}
+
+/// 間違えた問題を間隔反復システムに追加（存在しない場合は新規作成）
+/// StateNotifier内(Ref)側から呼ぶ版。通常の演習（PracticeViewModel）から使用。
+Future<void> addToSpacedRepetitionWithRef(
+  Ref ref, {
+  required String questionId,
+  required String kanji,
+  required String category,
+  required String question,
+  required List<String> options,
+  required String correctAnswer,
+}) async {
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  if (userId == null) return;
+
+  final profileId = (await ref.read(user_vm.currentUserProvider.future))?.profileId ?? 'default';
+  await _addToSpacedRepetitionImpl(
+    userId: userId,
+    profileId: profileId,
+    questionId: questionId,
+    kanji: kanji,
+    category: category,
+    question: question,
+    options: options,
+    correctAnswer: correctAnswer,
+  );
 }
 
 /// 復習リマインダー通知チェック（1日1回、期限アイテムがあれば通知）

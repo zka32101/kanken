@@ -1,20 +1,33 @@
+import 'dart:math';
+
 /// 手書き判定サービス
 /// ストローク座標と正解パターンの照合ロジック
-/// 実装時にOSS/軽量モデルの精度を検証予定
+///
+/// 実際の字形一致判定（機械学習モデル等）は行わない。国語コレ
+/// (drawing_canvas_screen.dart の _calculateScore()) と同様の
+/// ヒューリスティック採点方式を採用する:
+/// - ストローク数（画数の目安、最大25点）
+/// - 中心位置（キャンバス中心からの距離、最大40点）
+/// - サイズ（キャンバスに対する占有率、最大35点）
 class HandwritingJudgeService {
-  /// ストローク座標データから手書き入力を判定
-  /// @param strokePoints: 手書きストローク座標群 [[x1, y1], [x2, y2], ...]
-  /// @param correctAnswer: 正解の漢字パターンデータ
-  /// @return 正解判定結果（精度スコア）
+  /// 合格とみなす点数（0-100）
+  static const int passingScore = 60;
+
+  /// ストロークデータから手書き入力を判定
+  /// @param strokes: 手書きストローク座標群（キャンバス内のローカル座標）。
+  ///   ストロークごとにリストを分けて渡す（ペンを離した箇所が正しくストロークの
+  ///   区切りとして扱われる。距離ベースの推測分割は行わない）。
+  /// @param correctAnswer: 正解の漢字パターンデータ（strokeCountを含む）
+  /// @param canvasSize: 手書き入力エリアの [幅, 高さ]（ヒューリスティック採点の基準）
+  /// @return 正解判定結果（0-100点のヒューリスティックスコア）
   Future<HandwritingJudgement> judgeHandwriting({
-    required List<List<double>> strokePoints,
+    required List<List<List<double>>> strokes,
     required Map<String, dynamic> correctAnswer,
+    List<double>? canvasSize,
   }) async {
     try {
-      // TODO: 軽量な手書き認識モデル（TFLite/ONNX）の実装
-      // 現状は簡易的な実装。本実装ではOSS（e.g., 自分手書き認識ライブラリ）の精度検証が必要
-
-      if (strokePoints.isEmpty) {
+      final allPoints = strokes.expand((s) => s).toList();
+      if (allPoints.isEmpty) {
         return HandwritingJudgement(
           isCorrect: false,
           confidence: 0.0,
@@ -22,27 +35,16 @@ class HandwritingJudgeService {
         );
       }
 
-      // ストローク数、ストローク長などの基本的な検証
-      final strokeCount = _countStrokes(strokePoints);
-      final expectedStrokeCount =
-          (correctAnswer['strokeCount'] as int?) ?? 1;
+      final canvasW = (canvasSize != null && canvasSize.isNotEmpty) ? canvasSize[0] : 280.0;
+      final canvasH = (canvasSize != null && canvasSize.length > 1) ? canvasSize[1] : 280.0;
 
-      // 簡易判定：ストローク数が大きく異なれば不正解
-      final strokeCountDiff = (strokeCount - expectedStrokeCount).abs();
-      if (strokeCountDiff > 2) {
-        return HandwritingJudgement(
-          isCorrect: false,
-          confidence: 0.3,
-          message: 'ストローク数が異なります',
-        );
-      }
+      final score = _calculateScore(strokes, allPoints, canvasW, canvasH);
+      final isCorrect = score >= passingScore;
 
-      // 本来ここで画像化 → 機械学習モデルで照合
-      // 仮実装では70%の確度で正解と判定（実装時に要改善）
       return HandwritingJudgement(
-        isCorrect: true,
-        confidence: 0.75,
-        message: '正解',
+        isCorrect: isCorrect,
+        confidence: score / 100,
+        message: isCorrect ? '正解（$score点）' : 'もう一度書いてみましょう（$score点）',
       );
     } catch (e) {
       return HandwritingJudgement(
@@ -53,29 +55,70 @@ class HandwritingJudgeService {
     }
   }
 
-  /// ストローク点群からストローク数を推定
-  int _countStrokes(List<List<double>> strokePoints) {
-    if (strokePoints.isEmpty) return 0;
+  /// 採点ロジック（国語コレの _calculateScore() を移植）
+  /// - ストローク数：1〜5画が理想（最大25点）
+  /// - 中心位置：バウンディングボックス中心とキャンバス中心の距離が近いほど高得点（最大40点）
+  /// - サイズ：キャンバスの20%〜55%を占めるのが理想（最大35点）
+  int _calculateScore(
+    List<List<List<double>>> strokes,
+    List<List<double>> allPoints,
+    double canvasW,
+    double canvasH,
+  ) {
+    if (allPoints.isEmpty || strokes.isEmpty) return 0;
 
-    int strokeCount = 1;
-    const double movementThreshold = 20.0; // ストロークの分離閾値（ピクセル）
-
-    for (int i = 1; i < strokePoints.length; i++) {
-      final prev = strokePoints[i - 1];
-      final current = strokePoints[i];
-
-      final distance =
-          ((current[0] - prev[0]) * (current[0] - prev[0]) +
-                  (current[1] - prev[1]) * (current[1] - prev[1]))
-              .toDouble()
-              .sqrt();
-
-      if (distance > movementThreshold) {
-        strokeCount++;
-      }
+    double minX = allPoints.first[0], maxX = allPoints.first[0];
+    double minY = allPoints.first[1], maxY = allPoints.first[1];
+    for (final p in allPoints) {
+      minX = min(minX, p[0]);
+      maxX = max(maxX, p[0]);
+      minY = min(minY, p[1]);
+      maxY = max(maxY, p[1]);
     }
 
-    return strokeCount;
+    final bbW = maxX - minX;
+    final bbH = maxY - minY;
+    final bbCx = (minX + maxX) / 2;
+    final bbCy = (minY + maxY) / 2;
+
+    // 1. ストローク数スコア（1-5画が理想）
+    final sc = strokes.length;
+    final int strokeScore;
+    if (sc == 0) {
+      strokeScore = 0;
+    } else if (sc == 1) {
+      strokeScore = 12;
+    } else if (sc <= 5) {
+      strokeScore = 25;
+    } else if (sc <= 8) {
+      strokeScore = (25 - (sc - 5) * 5).clamp(5, 25);
+    } else {
+      strokeScore = 5;
+    }
+
+    // 2. 中心位置スコア（中心から20%以内が理想）
+    final dxRatio = ((bbCx - canvasW / 2) / canvasW).abs();
+    final dyRatio = ((bbCy - canvasH / 2) / canvasH).abs();
+    final centerDist = (dxRatio + dyRatio) / 2;
+    final centerScore = (40 * (1 - centerDist * 4.0)).clamp(0.0, 40.0).round();
+
+    // 3. サイズスコア（キャンバスの20%〜55%が理想）
+    final wRatio = bbW / canvasW;
+    final hRatio = bbH / canvasH;
+    final sizeRatio = (wRatio + hRatio) / 2;
+    final int sizeScore;
+    if (sizeRatio < 0.08) {
+      sizeScore = (sizeRatio * 100).round().clamp(0, 10);
+    } else if (sizeRatio < 0.20) {
+      sizeScore = (10 + (sizeRatio - 0.08) * 200).round().clamp(10, 35);
+    } else if (sizeRatio <= 0.55) {
+      final dist = (sizeRatio - 0.37).abs();
+      sizeScore = (35 - dist * 80).clamp(10.0, 35.0).round();
+    } else {
+      sizeScore = (35 - (sizeRatio - 0.55) * 70).clamp(5.0, 35.0).round();
+    }
+
+    return (strokeScore + centerScore + sizeScore).clamp(0, 100);
   }
 }
 
@@ -89,8 +132,4 @@ class HandwritingJudgement {
     required this.confidence,
     required this.message,
   });
-}
-
-extension on double {
-  double sqrt() => double.parse(toStringAsFixed(2));
 }

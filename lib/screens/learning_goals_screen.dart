@@ -45,7 +45,7 @@ class LearningGoalsScreen extends ConsumerWidget {
               ref,
               user?.examDate,
               currentLevel,
-              activeGoalsAsync.value,
+              activeGoalsAsync.valueOrNull,
             ),
             loading: () => const SizedBox.shrink(),
             error: (_, __) => const SizedBox.shrink(),

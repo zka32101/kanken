@@ -1,19 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '../providers/purchases_provider.dart';
 import '../services/ad_service.dart';
 
 /// 再利用可能なバナー広告ウィジェット
 ///
 /// 読み込みに失敗した場合や読み込み中は何も表示しない
 /// （レイアウトが崩れないよう、読み込み完了後にのみ広告サイズ分の領域を確保する）。
-class BannerAdWidget extends StatefulWidget {
+/// サブスク加入中（広告非表示）のユーザーには表示しない。
+class BannerAdWidget extends ConsumerWidget {
   const BannerAdWidget({Key? key}) : super(key: key);
 
   @override
-  State<BannerAdWidget> createState() => _BannerAdWidgetState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hasAdsRemoved = ref.watch(hasAdsRemovedProvider).valueOrNull ?? false;
+    if (hasAdsRemoved) return const SizedBox.shrink();
+    return const _BannerAdWidgetInner();
+  }
 }
 
-class _BannerAdWidgetState extends State<BannerAdWidget> {
+class _BannerAdWidgetInner extends StatefulWidget {
+  const _BannerAdWidgetInner();
+
+  @override
+  State<_BannerAdWidgetInner> createState() => _BannerAdWidgetState();
+}
+
+class _BannerAdWidgetState extends State<_BannerAdWidgetInner> {
   BannerAd? _bannerAd;
   bool _isLoaded = false;
 

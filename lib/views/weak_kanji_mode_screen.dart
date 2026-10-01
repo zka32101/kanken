@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/index.dart';
 import '../services/index.dart';
 import '../viewmodels/index.dart';
+import '../providers/purchases_provider.dart';
 import '../widgets/correct_feedback_widget.dart';
 
 /// 苦手集中モード画面
@@ -262,8 +263,12 @@ class WeakKanjiModeScreen extends ConsumerWidget {
             return Dialog(
               insetPadding: const EdgeInsets.all(24),
               child: CorrectFeedbackWidget(
-                onComplete: () {
+                onComplete: () async {
                   Navigator.pop(dialogContext);
+                  final hasAdsRemoved = await ref.read(hasAdsRemovedProvider.future);
+                  if (!hasAdsRemoved) {
+                    await ref.read(interstitialAdManagerProvider).maybeShowAfterQuestion();
+                  }
                   practiceVM.moveToNextQuestion();
                 },
                 onLearnedToggle: (isLearned) async {
@@ -296,6 +301,10 @@ class WeakKanjiModeScreen extends ConsumerWidget {
       );
 
       await Future.delayed(const Duration(milliseconds: 1500));
+      final hasAdsRemoved = await ref.read(hasAdsRemovedProvider.future);
+      if (!hasAdsRemoved) {
+        await ref.read(interstitialAdManagerProvider).maybeShowAfterQuestion();
+      }
       practiceVM.moveToNextQuestion();
     }
   }

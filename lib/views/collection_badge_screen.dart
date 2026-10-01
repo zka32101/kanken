@@ -189,7 +189,43 @@ class CollectionBadgeScreen extends ConsumerWidget {
                         return _buildLockedBadgeCard(context, entry.value);
                       }).toList(),
                     ),
+                    const SizedBox(height: 24),
                   ],
+
+                  // 実績バッジ（級に紐づかないもの。例：継続学習ストリーク）
+                  const Text(
+                    '実績バッジ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    children: streakBadgeThresholds.entries.map((entry) {
+                      final info = entry.value;
+                      final acquired = badges.any((b) => b.badgeId == info.$1);
+                      final achievementInfo = BadgeInfo(
+                        name: info.$2,
+                        description: info.$3,
+                        color: Colors.deepOrange,
+                        icon: Icons.local_fire_department,
+                        conditionText: '${entry.key}日連続で学習する',
+                      );
+                      return acquired
+                          ? _buildAcquiredBadgeCard(
+                              context,
+                              achievementInfo,
+                              badges.firstWhere((b) => b.badgeId == info.$1),
+                            )
+                          : _buildLockedBadgeCard(context, achievementInfo);
+                    }).toList(),
+                  ),
                 ],
               ),
             ),
