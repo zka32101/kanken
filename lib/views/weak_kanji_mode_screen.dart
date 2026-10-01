@@ -99,6 +99,18 @@ class WeakKanjiModeScreen extends ConsumerWidget {
   }
 
   Widget _buildCompletionScreen(BuildContext context, WidgetRef ref) {
+    // セッション(苦手集中トレーニング1回分)終了時のみ、ここで1回だけ
+    // インタースティシャル表示を判定する(演習の最中には出さない方針)。
+    if (!ref.read(weakKanjiSessionAdShownProvider)) {
+      ref.read(weakKanjiSessionAdShownProvider.notifier).state = true;
+      Future.microtask(() async {
+        final hasAdsRemoved = await ref.read(hasAdsRemovedProvider.future);
+        if (!hasAdsRemoved) {
+          await ref.read(interstitialAdManagerProvider).maybeShowAfterSession();
+        }
+      });
+    }
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -265,10 +277,6 @@ class WeakKanjiModeScreen extends ConsumerWidget {
               child: CorrectFeedbackWidget(
                 onComplete: () async {
                   Navigator.pop(dialogContext);
-                  final hasAdsRemoved = await ref.read(hasAdsRemovedProvider.future);
-                  if (!hasAdsRemoved) {
-                    await ref.read(interstitialAdManagerProvider).maybeShowAfterQuestion();
-                  }
                   practiceVM.moveToNextQuestion();
                 },
                 onLearnedToggle: (isLearned) async {
@@ -301,10 +309,6 @@ class WeakKanjiModeScreen extends ConsumerWidget {
       );
 
       await Future.delayed(const Duration(milliseconds: 1500));
-      final hasAdsRemoved = await ref.read(hasAdsRemovedProvider.future);
-      if (!hasAdsRemoved) {
-        await ref.read(interstitialAdManagerProvider).maybeShowAfterQuestion();
-      }
       practiceVM.moveToNextQuestion();
     }
   }
