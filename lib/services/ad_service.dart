@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -48,21 +49,40 @@ class AdService {
   }
 }
 
-/// インタースティシャル広告の読み込み・表示・出題数カウントを管理するクラス。
-/// 「演習N問ごとに1回」表示する用途で使う（Nは[questionInterval]）。
+/// インタースティシャル広告の読み込み・表示・セッション数カウントを管理するクラス。
+///
+/// 演習・模擬試験の最中には広告を出さない方針(うかラボ共通方針)のため、
+/// 出題のたびではなく「セッション(演習1回分、または模擬試験の結果画面)が
+/// 終わるたびに呼ぶ」運用とする。表示頻度(sessionInterval相当)は
+/// Remote Configの`interstitial_session_interval`キーで調整できる
+/// (未設定時は[defaultSessionInterval]回に1回)。
 ///
 /// 使い方:
 ///   final manager = InterstitialAdManager();
 ///   manager.preload(); // 画面表示時に先読み
 ///   ...
-///   await manager.maybeShowAfterQuestion(); // 1問終わるたびに呼ぶ
+///   await manager.maybeShowAfterSession(); // 演習セッション・模擬試験結果表示後に呼ぶ
 class InterstitialAdManager {
-  InterstitialAdManager({this.questionInterval = 10});
+  InterstitialAdManager({this.remoteConfig});
 
-  final int questionInterval;
+  /// 未指定の場合はFirebaseRemoteConfig.instanceを使う(テスト時にモック差し替え可能にするため)
+  final FirebaseRemoteConfig? remoteConfig;
+
+  static const int defaultSessionInterval = 3;
+  static const String remoteConfigKey = 'interstitial_session_interval';
+
   InterstitialAd? _ad;
   bool _isLoading = false;
-  int _questionCount = 0;
+  int _sessionCount = 0;
+
+  int get _sessionInterval {
+    try {
+      final value = (remoteConfig ?? FirebaseRemoteConfig.instance).getInt(remoteConfigKey);
+      return value > 0 ? value : defaultSessionInterval;
+    } catch (_) {
+      return defaultSessionInterval;
+    }
+  }
 
   /// 広告を先読みしておく（次に表示するタイミングで即座に出せるように）
   void preload() {
@@ -84,11 +104,12 @@ class InterstitialAdManager {
     );
   }
 
-  /// 1問終わるたびに呼ぶ。questionInterval問ごとに広告を表示する。
+  /// 演習セッション・模擬試験結果表示など「ひと区切り」の終わりに呼ぶ。
+  /// sessionInterval回に1回、広告を表示する。
   /// 広告が表示された場合はtrueを返す（呼び出し側で画面遷移等を一時止める場合の判定に使える）。
-  Future<bool> maybeShowAfterQuestion() async {
-    _questionCount++;
-    if (_questionCount % questionInterval != 0) {
+  Future<bool> maybeShowAfterSession() async {
+    _sessionCount++;
+    if (_sessionCount % _sessionInterval != 0) {
       return false;
     }
     return _show();
@@ -119,9 +140,9 @@ class InterstitialAdManager {
     return completer.future;
   }
 
-  /// カウンタをリセット（演習セッション開始時に呼ぶ）
+  /// カウンタをリセット（必要に応じて呼ぶ。通常は呼ばなくてよい）
   void reset() {
-    _questionCount = 0;
+    _sessionCount = 0;
   }
 
   void dispose() {

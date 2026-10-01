@@ -959,10 +959,16 @@ class PracticeScreen extends ConsumerWidget {
     // 読み方・用例を読む時間を確保してから次の問題へ
     await Future.delayed(const Duration(milliseconds: 2200));
 
-    // 広告非表示（サブスク加入中）でなければ、10問ごとにインタースティシャルを挟む
-    final hasAdsRemoved = await ref.read(hasAdsRemovedProvider.future);
-    if (!hasAdsRemoved) {
-      await ref.read(interstitialAdManagerProvider).maybeShowAfterQuestion();
+    // 演習セッション(practiceSessionSize問)の最後の1問が終わったタイミングのみ、
+    // 広告非表示（サブスク加入中）でなければインタースティシャルを挟む。
+    // 演習の最中(セッション途中)には広告を出さない(うかラボ共通方針)。
+    final currentIndex = ref.read(currentQuestionIndexProvider);
+    final isSessionEnd = currentIndex + 1 >= practiceSessionSize;
+    if (isSessionEnd) {
+      final hasAdsRemoved = await ref.read(hasAdsRemovedProvider.future);
+      if (!hasAdsRemoved) {
+        await ref.read(interstitialAdManagerProvider).maybeShowAfterSession();
+      }
     }
 
     // 正解の場合のみ、級クリア（正答率80%以上）に達したか確認し、
