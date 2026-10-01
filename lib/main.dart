@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:app_common_kit/app_common_kit.dart';
 import 'firebase_options.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
@@ -31,7 +35,23 @@ void main() async {
   // サブスクリプション（広告非表示プラン）初期化
   await PurchasesService.initialize();
 
-  runApp(const ProviderScope(child: MyApp()));
+  // 全アプリ共通フィードバック機能(app_common_kit)の送信処理を注入
+  final container = ProviderContainer();
+  container.read(feedbackProvider.notifier).setSubmitHandler((report) async {
+    await FirebaseFirestore.instance
+        .collection('feedback')
+        .doc(report.id)
+        .set(report.toJson());
+  });
+  // 未送信分の再送信を試みる(オフライン等で失敗した報告のリトライ)
+  unawaited(container.read(feedbackProvider.notifier).retryPendingReports());
+
+  runApp(
+    UncontrolledProviderScope(
+      container: container,
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends ConsumerWidget {

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cross_promo_kit/cross_promo_kit.dart';
+import 'package:app_common_kit/app_common_kit.dart';
 import '../models/user.dart';
 import '../services/firestore_service.dart';
 import '../viewmodels/user_viewmodel.dart';
@@ -76,6 +77,25 @@ class SettingsScreen extends ConsumerWidget {
                       ),
                     );
                   }
+                },
+              ),
+              const Divider(),
+              const _SectionHeader('サポート'),
+              ListTile(
+                leading: const Icon(Icons.feedback_outlined),
+                title: const Text('ご意見・不具合報告'),
+                subtitle: const Text('バグ報告や改善要望をお寄せください'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => FeedbackFormPage(
+                        appName: 'kanken',
+                        appVersion: '1.0.1',
+                        userId: user.uid,
+                      ),
+                    ),
+                  );
                 },
               ),
               const CrossPromoSection(
