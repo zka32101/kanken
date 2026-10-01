@@ -320,6 +320,7 @@ class _ProfileManagementSection extends ConsumerWidget {
       'LEVEL_6',
       'LEVEL_5',
       'LEVEL_4',
+      'LEVEL_3',
     ];
 
     await showDialog(

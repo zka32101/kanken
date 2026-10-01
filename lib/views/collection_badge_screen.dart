@@ -58,6 +58,13 @@ class CollectionBadgeScreen extends ConsumerWidget {
       icon: Icons.school,
       conditionText: '4級の模擬試験に合格',
     ),
+    'LEVEL_3': BadgeInfo(
+      name: '3級マスター',
+      description: '中学校卒業程度の漢字をマスター',
+      color: Colors.indigo,
+      icon: Icons.school,
+      conditionText: '3級の模擬試験に合格',
+    ),
   };
 
   @override
