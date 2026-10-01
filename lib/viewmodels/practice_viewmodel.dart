@@ -4,6 +4,8 @@ import '../data/compound_structure_data.dart';
 import '../data/kanji_radical_data.dart';
 import '../models/index.dart';
 import '../providers/learning_goal_provider.dart';
+import '../providers/spaced_repetition_provider.dart';
+import '../providers/level_progress_provider.dart';
 import 'services_provider.dart';
 import 'user_viewmodel.dart';
 
@@ -161,7 +163,10 @@ List<PracticeQuestion> _buildPracticeQuestions(
       actualMode: PracticeMode.writing,
       prompt: prompt,
       instruction: 'この読み方の漢字はどれ？',
-      choices: List<String>.from(question.choices),
+      // Firestore上のchoicesは正解位置が問題ごとに固定されているため、
+      // 同じ問題を再度出題した際に「位置で覚えてしまう」ことがないよう
+      // 表示のたびにシャッフルする。
+      choices: List<String>.from(question.choices)..shuffle(random),
       correctAnswer: question.correctAnswer,
     );
   }).toList();
@@ -239,6 +244,7 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
           isCorrect: isCorrect,
           mode: AnswerMode.normal,
           answeredAt: DateTime.now(),
+          level: level,
         );
         await firestoreService.addAnswerLog(log);
 
@@ -254,12 +260,32 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
               .read(aiWeakAnalysisServiceProvider)
               .analyzeWeakKanjis(uid, profileId: user?.profileId ?? 'default')
               .catchError((_) {});
+
+          // 不正解だった問題を間隔反復（スペースドリピティション）の
+          // 復習リストに追加する（完了を待たずバックグラウンドで実行）。
+          addToSpacedRepetitionWithRef(
+            ref,
+            questionId: question.source.id,
+            kanji: question.source.kanji,
+            category: question.actualMode.toString().split('.').last,
+            question: question.instruction,
+            options: question.choices,
+            correctAnswer: question.correctAnswer,
+          ).catchError((_) {});
         }
 
         ref.read(answeredCountProvider.notifier).state++;
 
         // 日次問題数の学習目標を1問分進める（完了を待たずバックグラウンドで実行）
         incrementDailyQuestionGoalFromRef(ref).catchError((_) {});
+
+        // 級ごとの正答率集計を更新したので再取得させる
+        // （次の級までのカウントダウン・クリア判定に使う）
+        ref.invalidate(levelProgressProvider);
+
+        // 演習で1問以上回答した = 「今日学習した」とみなしストリークを更新
+        // （完了を待たずバックグラウンドで実行）。
+        recordStudyActivityWithRef(ref).catchError((_) {});
 
         // Aha Moment判定：初回3問正解
         final correctCount = ref.read(correctCountProvider);

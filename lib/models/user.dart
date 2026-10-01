@@ -12,6 +12,7 @@ class User {
   final DateTime? examDate; // 受験予定日（未設定ならnull）
   final bool rankingOptIn; // ランキング参加設定（デフォルト不参加）
   final int masteryThreshold; // この回数連続正解した問題は出題対象から外す
+  final DateTime? lastStudyDate; // 最終学習日（ストリーク計算用、日付のみ意味を持つ）
 
   User({
     required this.uid,
@@ -24,6 +25,7 @@ class User {
     this.examDate,
     this.rankingOptIn = false,
     this.masteryThreshold = 3,
+    this.lastStudyDate,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -42,6 +44,9 @@ class User {
         : null,
       rankingOptIn: json['rankingOptIn'] as bool? ?? false,
       masteryThreshold: json['masteryThreshold'] as int? ?? 3,
+      lastStudyDate: json['lastStudyDate'] != null
+        ? DateTime.parse(json['lastStudyDate'])
+        : null,
     );
   }
 
@@ -57,6 +62,7 @@ class User {
       'examDate': examDate?.toIso8601String(),
       'rankingOptIn': rankingOptIn,
       'masteryThreshold': masteryThreshold,
+      'lastStudyDate': lastStudyDate?.toIso8601String(),
     };
   }
 
@@ -72,6 +78,7 @@ class User {
     bool clearExamDate = false,
     bool? rankingOptIn,
     int? masteryThreshold,
+    DateTime? lastStudyDate,
   }) {
     return User(
       uid: uid ?? this.uid,
@@ -84,6 +91,7 @@ class User {
       examDate: clearExamDate ? null : (examDate ?? this.examDate),
       rankingOptIn: rankingOptIn ?? this.rankingOptIn,
       masteryThreshold: masteryThreshold ?? this.masteryThreshold,
+      lastStudyDate: lastStudyDate ?? this.lastStudyDate,
     );
   }
 }

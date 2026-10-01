@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kanken/models/user_ranking.dart';
+import '../services/firestore_service.dart';
+import '../viewmodels/user_viewmodel.dart' as user_vm;
 import 'firebase_provider.dart';
 
 /// ランキングデータプロバイダー
@@ -76,12 +78,19 @@ final userRankProvider = FutureProvider.family<int?, RankingFilter>(
     if (currentUserId == null) return null;
 
     final firestore = ref.watch(firebaseProvider);
+    final profileId = ref.watch(
+      user_vm.currentUserProvider.select((async) => async.value?.profileId ?? 'default'),
+    );
 
     try {
       final sortField = _getSortField(filter.type);
 
-      // 現在のユーザーの値を取得（公開ミラーの rankings/{uid} を参照）
-      final userDoc = await firestore.collection('rankings').doc(currentUserId).get();
+      // 現在のユーザー（プロフィール）の値を取得（公開ミラーの
+      // rankings/{uid}_{profileId} を参照。以前は複合IDではなくuidのみで
+      // 参照していたため、プロフィール機能導入後は常にドキュメントが
+      // 見つからず「ログインしてください」表示のまま機能していなかった）
+      final docId = FirestoreService.rankingDocId(currentUserId, profileId);
+      final userDoc = await firestore.collection('rankings').doc(docId).get();
       if (!userDoc.exists) return null;
 
       final userData = userDoc.data() as Map<String, dynamic>;

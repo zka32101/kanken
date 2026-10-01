@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// アプリ全体で使用する統一カラーパレット・スタイル定義
 class AppColors {
@@ -32,10 +33,12 @@ class AppTheme {
   static ThemeData light() {
     final colorScheme = ColorScheme.fromSeed(seedColor: AppColors.primary);
 
+    final baseTextTheme = ThemeData(brightness: Brightness.light, useMaterial3: true).textTheme;
+
     return ThemeData(
       colorScheme: colorScheme,
       useMaterial3: true,
-      fontFamily: 'NotoSansJP',
+      textTheme: GoogleFonts.notoSansJpTextTheme(baseTextTheme),
       scaffoldBackgroundColor: AppColors.surfaceMuted,
       appBarTheme: const AppBarTheme(
         elevation: 0,
@@ -78,10 +81,12 @@ class AppTheme {
       brightness: Brightness.dark,
     );
 
+    final baseTextTheme = ThemeData(brightness: Brightness.dark, useMaterial3: true).textTheme;
+
     return ThemeData(
       colorScheme: colorScheme,
       useMaterial3: true,
-      fontFamily: 'NotoSansJP',
+      textTheme: GoogleFonts.notoSansJpTextTheme(baseTextTheme),
       appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,

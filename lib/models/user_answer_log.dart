@@ -8,6 +8,9 @@ class UserAnswerLog {
   final bool isCorrect;
   final AnswerMode mode;
   final DateTime answeredAt;
+  // 級ごとの正答率集計（levelStats）に使うため、どの級の問題だったかを記録する。
+  // 既存データとの互換のため未設定なら空文字列を許容する。
+  final String level;
 
   UserAnswerLog({
     required this.id,
@@ -17,6 +20,7 @@ class UserAnswerLog {
     required this.isCorrect,
     required this.mode,
     required this.answeredAt,
+    this.level = '',
   });
 
   factory UserAnswerLog.fromJson(Map<String, dynamic> json) {
@@ -30,6 +34,7 @@ class UserAnswerLog {
       answeredAt: json['answeredAt'] != null
         ? DateTime.parse(json['answeredAt'])
         : DateTime.now(),
+      level: json['level'] as String? ?? '',
     );
   }
 
@@ -55,6 +60,7 @@ class UserAnswerLog {
       'isCorrect': isCorrect,
       'mode': mode.toString().split('.').last,
       'answeredAt': answeredAt.toIso8601String(),
+      'level': level,
     };
   }
 }

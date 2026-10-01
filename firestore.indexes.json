@@ -90,6 +90,46 @@
         { "fieldPath": "status", "order": "ASCENDING" },
         { "fieldPath": "dueAt", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "rankings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "lastPlayedAt", "order": "ASCENDING" },
+        { "fieldPath": "level", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "rankings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "lastPlayedAt", "order": "ASCENDING" },
+        { "fieldPath": "experience", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "rankings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "lastPlayedAt", "order": "ASCENDING" },
+        { "fieldPath": "accuracyRate", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "rankings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "lastPlayedAt", "order": "ASCENDING" },
+        { "fieldPath": "streak", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "rankings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "lastPlayedAt", "order": "ASCENDING" },
+        { "fieldPath": "coins", "order": "DESCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

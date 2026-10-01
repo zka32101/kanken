@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/index.dart';
 import '../services/index.dart';
 import '../providers/firebase_provider.dart' show currentUserIdProvider;
+import '../providers/gamification_provider.dart' show currentGamificationNotifierProvider;
 import 'services_provider.dart';
 
 export '../providers/firebase_provider.dart' show currentUserIdProvider;
@@ -77,4 +78,78 @@ Future<void> updateExamDate(WidgetRef ref, DateTime? examDate) async {
 
   ref.invalidate(currentUserProvider);
   ref.invalidate(userProvider((uid: uid, profileId: user.profileId)));
+}
+
+/// 演習・模擬試験を1問以上完了したタイミングで呼び出し、
+/// 連続学習日数(streakCount)を更新する。
+/// - 最終学習日が「今日」なら何もしない（1日に何度学習してもカウントは1日分）
+/// - 最終学習日が「昨日」ならstreakCountを+1
+/// - それ以外（一昨日以前・記録なし）ならstreakCountを1にリセット
+Future<int?> _computeAndPersistStreak(
+  User user,
+  FirestoreService firestoreService,
+) async {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final last = user.lastStudyDate;
+  final lastDay = last != null ? DateTime(last.year, last.month, last.day) : null;
+
+  if (lastDay != null && lastDay == today) {
+    return null; // 本日は記録済み、変更なし
+  }
+
+  final int newStreak;
+  if (lastDay != null && today.difference(lastDay).inDays == 1) {
+    newStreak = user.streakCount + 1;
+  } else {
+    newStreak = 1;
+  }
+
+  await firestoreService.updateUser(
+    user.copyWith(streakCount: newStreak, lastStudyDate: today),
+  );
+
+  return newStreak;
+}
+
+/// 画面(ConsumerState/WidgetRef)側から呼び出す版
+Future<void> recordStudyActivity(WidgetRef ref) async {
+  final uid = ref.read(currentUserIdProvider);
+  if (uid == null) return;
+
+  final user = await ref.read(currentUserProvider.future);
+  if (user == null) return;
+
+  final firestoreService = ref.read(firestoreServiceProvider);
+  final newStreak = await _computeAndPersistStreak(user, firestoreService);
+  if (newStreak == null) return;
+
+  ref.invalidate(currentUserProvider);
+  ref.invalidate(userProvider((uid: uid, profileId: user.profileId)));
+
+  try {
+    await ref.read(currentGamificationNotifierProvider.notifier).updateStreak(newStreak);
+  } catch (_) {}
+  await checkAndAwardStreakBadges(ref, newStreak).catchError((_) => <String>[]);
+}
+
+/// StateNotifier内(Ref)側から呼び出す版
+Future<void> recordStudyActivityWithRef(Ref ref) async {
+  final uid = ref.read(currentUserIdProvider);
+  if (uid == null) return;
+
+  final user = await ref.read(currentUserProvider.future);
+  if (user == null) return;
+
+  final firestoreService = ref.read(firestoreServiceProvider);
+  final newStreak = await _computeAndPersistStreak(user, firestoreService);
+  if (newStreak == null) return;
+
+  ref.invalidate(currentUserProvider);
+  ref.invalidate(userProvider((uid: uid, profileId: user.profileId)));
+
+  try {
+    await ref.read(currentGamificationNotifierProvider.notifier).updateStreak(newStreak);
+  } catch (_) {}
+  await checkAndAwardStreakBadges(ref, newStreak).catchError((_) => <String>[]);
 }

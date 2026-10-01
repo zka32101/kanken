@@ -2,21 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/kanji_info_data.dart';
 import '../data/kanji_radical_data.dart';
+import '../data/level_kanji_data.dart';
 import '../data/stroke_order_sample_data.dart';
-import '../viewmodels/services_provider.dart';
+import '../providers/writing_mastery_provider.dart';
+import '../router/app_router.dart';
 import '../viewmodels/user_viewmodel.dart';
 import '../views/handwriting_practice_screen.dart';
 import '../widgets/stroke_order_animation.dart';
 import '../theme/app_theme.dart';
 
-/// 選択中の級で実際に出題される漢字のうち、書き順データがあるものだけに絞る。
+/// 選択中の級の配当漢字（公式級別漢字表準拠、`LevelKanjiData`）のうち、
+/// 書き順データがあるものに絞る。
+/// 以前はFirestoreの`questions`コレクションを`limit: 200`で取得していたが、
+/// 級によっては配当漢字の一部しか返らず表示数が不足していたため、
+/// 公式配当漢字表のローカルデータを直接使う方式に変更した。
 final _levelStrokeOrderKanjiProvider =
     FutureProvider.family<List<String>, String>((ref, level) async {
-  final firestoreService = ref.watch(firestoreServiceProvider);
-  final questions = await firestoreService.getQuestionsByLevel(level, limit: 200);
+  final levelKanji = LevelKanjiData.forLevel(level);
   final available = StrokeOrderSampleData.availableKanji.toSet();
-  final levelKanji = questions.map((q) => q.kanji).where(available.contains).toSet().toList();
-  return levelKanji.isNotEmpty ? levelKanji : StrokeOrderSampleData.availableKanji;
+  final filtered = levelKanji.where(available.contains).toList();
+  return filtered.isNotEmpty ? filtered : StrokeOrderSampleData.availableKanji;
 });
 
 /// 漢字の学習画面（漢字一覧 → タップで書き順アニメーション・読み方・用例を表示）
@@ -36,7 +41,7 @@ class _StrokeOrderScreenState extends ConsumerState<StrokeOrderScreen> {
   Widget build(BuildContext context) {
     final level = ref.watch(currentLevelProvider);
     final kanjiListAsync = ref.watch(_levelStrokeOrderKanjiProvider(level));
-    final learnedIds = ref.watch(learnedKanjiIdsProvider).valueOrNull ?? {};
+    final masteredAsync = ref.watch(masteredWritingKanjisProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +64,8 @@ class _StrokeOrderScreenState extends ConsumerState<StrokeOrderScreen> {
               (_selectedKanji != null && kanjiList.contains(_selectedKanji))
                   ? _selectedKanji!
                   : kanjiList.first;
-          return _buildContent(context, level, kanjiList, selected, learnedIds);
+          final mastered = masteredAsync.valueOrNull ?? const <String>{};
+          return _buildContent(context, level, kanjiList, selected, mastered);
         },
       ),
     );
@@ -70,137 +76,187 @@ class _StrokeOrderScreenState extends ConsumerState<StrokeOrderScreen> {
     String level,
     List<String> kanjiList,
     String selected,
-    Set<String> learnedIds,
+    Set<String> mastered,
   ) {
     final data = StrokeOrderSampleData.getStrokeOrder(selected)!;
     final info = KanjiInfoData.get(selected);
     final radicalInfo = KanjiRadicalData.get(selected);
 
-    return SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // 書き順アニメーション表示エリア
-            StrokeOrderAnimationWidget(
-              key: ValueKey(selected),
-              data: data,
-              size: 260,
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                icon: const Icon(Icons.edit),
-                label: Text('「$selected」を書く練習'),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => HandwritingPracticeScreen(
-                        level: level,
-                        kanji: selected,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            if (info != null) ...[
-              const SizedBox(height: 12),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(12),
+    // 詳細エリア（書き順・読み方・部首・用例）は画面上部に固定し、
+    // 漢字をタップするたびにスクロールして見に行かなくて済むようにする。
+    // 用例の数などで高さが変動しても、下の漢字選択グリッドの表示領域が
+    // つぶれないよう、詳細エリアは画面の45%までに収め、はみ出す分は
+    // その中だけでスクロールできるようにする。
+    final maxDetailHeight = MediaQuery.of(context).size.height * 0.45;
+
+    return Column(
+      children: [
+        ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: maxDetailHeight),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+            child: Column(
+            children: [
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                transitionBuilder: (child, animation) =>
+                    FadeTransition(opacity: animation, child: child),
+                child: StrokeOrderAnimationWidget(
+                  key: ValueKey(selected),
+                  data: data,
+                  size: 160,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      '読み方',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-                    const SizedBox(height: 4),
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 6,
-                      children: info.readings.map((reading) {
-                        return Chip(
-                          label: Text(reading),
-                          backgroundColor: Colors.white,
-                          visualDensity: VisualDensity.compact,
-                        );
-                      }).toList(),
-                    ),
-                    if (radicalInfo != null) ...[
-                      const SizedBox(height: 12),
-                      const Text(
-                        '部首',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                      ),
-                      const SizedBox(height: 4),
-                      Chip(
-                        label: Text('${radicalInfo.radical}（${radicalInfo.radicalName}）'),
-                        backgroundColor: Colors.white,
-                        visualDensity: VisualDensity.compact,
-                      ),
-                    ],
-                    const SizedBox(height: 12),
-                    const Text(
-                      '使い方の例',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-                    const SizedBox(height: 4),
-                    ...info.examples.map(
-                      (example) => Padding(
-                        padding: const EdgeInsets.only(top: 2),
-                        child: Text(
-                          '・$example',
-                          style: const TextStyle(fontSize: 13, color: Colors.black87),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => HandwritingPracticeScreen(
+                          level: level,
+                          kanji: selected,
                         ),
                       ),
-                    ),
-                  ],
+                    );
+                  },
+                  icon: const Icon(Icons.edit, size: 18),
+                  label: const Text('書く練習'),
                 ),
               ),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: info == null
+                    ? const SizedBox.shrink(key: ValueKey('no-info'))
+                    : Container(
+                        key: ValueKey('info-$selected'),
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(top: 10),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              '読み方',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                            const SizedBox(height: 4),
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
+                              children: info.readings.map((reading) {
+                                return Chip(
+                                  label: Text(reading),
+                                  backgroundColor: Colors.white,
+                                  visualDensity: VisualDensity.compact,
+                                );
+                              }).toList(),
+                            ),
+                            if (radicalInfo != null) ...[
+                              const SizedBox(height: 10),
+                              const Text(
+                                '部首',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                              ),
+                              const SizedBox(height: 4),
+                              Chip(
+                                label: Text('${radicalInfo.radical}（${radicalInfo.radicalName}）'),
+                                backgroundColor: Colors.white,
+                                visualDensity: VisualDensity.compact,
+                              ),
+                            ],
+                            const SizedBox(height: 10),
+                            const Text(
+                              '使い方の例',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                            const SizedBox(height: 4),
+                            ...info.examples.map(
+                              (example) => Padding(
+                                padding: const EdgeInsets.only(top: 2),
+                                child: Text(
+                                  '・$example',
+                                  style: const TextStyle(fontSize: 13, color: Colors.black87),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+              ),
             ],
-            const SizedBox(height: 24),
-
-            // 漢字選択グリッド
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
+            ),
+          ),
+        ),
+        const Divider(height: 1),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
                 'かんじをえらぼう',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            const SizedBox(height: 12),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 5,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 1,
+              Row(
+                children: [
+                  const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${kanjiList.where(mastered.contains).length} / ${kanjiList.length} 覚えた',
+                    style: const TextStyle(fontSize: 13, color: Colors.black54),
+                  ),
+                ],
               ),
-              itemCount: kanjiList.length,
-              itemBuilder: (context, index) {
-                final kanji = kanjiList[index];
-                final isSelected = kanji == selected;
-                final isLearned = learnedIds.contains('$level-$kanji');
-                return GestureDetector(
+            ],
+          ),
+        ),
+        Expanded(
+          child: GridView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 1,
+            ),
+            itemCount: kanjiList.length,
+            itemBuilder: (context, index) {
+              final kanji = kanjiList[index];
+              final isSelected = kanji == selected;
+              final isMastered = mastered.contains(kanji);
+              final bgColor = isSelected
+                  ? AppColors.primary
+                  : isMastered
+                      ? Colors.green.shade50
+                      : Colors.white;
+              final borderColor = isSelected
+                  ? AppColors.primary
+                  : isMastered
+                      ? Colors.green
+                      : Colors.grey.shade300;
+              return Material(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(12),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
                   onTap: () => setState(() => _selectedKanji = kanji),
                   child: Stack(
                     children: [
-                      Container(
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
                         decoration: BoxDecoration(
-                          color: isSelected ? AppColors.primary : Colors.white,
+                          color: bgColor,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: isSelected ? AppColors.primary : Colors.grey.shade300,
+                            color: borderColor,
                             width: isSelected ? 2 : 1,
                           ),
                         ),
@@ -208,37 +264,27 @@ class _StrokeOrderScreenState extends ConsumerState<StrokeOrderScreen> {
                           child: Text(
                             kanji,
                             style: TextStyle(
-                              fontSize: 28,
+                              fontSize: 32,
                               fontWeight: FontWeight.bold,
                               color: isSelected ? Colors.white : Colors.black87,
                             ),
                           ),
                         ),
                       ),
-                      if (isLearned)
-                        Positioned(
+                      if (isMastered && !isSelected)
+                        const Positioned(
                           top: 2,
                           right: 2,
-                          child: Container(
-                            padding: const EdgeInsets.all(1),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.check_circle,
-                              size: 16,
-                              color: Colors.green,
-                            ),
-                          ),
+                          child: Icon(Icons.check_circle, color: Colors.green, size: 16),
                         ),
                     ],
                   ),
-                );
-              },
-            ),
-          ],
+                ),
+              );
+            },
+          ),
         ),
-      );
+      ],
+    );
   }
 }

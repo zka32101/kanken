@@ -42,6 +42,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
     _registerWrongAnswersForReview();
     _updateLearningGoalsProgress();
     _awardBadgeIfPassed();
+    recordStudyActivity(ref).catchError((_) {});
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndShowAchievements();
     });
