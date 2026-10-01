@@ -148,6 +148,14 @@ service cloud.firestore {
       }
     }
 
+    // 全アプリ共通フィードバック機能(app_common_kit)。
+    // 作成はサインイン済みユーザーのみ、作成後の改変(status/githubIssueUrl等は
+    // Cloud Functions側がAdmin SDK経由で更新するため)はクライアントから禁止。
+    match /feedback/{reportId} {
+      allow create: if isSignedIn();
+      allow read, update, delete: if false;
+    }
+
     // 上記以外のパスはすべて拒否（デフォルト拒否）
     match /{document=**} {
       allow read, write: if false;
