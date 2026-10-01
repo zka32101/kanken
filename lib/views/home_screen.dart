@@ -26,6 +26,7 @@ class HomeScreen extends ConsumerWidget {
     'LEVEL_7',  // 小4
     'LEVEL_6',  // 小5
     'LEVEL_5',  // 小6
+    'LEVEL_4',  // 中学校程度
   ];
 
   static const Map<String, String> levelNames = {
@@ -35,6 +36,7 @@ class HomeScreen extends ConsumerWidget {
     'LEVEL_7': '7級（小4）',
     'LEVEL_6': '6級（小5）',
     'LEVEL_5': '5級（小6）',
+    'LEVEL_4': '4級（中学校程度）',
   };
 
   @override
