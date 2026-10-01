@@ -60,7 +60,7 @@ dependencies:
   cross_promo_kit:
     git:
       url: https://github.com/zka32101/cross_promo_kit
-      ref: main
+      ref: v0.2.0
 
 dev_dependencies:
   flutter_test:
