@@ -1,6 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/mock_exam.dart';
 import '../models/mock_exam_modes.dart';
+
+/// 模擬試験の受験履歴（users/{uid}/examResults）を新しい順に取得
+final examHistoryProvider = FutureProvider<List<ExamResult>>((ref) async {
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  if (userId == null) return [];
+
+  final snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('examResults')
+      .orderBy('completedAt', descending: true)
+      .limit(50)
+      .get();
+
+  return snapshot.docs
+      .map((doc) => ExamResult.fromJson(doc.data()))
+      .toList();
+});
 
 /// Enhanced exam questions with full dataset
 final enhancedExamQuestionsProvider =

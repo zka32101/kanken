@@ -295,10 +295,12 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
             (updatedCorrectAnswers[userId] ?? 0) + 1;
       }
 
+      final updatedQuestionIndex = session.currentQuestionIndex + 1;
+
       final updatedSession = BattleSession(
         sessionId: session.sessionId,
         roomId: session.roomId,
-        currentQuestionIndex: session.currentQuestionIndex,
+        currentQuestionIndex: updatedQuestionIndex,
         participantScores: updatedScores,
         participantCorrectAnswers: updatedCorrectAnswers,
         elapsedSeconds: session.elapsedSeconds,
@@ -312,6 +314,7 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
           .collection('battleSessions')
           .doc(sessionId)
           .update({
+        'currentQuestionIndex': updatedQuestionIndex,
         'participantScores': updatedScores,
         'participantCorrectAnswers': updatedCorrectAnswers,
       });
@@ -376,6 +379,12 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
         'participants': finalParticipants.map((p) => p.toJson()).toList(),
       });
 
+      // 各参加者の対戦統計を更新
+      await _updateBattleStats(
+        finalParticipants: finalParticipants,
+        winnerId: winnerId,
+      );
+
       state = state.copyWith(
         currentRoom: null,
         currentSession: null,
@@ -385,6 +394,63 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
     } catch (e) {
       state = state.copyWith(error: '対戦終了失敗: $e');
       return null;
+    }
+  }
+  /// 対戦終了後に各参加者の対戦統計（users/{uid}/battleStats/summary）を更新
+  Future<void> _updateBattleStats({
+    required List<BattleParticipant> finalParticipants,
+    required String winnerId,
+  }) async {
+    for (final participant in finalParticipants) {
+      final statsRef = _firestore
+          .collection('users')
+          .doc(participant.userId)
+          .collection('battleStats')
+          .doc('summary');
+
+      try {
+        await _firestore.runTransaction((transaction) async {
+          final snapshot = await transaction.get(statsRef);
+
+          final current = snapshot.exists
+              ? BattleRoomStats.fromJson(snapshot.data() ?? {})
+              : BattleRoomStats(
+                  userId: participant.userId,
+                  totalBattles: 0,
+                  victories: 0,
+                  defeats: 0,
+                  averageScore: 0.0,
+                  bestScore: 0,
+                  highestRank: 0,
+                );
+
+          final isWinner = participant.userId == winnerId;
+          final newTotalBattles = current.totalBattles + 1;
+          final newVictories = current.victories + (isWinner ? 1 : 0);
+          final newDefeats = current.defeats + (isWinner ? 0 : 1);
+          final newBestScore = participant.currentScore > current.bestScore
+              ? participant.currentScore
+              : current.bestScore;
+          final newAverageScore = ((current.averageScore * current.totalBattles) +
+                  participant.currentScore) /
+              newTotalBattles;
+          final newHighestRank = current.highestRank + (isWinner ? 1 : 0);
+
+          final updated = BattleRoomStats(
+            userId: participant.userId,
+            totalBattles: newTotalBattles,
+            victories: newVictories,
+            defeats: newDefeats,
+            averageScore: newAverageScore,
+            bestScore: newBestScore,
+            highestRank: newHighestRank,
+          );
+
+          transaction.set(statsRef, updated.toJson());
+        });
+      } catch (e) {
+        // 統計更新の失敗は対戦結果自体には影響させない
+      }
     }
   }
 }

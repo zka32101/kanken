@@ -148,6 +148,39 @@ service cloud.firestore {
       }
     }
 
+    // 対戦ルーム: ルーム一覧表示・参加判定のため読み取りはログインユーザー全員に許可。
+    // 書き込みは参加者（作成者を含む）本人がリスト内に含まれる場合のみ許可する。
+    function isParticipant(data) {
+      return isSignedIn() &&
+        data.participants is list &&
+        data.participants.size() > 0 &&
+        data.participants.filter(p => p.userId == request.auth.uid).size() > 0;
+    }
+
+    match /battleRooms/{roomId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() &&
+        request.resource.data.creatorId == request.auth.uid;
+      allow update: if isParticipant(resource.data) ||
+        isParticipant(request.resource.data);
+      allow delete: if isSignedIn() && resource.data.creatorId == request.auth.uid;
+    }
+
+    // 対戦セッション: ルームの参加者のみ読み書き可能（roomIdを介して突合する）
+    match /battleSessions/{sessionId} {
+      allow read, update, delete: if isSignedIn() &&
+        isParticipant(get(/databases/$(database)/documents/battleRooms/$(resource.data.roomId)).data);
+      allow create: if isSignedIn() &&
+        isParticipant(get(/databases/$(database)/documents/battleRooms/$(request.resource.data.roomId)).data);
+    }
+
+    // 対戦結果: 対戦参加者のみ読み取り可能。作成はログインユーザーのみ、改変は不可。
+    match /battleResults/{resultId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if false;
+    }
+
     // 全アプリ共通フィードバック機能(app_common_kit)。
     // 作成はサインイン済みユーザーのみ、作成後の改変(status/githubIssueUrl等は
     // Cloud Functions側がAdmin SDK経由で更新するため)はクライアントから禁止。
