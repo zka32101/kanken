@@ -3,10 +3,10 @@ import 'package:audioplayers/audioplayers.dart';
 /// 効果音（SE）管理サービス
 /// audioplayers パッケージを使用して assets/sounds/ 配下のSEを再生する
 class SoundEffectService {
-  static const String _correctSoundPath = 'sounds/correct.mp3';
-  static const String _incorrectSoundPath = 'sounds/incorrect.mp3';
-  static const String _badgeUnlockedSoundPath = 'sounds/badge_unlocked.mp3';
-  static const String _comboSoundPath = 'sounds/combo.mp3';
+  static const String _correctSoundPath = 'sounds/correct.ogg';
+  static const String _incorrectSoundPath = 'sounds/incorrect.ogg';
+  static const String _badgeUnlockedSoundPath = 'sounds/badge_unlocked.ogg';
+  static const String _comboSoundPath = 'sounds/combo.ogg';
 
   final AudioPlayer _audioPlayer = AudioPlayer();
 

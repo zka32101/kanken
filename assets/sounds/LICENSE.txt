@@ -1,0 +1,14 @@
+効果音クレジット
+
+本フォルダの音声ファイルは Kenney (www.kenney.nl) が CC0 (Creative Commons Zero /
+パブリックドメイン) で公開しているアセットから使用しています。
+商用・非商用問わず利用・改変・再配布は自由で、クレジット表記は必須ではありません
+(任意)。
+
+- correct.ogg / incorrect.ogg: Kenney "Interface Sounds"
+  https://kenney.nl/assets/interface-sounds
+- badge_unlocked.ogg / combo.ogg: Kenney "Music Jingles" (Pizzicato jingles)
+  https://kenney.nl/assets/music-jingles
+
+License: CC0 1.0 Universal
+https://creativecommons.org/publicdomain/zero/1.0/
