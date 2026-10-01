@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import 'package:cross_promo_kit/cross_promo_kit.dart';
 import '../models/user.dart';
 import '../services/firestore_service.dart';
 import '../viewmodels/user_viewmodel.dart';
@@ -76,6 +77,10 @@ class SettingsScreen extends ConsumerWidget {
                     );
                   }
                 },
+              ),
+              const CrossPromoSection(
+                currentAppId: 'com.yourwish.kankenchallenge',
+                currentCategory: '学習・教育',
               ),
             ],
           );
