@@ -4,6 +4,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import '../providers/purchases_provider.dart';
 import '../services/purchases_service.dart';
 import '../theme/app_theme.dart';
+import '../widgets/parental_gate_dialog.dart';
 
 /// サブスクリプション（広告非表示プラン）の購入画面。
 /// 月額¥300 / 年額¥2,400。
@@ -192,6 +193,8 @@ class PaywallScreen extends ConsumerWidget {
               onPressed: ref.watch(purchaseProvider).isLoading
                   ? null
                   : () async {
+                      final passedGate = await requireParentalGate(context);
+                      if (!passedGate || !context.mounted) return;
                       await ref.read(purchaseProvider.notifier).purchasePackage(package);
                       final success = ref.read(purchaseProvider).valueOrNull ?? false;
                       if (context.mounted && success) {

@@ -8,6 +8,7 @@ import '../models/user.dart';
 import '../services/firestore_service.dart';
 import '../viewmodels/user_viewmodel.dart';
 import '../viewmodels/services_provider.dart';
+import '../widgets/parental_gate_dialog.dart';
 
 /// プロフィールのアイコンに使える絵文字候補
 const _avatarIconChoices = ['🙂', '😀', '😊', '🐱', '🐶', '🐻', '🦁', '🐼', '🐸', '🦊', '⭐', '🌸'];
@@ -98,9 +99,10 @@ class SettingsScreen extends ConsumerWidget {
                   );
                 },
               ),
-              const CrossPromoSection(
+              CrossPromoSection(
                 currentAppId: 'com.yourwish.kankenchallenge',
                 currentCategory: '学習・教育',
+                beforeOpenStore: (context) => requireParentalGate(context),
               ),
             ],
           );
