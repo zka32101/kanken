@@ -236,7 +236,7 @@ class _HandwritingPracticeScreenState
     final uid = ref.read(currentUserIdProvider);
     if (uid == null) return;
 
-    final level = widget.level ?? ref.read(currentLevelProvider);
+    final String level = widget.level ?? ref.read(currentLevelProvider);
     final user = await ref.read(currentUserProvider.future);
     final profileId = user?.profileId ?? 'default';
 
@@ -251,7 +251,7 @@ class _HandwritingPracticeScreenState
           level: level,
         ));
 
-    incrementDailyQuestionGoalFromRef(ref).catchError((_) {});
+    incrementDailyQuestionGoal(ref).catchError((_) {});
 
     if (!isCorrect) {
       ref
