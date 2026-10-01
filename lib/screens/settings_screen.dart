@@ -104,6 +104,15 @@ class SettingsScreen extends ConsumerWidget {
                 currentCategory: '学習・教育',
                 beforeOpenStore: (context) => requireParentalGate(context),
               ),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 24, 16, 32),
+                child: Text(
+                  '本アプリは個人開発によるものであり、公益財団法人日本漢字能力検定協会その他の'
+                  '実施団体とは一切関係ありません。',
+                  style: TextStyle(fontSize: 11, color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ],
           );
         },
