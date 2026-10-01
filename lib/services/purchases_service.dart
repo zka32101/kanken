@@ -10,15 +10,17 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 /// 以下を設定した上で `_apiKey` を実際のPublic SDK Keyに差し替えること:
 ///   - Google Play Console側でサブスクリプション商品を作成
 ///     (premium-monthly: 月額¥300 / premium-yearly: 年額¥2,400)
-///   - RevenueCatのEntitlement「noads」に上記2商品を紐付け
+///   - RevenueCatのEntitlement「ad_free」(Display Name: noads)に上記2商品を紐付け
 ///   - Offering「default」にpremium-monthly/premium-yearlyのPackageを追加
 class PurchasesService {
   static const String _apiKey = 'goog_TFqirXGziXwifqVBVasvYInzHEp';
 
-  /// 広告非表示エンタイトルメント。将来的に`app_common_kit`側のEntitlement
-  /// 定義に統一する構想があるが、現時点では定数名・RevenueCat側の
-  /// Entitlement名を'noads'に揃えるのみ(うかラボ共通方針)。
-  static const String entitlementNoAds = 'noads';
+  /// 広告非表示エンタイトルメント。RevenueCat側のIdentifierは作成後
+  /// 変更不可のため'ad_free'のまま。Display Nameのみ'noads'に変更済み
+  /// (うかラボ共通方針の意図はDisplay Nameレベルで反映)。
+  /// コードが実際に参照するのはIdentifierなので、ここは'ad_free'のまま
+  /// にする必要がある(2026-10-01、Identifier変更不可と判明し決定)。
+  static const String entitlementNoAds = 'ad_free';
   static const String premiumMonthly = 'premium-monthly';
   static const String premiumYearly = 'premium-yearly';
 
