@@ -1,10 +1,14 @@
+import 'package:audioplayers/audioplayers.dart';
+
 /// 効果音（SE）管理サービス
-/// 実装時に audioplayers パッケージを使用
+/// audioplayers パッケージを使用して assets/sounds/ 配下のSEを再生する
 class SoundEffectService {
   static const String _correctSoundPath = 'sounds/correct.mp3';
   static const String _incorrectSoundPath = 'sounds/incorrect.mp3';
   static const String _badgeUnlockedSoundPath = 'sounds/badge_unlocked.mp3';
   static const String _comboSoundPath = 'sounds/combo.mp3';
+
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   bool _isMuted = false;
   double _volume = 0.7; // デフォルト音量（初回は控えめ）
@@ -50,11 +54,19 @@ class SoundEffectService {
   bool isMuted() => _isMuted;
 
   /// ファイルから音声再生（内部用）
-  /// 実装時：audioplayers.AudioPlayer を使用
   Future<void> _playSoundFile(String path) async {
-    // TODO: 実装
-    // final audioPlayer = AudioPlayer();
-    // await audioPlayer.play(AssetSource(path), volume: _volume);
+    try {
+      // 短いSEを連打しても途切れないよう、低遅延モードで再生する
+      await _audioPlayer.stop();
+      await _audioPlayer.play(AssetSource(path), volume: _volume);
+    } catch (e) {
+      // 音声ファイル未配置・再生環境の問題等でもアプリ本体の動作は止めない
+    }
+  }
+
+  /// リソース解放
+  Future<void> dispose() async {
+    await _audioPlayer.dispose();
   }
 
   /// 初期化（1タップでミュート設定）

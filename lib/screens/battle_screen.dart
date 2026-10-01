@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -230,7 +231,30 @@ class _BattleScreenState extends ConsumerState<BattleScreen>
     bool isCorrect,
     int points,
   ) async {
-    // TODO: 実装
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) return;
+
+    final notifier = ref.read(battleRoomNotifierProvider.notifier);
+
+    await notifier.recordBattleAnswer(
+      sessionId: sessionId,
+      userId: userId,
+      isCorrect: isCorrect,
+      pointsEarned: points,
+    );
+
+    if (!mounted) return;
+
+    final battleState = ref.read(battleRoomNotifierProvider);
+    final room = battleState.currentRoom;
+    final session = battleState.currentSession;
+
+    // 全問終了していたら対戦を自動終了する
+    if (room != null &&
+        session != null &&
+        session.currentQuestionIndex >= room.totalQuestions) {
+      await _endBattle(context);
+    }
   }
 
   Future<void> _endBattle(BuildContext context) async {

@@ -10,6 +10,7 @@ import '../screens/learning_plan_screen.dart';
 import '../screens/event_screen.dart';
 import '../screens/parent_dashboard_screen.dart';
 import '../screens/exam_result_screen.dart';
+import '../screens/exam_history_screen.dart';
 import '../screens/battle_room_list_screen.dart';
 import '../screens/battle_screen.dart';
 import '../screens/battle_result_screen.dart';
@@ -144,6 +145,13 @@ final appRouter = GoRouter(
             }
             return ExamResultScreen(result: result);
           },
+        ),
+
+        // 試験履歴
+        GoRoute(
+          path: 'exam-history',
+          name: 'examHistory',
+          builder: (context, state) => const ExamHistoryScreen(),
         ),
 
         // バトルルーム一覧
@@ -317,6 +325,9 @@ extension NavigationExtension on BuildContext {
   /// 試験結果画面に遷移
   void goExamResult(ExamResult result) =>
       push('/exam-result', extra: result);
+
+  /// 試験履歴画面に遷移
+  void goExamHistory() => push('/exam-history');
 
   /// バトルルーム一覧に遷移
   void goBattleRooms() => push('/battle-rooms');

@@ -296,7 +296,7 @@ class ExamResultScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
           ),
           onPressed: () {
-            // TODO: 試験履歴画面へ遷移
+            context.push('/exam-history');
           },
         ),
         const SizedBox(height: 12),
