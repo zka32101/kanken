@@ -8,6 +8,7 @@ import '../models/index.dart';
 import '../providers/learning_goal_provider.dart';
 import '../providers/spaced_repetition_provider.dart';
 import '../providers/level_progress_provider.dart';
+import '../services/oshi_progress_store.dart';
 import 'services_provider.dart';
 import 'user_viewmodel.dart';
 
@@ -249,6 +250,16 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
           level: level,
         );
         await firestoreService.addAnswerLog(log);
+
+        // 推しの成長（網羅率）に使う、解いた問題IDの端末内記録。
+        // 失敗しても学習フローは止めない。
+        try {
+          await OshiProgressStore.markAnswered(
+            profileId: user?.profileId ?? 'default',
+            level: level,
+            questionId: question.source.id,
+          );
+        } catch (_) {}
 
         // 学習コイン：初めて解く問題で付与（同じ問題は二度付与されない）。
         // コインは付加機能なので、未設定・失敗しても学習フローは止めない。
