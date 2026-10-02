@@ -50,7 +50,7 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('うかるラボ漢字検定'),
+        title: const Text('うかラボ漢字検定'),
       ),
       bottomNavigationBar: const SafeArea(child: BannerAdWidget()),
       body: SingleChildScrollView(
