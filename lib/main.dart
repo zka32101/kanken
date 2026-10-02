@@ -35,8 +35,17 @@ void main() async {
   // 広告初期化（児童向け設定を含む。権利状態に依存するため購入初期化の後）
   await AdService.initialize();
 
+  // 学習コイン（app_common_kit）。財布はアプリごと。端末内に保存する。
+  // コインは学習の成長でのみ獲得する（課金・広告視聴での付与はしない）。
+  final coinService = CoinService(store: SharedPreferencesCoinStore('kanken'));
+  await coinService.load();
+
   // 全アプリ共通フィードバック機能(app_common_kit)の送信処理を注入
-  final container = ProviderContainer();
+  final container = ProviderContainer(
+    overrides: [
+      coinServiceProvider.overrideWithValue(coinService),
+    ],
+  );
   container.read(feedbackProvider.notifier).setSubmitHandler((report) async {
     await FirebaseFirestore.instance
         .collection('feedback')
