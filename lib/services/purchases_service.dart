@@ -1,3 +1,4 @@
+import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/services.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
@@ -25,6 +26,10 @@ class PurchasesService {
   static const String premiumYearly = 'premium-yearly';
 
   static bool _initialized = false;
+  static RevenueCatEntitlementService? _entitlement;
+
+  /// 権利状態（app_common_kit）。RevenueCat未設定・初期化失敗時はnull。
+  static EntitlementService? get entitlement => _entitlement;
 
   /// RevenueCat 初期化（main.dartから起動時に一度だけ呼ぶ）
   static Future<void> initialize() async {
@@ -34,7 +39,12 @@ class PurchasesService {
       return;
     }
     try {
-      await Purchases.configure(PurchasesConfiguration(_apiKey));
+      // 権利IDはRevenueCat側で変更不可の'ad_free'のため、キット既定のnoadsを上書きする。
+      // 購入前の保護者ゲートはペイウォール画面側で実施済み。
+      _entitlement = await RevenueCatEntitlementService.init(
+        publicSdkKey: _apiKey,
+        ids: const EntitlementIds(noAds: entitlementNoAds),
+      );
       _initialized = true;
     } catch (_) {
       _initialized = false;
@@ -74,8 +84,7 @@ class PurchasesService {
   static Future<bool> restorePurchases() async {
     if (!_initialized) return false;
     try {
-      final info = await Purchases.restorePurchases();
-      return info.entitlements.active.containsKey(entitlementNoAds);
+      return (await _entitlement!.restore()).hasNoAds;
     } catch (_) {
       return false;
     }
@@ -85,8 +94,7 @@ class PurchasesService {
   static Future<bool> hasAdsRemoved() async {
     if (!_initialized) return false;
     try {
-      final info = await Purchases.getCustomerInfo();
-      return info.entitlements.active.containsKey(entitlementNoAds);
+      return _entitlement!.state.hasNoAds;
     } catch (_) {
       return false;
     }
