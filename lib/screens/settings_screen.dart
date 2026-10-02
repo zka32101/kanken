@@ -13,6 +13,12 @@ import '../widgets/parental_gate_dialog.dart';
 /// プロフィールのアイコンに使える絵文字候補
 const _avatarIconChoices = ['🙂', '😀', '😊', '🐱', '🐶', '🐻', '🦁', '🐼', '🐸', '🦊', '⭐', '🌸'];
 
+/// 免責表示（うかラボ共通方針・決定2）。ストア説明文の冒頭の注意書きと趣旨を揃える。
+const String appDisclaimer =
+    '本アプリは、各漢字検定の実施団体・主催者とは一切関係のない、Your Wish が制作した非公式の学習アプリです。\n'
+    '試験名は、学習の対象を示すためにのみ使用しています。問題・解説は独自に作成したもので、実際の試験の出題内容や合格を保証するものではありません。\n'
+    '最新の試験情報は、実施団体の公式サイトでご確認ください。';
+
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
@@ -104,13 +110,12 @@ class SettingsScreen extends ConsumerWidget {
                 currentCategory: '学習・教育',
                 beforeOpenStore: (context) => requireParentalGate(context),
               ),
+              const _SectionHeader('このアプリについて'),
               const Padding(
-                padding: EdgeInsets.fromLTRB(16, 24, 16, 32),
+                padding: EdgeInsets.fromLTRB(16, 4, 16, 32),
                 child: Text(
-                  '本アプリは個人開発によるものであり、公益財団法人日本漢字能力検定協会その他の'
-                  '実施団体とは一切関係ありません。',
-                  style: TextStyle(fontSize: 11, color: Colors.grey),
-                  textAlign: TextAlign.center,
+                  appDisclaimer,
+                  style: TextStyle(fontSize: 12, height: 1.6, color: Colors.black54),
                 ),
               ),
             ],
