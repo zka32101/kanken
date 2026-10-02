@@ -1,5 +1,5 @@
 name: kanken
-description: "うかるラボ漢字検定 - 漢字検定学習アプリ"
+description: "うかラボ漢字検定 - 漢字検定学習アプリ"
 publish_to: 'none'
 
 version: 1.0.1+3
