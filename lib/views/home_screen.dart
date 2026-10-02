@@ -14,6 +14,7 @@ import '../providers/level_progress_provider.dart';
 import '../models/user_ranking.dart';
 import '../theme/app_theme.dart';
 import '../widgets/menu_grid_card.dart';
+import '../widgets/oshi_card.dart';
 import '../widgets/banner_ad_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -72,6 +73,7 @@ class HomeScreen extends ConsumerWidget {
                 loading: () => const SizedBox.shrink(),
                 error: (_, __) => const SizedBox.shrink(),
               ),
+              const OshiCard(),
               const SizedBox(height: 20),
 
               // メインCTA（演習・模擬試験）

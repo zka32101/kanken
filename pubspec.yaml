@@ -26,6 +26,9 @@ dependencies:
   cloud_firestore: ^4.14.0
   cloud_functions: ^4.5.0
 
+  # 端末内の学習記録（推しの成長）。app_common_kit も使う
+  shared_preferences: ^2.3.0
+
   # Animation & Lottie
   lottie: ^2.4.0
   path_drawing: ^1.0.1
