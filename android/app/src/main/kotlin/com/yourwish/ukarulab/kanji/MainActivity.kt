@@ -1,4 +1,4 @@
-package com.yourwish.kankenchallenge
+package com.yourwish.ukarulab.kanji
 
 import io.flutter.embedding.android.FlutterActivity
 
