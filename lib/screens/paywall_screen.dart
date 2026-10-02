@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:app_common_kit/app_common_kit.dart';
 import '../providers/purchases_provider.dart';
 import '../services/purchases_service.dart';
 import '../theme/app_theme.dart';
@@ -14,7 +14,7 @@ class PaywallScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasAdsRemovedAsync = ref.watch(hasAdsRemovedProvider);
-    final packagesAsync = ref.watch(availablePackagesProvider);
+    final packagesAsync = ref.watch(availableOffersProvider);
     final purchaseState = ref.watch(purchaseProvider);
 
     return Scaffold(
@@ -68,7 +68,7 @@ class PaywallScreen extends ConsumerWidget {
   Widget _buildPaywallContent(
     BuildContext context,
     WidgetRef ref,
-    AsyncValue<List<Package>> packagesAsync,
+    AsyncValue<List<EntitlementOffer>> packagesAsync,
     AsyncValue<bool> purchaseState,
   ) {
     return ListView(
@@ -141,9 +141,8 @@ class PaywallScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPlanCard(BuildContext context, WidgetRef ref, Package package) {
-    final isYearly = package.storeProduct.identifier.contains(PurchasesService.premiumYearly);
-    final product = package.storeProduct;
+  Widget _buildPlanCard(BuildContext context, WidgetRef ref, EntitlementOffer offer) {
+    final isYearly = offer.productId.contains(PurchasesService.premiumYearly);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -183,7 +182,7 @@ class PaywallScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    product.priceString,
+                    offer.priceString,
                     style: const TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                 ],
@@ -195,7 +194,7 @@ class PaywallScreen extends ConsumerWidget {
                   : () async {
                       final passedGate = await requireParentalGate(context);
                       if (!passedGate || !context.mounted) return;
-                      await ref.read(purchaseProvider.notifier).purchasePackage(package);
+                      await ref.read(purchaseProvider.notifier).purchaseOffer(offer.id);
                       final success = ref.read(purchaseProvider).valueOrNull ?? false;
                       if (context.mounted && success) {
                         ScaffoldMessenger.of(context).showSnackBar(

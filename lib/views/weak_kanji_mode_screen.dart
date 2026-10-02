@@ -1,9 +1,9 @@
+import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/index.dart';
 import '../services/index.dart';
 import '../viewmodels/index.dart';
-import '../providers/purchases_provider.dart';
 import '../widgets/correct_feedback_widget.dart';
 
 /// 苦手集中モード画面
@@ -104,10 +104,7 @@ class WeakKanjiModeScreen extends ConsumerWidget {
     if (!ref.read(weakKanjiSessionAdShownProvider)) {
       ref.read(weakKanjiSessionAdShownProvider.notifier).state = true;
       Future.microtask(() async {
-        final hasAdsRemoved = await ref.read(hasAdsRemovedProvider.future);
-        if (!hasAdsRemoved) {
-          await ref.read(interstitialAdManagerProvider).maybeShowAfterSession();
-        }
+        await AdService.gate?.maybeShowInterstitial(InterstitialTrigger.sessionEnd);
       });
     }
 
