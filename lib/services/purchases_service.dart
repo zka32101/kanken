@@ -1,6 +1,4 @@
 import 'package:app_common_kit/app_common_kit.dart';
-import 'package:flutter/services.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
 
 /// RevenueCat経由のサブスクリプション管理（広告非表示プラン）。
 ///
@@ -53,31 +51,15 @@ class PurchasesService {
 
   static bool get isConfigured => _initialized;
 
-  /// 利用可能な商品パッケージ（月額・年額）を取得
-  static Future<List<Package>> getAvailablePackages() async {
-    if (!_initialized) return [];
-    try {
-      final offerings = await Purchases.getOfferings();
-      return offerings.current?.availablePackages ?? [];
-    } catch (_) {
-      return [];
-    }
-  }
+  /// 購入可能な商品（月額・年額）を取得
+  static Future<List<EntitlementOffer>> getOffers() async =>
+      _entitlement?.offers() ?? Future.value(const []);
 
-  /// 商品を購入
-  static Future<bool> purchasePackage(Package package) async {
-    try {
-      await Purchases.purchasePackage(package);
-      return true;
-    } on PlatformException catch (e) {
-      final errorCode = PurchasesErrorHelper.getErrorCode(e);
-      if (errorCode == PurchasesErrorCode.purchaseCancelledError) {
-        return false;
-      }
-      return false;
-    } catch (_) {
-      return false;
-    }
+  /// 商品を購入（購入前の保護者ゲートは呼び出し側の画面で実施済み）
+  static Future<bool> purchaseOffer(String offerId) async {
+    final entitlement = _entitlement;
+    if (entitlement == null) return false;
+    return await entitlement.purchaseOffer(offerId) == PurchaseOutcome.success;
   }
 
   /// 購入の復元

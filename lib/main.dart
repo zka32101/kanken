@@ -29,11 +29,11 @@ void main() async {
     if (e.code != 'duplicate-app') rethrow;
   }
 
-  // 広告初期化（児童向け設定を含む）
-  await AdService.initialize();
-
   // サブスクリプション（広告非表示プラン）初期化
   await PurchasesService.initialize();
+
+  // 広告初期化（児童向け設定を含む。権利状態に依存するため購入初期化の後）
+  await AdService.initialize();
 
   // 全アプリ共通フィードバック機能(app_common_kit)の送信処理を注入
   final container = ProviderContainer();

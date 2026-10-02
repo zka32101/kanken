@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:app_common_kit/app_common_kit.dart';
 import '../services/purchases_service.dart';
 
 /// 広告非表示（サブスク加入中）かどうか。
@@ -13,9 +13,9 @@ final hasAdsRemovedProvider = StreamProvider<bool>((ref) async* {
   }
 });
 
-/// 購入可能なパッケージ一覧（月額・年額プラン）
-final availablePackagesProvider = FutureProvider<List<Package>>((ref) async {
-  return PurchasesService.getAvailablePackages();
+/// 購入可能な商品一覧（月額・年額プラン）
+final availableOffersProvider = FutureProvider<List<EntitlementOffer>>((ref) async {
+  return PurchasesService.getOffers();
 });
 
 /// 購入処理の状態管理
@@ -28,10 +28,10 @@ class PurchaseNotifier extends StateNotifier<AsyncValue<bool>> {
   final Ref _ref;
   PurchaseNotifier(this._ref) : super(const AsyncValue.data(false));
 
-  Future<void> purchasePackage(Package package) async {
+  Future<void> purchaseOffer(String offerId) async {
     state = const AsyncValue.loading();
     try {
-      final success = await PurchasesService.purchasePackage(package);
+      final success = await PurchasesService.purchaseOffer(offerId);
       state = AsyncValue.data(success);
       if (success) {
         _ref.invalidate(hasAdsRemovedProvider);

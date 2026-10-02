@@ -1,3 +1,4 @@
+import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,7 +10,6 @@ import '../router/app_router.dart';
 import '../providers/ranking_provider.dart';
 import '../providers/friend_provider.dart';
 import '../providers/spaced_repetition_provider.dart';
-import '../providers/purchases_provider.dart';
 import '../providers/level_progress_provider.dart';
 import '../models/user_ranking.dart';
 import '../theme/app_theme.dart';
@@ -964,15 +964,12 @@ class PracticeScreen extends ConsumerWidget {
     await Future.delayed(const Duration(milliseconds: 2200));
 
     // 演習セッション(practiceSessionSize問)の最後の1問が終わったタイミングのみ、
-    // 広告非表示（サブスク加入中）でなければインタースティシャルを挟む。
+    // 広告ゲートがインタースティシャルを挟む（加入中・間隔/日次上限内は出さない）。
     // 演習の最中(セッション途中)には広告を出さない(うかラボ共通方針)。
     final currentIndex = ref.read(currentQuestionIndexProvider);
     final isSessionEnd = currentIndex + 1 >= practiceSessionSize;
     if (isSessionEnd) {
-      final hasAdsRemoved = await ref.read(hasAdsRemovedProvider.future);
-      if (!hasAdsRemoved) {
-        await ref.read(interstitialAdManagerProvider).maybeShowAfterSession();
-      }
+      await AdService.gate?.maybeShowInterstitial(InterstitialTrigger.sessionEnd);
     }
 
     // 正解の場合のみ、級クリア（正答率80%以上）に達したか確認し、
