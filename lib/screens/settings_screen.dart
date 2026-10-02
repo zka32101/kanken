@@ -106,7 +106,7 @@ class SettingsScreen extends ConsumerWidget {
                 },
               ),
               CrossPromoSection(
-                currentAppId: 'com.yourwish.kankenchallenge',
+                currentAppId: 'com.yourwish.ukarulab.kanji',
                 currentCategory: '学習・教育',
                 beforeOpenStore: (context) => requireParentalGate(context),
               ),

@@ -15,7 +15,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.yourwish.kankenchallenge"
+    namespace "com.yourwish.ukarulab.kanji"
     // Google Play の要件: targetSdk 36 以上（2026年〜）
     compileSdk 36
 
@@ -33,7 +33,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.yourwish.kankenchallenge"
+        applicationId "com.yourwish.ukarulab.kanji"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
         versionCode flutter.versionCode

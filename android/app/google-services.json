@@ -70,6 +70,43 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940359560531:android:80b639723327f9c31145a6",
+        "android_client_info": {
+          "package_name": "com.yourwish.ukarulab.kanji"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "940359560531-73rc6leolo4c111di7ln9vav9q81pkqo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yourwish.ukarulab.kanji",
+            "certificate_hash": "00d6b9402c781198991291d4ca1491cd58143c65"
+          }
+        },
+        {
+          "client_id": "940359560531-21hicomuvifi918vopeq0dm8ovhfkhit.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuRizUC5hDKn4Fbf5NatFuMGnl215QYkk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "940359560531-21hicomuvifi918vopeq0dm8ovhfkhit.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

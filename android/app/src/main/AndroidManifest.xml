@@ -13,7 +13,7 @@
         android:requestLegacyExternalStorage="true">
 
         <activity
-            android:name="com.yourwish.kankenchallenge.MainActivity"
+            android:name="com.yourwish.ukarulab.kanji.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
