@@ -4,8 +4,13 @@ import '../services/purchases_service.dart';
 
 /// 広告非表示（サブスク加入中）かどうか。
 /// RevenueCat未設定（APIキー未差し替え）の間は常にfalse＝広告表示。
-final hasAdsRemovedProvider = FutureProvider<bool>((ref) async {
-  return PurchasesService.hasAdsRemoved();
+/// 購入・復元・期限切れに追従する（app_common_kit の権利状態）。
+final hasAdsRemovedProvider = StreamProvider<bool>((ref) async* {
+  final entitlement = PurchasesService.entitlement;
+  yield entitlement?.state.adsHidden ?? false;
+  if (entitlement != null) {
+    yield* entitlement.stateStream.map((s) => s.adsHidden);
+  }
 });
 
 /// 購入可能なパッケージ一覧（月額・年額プラン）
