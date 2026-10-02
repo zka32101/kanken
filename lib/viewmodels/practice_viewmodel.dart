@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:math';
+import 'package:app_common_kit/app_common_kit.dart' show CoinEvent, coinProvider;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/compound_structure_data.dart';
 import '../data/kanji_radical_data.dart';
@@ -247,6 +249,15 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
           level: level,
         );
         await firestoreService.addAnswerLog(log);
+
+        // 学習コイン：初めて解く問題で付与（同じ問題は二度付与されない）。
+        // コインは付加機能なので、未設定・失敗しても学習フローは止めない。
+        try {
+          unawaited(ref
+              .read(coinProvider.notifier)
+              .grant(CoinEvent.newQuestion(question.source.id))
+              .catchError((_) => null));
+        } catch (_) {}
 
         // 状態を更新
         if (isCorrect) {
