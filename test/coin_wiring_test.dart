@@ -40,6 +40,6 @@ void main() {
   test('coinServiceProvider が未設定なら読み出しで例外になる（呼び出し側は握りつぶす）', () {
     final container = ProviderContainer();
     addTearDown(container.dispose);
-    expect(() => container.read(coinProvider.notifier), throwsA(anything));
+    expect(() => container.read(coinProvider), throwsA(anything));
   });
 }
