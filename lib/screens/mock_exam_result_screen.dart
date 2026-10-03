@@ -1,9 +1,18 @@
+import 'package:app_common_kit/app_common_kit.dart'
+    show
+        CoinBreakdownCard,
+        CoinEvent,
+        MascotStage,
+        UkalabCert,
+        coinProvider,
+        outfitProvider;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/mock_exam_modes.dart';
 import '../models/achievement.dart';
 import '../providers/exam_session_provider.dart';
+import '../providers/oshi_provider.dart';
 import '../providers/exam_analysis_provider.dart';
 import '../providers/achievement_provider.dart';
 import '../providers/leaderboard_provider.dart';
@@ -42,10 +51,39 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
     _registerWrongAnswersForReview();
     _updateLearningGoalsProgress();
     _awardBadgeIfPassed();
+    _awardCoinsAndReadiness();
     recordStudyActivity(ref).catchError((_) {});
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndShowAchievements();
     });
+  }
+
+  /// 学習コイン（模擬試験の実施・合格点）と、準備完了の装いの解放。
+  /// コインは学習の成長でのみ付く。失敗しても結果画面は止めない。
+  Future<void> _awardCoinsAndReadiness() async {
+    try {
+      final coin = ref.read(coinProvider.notifier);
+      coin.takeRecent(); // 結果画面の内訳に、この試験の分だけが出るように
+      await coin.grant(CoinEvent.mockDone());
+      final accuracy = session.getAccuracyRate();
+      final isPassed = (accuracy * 100) >= session.config.passThreshold;
+      if (!isPassed) return;
+      await coin.grant(CoinEvent.mockPass('kanken_level_${session.config.targetLevel}'));
+      // 習得度が最高段階（Lv5＝0.8以上）なら、準備完了の装いを解放する。
+      final stage = await ref.read(oshiStageProvider.future);
+      if (stage == MascotStage.lv5) {
+        await ref.read(outfitProvider.notifier).markReady(UkalabCert.kanjiKentei);
+      }
+    } catch (_) {}
+  }
+
+  /// 今回貯まった学習コインの内訳（付与がなければ何も出ない）。
+  Widget _buildCoinBreakdown() {
+    try {
+      return CoinBreakdownCard(grants: ref.watch(coinProvider).recent);
+    } catch (_) {
+      return const SizedBox.shrink();
+    }
   }
 
   /// 合格ラインを超えていれば、その級の合格バッジを付与する
@@ -474,6 +512,8 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
               _buildResultStatus(context, isPassed, accuracy),
               const SizedBox(height: 32),
               _buildScoreCard(context, accuracy),
+              const SizedBox(height: 24),
+              _buildCoinBreakdown(),
               const SizedBox(height: 24),
               _buildDetailedStats(context),
               const SizedBox(height: 24),
