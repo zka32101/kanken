@@ -8,7 +8,7 @@
  *   10級(小1・80字) 9級(小2・160字) 8級(小3・200字)
  *   7級(小4・202字) 6級(小5・193字) 5級(小6・191字)
  *
- * 4級(中学校程度・316字)、3級(中学校卒業程度・285字)は、常用漢字のうち
+ * 4級(中学校程度・313字)、3級(中学校卒業程度・284字)は、常用漢字のうち
  * 中学校で新たに学習する漢字の級別配当表(公開されている級別漢字一覧に
  * 基づく)を追加済み。
  *
@@ -3833,7 +3833,7 @@ const questions = [
     "choices": ["息", "品", "去", "落"],
     "correctAnswer": "息",
     "reading": "いき",
-    "example": "深呼吸（しんこきゅう）",
+    "example": "息（いき）",
     "version": 1
   },
   {
@@ -11365,7 +11365,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "丹",
     "questionType": "multipleChoice",
-    "choices": ["較","丹","沖","与"],
+    "choices": ["較","丹","僧","与"],
     "correctAnswer": "丹",
     "reading": "タン",
     "example": "丹念（たんねん）",
@@ -11391,17 +11391,6 @@ const questions = [
     "correctAnswer": "互",
     "reading": "たが（い）",
     "example": "互い（たがい）",
-    "version": 1
-  },
-  {
-    "id": "LEVEL_4-井",
-    "level": "LEVEL_4",
-    "kanji": "井",
-    "questionType": "multipleChoice",
-    "choices": ["井","儀","俗","獣"],
-    "correctAnswer": "井",
-    "reading": "い",
-    "example": "井戸（いど）",
     "version": 1
   },
   {
@@ -11728,7 +11717,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "召",
     "questionType": "multipleChoice",
-    "choices": ["井","剤","召","粒"],
+    "choices": ["丘","剤","召","粒"],
     "correctAnswer": "召",
     "reading": "め（す）",
     "example": "召集（しょうしゅう）",
@@ -11816,7 +11805,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "圏",
     "questionType": "multipleChoice",
-    "choices": ["獲","香","勧","圏"],
+    "choices": ["獲","獣","勧","圏"],
     "correctAnswer": "圏",
     "reading": "ケン",
     "example": "首都圏（しゅとけん）",
@@ -11849,7 +11838,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "堅",
     "questionType": "multipleChoice",
-    "choices": ["井","堅","抵","旬"],
+    "choices": ["弐","堅","抵","旬"],
     "correctAnswer": "堅",
     "reading": "かた（い）",
     "example": "堅い（かたい）",
@@ -11948,7 +11937,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "妙",
     "questionType": "multipleChoice",
-    "choices": ["凶","沖","添","妙"],
+    "choices": ["凶","跡","添","妙"],
     "correctAnswer": "妙",
     "reading": "ミョウ",
     "example": "妙案（みょうあん）",
@@ -12740,7 +12729,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "普",
     "questionType": "multipleChoice",
-    "choices": ["普","井","歳","更"],
+    "choices": ["普","況","歳","更"],
     "correctAnswer": "普",
     "reading": "フ",
     "example": "普通（ふつう）",
@@ -12967,17 +12956,6 @@ const questions = [
     "version": 1
   },
   {
-    "id": "LEVEL_4-沖",
-    "level": "LEVEL_4",
-    "kanji": "沖",
-    "questionType": "multipleChoice",
-    "choices": ["沖","俗","豪","御"],
-    "correctAnswer": "沖",
-    "reading": "おき",
-    "example": "沖（おき）",
-    "version": 1
-  },
-  {
     "id": "LEVEL_4-沢",
     "level": "LEVEL_4",
     "kanji": "沢",
@@ -13180,7 +13158,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "烈",
     "questionType": "multipleChoice",
-    "choices": ["烈","浜","絡","沖"],
+    "choices": ["烈","浜","絡","透"],
     "correctAnswer": "烈",
     "reading": "レツ",
     "example": "強烈（きょうれつ）",
@@ -13213,7 +13191,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "燥",
     "questionType": "multipleChoice",
-    "choices": ["誉","燥","沖","幾"],
+    "choices": ["誉","燥","奴","幾"],
     "correctAnswer": "燥",
     "reading": "ソウ",
     "example": "乾燥（かんそう）",
@@ -13675,7 +13653,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "緯",
     "questionType": "multipleChoice",
-    "choices": ["傾","井","壁","緯"],
+    "choices": ["傾","端","壁","緯"],
     "correctAnswer": "緯",
     "reading": "イ",
     "example": "緯度（いど）",
@@ -13741,7 +13719,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "耐",
     "questionType": "multipleChoice",
-    "choices": ["畳","占","香","耐"],
+    "choices": ["畳","占","込","耐"],
     "correctAnswer": "耐",
     "reading": "た（える）",
     "example": "耐える（たえる）",
@@ -13972,7 +13950,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "蓄",
     "questionType": "multipleChoice",
-    "choices": ["蓄","床","微","香"],
+    "choices": ["蓄","床","微","浸"],
     "correctAnswer": "蓄",
     "reading": "たくわ（える）",
     "example": "蓄える（たくわえる）",
@@ -13996,8 +13974,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["誉","粒","薪","堤"],
     "correctAnswer": "薪",
-    "reading": "まき",
-    "example": "薪（まき）",
+    "reading": "たきぎ",
+    "example": "薪（たきぎ）",
     "version": 1
   },
   {
@@ -14038,7 +14016,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "訴",
     "questionType": "multipleChoice",
-    "choices": ["訴","扇","井","沼"],
+    "choices": ["訴","扇","剤","沼"],
     "correctAnswer": "訴",
     "reading": "うった（える）",
     "example": "訴える（うったえる）",
@@ -14683,17 +14661,6 @@ const questions = [
     "version": 1
   },
   {
-    "id": "LEVEL_4-香",
-    "level": "LEVEL_4",
-    "kanji": "香",
-    "questionType": "multipleChoice",
-    "choices": ["恋","抱","香","髪"],
-    "correctAnswer": "香",
-    "reading": "かお（り）",
-    "example": "香り（かおり）",
-    "version": 1
-  },
-  {
     "id": "LEVEL_4-駆",
     "level": "LEVEL_4",
     "kanji": "駆",
@@ -15149,7 +15116,7 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "卸",
     "questionType": "multipleChoice",
-    "choices": ["泌","岐","哲","卸"],
+    "choices": ["泌","侍","哲","卸"],
     "correctAnswer": "卸",
     "reading": "おろ（す）",
     "example": "卸す（おろす）",
@@ -15171,7 +15138,7 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "又",
     "questionType": "multipleChoice",
-    "choices": ["又","巧","郊","岐"],
+    "choices": ["又","巧","郊","遭"],
     "correctAnswer": "又",
     "reading": "また",
     "example": "又は（または）",
@@ -15270,7 +15237,7 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "嘱",
     "questionType": "multipleChoice",
-    "choices": ["岐","嘱","憂","厘"],
+    "choices": ["縫","嘱","憂","厘"],
     "correctAnswer": "嘱",
     "reading": "ショク",
     "example": "委嘱（いしょく）",
@@ -15534,7 +15501,7 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "審",
     "questionType": "multipleChoice",
-    "choices": ["審","岐","裸","滅"],
+    "choices": ["審","孔","裸","滅"],
     "correctAnswer": "審",
     "reading": "シン",
     "example": "審査（しんさ）",
@@ -15571,17 +15538,6 @@ const questions = [
     "correctAnswer": "尿",
     "reading": "ニョウ",
     "example": "尿（にょう）",
-    "version": 1
-  },
-  {
-    "id": "LEVEL_3-岐",
-    "level": "LEVEL_3",
-    "kanji": "岐",
-    "questionType": "multipleChoice",
-    "choices": ["霊","岐","掌","貫"],
-    "correctAnswer": "岐",
-    "reading": "キ",
-    "example": "分岐（ぶんき）",
     "version": 1
   },
   {
@@ -15699,7 +15655,7 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "弧",
     "questionType": "multipleChoice",
-    "choices": ["喫","励","弧","岐"],
+    "choices": ["喫","励","弧","寿"],
     "correctAnswer": "弧",
     "reading": "コ",
     "example": "弧（こ）",
@@ -15710,7 +15666,7 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "彫",
     "questionType": "multipleChoice",
-    "choices": ["陶","彫","岐","掌"],
+    "choices": ["陶","彫","陳","掌"],
     "correctAnswer": "彫",
     "reading": "ほ（る）",
     "example": "彫る（ほる）",
@@ -17063,7 +17019,7 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "膜",
     "questionType": "multipleChoice",
-    "choices": ["膜","架","膨","岐"],
+    "choices": ["膜","架","膨","卑"],
     "correctAnswer": "膜",
     "reading": "マク",
     "example": "膜（まく）",
