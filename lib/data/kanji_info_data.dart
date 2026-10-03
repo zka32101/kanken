@@ -363,7 +363,7 @@ class KanjiInfoData {
     '落': KanjiInfo(readings: ['お（ちる）'], examples: ['落ちる（おちる）']),
     '平': KanjiInfo(readings: ['たい（ら）'], examples: ['平ら（たいら）']),
     '畑': KanjiInfo(readings: ['はたけ'], examples: ['畑仕事（はたけしごと）']),
-    '息': KanjiInfo(readings: ['いき'], examples: ['深呼吸（しんこきゅう）']),
+    '息': KanjiInfo(readings: ['いき'], examples: ['息（いき）']),
     '昭': KanjiInfo(readings: ['ショウ'], examples: ['昭和（しょうわ）']),
     '式': KanjiInfo(readings: ['シキ'], examples: ['入学式（にゅうがくしき）']),
     '県': KanjiInfo(readings: ['ケン'], examples: ['県庁（けんちょう）']),
