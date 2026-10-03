@@ -37,13 +37,21 @@ void main() async {
 
   // 学習コイン（app_common_kit）。財布はアプリごと。端末内に保存する。
   // コインは学習の成長でのみ獲得する（課金・広告視聴での付与はしない）。
-  final coinService = CoinService(store: SharedPreferencesCoinStore('kanken'));
+  final coinService = CoinService(
+    store: SharedPreferencesCoinStore('kanken'),
+    shop: OutfitCatalog.shopItems([UkalabCert.kanjiKentei]),
+  );
   await coinService.load();
+  // 衣装（着替え・ショップ。合格記念・準備完了の解放もここに保存する）
+  final outfitService =
+      OutfitService(store: SharedPreferencesOutfitStore('kanken'));
+  await outfitService.load();
 
   // 全アプリ共通フィードバック機能(app_common_kit)の送信処理を注入
   final container = ProviderContainer(
     overrides: [
       coinServiceProvider.overrideWithValue(coinService),
+      outfitServiceProvider.overrideWithValue(outfitService),
     ],
   );
   container.read(feedbackProvider.notifier).setSubmitHandler((report) async {
