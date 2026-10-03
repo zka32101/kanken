@@ -12,7 +12,7 @@ import 'package:app_common_kit/app_common_kit.dart';
 ///   - RevenueCatのEntitlement「ad_free」(Display Name: noads)に上記2商品を紐付け
 ///   - Offering「default」にpremium-monthly/premium-yearlyのPackageを追加
 class PurchasesService {
-  static const String _apiKey = 'goog_TFqirXGziXwifqVBVasvYInzHEp';
+  static const String _apiKey = 'goog_PkCbEBxntkZNsLxCbKeSkHnoWEi';
 
   /// 広告非表示エンタイトルメント。RevenueCat側のIdentifierは作成後
   /// 変更不可のため'ad_free'のまま。Display Nameのみ'noads'に変更済み
