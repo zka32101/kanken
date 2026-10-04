@@ -37,11 +37,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.4.0"
-      resolved-ref: "9dd0c5ec752787e21f3aa36543c4733e818345c3"
+      ref: "v0.4.1"
+      resolved-ref: e39ae5ce2860ac63acf402b2066c6fdcf7ed6913
       url: "https://github.com/zka32101/app_common_kit.git"
     source: git
-    version: "0.4.0"
+    version: "0.4.1"
   archive:
     dependency: transitive
     description:

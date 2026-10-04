@@ -22,9 +22,9 @@ MascotStage oshiStageFor({
       .stageOf(MasteryInput(coverage: coverage, accuracy: accuracy));
 }
 
-/// 選択中の級での推しの成長段階。
+/// 選択中の級での習得度の材料（網羅率・正答率）。回答が無ければ 0。
 /// 回答のたびに levelProgressProvider が更新されるので、それに追従する。
-final oshiStageProvider = FutureProvider.autoDispose<MascotStage>((ref) async {
+final oshiMasteryProvider = FutureProvider.autoDispose<MasteryInput>((ref) async {
   final level = ref.watch(currentLevelProvider);
   final user = await ref.watch(currentUserProvider.future);
   final stats = await ref.watch(levelProgressProvider.future);
@@ -37,10 +37,17 @@ final oshiStageProvider = FutureProvider.autoDispose<MascotStage>((ref) async {
   );
   final total = await OshiProgressStore.totalQuestions(level);
 
-  return oshiStageFor(
-    distinctAnswered: answered,
-    totalQuestions: total,
-    correct: progress.correctCount,
-    answered: progress.totalCount,
+  if (total <= 0 || progress.totalCount <= 0) {
+    return const MasteryInput(coverage: 0, accuracy: 0);
+  }
+  return MasteryInput(
+    coverage: (answered / total).clamp(0.0, 1.0),
+    accuracy: (progress.correctCount / progress.totalCount).clamp(0.0, 1.0),
   );
+});
+
+/// 選択中の級での推しの成長段階。
+final oshiStageProvider = FutureProvider.autoDispose<MascotStage>((ref) async {
+  final m = await ref.watch(oshiMasteryProvider.future);
+  return MasteryModel.standard.stageOf(m);
 });
