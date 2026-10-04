@@ -341,6 +341,10 @@ class PracticeViewModel extends StateNotifier<PracticeState> {
     ref.read(answeredCountProvider.notifier).state = 0;
     ref.read(comboCountProvider.notifier).state = 0;
     ref.read(ahaMomentReachedProvider.notifier).state = false;
+    // 次の練習の終了画面に、そのセッションの分だけコイン内訳が出るようにする。
+    try {
+      ref.read(coinProvider.notifier).takeRecent();
+    } catch (_) {}
     state = const PracticeState(
       isLoading: false,
       currentQuestion: null,
