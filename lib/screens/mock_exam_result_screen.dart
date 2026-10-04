@@ -5,7 +5,8 @@ import 'package:app_common_kit/app_common_kit.dart'
         MascotStage,
         UkalabCert,
         coinProvider,
-        outfitProvider;
+        outfitProvider,
+        showMockRecordDialog;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,6 +24,7 @@ import '../models/collection_badge.dart';
 import '../viewmodels/services_provider.dart';
 import '../viewmodels/user_viewmodel.dart';
 import '../widgets/achievement_unlock_dialog.dart';
+import '../widgets/oshi_card.dart' show shareCardImage;
 
 class MockExamResultScreen extends ConsumerStatefulWidget {
   final ExamSessionState session;
@@ -75,6 +77,36 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
         await ref.read(outfitProvider.notifier).markReady(UkalabCert.kanjiKentei);
       }
     } catch (_) {}
+  }
+
+  /// 模擬試験で合格点を超えたときの「学習の記録カード」（本番の合格報告とは別。コインも衣装も付かない）。
+  Widget _buildMockRecordButton(bool isPassed, double accuracy) {
+    if (!isPassed) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          icon: const Icon(Icons.ios_share),
+          label: const Text('学習の記録カードを見る'),
+          onPressed: () async {
+            var stage = MascotStage.lv1;
+            try {
+              stage = await ref.read(oshiStageProvider.future);
+            } catch (_) {}
+            if (!mounted) return;
+            await showMockRecordDialog(
+              context,
+              ref,
+              cert: UkalabCert.kanjiKentei,
+              stage: stage,
+              scoreText: '正答率 ${(accuracy * 100).round()}%',
+              onShare: shareCardImage,
+            );
+          },
+        ),
+      ),
+    );
   }
 
   /// 今回貯まった学習コインの内訳（付与がなければ何も出ない）。
@@ -514,6 +546,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
               _buildScoreCard(context, accuracy),
               const SizedBox(height: 24),
               _buildCoinBreakdown(),
+              _buildMockRecordButton(isPassed, accuracy),
               const SizedBox(height: 24),
               _buildDetailedStats(context),
               const SizedBox(height: 24),
