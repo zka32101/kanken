@@ -15,11 +15,12 @@ MascotStage oshiStageFor({
   required int correct,
   required int answered,
 }) {
-  if (totalQuestions <= 0 || answered <= 0) return MascotStage.lv1;
-  final coverage = (distinctAnswered / totalQuestions).clamp(0.0, 1.0);
-  final accuracy = (correct / answered).clamp(0.0, 1.0);
-  return MasteryModel.standard
-      .stageOf(MasteryInput(coverage: coverage, accuracy: accuracy));
+  return MasteryModel.standard.stageOf(MasteryInput.fromCounts(
+    distinctAnswered: distinctAnswered,
+    totalQuestions: totalQuestions,
+    correct: correct,
+    answered: answered,
+  ));
 }
 
 /// 選択中の級での習得度の材料（網羅率・正答率）。回答が無ければ 0。
@@ -37,12 +38,11 @@ final oshiMasteryProvider = FutureProvider.autoDispose<MasteryInput>((ref) async
   );
   final total = await OshiProgressStore.totalQuestions(level);
 
-  if (total <= 0 || progress.totalCount <= 0) {
-    return const MasteryInput(coverage: 0, accuracy: 0);
-  }
-  return MasteryInput(
-    coverage: (answered / total).clamp(0.0, 1.0),
-    accuracy: (progress.correctCount / progress.totalCount).clamp(0.0, 1.0),
+  return MasteryInput.fromCounts(
+    distinctAnswered: answered,
+    totalQuestions: total,
+    correct: progress.correctCount,
+    answered: progress.totalCount,
   );
 });
 
