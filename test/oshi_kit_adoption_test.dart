@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kanken/providers/oshi_provider.dart';
 import 'package:kanken/viewmodels/user_viewmodel.dart';
 import 'package:kanken/widgets/oshi_card.dart';
+import 'package:kanken/widgets/oshi_readiness_card.dart';
 
 /// 推しカードのメニュー（着替え・ショップ、試験の結果報告）の配線テスト。
 ProviderContainer _container() {
@@ -74,5 +75,31 @@ void main() {
     await _settle(tester);
     expect(c.read(coinProvider).balance, CoinRules.standard.passReport);
     expect(c.read(outfitServiceProvider).passedCerts, contains('kanji_kentei'));
+  });
+
+  test('模擬試験の合格は級ごとに分かる（1級と10級を取り違えない）', () async {
+    final coin = CoinService(store: InMemoryCoinStore(), shop: const []);
+    await coin.grant(CoinEvent.mockPass('kanken_level_10'));
+    expect(mockPassedInLedger(coin.ledger, 10), isTrue);
+    expect(mockPassedInLedger(coin.ledger, 1), isFalse);
+    expect(mockPassedInLedger(coin.ledger, 4), isFalse);
+  });
+
+  testWidgets('「準備完了まで」カードが習得度と案内を出す', (tester) async {
+    final c = ProviderContainer(overrides: [
+        coinServiceProvider.overrideWithValue(
+            CoinService(store: InMemoryCoinStore(), shop: const [])),
+        oshiMasteryProvider.overrideWith(
+            (ref) async => const MasteryInput(coverage: 0.5, accuracy: 0.8)),
+    ]);
+    addTearDown(c.dispose);
+    await tester.pumpWidget(UncontrolledProviderScope(
+      container: c,
+      child: const MaterialApp(home: Scaffold(body: OshiReadinessCard())),
+    ));
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('準備完了まで'), findsOneWidget);
+    expect(find.text('習得度があと40%、模擬試験の合格でそろいます'), findsOneWidget);
   });
 }
