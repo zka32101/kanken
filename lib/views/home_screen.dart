@@ -721,6 +721,15 @@ final _weakKanjiCountProvider = FutureProvider<int>((ref) async {
   );
 });
 
+/// 今回の練習で貯まった学習コインの内訳（付与がなければ何も出ない）。
+Widget _practiceCoinBreakdown(WidgetRef ref) {
+  try {
+    return CoinBreakdownCard(grants: ref.watch(coinProvider).recent);
+  } catch (_) {
+    return const SizedBox.shrink();
+  }
+}
+
 // 練習画面
 class PracticeScreen extends ConsumerWidget {
   const PracticeScreen({Key? key}) : super(key: key);
@@ -763,6 +772,11 @@ class PracticeScreen extends ConsumerWidget {
                       '🎉 ${qList.length}問クリア！\n正解数: $correctCount / ${qList.length}問',
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: _practiceCoinBreakdown(ref),
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton(
