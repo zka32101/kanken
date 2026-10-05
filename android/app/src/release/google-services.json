@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "765180094909",
-    "project_id": "ukalab-dev",
-    "storage_bucket": "ukalab-dev.firebasestorage.app"
+    "project_number": "264757683394",
+    "project_id": "ukalab-prod",
+    "storage_bucket": "ukalab-prod.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:765180094909:android:f01e93b4172209730e8ad4",
+        "mobilesdk_app_id": "1:264757683394:android:1e007ed51f14dfc79a475b",
         "android_client_info": {
           "package_name": "com.yourwish.ukarulab.kanji"
         }
       },
       "oauth_client": [
         {
-          "client_id": "765180094909-nfni63nvrn7cekpp9ln414p7lbfabhrt.apps.googleusercontent.com",
+          "client_id": "264757683394-cb09r5e6sv3qupn6oh4rgbetnjjvu5v2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCtYZQVS6ZElOuJwXnYZERNctGeB8G9wuY"
+          "current_key": "AIzaSyDZdjJ53kTfALpV_ti_ipLpxMeNVhLXOAE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "765180094909-nfni63nvrn7cekpp9ln414p7lbfabhrt.apps.googleusercontent.com",
+              "client_id": "264757683394-cb09r5e6sv3qupn6oh4rgbetnjjvu5v2.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

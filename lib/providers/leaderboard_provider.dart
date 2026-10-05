@@ -6,6 +6,7 @@ import '../models/achievement.dart';
 import '../models/notifications.dart';
 import '../services/firestore_service.dart';
 import '../viewmodels/user_viewmodel.dart' as user_vm;
+import '../services/ukalab_paths.dart';
 
 /// 日次リーダーボードプロバイダー
 final dailyLeaderboardProvider = FutureProvider<LeaderboardStats>((ref) async {
@@ -53,7 +54,7 @@ Future<LeaderboardStats> _fetchLeaderboard(Ref ref, LeaderboardPeriod period) as
     final db = FirebaseFirestore.instance;
 
     // スコアコレクションから上位ユーザーを取得
-    final query = db.collection('leaderboard').doc(period.toString()).collection('scores');
+    final query = db.kanjiCollection('leaderboard').doc(period.toString()).collection('scores');
     final snapshot = await query
         .orderBy('totalScore', descending: true)
         .limit(100)
@@ -73,7 +74,7 @@ Future<LeaderboardStats> _fetchLeaderboard(Ref ref, LeaderboardPeriod period) as
     if (userId != null) {
       final docId = FirestoreService.rankingDocId(userId, profileId);
       final userScoreDoc = await db
-          .collection('leaderboard')
+          .kanjiCollection('leaderboard')
           .doc(period.toString())
           .collection('scores')
           .doc(docId)
@@ -110,7 +111,7 @@ Future<LeaderboardStats> _fetchLeaderboard(Ref ref, LeaderboardPeriod period) as
 Future<int?> _getUserRank(String docId, LeaderboardPeriod period) async {
   try {
     final db = FirebaseFirestore.instance;
-    final query = db.collection('leaderboard').doc(period.toString()).collection('scores');
+    final query = db.kanjiCollection('leaderboard').doc(period.toString()).collection('scores');
 
     // ユーザーのスコアを取得
     final userDoc = await query.doc(docId).get();
@@ -154,7 +155,7 @@ Future<void> updateUserScore(
     // 複数の期間（日次、週次、月次、全期間）に対してスコアを更新
     for (final period in LeaderboardPeriod.values) {
       final docRef = db
-          .collection('leaderboard')
+          .kanjiCollection('leaderboard')
           .doc(period.toString())
           .collection('scores')
           .doc(docId);
@@ -185,7 +186,7 @@ Future<void> updateUserScore(
 
     // スコア履歴を記録（プロフィール単位）
     await db
-        .collection('users')
+        .kanjiCollection('users')
         .doc(userId)
         .collection('profiles')
         .doc(profileId)
@@ -218,7 +219,7 @@ Future<void> _checkLeaderboardRankAchievement(
 ) async {
   try {
     final profileRef = FirebaseFirestore.instance
-        .collection('users')
+        .kanjiCollection('users')
         .doc(userId)
         .collection('profiles')
         .doc(profileId);

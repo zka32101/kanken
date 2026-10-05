@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/daily_challenge.dart';
 import 'firebase_provider.dart';
+import '../services/ukalab_paths.dart';
 
 /// 本日のデイリーチャレンジ取得 provider
 final dailyChallengeProvider = FutureProvider<DailyChallenge>((ref) async {
@@ -10,7 +11,7 @@ final dailyChallengeProvider = FutureProvider<DailyChallenge>((ref) async {
   final dateStr = _formatDate(today);
 
   try {
-    final doc = await firestore.collection('challenges').doc(dateStr).get();
+    final doc = await firestore.kanjiCollection('challenges').doc(dateStr).get();
 
     if (doc.exists && doc.data() != null) {
       return DailyChallenge.fromJson({...doc.data()!, 'id': doc.id});
@@ -28,7 +29,7 @@ final dailyChallengeByDateProvider = FutureProvider.family<DailyChallenge, Strin
   final firestore = ref.watch(firebaseProvider);
 
   try {
-    final doc = await firestore.collection('challenges').doc(dateStr).get();
+    final doc = await firestore.kanjiCollection('challenges').doc(dateStr).get();
 
     if (doc.exists && doc.data() != null) {
       return DailyChallenge.fromJson({...doc.data()!, 'id': doc.id});
@@ -53,7 +54,7 @@ class DailyChallengeNotifier extends StateNotifier<AsyncValue<DailyChallenge>> {
       final today = DateTime.now();
       final dateStr = _formatDate(today);
 
-      final doc = await _firestore.collection('challenges').doc(dateStr).get();
+      final doc = await _firestore.kanjiCollection('challenges').doc(dateStr).get();
 
       if (doc.exists && doc.data() != null) {
         return DailyChallenge.fromJson({...doc.data()!, 'id': doc.id});
@@ -67,7 +68,7 @@ class DailyChallengeNotifier extends StateNotifier<AsyncValue<DailyChallenge>> {
   Future<void> loadByDate(String dateStr) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final doc = await _firestore.collection('challenges').doc(dateStr).get();
+      final doc = await _firestore.kanjiCollection('challenges').doc(dateStr).get();
 
       if (doc.exists && doc.data() != null) {
         return DailyChallenge.fromJson({...doc.data()!, 'id': doc.id});
@@ -98,7 +99,7 @@ Future<DailyChallenge> _createDailyChallenge(
   try {
     // ランダムに10問選択
     final questionsSnap = await firestore
-        .collection('questions')
+        .kanjiCollection('questions')
         .limit(10)
         .get();
 
@@ -117,7 +118,7 @@ Future<DailyChallenge> _createDailyChallenge(
 
     // Firestore に保存
     await firestore
-        .collection('challenges')
+        .kanjiCollection('challenges')
         .doc(dateStr)
         .set(challenge.toJson());
 

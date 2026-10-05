@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/global_event.dart';
+import '../services/ukalab_paths.dart';
 
 /// アクティブなイベント一覧を取得
 final activeEventsProvider = FutureProvider<List<GlobalEvent>>((ref) async {
   final snapshot = await FirebaseFirestore.instance
-      .collection('events')
+      .kanjiCollection('events')
       .where('status', isEqualTo: 'active')
       .orderBy('endAt')
       .get();
@@ -19,7 +20,7 @@ final activeEventsProvider = FutureProvider<List<GlobalEvent>>((ref) async {
 /// 開始前のイベント一覧を取得
 final upcomingEventsProvider = FutureProvider<List<GlobalEvent>>((ref) async {
   final snapshot = await FirebaseFirestore.instance
-      .collection('events')
+      .kanjiCollection('events')
       .where('status', isEqualTo: 'upcoming')
       .orderBy('startAt')
       .get();
@@ -32,7 +33,7 @@ final upcomingEventsProvider = FutureProvider<List<GlobalEvent>>((ref) async {
 /// 終了したイベント一覧を取得
 final pastEventsProvider = FutureProvider<List<GlobalEvent>>((ref) async {
   final snapshot = await FirebaseFirestore.instance
-      .collection('events')
+      .kanjiCollection('events')
       .where('status', isEqualTo: 'ended')
       .orderBy('endAt', descending: true)
       .limit(10)
@@ -46,7 +47,7 @@ final pastEventsProvider = FutureProvider<List<GlobalEvent>>((ref) async {
 /// イベント参加情報を取得
 final eventParticipantsProvider = FutureProvider.family<List<EventParticipation>, String>((ref, eventId) async {
   final snapshot = await FirebaseFirestore.instance
-      .collection('events')
+      .kanjiCollection('events')
       .doc(eventId)
       .collection('participants')
       .orderBy('rank')
@@ -63,7 +64,7 @@ final userEventParticipationsProvider = FutureProvider<List<EventParticipation>>
   if (userId == null) return [];
 
   final snapshot = await FirebaseFirestore.instance
-      .collection('users')
+      .kanjiCollection('users')
       .doc(userId)
       .collection('eventParticipations')
       .orderBy('joinedAt', descending: true)
@@ -118,7 +119,7 @@ class EventNotifier extends StateNotifier<EventState> {
       if (currentUser == null) throw Exception('ユーザーがログインしていません');
 
       final participationId =
-          _firestore.collection('events').doc(eventId).collection('participants').doc().id;
+          _firestore.kanjiCollection('events').doc(eventId).collection('participants').doc().id;
 
       final participation = EventParticipation(
         participationId: participationId,
@@ -134,7 +135,7 @@ class EventNotifier extends StateNotifier<EventState> {
 
       // イベントの participants コレクションに追加
       await _firestore
-          .collection('events')
+          .kanjiCollection('events')
           .doc(eventId)
           .collection('participants')
           .doc(participationId)
@@ -142,14 +143,14 @@ class EventNotifier extends StateNotifier<EventState> {
 
       // ユーザーの eventParticipations コレクションにも追加
       await _firestore
-          .collection('users')
+          .kanjiCollection('users')
           .doc(currentUser.uid)
           .collection('eventParticipations')
           .doc(participationId)
           .set(participation.toJson());
 
       // イベントの参加者数を増やす
-      await _firestore.collection('events').doc(eventId).update({
+      await _firestore.kanjiCollection('events').doc(eventId).update({
         'participantCount': FieldValue.increment(1),
       });
 
@@ -174,7 +175,7 @@ class EventNotifier extends StateNotifier<EventState> {
 
       // イベントの participants コレクションを更新
       await _firestore
-          .collection('events')
+          .kanjiCollection('events')
           .doc(eventId)
           .collection('participants')
           .doc(participationId)
@@ -182,7 +183,7 @@ class EventNotifier extends StateNotifier<EventState> {
 
       // ユーザーの eventParticipations も更新
       await _firestore
-          .collection('users')
+          .kanjiCollection('users')
           .doc(currentUser.uid)
           .collection('eventParticipations')
           .doc(participationId)
@@ -209,7 +210,7 @@ class EventNotifier extends StateNotifier<EventState> {
 
       // イベントの participants コレクションを更新
       await _firestore
-          .collection('events')
+          .kanjiCollection('events')
           .doc(eventId)
           .collection('participants')
           .doc(participationId)
@@ -222,7 +223,7 @@ class EventNotifier extends StateNotifier<EventState> {
 
       // ユーザーの eventParticipations も更新
       await _firestore
-          .collection('users')
+          .kanjiCollection('users')
           .doc(currentUser.uid)
           .collection('eventParticipations')
           .doc(participationId)
@@ -235,7 +236,7 @@ class EventNotifier extends StateNotifier<EventState> {
 
       // ユーザーのコインを加算（gamification_stats と同期）
       await _firestore
-          .collection('users')
+          .kanjiCollection('users')
           .doc(currentUser.uid)
           .update({
         'coins': FieldValue.increment(rewardCoins),
@@ -263,7 +264,7 @@ class EventNotifier extends StateNotifier<EventState> {
 
       // イベントの participants コレクションから削除
       await _firestore
-          .collection('events')
+          .kanjiCollection('events')
           .doc(eventId)
           .collection('participants')
           .doc(participationId)
@@ -271,14 +272,14 @@ class EventNotifier extends StateNotifier<EventState> {
 
       // ユーザーの eventParticipations からも削除
       await _firestore
-          .collection('users')
+          .kanjiCollection('users')
           .doc(currentUser.uid)
           .collection('eventParticipations')
           .doc(participationId)
           .delete();
 
       // イベントの参加者数を減らす
-      await _firestore.collection('events').doc(eventId).update({
+      await _firestore.kanjiCollection('events').doc(eventId).update({
         'participantCount': FieldValue.increment(-1),
       });
 

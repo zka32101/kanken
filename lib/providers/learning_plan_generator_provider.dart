@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/exam_analysis_provider.dart';
+import '../services/ukalab_paths.dart';
 
 /// 学習計画アイテム
 class LearningPlanItem {
@@ -107,7 +108,7 @@ final userLearningPlanProvider = FutureProvider<LearningPlan?>((ref) async {
 
   try {
     final doc = await FirebaseFirestore.instance
-        .collection('users')
+        .kanjiCollection('users')
         .doc(userId)
         .collection('learningPlans')
         .orderBy('generatedAt', descending: true)
@@ -285,7 +286,7 @@ Future<void> saveLearningPlan(LearningPlan plan) async {
 
   try {
     await FirebaseFirestore.instance
-        .collection('users')
+        .kanjiCollection('users')
         .doc(userId)
         .collection('learningPlans')
         .add(plan.toJson());

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/index.dart';
+import 'ukalab_paths.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore;
@@ -68,7 +69,7 @@ class FirestoreService {
   /// （全員読み取り可）へミラーする。詳しくは _mirrorUserNameToRanking 参照。
   Future<void> _mirrorUserToProfileDirectory(User user) async {
     await _firestore
-        .collection('profileDirectory')
+        .kanjiCollection('profileDirectory')
         .doc(rankingDocId(user.uid, user.profileId))
         .set(
       {
@@ -84,7 +85,7 @@ class FirestoreService {
 
   /// フレンドID（"{uid}_{profileId}"）から公開プロフィール情報を検索する
   Future<Map<String, dynamic>?> findProfileByCompositeId(String compositeId) async {
-    final doc = await _firestore.collection('profileDirectory').doc(compositeId).get();
+    final doc = await _firestore.kanjiCollection('profileDirectory').doc(compositeId).get();
     return doc.data();
   }
 
@@ -93,7 +94,7 @@ class FirestoreService {
   }
 
   CollectionReference<Map<String, dynamic>> _profilesCollection(String uid) {
-    return _firestore.collection('users').doc(uid).collection('profiles');
+    return _firestore.kanjiCollection('users').doc(uid).collection('profiles');
   }
 
   /// users/{uid}/profiles/{profileId} 本体（メール等を含みうる）は本人のみ
@@ -107,7 +108,7 @@ class FirestoreService {
     String profileId,
     String userName,
   ) async {
-    await _firestore.collection('rankings').doc(rankingDocId(uid, profileId)).set(
+    await _firestore.kanjiCollection('rankings').doc(rankingDocId(uid, profileId)).set(
       {'userId': uid, 'profileId': profileId, 'userName': userName},
       SetOptions(merge: true),
     );
@@ -115,7 +116,7 @@ class FirestoreService {
 
   /// ランキング参加をオフにしたユーザーのエントリを削除する
   Future<void> _removeFromRanking(String uid, String profileId) async {
-    await _firestore.collection('rankings').doc(rankingDocId(uid, profileId)).delete();
+    await _firestore.kanjiCollection('rankings').doc(rankingDocId(uid, profileId)).delete();
   }
 
   // Question operations
@@ -129,7 +130,7 @@ class FirestoreService {
     int masteryThreshold = 3,
   }) async {
     final snapshot = await _firestore
-        .collection('questions')
+        .kanjiCollection('questions')
         .where('level', isEqualTo: level)
         .limit(limit)
         .get();
@@ -153,7 +154,7 @@ class FirestoreService {
   }
 
   Future<KanjiQuestion?> getKanjiQuestion(String questionId) async {
-    final doc = await _firestore.collection('questions').doc(questionId).get();
+    final doc = await _firestore.kanjiCollection('questions').doc(questionId).get();
     if (!doc.exists) return null;
     return KanjiQuestion.fromJson({...doc.data()!, 'id': doc.id});
   }

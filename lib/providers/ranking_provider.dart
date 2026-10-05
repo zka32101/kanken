@@ -4,6 +4,7 @@ import 'package:kanken/models/user_ranking.dart';
 import '../services/firestore_service.dart';
 import '../viewmodels/user_viewmodel.dart' as user_vm;
 import 'firebase_provider.dart';
+import '../services/ukalab_paths.dart';
 
 /// ランキングデータプロバイダー
 final rankingProvider = FutureProvider.family<List<UserRanking>, RankingFilter>(
@@ -25,7 +26,7 @@ final rankingProvider = FutureProvider.family<List<UserRanking>, RankingFilter>(
       // Firestoreクエリを構築。
       // users/{uid} 本体はメール等を含みうるため本人のみ読み書き可能。
       // ランキング表示には rankings/{uid}（全員読み取り可の公開ミラー）を使う。
-      Query query = firestore.collection('rankings');
+      Query query = firestore.kanjiCollection('rankings');
 
       // 期間フィルター（週間・月間の場合）
       if (filter.period != RankingPeriod.allTime) {
@@ -90,14 +91,14 @@ final userRankProvider = FutureProvider.family<int?, RankingFilter>(
       // 参照していたため、プロフィール機能導入後は常にドキュメントが
       // 見つからず「ログインしてください」表示のまま機能していなかった）
       final docId = FirestoreService.rankingDocId(currentUserId, profileId);
-      final userDoc = await firestore.collection('rankings').doc(docId).get();
+      final userDoc = await firestore.kanjiCollection('rankings').doc(docId).get();
       if (!userDoc.exists) return null;
 
       final userData = userDoc.data() as Map<String, dynamic>;
       final userValue = _extractSortValue(userData, filter.type);
 
       // より高い値を持つユーザーをカウント
-      Query query = firestore.collection('rankings');
+      Query query = firestore.kanjiCollection('rankings');
       query = query.where(sortField, isGreaterThan: userValue);
 
       final snapshot = await query.count().get();

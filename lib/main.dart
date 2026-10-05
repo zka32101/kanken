@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -54,11 +55,16 @@ void main() async {
       outfitServiceProvider.overrideWithValue(outfitService),
     ],
   );
+  // ルールは自分のUIDのみ作成可のため、送信時点のログインUIDで上書きする。
+  // 未ログイン時は例外にして、キュー(端末内)に残す。
   container.read(feedbackProvider.notifier).setSubmitHandler((report) async {
+    final uid = fb_auth.FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) throw StateError('not signed in');
+    final sent = report.copyWith(userId: uid);
     await FirebaseFirestore.instance
         .collection('feedback')
-        .doc(report.id)
-        .set(report.toJson());
+        .doc(sent.id)
+        .set(sent.toJson());
   });
   // 未送信分の再送信を試みる(オフライン等で失敗した報告のリトライ)
   unawaited(container.read(feedbackProvider.notifier).retryPendingReports());

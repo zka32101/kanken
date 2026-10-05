@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/parent_dashboard.dart';
+import '../services/ukalab_paths.dart';
 
 /// 保護者がリンクしている子どもの一覧を取得
 final linkedChildrenProvider = FutureProvider<List<ChildLearningStats>>((ref) async {
@@ -9,7 +10,7 @@ final linkedChildrenProvider = FutureProvider<List<ChildLearningStats>>((ref) as
   if (parentId == null) return [];
 
   final snapshot = await FirebaseFirestore.instance
-      .collection('parentLinks')
+      .kanjiCollection('parentLinks')
       .where('parentId', isEqualTo: parentId)
       .get();
 
@@ -20,7 +21,7 @@ final linkedChildrenProvider = FutureProvider<List<ChildLearningStats>>((ref) as
 
     try {
       final childDoc = await FirebaseFirestore.instance
-          .collection('users')
+          .kanjiCollection('users')
           .doc(childId)
           .get();
 
@@ -57,7 +58,7 @@ final childLearningGraphProvider = FutureProvider.family<List<LearningDataPoint>
   final startDate = DateTime.now().subtract(const Duration(days: 30));
 
   final snapshot = await FirebaseFirestore.instance
-      .collection('users')
+      .kanjiCollection('users')
       .doc(childId)
       .collection('learningHistory')
       .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
@@ -72,7 +73,7 @@ final childLearningGraphProvider = FutureProvider.family<List<LearningDataPoint>
 /// 子どもの弱点分野を取得
 final childWeakAreasProvider = FutureProvider.family<List<ChildWeakArea>, String>((ref, childId) async {
   final snapshot = await FirebaseFirestore.instance
-      .collection('users')
+      .kanjiCollection('users')
       .doc(childId)
       .collection('weakAreas')
       .orderBy('accuracyRate')
@@ -127,7 +128,7 @@ class ParentDashboardNotifier extends StateNotifier<ParentDashboardState> {
 
       // 子どものメールアドレスからユーザーIDを検索
       final childSnapshot = await _firestore
-          .collection('users')
+          .kanjiCollection('users')
           .where('email', isEqualTo: childEmail)
           .limit(1)
           .get();
@@ -139,7 +140,7 @@ class ParentDashboardNotifier extends StateNotifier<ParentDashboardState> {
       final childId = childSnapshot.docs[0].id;
 
       // parentLinksコレクションにリンクを追加
-      await _firestore.collection('parentLinks').add({
+      await _firestore.kanjiCollection('parentLinks').add({
         'parentId': parentId,
         'childId': childId,
         'linkedAt': Timestamp.now(),
@@ -166,7 +167,7 @@ class ParentDashboardNotifier extends StateNotifier<ParentDashboardState> {
 
       // parentLinksコレクションからリンクを削除
       final snapshot = await _firestore
-          .collection('parentLinks')
+          .kanjiCollection('parentLinks')
           .where('parentId', isEqualTo: parentId)
           .where('childId', isEqualTo: childId)
           .get();

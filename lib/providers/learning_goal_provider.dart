@@ -6,11 +6,12 @@ import '../models/learning_goal.dart';
 import '../models/notifications.dart';
 import '../models/achievement.dart';
 import '../viewmodels/user_viewmodel.dart' as user_vm;
+import '../services/ukalab_paths.dart';
 
 /// users/{uid}/profiles/{profileId} 配下のドキュメント参照
 DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {
   return FirebaseFirestore.instance
-      .collection('users')
+      .kanjiCollection('users')
       .doc(uid)
       .collection('profiles')
       .doc(profileId);

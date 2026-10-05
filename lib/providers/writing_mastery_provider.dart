@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../viewmodels/user_viewmodel.dart' as user_vm;
+import '../services/ukalab_paths.dart';
 
 /// 「書く練習」で漢字ごとに「覚えた」チェックを付けられるようにするための
 /// 状態管理（プロフィール単位、users/{uid}/profiles/{profileId}/masteredWritingKanjis/{kanji}）。
@@ -11,7 +12,7 @@ import '../viewmodels/user_viewmodel.dart' as user_vm;
 
 DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {
   return FirebaseFirestore.instance
-      .collection('users')
+      .kanjiCollection('users')
       .doc(uid)
       .collection('profiles')
       .doc(profileId);

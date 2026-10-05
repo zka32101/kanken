@@ -4,7 +4,7 @@
 
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
-    show defaultTargetPlatform, kIsWeb, TargetPlatform;
+    show defaultTargetPlatform, kIsWeb, kReleaseMode, TargetPlatform;
 
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
@@ -45,13 +45,27 @@ class DefaultFirebaseOptions {
     storageBucket: 'kanken-dev.appspot.com',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBuRizUC5hDKn4Fbf5NatFuMGnl215QYkk',
-    appId: '1:940359560531:android:80b639723327f9c31145a6',
-    messagingSenderId: '940359560531',
-    projectId: 'kanken-b5ac9',
-    storageBucket: 'kanken-b5ac9.firebasestorage.app',
+  /// リリースビルドは本番（ukalab-prod）、それ以外（debug/profile）は開発（ukalab-dev）。
+  /// どちらも うかラボ共通プロジェクト。データは exams/kanji_kentei/ 配下。
+  /// ※ CI は google-services.json（= ukalab-dev）からこのファイルを再生成する。
+  static FirebaseOptions get android => kReleaseMode ? _androidProd : _androidDev;
+
+  static const FirebaseOptions _androidProd = FirebaseOptions(
+    apiKey: 'AIzaSyDZdjJ53kTfALpV_ti_ipLpxMeNVhLXOAE',
+    appId: '1:264757683394:android:1e007ed51f14dfc79a475b',
+    messagingSenderId: '264757683394',
+    projectId: 'ukalab-prod',
+    storageBucket: 'ukalab-prod.firebasestorage.app',
   );
+
+  static const FirebaseOptions _androidDev = FirebaseOptions(
+    apiKey: 'AIzaSyCtYZQVS6ZElOuJwXnYZERNctGeB8G9wuY',
+    appId: '1:765180094909:android:f01e93b4172209730e8ad4',
+    messagingSenderId: '765180094909',
+    projectId: 'ukalab-dev',
+    storageBucket: 'ukalab-dev.firebasestorage.app',
+  );
+
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'YOUR_IOS_API_KEY',
     appId: 'YOUR_IOS_APP_ID',

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/mock_exam_modes.dart';
 import '../providers/exam_session_provider.dart';
+import '../services/ukalab_paths.dart';
 
 /// 試験分析結果
 class ExamAnalysisResult {
@@ -99,7 +100,7 @@ final userWeakPointHistoryProvider = FutureProvider<List<ExamAnalysisResult>>((r
 
   try {
     final snapshot = await FirebaseFirestore.instance
-        .collection('users')
+        .kanjiCollection('users')
         .doc(userId)
         .collection('examAnalyses')
         .orderBy('analyzedAt', descending: true)
@@ -274,7 +275,7 @@ Future<void> saveExamAnalysis(ExamAnalysisResult analysis) async {
 
   try {
     await FirebaseFirestore.instance
-        .collection('users')
+        .kanjiCollection('users')
         .doc(userId)
         .collection('examAnalyses')
         .add(analysis.toJson());

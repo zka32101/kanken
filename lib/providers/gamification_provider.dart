@@ -5,6 +5,7 @@ import '../models/reward.dart';
 import '../services/firestore_service.dart';
 import '../viewmodels/user_viewmodel.dart' as user_vm;
 import 'firebase_provider.dart';
+import '../services/ukalab_paths.dart';
 
 /// ユーザーのゲーミフィケーション統計取得 provider
 final gamificationStatsProvider = FutureProvider<GamificationStats>((ref) async {
@@ -21,7 +22,7 @@ final gamificationStatsProvider = FutureProvider<GamificationStats>((ref) async 
 
   try {
     final doc = await firestore
-        .collection('users')
+        .kanjiCollection('users')
         .doc(userId)
         .collection('profiles')
         .doc(profileId)
@@ -73,7 +74,7 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final doc = await _firestore
-          .collection('users')
+          .kanjiCollection('users')
           .doc(_userId)
           .collection('profiles')
           .doc(_profileId)
@@ -108,7 +109,7 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
   /// ランキング参加設定(rankingOptIn)がオンのユーザーのみ行う。
   Future<void> _saveStats(GamificationStats stats) async {
     await _firestore
-        .collection('users')
+        .kanjiCollection('users')
         .doc(_userId)
         .collection('profiles')
         .doc(_profileId)
@@ -119,7 +120,7 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
     if (!_rankingOptIn) return;
 
     await _firestore
-        .collection('rankings')
+        .kanjiCollection('rankings')
         .doc(FirestoreService.rankingDocId(_userId, _profileId))
         .set(
       {
@@ -238,7 +239,7 @@ class GamificationNotifier extends StateNotifier<AsyncValue<GamificationStats>> 
   Future<void> _recordReward(Reward reward) async {
     try {
       await _firestore
-          .collection('users')
+          .kanjiCollection('users')
           .doc(_userId)
           .collection('profiles')
           .doc(_profileId)

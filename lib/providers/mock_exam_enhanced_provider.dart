@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/mock_exam.dart';
 import '../models/mock_exam_modes.dart';
+import '../services/ukalab_paths.dart';
 
 /// 模擬試験の受験履歴（users/{uid}/examResults）を新しい順に取得
 final examHistoryProvider = FutureProvider<List<ExamResult>>((ref) async {
@@ -10,7 +11,7 @@ final examHistoryProvider = FutureProvider<List<ExamResult>>((ref) async {
   if (userId == null) return [];
 
   final snapshot = await FirebaseFirestore.instance
-      .collection('users')
+      .kanjiCollection('users')
       .doc(userId)
       .collection('examResults')
       .orderBy('completedAt', descending: true)
@@ -28,7 +29,7 @@ final enhancedExamQuestionsProvider =
   (ref, config) async {
     try {
       Query<Map<String, dynamic>> query = FirebaseFirestore.instance
-          .collection('examQuestions')
+          .kanjiCollection('examQuestions')
           .where('level', isEqualTo: config.targetLevel);
 
       // Filter by difficulty if not all difficulties
@@ -76,7 +77,7 @@ final weakAreaQuestionsProvider = FutureProvider.family<
     try {
       // Get user's weak areas from their history
       final userSnapshot = await FirebaseFirestore.instance
-          .collection('users')
+          .kanjiCollection('users')
           .doc(params.userId)
           .collection('weakAreas')
           .get();
@@ -91,7 +92,7 @@ final weakAreaQuestionsProvider = FutureProvider.family<
       // 残らず試験が成立しないため、難易度は絞らず級とカテゴリのみで
       // 抽出する（苦手カテゴリを優先しつつ、母数を確保する）。
       Query<Map<String, dynamic>> query = FirebaseFirestore.instance
-          .collection('examQuestions')
+          .kanjiCollection('examQuestions')
           .where('level', isEqualTo: params.examLevel);
 
       if (weakAreas.isNotEmpty) {
@@ -118,7 +119,7 @@ final progressiveExamQuestionsProvider =
   (ref, examLevel) async {
     try {
       final snapshot = await FirebaseFirestore.instance
-          .collection('examQuestions')
+          .kanjiCollection('examQuestions')
           .where('level', isEqualTo: examLevel)
           .limit(200)
           .get();
@@ -152,7 +153,7 @@ final detailedExamStatisticsProvider =
   (ref, userId) async {
     try {
       final snapshot = await FirebaseFirestore.instance
-          .collection('users')
+          .kanjiCollection('users')
           .doc(userId)
           .collection('examStatistics')
           .doc('detailed')
@@ -176,7 +177,7 @@ final categoryExamResultsProvider = FutureProvider.family<
   (ref, params) async {
     try {
       final snapshot = await FirebaseFirestore.instance
-          .collection('users')
+          .kanjiCollection('users')
           .doc(params.userId)
           .collection('examResults')
           .where('examLevel', isEqualTo: params.examLevel)

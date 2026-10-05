@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/multiplayer.dart';
+import '../services/ukalab_paths.dart';
 
 /// 利用可能なバトルルーム一覧を取得
 final availableBattleRoomsProvider = FutureProvider<List<BattleRoom>>((ref) async {
   final snapshot = await FirebaseFirestore.instance
-      .collection('battleRooms')
+      .kanjiCollection('battleRooms')
       .where('status', isEqualTo: 'waiting')
       .orderBy('createdAt', descending: true)
       .get();
@@ -32,7 +33,7 @@ final userBattleStatsProvider = FutureProvider<BattleRoomStats>((ref) async {
   }
 
   final snapshot = await FirebaseFirestore.instance
-      .collection('users')
+      .kanjiCollection('users')
       .doc(userId)
       .collection('battleStats')
       .doc('summary')
@@ -105,7 +106,7 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
 
       final displayName = _auth.currentUser?.displayName ?? 'ユーザー';
 
-      final roomId = _firestore.collection('battleRooms').doc().id;
+      final roomId = _firestore.kanjiCollection('battleRooms').doc().id;
 
       final participant = BattleParticipant(
         userId: userId,
@@ -133,7 +134,7 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
       );
 
       await _firestore
-          .collection('battleRooms')
+          .kanjiCollection('battleRooms')
           .doc(roomId)
           .set(room.toJson());
 
@@ -158,7 +159,7 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
 
       // ルーム情報を取得
       final roomSnapshot = await _firestore
-          .collection('battleRooms')
+          .kanjiCollection('battleRooms')
           .doc(roomId)
           .get();
 
@@ -188,7 +189,7 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
       final updatedParticipants = [...room.participants, participant];
 
       await _firestore
-          .collection('battleRooms')
+          .kanjiCollection('battleRooms')
           .doc(roomId)
           .update({
         'participants': updatedParticipants.map((p) => p.toJson()).toList(),
@@ -213,7 +214,7 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
       state = state.copyWith(isLoading: true, error: null);
 
       final roomSnapshot = await _firestore
-          .collection('battleRooms')
+          .kanjiCollection('battleRooms')
           .doc(roomId)
           .get();
 
@@ -224,7 +225,7 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
       }
 
       final sessionId =
-          _firestore.collection('battleSessions').doc().id;
+          _firestore.kanjiCollection('battleSessions').doc().id;
 
       final participantScores = <String, int>{
         for (var p in room.participants) p.userId: 0,
@@ -245,12 +246,12 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
 
       // セッションを作成
       await _firestore
-          .collection('battleSessions')
+          .kanjiCollection('battleSessions')
           .doc(sessionId)
           .set(session.toJson());
 
       // ルームステータスを更新
-      await _firestore.collection('battleRooms').doc(roomId).update({
+      await _firestore.kanjiCollection('battleRooms').doc(roomId).update({
         'status': 'playing',
         'startedAt': Timestamp.now(),
       });
@@ -311,7 +312,7 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
 
       // Firestoreに記録
       await _firestore
-          .collection('battleSessions')
+          .kanjiCollection('battleSessions')
           .doc(sessionId)
           .update({
         'currentQuestionIndex': updatedQuestionIndex,
@@ -356,7 +357,7 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
       }
 
       final result = BattleResult(
-        resultId: _firestore.collection('battleResults').doc().id,
+        resultId: _firestore.kanjiCollection('battleResults').doc().id,
         roomId: roomId,
         winnerId: winnerId,
         finalParticipants: finalParticipants,
@@ -368,12 +369,12 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
 
       // 結果をFirestoreに保存
       await _firestore
-          .collection('battleResults')
+          .kanjiCollection('battleResults')
           .doc(result.resultId)
           .set(result.toJson());
 
       // ルームを完了
-      await _firestore.collection('battleRooms').doc(roomId).update({
+      await _firestore.kanjiCollection('battleRooms').doc(roomId).update({
         'status': 'finished',
         'finishedAt': Timestamp.now(),
         'participants': finalParticipants.map((p) => p.toJson()).toList(),
@@ -403,7 +404,7 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
   }) async {
     for (final participant in finalParticipants) {
       final statsRef = _firestore
-          .collection('users')
+          .kanjiCollection('users')
           .doc(participant.userId)
           .collection('battleStats')
           .doc('summary');

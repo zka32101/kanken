@@ -6,11 +6,12 @@ import '../models/friend_challenge.dart';
 import '../models/notifications.dart';
 import '../models/achievement.dart';
 import '../viewmodels/user_viewmodel.dart' as user_vm;
+import '../services/ukalab_paths.dart';
 
 /// users/{uid}/profiles/{profileId} 配下のドキュメント参照
 DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {
   return FirebaseFirestore.instance
-      .collection('users')
+      .kanjiCollection('users')
       .doc(uid)
       .collection('profiles')
       .doc(profileId);
@@ -23,7 +24,7 @@ final receivedChallengesProvider = FutureProvider<List<FriendChallenge>>((ref) a
 
   try {
     final snapshot = await FirebaseFirestore.instance
-        .collection('friendChallenges')
+        .kanjiCollection('friendChallenges')
         .where('challengeeUserId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .get();
@@ -43,7 +44,7 @@ final sentChallengesProvider = FutureProvider<List<FriendChallenge>>((ref) async
 
   try {
     final snapshot = await FirebaseFirestore.instance
-        .collection('friendChallenges')
+        .kanjiCollection('friendChallenges')
         .where('challengerUserId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .get();
@@ -63,7 +64,7 @@ final activeChallengesProvider = FutureProvider<List<FriendChallenge>>((ref) asy
 
   try {
     final snapshot = await FirebaseFirestore.instance
-        .collection('friendChallenges')
+        .kanjiCollection('friendChallenges')
         .where('challengeeUserId', isEqualTo: userId)
         .where('status', whereIn: ['pending', 'accepted'])
         .orderBy('dueAt')
@@ -101,7 +102,7 @@ Future<void> createChallenge(
     final dueAt = DateTime.now().add(Duration(days: durationDays));
 
     await FirebaseFirestore.instance
-        .collection('friendChallenges')
+        .kanjiCollection('friendChallenges')
         .doc(challengeId)
         .set({
           'challengeId': challengeId,
@@ -164,7 +165,7 @@ Future<void> _createChallengeReceivedNotification({
 Future<void> acceptChallenge(String challengeId) async {
   try {
     await FirebaseFirestore.instance
-        .collection('friendChallenges')
+        .kanjiCollection('friendChallenges')
         .doc(challengeId)
         .update({
           'status': 'accepted',
@@ -179,7 +180,7 @@ Future<void> acceptChallenge(String challengeId) async {
 Future<void> declineChallenge(String challengeId) async {
   try {
     await FirebaseFirestore.instance
-        .collection('friendChallenges')
+        .kanjiCollection('friendChallenges')
         .doc(challengeId)
         .update({
           'status': 'declined',
@@ -199,7 +200,7 @@ Future<void> submitChallengeScore({
     final field = isChallenger ? 'challengerScore' : 'challengeeScore';
 
     await FirebaseFirestore.instance
-        .collection('friendChallenges')
+        .kanjiCollection('friendChallenges')
         .doc(challengeId)
         .update({
           field: score,
@@ -207,14 +208,14 @@ Future<void> submitChallengeScore({
 
     // 両者がスコアを提出したらチャレンジを完了
     final doc = await FirebaseFirestore.instance
-        .collection('friendChallenges')
+        .kanjiCollection('friendChallenges')
         .doc(challengeId)
         .get();
 
     final data = doc.data()!;
     if (data['challengerScore'] != null && data['challengeeScore'] != null) {
       await FirebaseFirestore.instance
-          .collection('friendChallenges')
+          .kanjiCollection('friendChallenges')
           .doc(challengeId)
           .update({
             'status': 'completed',
@@ -238,7 +239,7 @@ Future<void> submitChallengeScore({
 Future<void> deleteChallenge(String challengeId) async {
   try {
     await FirebaseFirestore.instance
-        .collection('friendChallenges')
+        .kanjiCollection('friendChallenges')
         .doc(challengeId)
         .delete();
   } catch (e) {

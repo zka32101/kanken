@@ -7,11 +7,12 @@ import 'package:kanken/services/firestore_service.dart';
 import 'package:kanken/viewmodels/services_provider.dart';
 import 'package:kanken/viewmodels/user_viewmodel.dart' as user_vm;
 import 'firebase_provider.dart';
+import '../services/ukalab_paths.dart';
 
 /// users/{uid}/profiles/{profileId} 配下のドキュメント参照
 DocumentReference<Map<String, dynamic>> _profileDoc(String uid, String profileId) {
   return FirebaseFirestore.instance
-      .collection('users')
+      .kanjiCollection('users')
       .doc(uid)
       .collection('profiles')
       .doc(profileId);
@@ -143,7 +144,7 @@ class FriendNotifier extends StateNotifier<AsyncValue<void>> {
       }
       final targetDisplayName = targetProfile['displayName'] as String? ?? 'Unknown';
 
-      final requestId = FirebaseFirestore.instance.collection('users').doc().id;
+      final requestId = FirebaseFirestore.instance.kanjiCollection('users').doc().id;
 
       // 送信側: friends に「リクエスト送信済み」として追加
       await _profileDoc(_currentUserId!, _profileId)

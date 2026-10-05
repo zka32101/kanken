@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'ukalab_paths.dart';
 
 /// 推しの成長（網羅率）に使う、端末内の学習記録。
 ///
@@ -48,7 +49,7 @@ class OshiProgressStore {
     final prefs = await SharedPreferences.getInstance();
     try {
       final snapshot = await (firestore ?? FirebaseFirestore.instance)
-          .collection('questions')
+          .kanjiCollection('questions')
           .where('level', isEqualTo: level)
           .count()
           .get();

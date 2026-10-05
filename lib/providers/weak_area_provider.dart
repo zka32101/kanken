@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/weak_area.dart';
+import '../services/ukalab_paths.dart';
 
 /// 苦手分野分析を取得
 final weakAreaAnalysisProvider = FutureProvider<WeakAreaAnalysis>((ref) async {
@@ -15,7 +16,7 @@ final weakAreaAnalysisProvider = FutureProvider<WeakAreaAnalysis>((ref) async {
   }
 
   final snapshot = await FirebaseFirestore.instance
-      .collection('users')
+      .kanjiCollection('users')
       .doc(userId)
       .collection('weakAreas')
       .orderBy('accuracyRate')
@@ -98,7 +99,7 @@ class WeakAreaNotifier extends StateNotifier<WeakAreaState> {
       if (currentUser == null) throw Exception('ユーザーがログインしていません');
 
       final docRef = _firestore
-          .collection('users')
+          .kanjiCollection('users')
           .doc(currentUser.uid)
           .collection('weakAreas')
           .doc(categoryId);
@@ -155,7 +156,7 @@ class WeakAreaNotifier extends StateNotifier<WeakAreaState> {
       if (currentUser == null) throw Exception('ユーザーがログインしていません');
 
       final docRef = _firestore
-          .collection('users')
+          .kanjiCollection('users')
           .doc(currentUser.uid)
           .collection('weakAreas')
           .doc(categoryId);
@@ -189,7 +190,7 @@ class WeakAreaNotifier extends StateNotifier<WeakAreaState> {
       if (currentUser == null) throw Exception('ユーザーがログインしていません');
 
       await _firestore
-          .collection('users')
+          .kanjiCollection('users')
           .doc(currentUser.uid)
           .collection('weakAreas')
           .doc(categoryId)
