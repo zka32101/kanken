@@ -149,9 +149,11 @@ class _MockExamEnhancedScreenState extends ConsumerState<MockExamEnhancedScreen>
           elevation: 0,
           actions: [
             Padding(
-              padding: const EdgeInsets.all(16),
+              // 縦に余白を取ると、AppBarの高さ(56)を超えて「BOTTOM OVERFLOWED」になる。
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Center(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -221,7 +223,7 @@ class _MockExamEnhancedScreenState extends ConsumerState<MockExamEnhancedScreen>
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              '【${currentQuestion.questionType}】',
+                              '【${questionTypeLabel(currentQuestion.questionType)}】',
                               style: Theme.of(context).textTheme.labelMedium,
                             ),
                             if (currentQuestion.questionType != 'writing' &&
@@ -309,5 +311,23 @@ class _MockExamEnhancedScreenState extends ConsumerState<MockExamEnhancedScreen>
               ),
       ),
     );
+  }
+}
+
+/// 出題形式の内部名を、画面に出す日本語名にする。
+String questionTypeLabel(String type) {
+  switch (type) {
+    case 'reading':
+      return '読み';
+    case 'meaning':
+      return '意味';
+    case 'stroke':
+      return '画数';
+    case 'writing':
+      return '書き取り';
+    case 'usage':
+      return '使い方';
+    default:
+      return type;
   }
 }
