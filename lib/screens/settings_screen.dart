@@ -10,6 +10,7 @@ import '../services/handwriting_strictness.dart';
 import '../viewmodels/user_viewmodel.dart';
 import '../viewmodels/services_provider.dart';
 import '../widgets/parental_gate_dialog.dart';
+import 'package:kanken/widgets/ukalab_emoji.dart';
 
 /// プロフィールのアイコンに使える絵文字候補
 const _avatarIconChoices = ['🙂', '😀', '😊', '🐱', '🐶', '🐻', '🦁', '🐼', '🐸', '🦊', '⭐', '🌸'];
@@ -199,7 +200,7 @@ class _ProfileManagementSection extends ConsumerWidget {
                   backgroundColor: profile.profileId == activeProfileId
                       ? Colors.blue.shade100
                       : Colors.grey.shade200,
-                  child: Text(profile.avatarIcon, style: const TextStyle(fontSize: 20)),
+                  child: UkalabEmoji(profile.avatarIcon, size: 20),
                 ),
                 title: Text(profile.displayName.isEmpty ? '(名前未設定)' : profile.displayName),
                 subtitle: Text(profile.currentLevel),
@@ -379,7 +380,7 @@ class _ProfileManagementSection extends ConsumerWidget {
                   children: _avatarIconChoices.map((icon) {
                     final selected = icon == selectedIcon;
                     return ChoiceChip(
-                      label: Text(icon, style: const TextStyle(fontSize: 18)),
+                      label: UkalabEmoji(icon, size: 18),
                       selected: selected,
                       onSelected: (_) => setState(() => selectedIcon = icon),
                     );

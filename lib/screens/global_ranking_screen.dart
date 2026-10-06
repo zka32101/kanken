@@ -5,6 +5,7 @@ import '../models/global_event.dart';
 import '../models/user_ranking.dart';
 import '../providers/event_provider.dart';
 import '../providers/ranking_provider.dart';
+import 'package:kanken/widgets/ukalab_emoji.dart';
 
 class GlobalRankingScreen extends ConsumerStatefulWidget {
   const GlobalRankingScreen({Key? key}) : super(key: key);
@@ -310,10 +311,7 @@ class _GlobalRankingScreenState extends ConsumerState<GlobalRankingScreen>
           SizedBox(
             width: 50,
             child: Center(
-              child: Text(
-                medalEmoji,
-                style: const TextStyle(fontSize: 28),
-              ),
+              child: UkalabEmoji(medalEmoji, size: 28),
             ),
           ),
           const SizedBox(width: 12),
@@ -539,10 +537,7 @@ class _GlobalRankingScreenState extends ConsumerState<GlobalRankingScreen>
           SizedBox(
             width: 50,
             child: Center(
-              child: Text(
-                medalEmoji,
-                style: const TextStyle(fontSize: 28),
-              ),
+              child: UkalabEmoji(medalEmoji, size: 28),
             ),
           ),
           const SizedBox(width: 12),

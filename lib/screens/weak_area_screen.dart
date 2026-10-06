@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/weak_area.dart';
 import '../providers/weak_area_provider.dart';
+import 'package:kanken/widgets/ukalab_emoji.dart';
 
 class WeakAreaScreen extends ConsumerWidget {
   const WeakAreaScreen({Key? key}) : super(key: key);
@@ -111,10 +112,7 @@ class WeakAreaScreen extends ConsumerWidget {
   }) {
     return Column(
       children: [
-        Text(
-          icon,
-          style: const TextStyle(fontSize: 28),
-        ),
+        UkalabEmoji(icon, size: 28),
         const SizedBox(height: 4),
         Text(
           value,

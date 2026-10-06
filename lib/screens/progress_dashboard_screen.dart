@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../models/gamification_stats.dart';
 import '../providers/gamification_provider.dart';
+import 'package:kanken/widgets/ukalab_emoji.dart';
 
 /// 学習進捗ダッシュボード画面
 class ProgressDashboardScreen extends ConsumerWidget {
@@ -495,7 +496,7 @@ class _StatColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(icon, style: const TextStyle(fontSize: 24)),
+        UkalabEmoji(icon, size: 24),
         const SizedBox(height: 8),
         Text(
           value,

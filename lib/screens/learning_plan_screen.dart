@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/learning_recommendation.dart';
 import '../providers/learning_plan_provider.dart';
+import 'package:kanken/widgets/ukalab_emoji.dart';
 
 class LearningPlanScreen extends ConsumerWidget {
   const LearningPlanScreen({Key? key}) : super(key: key);
@@ -162,10 +163,7 @@ class LearningPlanScreen extends ConsumerWidget {
   }) {
     return Column(
       children: [
-        Text(
-          icon,
-          style: const TextStyle(fontSize: 24),
-        ),
+        UkalabEmoji(icon, size: 24),
         const SizedBox(height: 4),
         Text(
           value,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/leaderboard.dart';
 import '../providers/leaderboard_provider.dart';
+import 'package:kanken/widgets/ukalab_emoji.dart';
 
 class LeaderboardScreen extends ConsumerStatefulWidget {
   const LeaderboardScreen({Key? key}) : super(key: key);
@@ -94,10 +95,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
             margin: const EdgeInsets.only(bottom: 8),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             child: ListTile(
-              leading: Text(
-                medal,
-                style: const TextStyle(fontSize: 24),
-              ),
+              leading: UkalabEmoji(medal, size: 24),
               title: Text(
                 leaderboardEntry.userName,
                 style: const TextStyle(fontWeight: FontWeight.bold),
