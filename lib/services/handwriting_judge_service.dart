@@ -16,7 +16,10 @@ import '../data/stroke_order_sample_data.dart';
 /// - サイズ（キャンバスに対する占有率、最大35点）
 class HandwritingJudgeService {
   /// 合格とみなす点数（0-100）
-  static const int passingScore = 60;
+  static const int passingScore = 70;
+
+  /// 字として小さすぎる入力（キャンバス短辺に対する外接四角の長辺の割合）は採点しない
+  static const double minInkExtentRatio = 0.12;
 
   /// ストロークデータから手書き入力を判定
   /// @param strokes: 手書きストローク座標群（キャンバス内のローカル座標）。
@@ -52,6 +55,7 @@ class HandwritingJudgeService {
           : shapeScore(
               strokes: strokes,
               referenceStrokes: referencePolylines(ref.strokePaths, ref.viewBox),
+              canvasSize: [canvasW, canvasH],
             );
       final isCorrect = score >= passingScore;
 
@@ -93,12 +97,20 @@ class HandwritingJudgeService {
   static int shapeScore({
     required List<List<List<double>>> strokes,
     required List<List<Offset>> referenceStrokes,
+    List<double>? canvasSize,
   }) {
     final user = [
       for (final s in strokes)
         if (s.isNotEmpty) [for (final p in s) Offset(p[0], p[1])],
     ];
     if (user.isEmpty || referenceStrokes.isEmpty) return 0;
+    // 点や極小の書き込みは、正規化で拡大されて字形に見えてしまうので先に弾く
+    if (canvasSize != null && canvasSize.length > 1) {
+      final all = user.expand((s) => s);
+      final xs = all.map((p) => p.dx), ys = all.map((p) => p.dy);
+      final extent = max(xs.reduce(max) - xs.reduce(min), ys.reduce(max) - ys.reduce(min));
+      if (extent < min(canvasSize[0], canvasSize[1]) * minInkExtentRatio) return 0;
+    }
     final u = _resample(_normalize(user));
     final r = _resample(_normalize(referenceStrokes));
     if (u.isEmpty || r.isEmpty) return 0;
@@ -115,7 +127,9 @@ class HandwritingJudgeService {
       return sum / from.length;
     }
 
-    final dist = (mean(r, u) + mean(u, r)) / 2; // 0〜約1（正規化済み）
+    // 書き漏れ(r→u)と余計な線(u→r)の平均に加え、どちらか悪い方も効かせる
+    final miss = mean(r, u), extra = mean(u, r);
+    final dist = ((miss + extra) / 2) * 0.6 + max(miss, extra) * 0.4; // 0〜約1（正規化済み）
     final shape = (100 * (1 - (dist / 0.14))).clamp(0.0, 100.0);
     final diff = (user.length - referenceStrokes.length).abs();
     final penalty = diff <= 1 ? 0.0 : (diff - 1) * 15.0;
