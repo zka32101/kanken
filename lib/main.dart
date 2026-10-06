@@ -8,11 +8,20 @@ import 'package:app_common_kit/app_common_kit.dart';
 import 'firebase_options.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
+import 'widgets/startup_splash.dart';
 import 'services/ad_service.dart';
 import 'services/purchases_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 初期化（Firebase・課金・広告・保存データの読み込み）には時間がかかる。その間、
+  // 下部に組織ロゴを出した起動画面を先に出す。初期化が終わったら本来の画面に差し替える。
+  runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: StartupSplash()));
+
+  // 初期化（Firebase・課金・広告・保存データの読み込み）には時間がかかる。その間、
+  // 下部に組織ロゴを出した起動画面を先に出す。初期化が終わったら本来の画面に差し替える。
+  runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: StartupSplash()));
 
   // Firebase初期化
   // google-services.jsonが存在する場合、ネイティブ側(FirebaseInitProvider)が
