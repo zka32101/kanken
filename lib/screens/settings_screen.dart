@@ -6,6 +6,7 @@ import 'package:cross_promo_kit/cross_promo_kit.dart';
 import 'package:app_common_kit/app_common_kit.dart';
 import '../models/user.dart';
 import '../services/firestore_service.dart';
+import '../services/handwriting_strictness.dart';
 import '../viewmodels/user_viewmodel.dart';
 import '../viewmodels/services_provider.dart';
 import '../widgets/parental_gate_dialog.dart';
@@ -18,6 +19,32 @@ const String appDisclaimer =
     '本アプリは、各漢字検定の実施団体・主催者とは一切関係のない、Your Wish が制作した非公式の学習アプリです。\n'
     '試験名は、学習の対象を示すためにのみ使用しています。問題・解説は独自に作成したもので、実際の試験の出題内容や合格を保証するものではありません。\n'
     '最新の試験情報は、実施団体の公式サイトでご確認ください。';
+
+/// 手書き練習の合格ライン（やさしい60 / ふつう70 / きびしい80）。端末内に保存。
+class HandwritingStrictnessTile extends ConsumerWidget {
+  const HandwritingStrictnessTile({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final level = ref.watch(handwritingStrictnessProvider);
+    return ListTile(
+      leading: const Icon(Icons.edit_outlined),
+      title: const Text('手書きの判定'),
+      subtitle: const Text('やさしい：ざっくり合っていれば合格\nふつう\nきびしい：形をていねいに'),
+      isThreeLine: true,
+      trailing: DropdownButton<HandwritingStrictness>(
+        value: level,
+        items: HandwritingStrictness.values
+            .map((e) => DropdownMenuItem(value: e, child: Text(e.label)))
+            .toList(),
+        onChanged: (v) {
+          if (v == null) return;
+          ref.read(handwritingStrictnessProvider.notifier).set(v);
+        },
+      ),
+    );
+  }
+}
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -62,6 +89,7 @@ class SettingsScreen extends ConsumerWidget {
                   },
                 ),
               ),
+              const HandwritingStrictnessTile(),
               const Divider(),
               const _SectionHeader('公開設定'),
               SwitchListTile(

@@ -32,6 +32,7 @@ class HandwritingJudgeService {
     required List<List<List<double>>> strokes,
     required Map<String, dynamic> correctAnswer,
     List<double>? canvasSize,
+    int passingScore = HandwritingJudgeService.passingScore,
   }) async {
     try {
       final allPoints = strokes.expand((s) => s).toList();
