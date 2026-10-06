@@ -1,4 +1,9 @@
 import 'dart:math';
+import 'dart:ui' show Offset;
+
+import 'package:path_drawing/path_drawing.dart';
+
+import '../data/stroke_order_sample_data.dart';
 
 /// 手書き判定サービス
 /// ストローク座標と正解パターンの照合ロジック
@@ -38,7 +43,16 @@ class HandwritingJudgeService {
       final canvasW = (canvasSize != null && canvasSize.isNotEmpty) ? canvasSize[0] : 280.0;
       final canvasH = (canvasSize != null && canvasSize.length > 1) ? canvasSize[1] : 280.0;
 
-      final score = _calculateScore(strokes, allPoints, canvasW, canvasH);
+      // 書き順データ(KanjiVG)がある漢字は、字形を照合して採点する。ない漢字だけ、
+      // 従来の画数・位置・大きさの目安で採点する。
+      final kanji = correctAnswer['kanji'] as String?;
+      final ref = kanji == null ? null : StrokeOrderSampleData.getStrokeOrder(kanji);
+      final score = ref == null
+          ? _calculateScore(strokes, allPoints, canvasW, canvasH)
+          : shapeScore(
+              strokes: strokes,
+              referenceStrokes: referencePolylines(ref.strokePaths, ref.viewBox),
+            );
       final isCorrect = score >= passingScore;
 
       return HandwritingJudgement(
@@ -53,6 +67,97 @@ class HandwritingJudgeService {
         message: '判定エラー：${e.toString()}',
       );
     }
+  }
+
+  /// 書き順データの各画（SVGパス）を、点列に直す。
+  static List<List<Offset>> referencePolylines(List<String> svgPaths, double viewBox) {
+    final result = <List<Offset>>[];
+    for (final svg in svgPaths) {
+      final pts = <Offset>[];
+      for (final m in parseSvgPathData(svg).computeMetrics()) {
+        final n = max(2, (m.length / 3).ceil());
+        for (var i = 0; i <= n; i++) {
+          final t = m.getTangentForOffset(m.length * i / n);
+          if (t != null) pts.add(t.position);
+        }
+      }
+      result.add(pts);
+    }
+    return result;
+  }
+
+  /// 字形の一致度(0-100)。位置と大きさは正規化して無視し、形だけを見る。
+  /// - 正解の各点が、書いた線のどこかの近くにあること（書き漏れ）
+  /// - 書いた各点が、正解の線のどこかの近くにあること（余計な線）
+  /// - 画数が大きく違う場合は減点（±1画までは許す）
+  static int shapeScore({
+    required List<List<List<double>>> strokes,
+    required List<List<Offset>> referenceStrokes,
+  }) {
+    final user = [
+      for (final s in strokes)
+        if (s.isNotEmpty) [for (final p in s) Offset(p[0], p[1])],
+    ];
+    if (user.isEmpty || referenceStrokes.isEmpty) return 0;
+    final u = _resample(_normalize(user));
+    final r = _resample(_normalize(referenceStrokes));
+    if (u.isEmpty || r.isEmpty) return 0;
+
+    double mean(List<Offset> from, List<Offset> to) {
+      var sum = 0.0;
+      for (final a in from) {
+        var best = double.infinity;
+        for (final b in to) {
+          best = min(best, (a - b).distance);
+        }
+        sum += best;
+      }
+      return sum / from.length;
+    }
+
+    final dist = (mean(r, u) + mean(u, r)) / 2; // 0〜約1（正規化済み）
+    final shape = (100 * (1 - (dist / 0.14))).clamp(0.0, 100.0);
+    final diff = (user.length - referenceStrokes.length).abs();
+    final penalty = diff <= 1 ? 0.0 : (diff - 1) * 15.0;
+    return (shape - penalty).clamp(0.0, 100.0).round();
+  }
+
+  /// 全体の外接四角を、縦横比を保って単位正方形(中央寄せ)に収める。
+  static List<List<Offset>> _normalize(List<List<Offset>> strokes) {
+    final all = strokes.expand((s) => s);
+    var minX = double.infinity, minY = double.infinity;
+    var maxX = -double.infinity, maxY = -double.infinity;
+    for (final p in all) {
+      minX = min(minX, p.dx);
+      maxX = max(maxX, p.dx);
+      minY = min(minY, p.dy);
+      maxY = max(maxY, p.dy);
+    }
+    final side = max(max(maxX - minX, maxY - minY), 1e-6);
+    final ox = (1 - (maxX - minX) / side) / 2;
+    final oy = (1 - (maxY - minY) / side) / 2;
+    return [
+      for (final s in strokes)
+        [for (final p in s) Offset((p.dx - minX) / side + ox, (p.dy - minY) / side + oy)],
+    ];
+  }
+
+  /// 線に沿って、一定間隔の点に取り直す（点の粗密に左右されないように）。
+  static List<Offset> _resample(List<List<Offset>> strokes, {double step = 0.02}) {
+    final out = <Offset>[];
+    for (final s in strokes) {
+      if (s.length == 1) out.add(s.first);
+      for (var i = 0; i + 1 < s.length; i++) {
+        final a = s[i], b = s[i + 1];
+        final len = (b - a).distance;
+        final n = max(1, (len / step).ceil());
+        for (var k = 0; k < n; k++) {
+          out.add(Offset.lerp(a, b, k / n)!);
+        }
+      }
+      if (s.length > 1) out.add(s.last);
+    }
+    return out;
   }
 
   /// 採点ロジック（国語コレの _calculateScore() を移植）
