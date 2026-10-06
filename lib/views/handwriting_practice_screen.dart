@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/index.dart';
 import '../providers/learning_goal_provider.dart';
 import '../services/index.dart';
+import '../services/handwriting_strictness.dart';
 import '../viewmodels/services_provider.dart';
 import '../viewmodels/user_viewmodel.dart';
 import '../providers/writing_mastery_provider.dart';
@@ -206,7 +207,10 @@ class _HandwritingPracticeScreenState
     setState(() => _isJudging = true);
     final handwritingService = ref.read(handwritingJudgeServiceProvider);
 
+    await ref.read(handwritingStrictnessProvider.notifier).ensureLoaded();
+    final level = ref.read(handwritingStrictnessProvider);
     final judgement = await handwritingService.judgeHandwriting(
+      passingScore: level.passingScore,
       strokes: _strokes,
       correctAnswer: {'kanji': kanji},
       canvasSize: _canvasSize,
