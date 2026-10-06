@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/learning_goal.dart';
 import '../providers/learning_goal_provider.dart';
 import '../viewmodels/user_viewmodel.dart';
+import 'package:kanken/widgets/ukalab_emoji.dart';
 
 // 各級の配当漢字数（累計）の目安。受験日から逆算した1日あたりの
 // 学習ペースを提案する際の参考値として使う簡略化された値であり、
@@ -284,7 +285,7 @@ class LearningGoalsScreen extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    Text(goal.typeIcon, style: const TextStyle(fontSize: 20)),
+                    UkalabEmoji(goal.typeIcon, size: 20),
                     const SizedBox(width: 8),
                     Text(
                       goal.typeLabel,
@@ -365,7 +366,7 @@ class LearningGoalsScreen extends ConsumerWidget {
           color: Colors.green.shade50,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: ListTile(
-            leading: Text(goal.typeIcon, style: const TextStyle(fontSize: 24)),
+            leading: UkalabEmoji(goal.typeIcon, size: 24),
             title: Text(
               goal.typeLabel,
               style: const TextStyle(fontWeight: FontWeight.bold),

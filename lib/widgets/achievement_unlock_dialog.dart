@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/achievement.dart';
+import 'package:kanken/widgets/ukalab_emoji.dart';
 
 class AchievementUnlockDialog extends StatefulWidget {
   final List<Achievement> achievements;
@@ -100,10 +101,7 @@ class _AchievementUnlockDialogState extends State<AchievementUnlockDialog>
                 ),
 
               // アイコン
-              Text(
-                achievement.icon,
-                style: const TextStyle(fontSize: 80),
-              ),
+              UkalabEmoji(achievement.icon, size: 80),
               const SizedBox(height: 16),
 
               // 「新しいバッジを獲得」
@@ -223,10 +221,7 @@ class AchievementBadgeWidget extends StatelessWidget {
             ),
           ),
           child: Center(
-            child: Text(
-              achievement.icon,
-              style: const TextStyle(fontSize: 32),
-            ),
+            child: UkalabEmoji(achievement.icon, size: 32),
           ),
         ),
         const SizedBox(height: 8),

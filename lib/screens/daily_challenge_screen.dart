@@ -5,6 +5,7 @@ import '../models/daily_challenge.dart';
 import '../models/gamification_stats.dart';
 import '../providers/daily_challenge_provider.dart';
 import '../providers/gamification_provider.dart';
+import 'package:kanken/widgets/ukalab_emoji.dart';
 
 /// デイリーチャレンジ画面
 class DailyChallengeScreen extends ConsumerWidget {
@@ -319,7 +320,7 @@ class _StatTile extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
-            Text(icon, style: const TextStyle(fontSize: 28)),
+            UkalabEmoji(icon, size: 28),
             const SizedBox(height: 8),
             Text(
               value,
@@ -390,7 +391,7 @@ class _BonusItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(icon, style: const TextStyle(fontSize: 18)),
+        UkalabEmoji(icon, size: 18),
         const SizedBox(width: 8),
         Expanded(
           child: Text(

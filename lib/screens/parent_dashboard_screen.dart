@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/parent_dashboard.dart';
 import '../providers/parent_dashboard_provider.dart';
+import 'package:kanken/widgets/ukalab_emoji.dart';
 
 class ParentDashboardScreen extends ConsumerStatefulWidget {
   const ParentDashboardScreen({Key? key}) : super(key: key);
@@ -315,7 +316,7 @@ class _ParentDashboardScreenState extends ConsumerState<ParentDashboardScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(icon, style: const TextStyle(fontSize: 28)),
+          UkalabEmoji(icon, size: 28),
           const SizedBox(height: 8),
           Text(
             value,
