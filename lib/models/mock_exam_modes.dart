@@ -57,10 +57,14 @@ class ExamConfig {
   // ここも見直すこと（lib/screens/mock_exam_modes_screen.dartの
   // サブタイトル表示もquestionCountと連動させている）。
 
+  /// 日本漢字能力検定の公式の検定時間（分）。8級以下（8・9・10級）は40分、
+  /// 7級以上は60分（日本漢字能力検定協会の公表値）。
+  static int officialMinutes(int level) => level >= 8 ? 40 : 60;
+
   /// Standard exam (official format)
   factory ExamConfig.standard({int level = 3}) => ExamConfig(
     questionCount: 20,
-    timeLimit: 120,
+    timeLimit: officialMinutes(level),
     mode: ExamMode.standardExam,
     difficulty: ExamDifficulty.medium,
     categories: ExamCategory.values,
