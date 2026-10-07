@@ -37,8 +37,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "backport/ukalab-characters-0.4"
-      resolved-ref: "437ed29540ac5a5196761dd23636c52ffb7f197e"
+      ref: "v0.4.5"
+      resolved-ref: "1a13dbd07952083ee91b9a38370c21a58c7318a4"
       url: "https://github.com/zka32101/app_common_kit.git"
     source: git
     version: "0.4.5"

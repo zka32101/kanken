@@ -59,7 +59,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: backport/ukalab-characters-0.4
+      ref: v0.4.5
   cross_promo_kit:
     git:
       url: https://github.com/zka32101/cross_promo_kit
