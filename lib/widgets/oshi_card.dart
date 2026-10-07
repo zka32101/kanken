@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:app_common_kit/app_common_kit.dart'
     show
-        CharacterPack,
+        CharacterSelectScreen,
         ExamPhase,
         MascotDayState,
         MascotStage,
@@ -12,6 +12,7 @@ import 'package:app_common_kit/app_common_kit.dart'
         WardrobeScreen,
         coinProvider,
         equippedOutfitProvider,
+        selectedCharacterPackProvider,
         showPassReportDialog;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,7 +31,7 @@ Future<void> shareCardImage(Uint8List png) async {
   );
 }
 
-enum _OshiAction { wardrobe, passReport }
+enum _OshiAction { wardrobe, passReport, choose }
 
 /// ホームの「推し」カード。学習が進むと成長し、学習コインの残高を控えめに出す。
 /// メニューから着替え・ショップと、試験の結果報告（合格報告）を開ける。
@@ -43,6 +44,7 @@ class OshiCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stage = ref.watch(oshiStageProvider).valueOrNull ?? MascotStage.lv1;
+    final pack = ref.watch(selectedCharacterPackProvider);
     final examDate = ref.watch(currentUserProvider).valueOrNull?.examDate;
 
     // コインと衣装は付加機能。未設定でも画面は出す。
@@ -63,8 +65,12 @@ class OshiCard extends ConsumerWidget {
               cert: UkalabCert.kanjiKentei,
               examPhase: _examPhase(examDate),
               stage: stage,
-              pack: CharacterPack.standard,
+              pack: pack,
             ),
+          ));
+        case _OshiAction.choose:
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => const CharacterSelectScreen(),
           ));
         case _OshiAction.passReport:
           showPassReportDialog(
@@ -85,6 +91,7 @@ class OshiCard extends ConsumerWidget {
         child: Row(
           children: [
             MascotWidget(
+              pack: pack,
               stage: stage,
               outfit: outfit,
               examPhase: _examPhase(examDate),
@@ -95,7 +102,7 @@ class OshiCard extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('あなたの推し  Lv${stage.level}',
+                  Text('${pack.isBuiltIn ? 'あなたの推し' : pack.name}  Lv${stage.level}',
                       style: theme.textTheme.titleSmall),
                   const SizedBox(height: 4),
                   Text('学習すると成長します', style: theme.textTheme.bodySmall),
@@ -111,6 +118,8 @@ class OshiCard extends ConsumerWidget {
               icon: const Icon(Icons.more_vert),
               onSelected: onSelected,
               itemBuilder: (_) => const [
+                PopupMenuItem(
+                    value: _OshiAction.choose, child: Text('推しを選ぶ')),
                 PopupMenuItem(
                     value: _OshiAction.wardrobe, child: Text('着替え・ショップ')),
                 PopupMenuItem(
