@@ -16,10 +16,12 @@ import '../data/stroke_order_sample_data.dart';
 /// - サイズ（キャンバスに対する占有率、最大35点）
 class HandwritingJudgeService {
   /// 合格とみなす点数（0-100）
-  static const int passingScore = 70;
+  static const int passingScore = 65;
 
   /// 字として小さすぎる入力（キャンバス短辺に対する外接四角の長辺の割合）は採点しない
   static const double minInkExtentRatio = 0.12;
+  /// 書いた線の総延長が正解の何倍までなら減点しないか（書き散らし対策）。
+  static const double maxInkRatio = 2.0;
 
   /// ストロークデータから手書き入力を判定
   /// @param strokes: 手書きストローク座標群（キャンバス内のローカル座標）。
@@ -134,7 +136,21 @@ class HandwritingJudgeService {
     final shape = (100 * (1 - (dist / 0.14))).clamp(0.0, 100.0);
     final diff = (user.length - referenceStrokes.length).abs();
     final penalty = diff <= 1 ? 0.0 : (diff - 1) * 15.0;
-    return (shape - penalty).clamp(0.0, 100.0).round();
+    // 線を塗りつぶすように書き散らすと、どこも正解の近くになって形の一致度が高く出てしまう。
+    // 書いた線の総延長が正解の2倍を超えたら、超えた分だけ減点する。
+    final inkRatio = _pathLength(_normalize(user)) / max(_pathLength(_normalize(referenceStrokes)), 1e-6);
+    final inkPenalty = inkRatio <= maxInkRatio ? 0.0 : ((inkRatio - maxInkRatio) * 40.0).clamp(0.0, 60.0);
+    return (shape - penalty - inkPenalty).clamp(0.0, 100.0).round();
+  }
+
+  static double _pathLength(List<List<Offset>> strokes) {
+    var sum = 0.0;
+    for (final s in strokes) {
+      for (var i = 0; i + 1 < s.length; i++) {
+        sum += (s[i + 1] - s[i]).distance;
+      }
+    }
+    return sum;
   }
 
   /// 全体の外接四角を、縦横比を保って単位正方形(中央寄せ)に収める。
