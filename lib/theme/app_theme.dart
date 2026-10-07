@@ -7,8 +7,12 @@ class AppColors {
   AppColors._();
 
   // ブランドカラー
-  static const Color primary = Color(0xFFC2347A); // 共通テーマ「言語・教育」の分野色
-  static const Color primaryDark = Color(0xFF90265A);
+  // 漢字検定は別ブランド（子ども向け）。小学コレ！国語と同系のオレンジで統一する。
+  // 設計書: ukalab_分野別・資格別カラー割当_v0_1（漢字検定）。
+  // light = #B45F06（白文字 4.58:1）／ dark = #F5B461（文字 #10151C 10.11:1）。
+  static const Color primary = Color(0xFFB45F06);
+  static const Color primaryDark = Color(0xFF8A4905);
+  static const Color primaryOnDark = Color(0xFFF5B461);
 
   // 機能カテゴリカラー（意味のグルーピングに基づく統一配色）
   static const Color study = Color(0xFF2FA86A);      // 学習・演習系（緑）
@@ -42,7 +46,40 @@ class AppTheme {
   static ThemeData dark({bool googleFont = true}) => _base(Brightness.dark, googleFont);
 
   static ThemeData _base(Brightness brightness, bool googleFont) {
-    final base = UkalabTheme.build(field: field, brightness: brightness);
+    final built = UkalabTheme.build(field: field, brightness: brightness);
+    final isDark = brightness == Brightness.dark;
+    final fill = isDark ? AppColors.primaryOnDark : AppColors.primary;
+    final onFill = isDark ? const Color(0xFF10151C) : Colors.white;
+    // 共通テーマ（言語・教育のピンク）を、漢検のオレンジに差し替える。
+    // コンテナ色は面と文字をセットで決める（沈んで読めなくなるのを防ぐ）。
+    final scheme = built.colorScheme.copyWith(
+      primary: fill,
+      onPrimary: onFill,
+      primaryContainer: isDark ? const Color(0xFF4A2D08) : const Color(0xFFFBE5CC),
+      onPrimaryContainer: isDark ? const Color(0xFFFBE0B8) : const Color(0xFF5A2F00),
+      secondary: fill,
+      onSecondary: onFill,
+      secondaryContainer: isDark ? const Color(0xFF4A2D08) : const Color(0xFFFBE5CC),
+      onSecondaryContainer: isDark ? const Color(0xFFFBE0B8) : const Color(0xFF5A2F00),
+    );
+    final base = built.copyWith(
+      colorScheme: scheme,
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(UkalabTheme.minTapTarget, UkalabTheme.minTapTarget),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(UkalabTheme.buttonRadius)),
+          backgroundColor: fill,
+          foregroundColor: onFill,
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          minimumSize: const Size(UkalabTheme.minTapTarget, UkalabTheme.minTapTarget),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(UkalabTheme.buttonRadius)),
+          foregroundColor: fill,
+        ),
+      ),
+    );
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(UkalabTheme.buttonRadius),
     );
