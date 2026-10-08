@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../models/category_label.dart';
 import '../models/mock_exam.dart';
 
 class ExamResultScreen extends StatelessWidget {
@@ -246,7 +247,7 @@ class ExamResultScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(category),
+                        Text(categoryLabel(category)),
                         Text('${(score * 100).toStringAsFixed(1)}%'),
                       ],
                     ),

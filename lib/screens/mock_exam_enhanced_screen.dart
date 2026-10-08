@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/category_label.dart';
 import '../models/mock_exam_modes.dart';
 import '../providers/exam_session_provider.dart';
 import 'mock_exam_result_screen.dart';
@@ -316,18 +317,5 @@ class _MockExamEnhancedScreenState extends ConsumerState<MockExamEnhancedScreen>
 
 /// 出題形式の内部名を、画面に出す日本語名にする。
 String questionTypeLabel(String type) {
-  switch (type) {
-    case 'reading':
-      return '読み';
-    case 'meaning':
-      return '意味';
-    case 'stroke':
-      return '画数';
-    case 'writing':
-      return '書き取り';
-    case 'usage':
-      return '使い方';
-    default:
-      return type;
-  }
+  return categoryLabel(type);
 }

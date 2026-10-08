@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/category_label.dart';
 import '../models/mock_exam_modes.dart';
 import '../providers/mock_exam_enhanced_provider.dart';
 import '../providers/exam_session_provider.dart';
@@ -327,14 +328,7 @@ class MockExamModesScreen extends ConsumerWidget {
             itemCount: ExamCategory.values.length - 1, // Exclude 'mixed'
             itemBuilder: (context, index) {
               final category = ExamCategory.values[index];
-              final categoryName = {
-                ExamCategory.reading: '読み',
-                ExamCategory.meaning: '意味',
-                ExamCategory.stroke: '画数',
-                ExamCategory.writing: '書き',
-                ExamCategory.usage: '使い方',
-                ExamCategory.mixed: '混合',
-              }[category] ?? category.toString();
+              final categoryName = categoryLabel(category.name);
 
               return ListTile(
                 title: Text(categoryName),
