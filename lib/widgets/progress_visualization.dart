@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
 
 /// カテゴリ別進捗バー
 class CategoryProgressBar extends StatelessWidget {
@@ -344,11 +345,13 @@ class StreakWidget extends StatelessWidget {
         DateTime.now().month == lastActiveDate.month &&
         DateTime.now().year == lastActiveDate.year;
 
+    // 漢検のブランド色（オレンジ）に合わせ、ライト/ダークとも配色はテーマから取る。
+    final scheme = Theme.of(context).colorScheme;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.red.shade50,
+        color: scheme.primaryContainer,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.red.shade200),
+        border: Border.all(color: scheme.primary.withOpacity(0.5)),
       ),
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -361,8 +364,8 @@ class StreakWidget extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Colors.red.shade400,
-                  Colors.orange.shade400,
+                  scheme.primary,
+                  Color.lerp(scheme.primary, Colors.black, 0.25)!,
                 ],
               ),
               borderRadius: BorderRadius.circular(8),
@@ -382,16 +385,16 @@ class StreakWidget extends StatelessWidget {
                 Text(
                   '連続学習中',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey.shade600,
+                        color: scheme.onPrimaryContainer.withOpacity(0.75),
                       ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '$streakDays日間',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
-                    color: Colors.red,
+                    color: scheme.onPrimaryContainer,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -399,7 +402,9 @@ class StreakWidget extends StatelessWidget {
                   isActiveToday ? '今日も学習済み ✓' : '今日はまだ学習していません',
                   style: TextStyle(
                     fontSize: 12,
-                    color: isActiveToday ? Colors.green : Colors.orange,
+                    color: isActiveToday
+                        ? AppColors.success
+                        : scheme.onPrimaryContainer.withOpacity(0.75),
                   ),
                 ),
               ],
