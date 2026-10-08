@@ -21,7 +21,7 @@ const String appDisclaimer =
     '試験名は、学習の対象を示すためにのみ使用しています。問題・解説は独自に作成したもので、実際の試験の出題内容や合格を保証するものではありません。\n'
     '最新の試験情報は、実施団体の公式サイトでご確認ください。';
 
-/// 手書き練習の合格ライン（やさしい60 / ふつう70 / きびしい80）。端末内に保存。
+/// 手書き練習の合格ライン（60/65/70/75/80点、初期は65点）。端末内に保存。
 class HandwritingStrictnessTile extends ConsumerWidget {
   const HandwritingStrictnessTile({Key? key}) : super(key: key);
 

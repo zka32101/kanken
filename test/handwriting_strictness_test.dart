@@ -25,12 +25,15 @@ Future<HandwritingJudgement> _judge(int pass) => HandwritingJudgeService().judge
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  test('合格点は やさしい60/ふつう70/きびしい80、既定はふつう', () {
+  test('合格点は 60/65/70/75/80、既定は65', () {
+    expect(HandwritingStrictness.values.map((e) => e.passingScore), [60, 65, 70, 75, 80]);
     expect(HandwritingStrictness.easy.passingScore, 60);
+    expect(HandwritingStrictness.standard.passingScore, 65);
+    expect(HandwritingStrictness.firm.passingScore, 75);
     expect(HandwritingStrictness.normal.passingScore, 70);
     expect(HandwritingStrictness.strict.passingScore, 80);
-    expect(HandwritingStrictness.defaultLevel, HandwritingStrictness.normal);
-    expect(HandwritingJudgeService.passingScore, 70);
+    expect(HandwritingStrictness.defaultLevel, HandwritingStrictness.standard);
+    expect(HandwritingJudgeService.passingScore, 65);
   });
 
   test('同じ点数でも合格点で正誤が変わる（点数自体は不変）', () async {
@@ -46,13 +49,15 @@ void main() {
     expect((await _judge(score)).isCorrect, isTrue);
   });
 
-  test('保存値なしは ふつう、保存して読み戻せる、壊れた値は ふつう', () async {
-    expect(await HandwritingStrictnessStore.load(), HandwritingStrictness.normal);
+  test('保存値なしは65点、保存して読み戻せる、壊れた値は65点、旧保存名normalは70点のまま', () async {
+    expect(await HandwritingStrictnessStore.load(), HandwritingStrictness.standard);
     for (final l in HandwritingStrictness.values) {
       await HandwritingStrictnessStore.save(l);
       expect(await HandwritingStrictnessStore.load(), l);
     }
     SharedPreferences.setMockInitialValues({HandwritingStrictnessStore.prefsKey: 'xxx'});
+    expect(await HandwritingStrictnessStore.load(), HandwritingStrictness.standard);
+    SharedPreferences.setMockInitialValues({HandwritingStrictnessStore.prefsKey: 'normal'});
     expect(await HandwritingStrictnessStore.load(), HandwritingStrictness.normal);
   });
 
@@ -62,9 +67,9 @@ void main() {
     ));
     await tester.pumpAndSettle();
     expect(find.text('手書きの判定'), findsOneWidget);
-    await tester.tap(find.text('ふつう'));
+    await tester.tap(find.text('65点'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('きびしい').last);
+    await tester.tap(find.text('80点').last);
     await tester.pumpAndSettle();
     expect(await HandwritingStrictnessStore.load(), HandwritingStrictness.strict);
   });

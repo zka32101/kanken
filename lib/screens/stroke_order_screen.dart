@@ -18,11 +18,17 @@ import '../theme/app_theme.dart';
 /// 公式配当漢字表のローカルデータを直接使う方式に変更した。
 final _levelStrokeOrderKanjiProvider =
     FutureProvider.family<List<String>, String>((ref, level) async {
-  final levelKanji = LevelKanjiData.forLevel(level);
-  final available = StrokeOrderSampleData.availableKanji.toSet();
-  final filtered = levelKanji.where(available.contains).toList();
-  return filtered.isNotEmpty ? filtered : StrokeOrderSampleData.availableKanji;
+  return strokeOrderKanjiForLevel(level);
 });
+
+/// 級の配当漢字のうち書き順データがあるものだけを返す（配当表の並び順）。
+/// 書き順データが1字も無い級（現状は4級・3級）は、他の級の漢字で埋めずに空を返す。
+/// 以前は空のとき全漢字（小学校分）にフォールバックしていたため、
+/// 4級・3級を選んでも下の級の漢字が混ざって表示されていた。
+List<String> strokeOrderKanjiForLevel(String level) {
+  final available = StrokeOrderSampleData.availableKanji.toSet();
+  return LevelKanjiData.forLevel(level).where(available.contains).toList();
+}
 
 /// 漢字の学習画面（漢字一覧 → タップで書き順アニメーション・読み方・用例を表示）
 /// 一覧は現在選択中の級（currentLevelProvider）に出題される漢字のみに絞る。
@@ -53,7 +59,7 @@ class _StrokeOrderScreenState extends ConsumerState<StrokeOrderScreen> {
         error: (err, stack) => Center(child: Text('エラー: $err')),
         data: (kanjiList) {
           if (kanjiList.isEmpty) {
-            return const Center(child: Text('この級の漢字データがありません'));
+            return const Center(child: Text('この級の書き順データは準備中です'));
           }
           // 級が変わったら選択をリセットする（別の級の漢字が選ばれたままにならないように）。
           if (_selectedForLevel != level) {

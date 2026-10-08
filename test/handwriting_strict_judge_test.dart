@@ -65,6 +65,23 @@ void main() {
     expect((await _judge(dots)).isCorrect, isFalse);
   });
 
+  test('書き散らし(線で全面を塗る)は、いちばんやさしい60点でも不正解', () async {
+    for (var seed = 1; seed <= 8; seed++) {
+      final rnd = Random(seed);
+      final scribble = [
+        for (var s = 0; s < 6; s++)
+          [for (var i = 0; i < 40; i++) [20 + rnd.nextDouble() * 320, 40 + rnd.nextDouble() * 400]],
+      ];
+      final j = await HandwritingJudgeService().judgeHandwriting(
+        strokes: scribble,
+        correctAnswer: {'kanji': '百'},
+        canvasSize: [360, 500],
+        passingScore: 60,
+      );
+      expect(j.isCorrect, isFalse, reason: 'seed $seed: ${j.message}');
+    }
+  });
+
   test('一部の画だけ(半分書き漏れ)は不正解', () async {
     final full = _drawn('百');
     expect((await _judge(full.sublist(0, 3))).isCorrect, isFalse);
