@@ -48,7 +48,7 @@ class MockExamModesScreen extends ConsumerWidget {
               context,
               ref,
               title: '標準試験',
-              subtitle: '${ExamConfig.standard(level: targetLevel).questionCount}問 • ${ExamConfig.standard(level: targetLevel).timeLimit}分',
+              subtitle: '${ExamConfig.standard(level: targetLevel).questionCount}問 • ${ExamConfig.standard(level: targetLevel).timeLimit}分 • 合格の目安${ExamConfig.standard(level: targetLevel).passThreshold}%',
               description: '実際の試験に最も近い形式。全問題タイプをバランスよく出題します。',
               icon: Icons.description,
               color: Colors.blue,

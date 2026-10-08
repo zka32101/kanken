@@ -69,7 +69,8 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
       coin.takeRecent(); // 結果画面の内訳に、この試験の分だけが出るように
       await coin.grant(CoinEvent.mockDone());
       final accuracy = session.getAccuracyRate();
-      final isPassed = (accuracy * 100) >= session.config.passThreshold;
+      final isPassed = session.config.isPass(
+          session.getCorrectAnswerCount(), session.questions.length);
       if (!isPassed) return;
       await coin.grant(CoinEvent.mockPass('kanken_level_${session.config.targetLevel}'));
       // 習得度が最高段階（Lv5＝0.8以上）なら、準備完了の装いを解放する。
@@ -122,7 +123,8 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
   /// 合格ラインを超えていれば、その級の合格バッジを付与する
   Future<void> _awardBadgeIfPassed() async {
     final accuracy = session.getAccuracyRate();
-    final isPassed = (accuracy * 100) >= session.config.passThreshold;
+    final isPassed = session.config.isPass(
+          session.getCorrectAnswerCount(), session.questions.length);
     if (!isPassed) return;
 
     try {
@@ -528,7 +530,8 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
   @override
   Widget build(BuildContext context) {
     final accuracy = session.getAccuracyRate();
-    final isPassed = (accuracy * 100) >= session.config.passThreshold;
+    final isPassed = session.config.isPass(
+          session.getCorrectAnswerCount(), session.questions.length);
 
     return Scaffold(
       appBar: AppBar(
@@ -702,7 +705,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
             const Divider(),
             _buildStatRow(
               '合否ライン',
-              '${session.config.passThreshold}%以上',
+              '${session.config.passThreshold}%以上（公式の目安）',
             ),
           ],
         ),
