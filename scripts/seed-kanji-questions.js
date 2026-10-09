@@ -12,6 +12,9 @@
  * 中学校で新たに学習する漢字の級別配当表(公開されている級別漢字一覧に
  * 基づく)を追加済み。
  *
+ * 読み・例文・追加の読み(extraReadings)は export_data/kanji_questions_600.jsonl を
+ * 正として反映している(読みはひらがな、送り仮名は全角括弧)。
+ *
  * KanjiQuestion.fromJson()(lib/models/kanji_question.dart) が期待する
  * フィールド構造に合わせてある。readingは送り仮名がある語を
  * 「ただ（しい）」のように括弧表記する(同ファイルのdocコメント参照)。
@@ -61,6 +64,7 @@ const questions = [
     "correctAnswer": "町",
     "reading": "まち",
     "example": "町のお祭り（まちのおまつり）",
+    "extraReadings": [{"reading": "ちょう", "example": "町長（ちょうちょう）"}],
     "version": 1
   },
   {
@@ -72,6 +76,7 @@ const questions = [
     "correctAnswer": "先",
     "reading": "さき",
     "example": "先に（さきに）",
+    "extraReadings": [{"reading": "せん", "example": "先生（せんせい）"}],
     "version": 1
   },
   {
@@ -83,6 +88,7 @@ const questions = [
     "correctAnswer": "人",
     "reading": "ひと",
     "example": "人間（にんげん）",
+    "extraReadings": [{"reading": "じん", "example": "人口（じんこう）"}, {"reading": "にん", "example": "人数（にんずう）"}],
     "version": 1
   },
   {
@@ -94,6 +100,7 @@ const questions = [
     "correctAnswer": "耳",
     "reading": "みみ",
     "example": "耳たぶ（みみたぶ）",
+    "extraReadings": [{"reading": "じ", "example": "耳鼻科（じびか）"}],
     "version": 1
   },
   {
@@ -105,6 +112,7 @@ const questions = [
     "correctAnswer": "五",
     "reading": "ご",
     "example": "五月（ごがつ）",
+    "extraReadings": [{"reading": "いつ（つ）", "example": "五つ（いつつ）"}, {"reading": "いつ", "example": "五日（いつか）"}],
     "version": 1
   },
   {
@@ -116,6 +124,7 @@ const questions = [
     "correctAnswer": "学",
     "reading": "がく",
     "example": "学校（がっこう）",
+    "extraReadings": [{"reading": "まな（ぶ）", "example": "学ぶ（まなぶ）"}],
     "version": 1
   },
   {
@@ -127,6 +136,7 @@ const questions = [
     "correctAnswer": "一",
     "reading": "いち",
     "example": "一番目（いちばんめ）",
+    "extraReadings": [{"reading": "ひと", "example": "一人（ひとり）"}],
     "version": 1
   },
   {
@@ -137,7 +147,8 @@ const questions = [
     "choices": ["音", "虫", "土", "文"],
     "correctAnswer": "文",
     "reading": "ぶん",
-    "example": "文章（ぶんしょう）",
+    "example": "作文（さくぶん）",
+    "extraReadings": [{"reading": "もん", "example": "文字（もじ）"}, {"reading": "ふみ", "example": "文（ふみ）"}],
     "version": 1
   },
   {
@@ -149,6 +160,7 @@ const questions = [
     "correctAnswer": "天",
     "reading": "てん",
     "example": "天気（てんき）",
+    "extraReadings": [{"reading": "あま", "example": "天の川（あまのがわ）"}],
     "version": 1
   },
   {
@@ -160,6 +172,7 @@ const questions = [
     "correctAnswer": "早",
     "reading": "はや（い）",
     "example": "早い（はやい）",
+    "extraReadings": [{"reading": "そう", "example": "早朝（そうちょう）"}, {"reading": "さっ", "example": "早速（さっそく）"}],
     "version": 1
   },
   {
@@ -171,6 +184,7 @@ const questions = [
     "correctAnswer": "水",
     "reading": "みず",
     "example": "水曜日（すいようび）",
+    "extraReadings": [{"reading": "すい", "example": "水泳（すいえい）"}],
     "version": 1
   },
   {
@@ -182,6 +196,7 @@ const questions = [
     "correctAnswer": "七",
     "reading": "しち",
     "example": "七月（しちがつ）",
+    "extraReadings": [{"reading": "なな", "example": "七色（なないろ）"}, {"reading": "なの", "example": "七日（なのか）"}],
     "version": 1
   },
   {
@@ -193,6 +208,7 @@ const questions = [
     "correctAnswer": "口",
     "reading": "くち",
     "example": "入り口（いりぐち）",
+    "extraReadings": [{"reading": "こう", "example": "人口（じんこう）"}, {"reading": "く", "example": "口調（くちょう）"}],
     "version": 1
   },
   {
@@ -204,6 +220,7 @@ const questions = [
     "correctAnswer": "気",
     "reading": "き",
     "example": "気分（きぶん）",
+    "extraReadings": [{"reading": "け", "example": "気配（けはい）"}],
     "version": 1
   },
   {
@@ -215,6 +232,7 @@ const questions = [
     "correctAnswer": "右",
     "reading": "みぎ",
     "example": "右手（みぎて）",
+    "extraReadings": [{"reading": "う", "example": "右折（うせつ）"}],
     "version": 1
   },
   {
@@ -226,6 +244,7 @@ const questions = [
     "correctAnswer": "木",
     "reading": "き",
     "example": "木曜日（もくようび）",
+    "extraReadings": [{"reading": "ぼく", "example": "大木（たいぼく）"}, {"reading": "もく", "example": "木材（もくざい）"}, {"reading": "こ", "example": "木立（こだち）"}],
     "version": 1
   },
   {
@@ -237,6 +256,7 @@ const questions = [
     "correctAnswer": "田",
     "reading": "た",
     "example": "田んぼ（たんぼ）",
+    "extraReadings": [{"reading": "でん", "example": "水田（すいでん）"}],
     "version": 1
   },
   {
@@ -248,6 +268,7 @@ const questions = [
     "correctAnswer": "草",
     "reading": "くさ",
     "example": "草花（くさばな）",
+    "extraReadings": [{"reading": "そう", "example": "雑草（ざっそう）"}],
     "version": 1
   },
   {
@@ -258,7 +279,8 @@ const questions = [
     "choices": ["正", "男", "入", "字"],
     "correctAnswer": "正",
     "reading": "ただ（しい）",
-    "example": "正しい（ただしい）",
+    "example": "正しい答え（ただしいこたえ）",
+    "extraReadings": [{"reading": "せい", "example": "正解（せいかい）"}, {"reading": "しょう", "example": "正月（しょうがつ）"}],
     "version": 1
   },
   {
@@ -270,6 +292,7 @@ const questions = [
     "correctAnswer": "車",
     "reading": "くるま",
     "example": "車いす（くるまいす）",
+    "extraReadings": [{"reading": "しゃ", "example": "電車（でんしゃ）"}],
     "version": 1
   },
   {
@@ -292,6 +315,7 @@ const questions = [
     "correctAnswer": "九",
     "reading": "きゅう",
     "example": "九月（くがつ）",
+    "extraReadings": [{"reading": "ここの", "example": "九つ（ここのつ）"}, {"reading": "く", "example": "九月（くがつ）"}],
     "version": 1
   },
   {
@@ -303,6 +327,7 @@ const questions = [
     "correctAnswer": "雨",
     "reading": "あめ",
     "example": "雨降り（あめふり）",
+    "extraReadings": [{"reading": "う", "example": "雨天（うてん）"}],
     "version": 1
   },
   {
@@ -313,7 +338,8 @@ const questions = [
     "choices": ["百", "本", "犬", "上"],
     "correctAnswer": "本",
     "reading": "ほん",
-    "example": "絵本（えほん）",
+    "example": "本屋（ほんや）",
+    "extraReadings": [{"reading": "もと", "example": "本（もと）"}],
     "version": 1
   },
   {
@@ -325,6 +351,7 @@ const questions = [
     "correctAnswer": "土",
     "reading": "つち",
     "example": "土曜日（どようび）",
+    "extraReadings": [{"reading": "ど", "example": "土木（どぼく）"}, {"reading": "と", "example": "土地（とち）"}],
     "version": 1
   },
   {
@@ -336,6 +363,7 @@ const questions = [
     "correctAnswer": "足",
     "reading": "あし",
     "example": "足音（あしおと）",
+    "extraReadings": [{"reading": "そく", "example": "満足（まんぞく）"}, {"reading": "た（りる）", "example": "足りる（たりる）"}, {"reading": "た（す）", "example": "足す（たす）"}],
     "version": 1
   },
   {
@@ -347,6 +375,7 @@ const questions = [
     "correctAnswer": "生",
     "reading": "い（きる）",
     "example": "生きる（いきる）",
+    "extraReadings": [{"reading": "う（む）", "example": "生む（うむ）"}, {"reading": "なま", "example": "生水（なまみず）"}],
     "version": 1
   },
   {
@@ -358,6 +387,7 @@ const questions = [
     "correctAnswer": "手",
     "reading": "て",
     "example": "手紙（てがみ）",
+    "extraReadings": [{"reading": "しゅ", "example": "歌手（かしゅ）"}],
     "version": 1
   },
   {
@@ -369,6 +399,7 @@ const questions = [
     "correctAnswer": "左",
     "reading": "ひだり",
     "example": "左手（ひだりて）",
+    "extraReadings": [{"reading": "さ", "example": "左右（さゆう）"}],
     "version": 1
   },
   {
@@ -380,6 +411,7 @@ const questions = [
     "correctAnswer": "休",
     "reading": "やす（む）",
     "example": "休む（やすむ）",
+    "extraReadings": [{"reading": "きゅう", "example": "休日（きゅうじつ）"}, {"reading": "やす（まる）", "example": "休まる（やすまる）"}],
     "version": 1
   },
   {
@@ -391,6 +423,7 @@ const questions = [
     "correctAnswer": "円",
     "reading": "えん",
     "example": "百円（ひゃくえん）",
+    "extraReadings": [{"reading": "まる（い）", "example": "円い（まるい）"}],
     "version": 1
   },
   {
@@ -402,6 +435,7 @@ const questions = [
     "correctAnswer": "名",
     "reading": "な",
     "example": "名前（なまえ）",
+    "extraReadings": [{"reading": "めい", "example": "名人（めいじん）"}, {"reading": "みょう", "example": "名字（みょうじ）"}],
     "version": 1
   },
   {
@@ -413,6 +447,7 @@ const questions = [
     "correctAnswer": "二",
     "reading": "に",
     "example": "二人（ふたり）",
+    "extraReadings": [{"reading": "ふた", "example": "二つ（ふたつ）"}],
     "version": 1
   },
   {
@@ -424,6 +459,7 @@ const questions = [
     "correctAnswer": "村",
     "reading": "むら",
     "example": "村人（むらびと）",
+    "extraReadings": [{"reading": "そん", "example": "村長（そんちょう）"}],
     "version": 1
   },
   {
@@ -435,6 +471,7 @@ const questions = [
     "correctAnswer": "青",
     "reading": "あお",
     "example": "青空（あおぞら）",
+    "extraReadings": [{"reading": "せい", "example": "青春（せいしゅん）"}, {"reading": "あお（い）", "example": "青い（あおい）"}],
     "version": 1
   },
   {
@@ -446,6 +483,7 @@ const questions = [
     "correctAnswer": "十",
     "reading": "じゅう",
     "example": "十月（じゅうがつ）",
+    "extraReadings": [{"reading": "じっ", "example": "十分（じっぷん）"}, {"reading": "とお", "example": "十日（とおか）"}],
     "version": 1
   },
   {
@@ -457,6 +495,7 @@ const questions = [
     "correctAnswer": "三",
     "reading": "さん",
     "example": "三月（さんがつ）",
+    "extraReadings": [{"reading": "みっ（つ）", "example": "三つ（みっつ）"}],
     "version": 1
   },
   {
@@ -468,6 +507,7 @@ const questions = [
     "correctAnswer": "玉",
     "reading": "たま",
     "example": "玉入れ（たまいれ）",
+    "extraReadings": [{"reading": "ぎょく", "example": "玉将（ぎょくしょう）"}],
     "version": 1
   },
   {
@@ -490,6 +530,7 @@ const questions = [
     "correctAnswer": "目",
     "reading": "め",
     "example": "目薬（めぐすり）",
+    "extraReadings": [{"reading": "もく", "example": "目次（もくじ）"}, {"reading": "ぼく", "example": "面目（めんぼく）"}],
     "version": 1
   },
   {
@@ -501,6 +542,7 @@ const questions = [
     "correctAnswer": "日",
     "reading": "ひ",
     "example": "日曜日（にちようび）",
+    "extraReadings": [{"reading": "にち", "example": "日曜日（にちようび）"}, {"reading": "か", "example": "三日（みっか）"}],
     "version": 1
   },
   {
@@ -512,6 +554,7 @@ const questions = [
     "correctAnswer": "大",
     "reading": "おお（きい）",
     "example": "大きい（おおきい）",
+    "extraReadings": [{"reading": "だい", "example": "大学（だいがく）"}, {"reading": "たい", "example": "大切（たいせつ）"}, {"reading": "おお", "example": "大空（おおぞら）"}],
     "version": 1
   },
   {
@@ -534,6 +577,7 @@ const questions = [
     "correctAnswer": "出",
     "reading": "で（る）",
     "example": "出口（でぐち）",
+    "extraReadings": [{"reading": "しゅつ", "example": "出発（しゅっぱつ）"}],
     "version": 1
   },
   {
@@ -545,6 +589,7 @@ const questions = [
     "correctAnswer": "山",
     "reading": "やま",
     "example": "山登り（やまのぼり）",
+    "extraReadings": [{"reading": "さん", "example": "山脈（さんみゃく）"}],
     "version": 1
   },
   {
@@ -556,6 +601,7 @@ const questions = [
     "correctAnswer": "金",
     "reading": "かね",
     "example": "金曜日（きんようび）",
+    "extraReadings": [{"reading": "きん", "example": "金魚（きんぎょ）"}, {"reading": "こん", "example": "金色（こんじき）"}, {"reading": "かな", "example": "金物（かなもの）"}],
     "version": 1
   },
   {
@@ -567,6 +613,7 @@ const questions = [
     "correctAnswer": "音",
     "reading": "おと",
     "example": "足音（あしおと）",
+    "extraReadings": [{"reading": "おん", "example": "音楽（おんがく）"}, {"reading": "いん", "example": "母音（ぼいん）"}, {"reading": "ね", "example": "音色（ねいろ）"}],
     "version": 1
   },
   {
@@ -577,7 +624,8 @@ const questions = [
     "choices": ["休", "目", "立", "二"],
     "correctAnswer": "立",
     "reading": "た（つ）",
-    "example": "立つ（たつ）",
+    "example": "立ち上がる（たちあがる）",
+    "extraReadings": [{"reading": "りつ", "example": "国立（こくりつ）"}, {"reading": "りゅう", "example": "建立（こんりゅう）"}],
     "version": 1
   },
   {
@@ -589,6 +637,7 @@ const questions = [
     "correctAnswer": "入",
     "reading": "はい（る）",
     "example": "入る（はいる）",
+    "extraReadings": [{"reading": "にゅう", "example": "入学（にゅうがく）"}],
     "version": 1
   },
   {
@@ -600,6 +649,7 @@ const questions = [
     "correctAnswer": "男",
     "reading": "おとこ",
     "example": "男性（だんせい）",
+    "extraReadings": [{"reading": "だん", "example": "男子（だんし）"}, {"reading": "なん", "example": "長男（ちょうなん）"}],
     "version": 1
   },
   {
@@ -611,6 +661,7 @@ const questions = [
     "correctAnswer": "石",
     "reading": "いし",
     "example": "小石（こいし）",
+    "extraReadings": [{"reading": "せき", "example": "石油（せきゆ）"}, {"reading": "しゃく", "example": "磁石（じしゃく）"}, {"reading": "こく", "example": "石高（こくだか）"}],
     "version": 1
   },
   {
@@ -622,6 +673,7 @@ const questions = [
     "correctAnswer": "女",
     "reading": "おんな",
     "example": "女性（じょせい）",
+    "extraReadings": [{"reading": "じょ", "example": "少女（しょうじょ）"}, {"reading": "にょ", "example": "天女（てんにょ）"}, {"reading": "め", "example": "女神（めがみ）"}],
     "version": 1
   },
   {
@@ -633,6 +685,7 @@ const questions = [
     "correctAnswer": "子",
     "reading": "こ",
     "example": "子供（こども）",
+    "extraReadings": [{"reading": "し", "example": "女子（じょし）"}],
     "version": 1
   },
   {
@@ -643,7 +696,8 @@ const questions = [
     "choices": ["空", "見", "十", "村"],
     "correctAnswer": "空",
     "reading": "そら",
-    "example": "空色（そらいろ）",
+    "example": "青空（あおぞら）",
+    "extraReadings": [{"reading": "くう", "example": "空気（くうき）"}],
     "version": 1
   },
   {
@@ -655,6 +709,7 @@ const questions = [
     "correctAnswer": "下",
     "reading": "した",
     "example": "下着（したぎ）",
+    "extraReadings": [{"reading": "か", "example": "地下（ちか）"}, {"reading": "げ", "example": "下車（げしゃ）"}],
     "version": 1
   },
   {
@@ -666,6 +721,7 @@ const questions = [
     "correctAnswer": "力",
     "reading": "ちから",
     "example": "力持ち（ちからもち）",
+    "extraReadings": [{"reading": "りょく", "example": "努力（どりょく）"}, {"reading": "りき", "example": "力士（りきし）"}],
     "version": 1
   },
   {
@@ -677,6 +733,7 @@ const questions = [
     "correctAnswer": "年",
     "reading": "とし",
     "example": "来年（らいねん）",
+    "extraReadings": [{"reading": "ねん", "example": "一年生（いちねんせい）"}],
     "version": 1
   },
   {
@@ -687,7 +744,8 @@ const questions = [
     "choices": ["六", "気", "町", "竹"],
     "correctAnswer": "竹",
     "reading": "たけ",
-    "example": "竹の子（たけのこ）",
+    "example": "竹やぶ（たけやぶ）",
+    "extraReadings": [{"reading": "ちく", "example": "竹林（ちくりん）"}],
     "version": 1
   },
   {
@@ -699,6 +757,7 @@ const questions = [
     "correctAnswer": "赤",
     "reading": "あか",
     "example": "赤色（あかいろ）",
+    "extraReadings": [{"reading": "せき", "example": "赤道（せきどう）"}, {"reading": "あか（い）", "example": "赤い（あかい）"}],
     "version": 1
   },
   {
@@ -710,6 +769,7 @@ const questions = [
     "correctAnswer": "小",
     "reading": "ちい（さい）",
     "example": "小さい（ちいさい）",
+    "extraReadings": [{"reading": "しょう", "example": "小学校（しょうがっこう）"}, {"reading": "こ", "example": "小川（こがわ）"}],
     "version": 1
   },
   {
@@ -721,6 +781,7 @@ const questions = [
     "correctAnswer": "四",
     "reading": "し",
     "example": "四月（しがつ）",
+    "extraReadings": [{"reading": "よ", "example": "四人（よにん）"}, {"reading": "よん", "example": "四本（よんほん）"}],
     "version": 1
   },
   {
@@ -732,6 +793,7 @@ const questions = [
     "correctAnswer": "月",
     "reading": "つき",
     "example": "月曜日（げつようび）",
+    "extraReadings": [{"reading": "げつ", "example": "月曜日（げつようび）"}, {"reading": "がつ", "example": "一月（いちがつ）"}],
     "version": 1
   },
   {
@@ -743,6 +805,7 @@ const questions = [
     "correctAnswer": "火",
     "reading": "ひ",
     "example": "火曜日（かようび）",
+    "extraReadings": [{"reading": "か", "example": "火事（かじ）"}],
     "version": 1
   },
   {
@@ -753,7 +816,8 @@ const questions = [
     "choices": ["耳", "小", "林", "立"],
     "correctAnswer": "林",
     "reading": "はやし",
-    "example": "林の中（はやしのなか）",
+    "example": "松林（まつばやし）",
+    "extraReadings": [{"reading": "りん", "example": "森林（しんりん）"}],
     "version": 1
   },
   {
@@ -765,6 +829,7 @@ const questions = [
     "correctAnswer": "白",
     "reading": "しろ",
     "example": "白色（しろいろ）",
+    "extraReadings": [{"reading": "はく", "example": "白紙（はくし）"}, {"reading": "しら", "example": "白髪（しらが）"}, {"reading": "びゃく", "example": "白夜（びゃくや）"}],
     "version": 1
   },
   {
@@ -776,6 +841,7 @@ const questions = [
     "correctAnswer": "中",
     "reading": "なか",
     "example": "中身（なかみ）",
+    "extraReadings": [{"reading": "ちゅう", "example": "中心（ちゅうしん）"}, {"reading": "じゅう", "example": "一日中（いちにちじゅう）"}],
     "version": 1
   },
   {
@@ -798,6 +864,7 @@ const questions = [
     "correctAnswer": "上",
     "reading": "うえ",
     "example": "机の上（つくえのうえ）",
+    "extraReadings": [{"reading": "じょう", "example": "上手（じょうず）"}, {"reading": "あ（がる）", "example": "上がる（あがる）"}],
     "version": 1
   },
   {
@@ -808,7 +875,8 @@ const questions = [
     "choices": ["出", "糸", "字", "下"],
     "correctAnswer": "糸",
     "reading": "いと",
-    "example": "毛糸（けいと）",
+    "example": "糸電話（いとでんわ）",
+    "extraReadings": [{"reading": "し", "example": "毛糸（けいと）"}],
     "version": 1
   },
   {
@@ -820,6 +888,7 @@ const questions = [
     "correctAnswer": "犬",
     "reading": "いぬ",
     "example": "子犬（こいぬ）",
+    "extraReadings": [{"reading": "けん", "example": "番犬（ばんけん）"}],
     "version": 1
   },
   {
@@ -831,6 +900,7 @@ const questions = [
     "correctAnswer": "花",
     "reading": "はな",
     "example": "花見（はなみ）",
+    "extraReadings": [{"reading": "か", "example": "花瓶（かびん）"}],
     "version": 1
   },
   {
@@ -842,6 +912,7 @@ const questions = [
     "correctAnswer": "六",
     "reading": "ろく",
     "example": "六月（ろくがつ）",
+    "extraReadings": [{"reading": "むっ（つ）", "example": "六つ（むっつ）"}, {"reading": "む", "example": "六日（むいか）"}],
     "version": 1
   },
   {
@@ -853,6 +924,7 @@ const questions = [
     "correctAnswer": "八",
     "reading": "はち",
     "example": "八月（はちがつ）",
+    "extraReadings": [{"reading": "や", "example": "八百屋（やおや）"}, {"reading": "よう", "example": "八日（ようか）"}],
     "version": 1
   },
   {
@@ -863,7 +935,8 @@ const questions = [
     "choices": ["虫", "犬", "木", "本"],
     "correctAnswer": "虫",
     "reading": "むし",
-    "example": "虫かご（むしかご）",
+    "example": "虫取り（むしとり）",
+    "extraReadings": [{"reading": "ちゅう", "example": "昆虫（こんちゅう）"}],
     "version": 1
   },
   {
@@ -875,6 +948,7 @@ const questions = [
     "correctAnswer": "川",
     "reading": "かわ",
     "example": "小川（おがわ）",
+    "extraReadings": [{"reading": "せん", "example": "河川（かせん）"}],
     "version": 1
   },
   {
@@ -886,6 +960,7 @@ const questions = [
     "correctAnswer": "森",
     "reading": "もり",
     "example": "森の中（もりのなか）",
+    "extraReadings": [{"reading": "しん", "example": "森閑（しんかん）"}],
     "version": 1
   },
   {
@@ -908,6 +983,7 @@ const questions = [
     "correctAnswer": "見",
     "reading": "み（る）",
     "example": "見る（みる）",
+    "extraReadings": [{"reading": "けん", "example": "見学（けんがく）"}, {"reading": "み（える）", "example": "見える（みえる）"}, {"reading": "み（せる）", "example": "見せる（みせる）"}],
     "version": 1
   },
   {
@@ -918,7 +994,7 @@ const questions = [
     "choices": ["土", "手", "貝", "王"],
     "correctAnswer": "貝",
     "reading": "かい",
-    "example": "貝殻（かいがら）",
+    "example": "貝がら（かいがら）",
     "version": 1
   },
   {
@@ -928,7 +1004,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["交", "道", "台", "毎"],
     "correctAnswer": "毎",
-    "reading": "マイ",
+    "reading": "まい",
     "example": "毎日（まいにち）",
     "version": 1
   },
@@ -939,7 +1015,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["毛", "肉", "強", "歌"],
     "correctAnswer": "肉",
-    "reading": "ニク",
+    "reading": "にく",
     "example": "牛肉（ぎゅうにく）",
     "version": 1
   },
@@ -951,7 +1027,8 @@ const questions = [
     "choices": ["間", "肉", "通", "活"],
     "correctAnswer": "通",
     "reading": "とお（る）",
-    "example": "通る（とおる）",
+    "example": "通り道（とおりみち）",
+    "extraReadings": [{"reading": "つう", "example": "交通（こうつう）"}, {"reading": "かよ（う）", "example": "通う（かよう）"}],
     "version": 1
   },
   {
@@ -963,6 +1040,7 @@ const questions = [
     "correctAnswer": "前",
     "reading": "まえ",
     "example": "名前（なまえ）",
+    "extraReadings": [{"reading": "ぜん", "example": "前後（ぜんご）"}],
     "version": 1
   },
   {
@@ -973,7 +1051,8 @@ const questions = [
     "choices": ["場", "算", "紙", "回"],
     "correctAnswer": "場",
     "reading": "ば",
-    "example": "場所（ばしょ）",
+    "example": "広場（ひろば）",
+    "extraReadings": [{"reading": "じょう", "example": "工場（こうじょう）"}],
     "version": 1
   },
   {
@@ -996,6 +1075,7 @@ const questions = [
     "correctAnswer": "光",
     "reading": "ひか（る）",
     "example": "光る（ひかる）",
+    "extraReadings": [{"reading": "こう", "example": "日光（にっこう）"}],
     "version": 1
   },
   {
@@ -1007,6 +1087,7 @@ const questions = [
     "correctAnswer": "近",
     "reading": "ちか（い）",
     "example": "近く（ちかく）",
+    "extraReadings": [{"reading": "きん", "example": "近代（きんだい）"}],
     "version": 1
   },
   {
@@ -1018,6 +1099,7 @@ const questions = [
     "correctAnswer": "角",
     "reading": "かど",
     "example": "街角（まちかど）",
+    "extraReadings": [{"reading": "つの", "example": "角（つの）"}],
     "version": 1
   },
   {
@@ -1028,7 +1110,8 @@ const questions = [
     "choices": ["歌", "鳴", "引", "門"],
     "correctAnswer": "引",
     "reading": "ひ（く）",
-    "example": "引く（ひく）",
+    "example": "引き出し（ひきだし）",
+    "extraReadings": [{"reading": "いん", "example": "引力（いんりょく）"}],
     "version": 1
   },
   {
@@ -1040,6 +1123,7 @@ const questions = [
     "correctAnswer": "妹",
     "reading": "いもうと",
     "example": "妹（いもうと）",
+    "extraReadings": [{"reading": "まい", "example": "姉妹（しまい）"}],
     "version": 1
   },
   {
@@ -1050,7 +1134,8 @@ const questions = [
     "choices": ["用", "体", "弓", "馬"],
     "correctAnswer": "馬",
     "reading": "うま",
-    "example": "馬車（ばしゃ）",
+    "example": "馬小屋（うまごや）",
+    "extraReadings": [{"reading": "ば", "example": "乗馬（じょうば）"}],
     "version": 1
   },
   {
@@ -1062,6 +1147,7 @@ const questions = [
     "correctAnswer": "弟",
     "reading": "おとうと",
     "example": "兄弟（きょうだい）",
+    "extraReadings": [{"reading": "てい", "example": "師弟（してい）"}, {"reading": "で", "example": "弟子（でし）"}],
     "version": 1
   },
   {
@@ -1073,6 +1159,7 @@ const questions = [
     "correctAnswer": "組",
     "reading": "く（む）",
     "example": "組み立て（くみたて）",
+    "extraReadings": [{"reading": "そ", "example": "組織（そしき）"}, {"reading": "くみ", "example": "組（くみ）"}],
     "version": 1
   },
   {
@@ -1084,6 +1171,7 @@ const questions = [
     "correctAnswer": "色",
     "reading": "いろ",
     "example": "色紙（いろがみ）",
+    "extraReadings": [{"reading": "しょく", "example": "特色（とくしょく）"}, {"reading": "しき", "example": "色彩（しきさい）"}],
     "version": 1
   },
   {
@@ -1095,6 +1183,7 @@ const questions = [
     "correctAnswer": "姉",
     "reading": "あね",
     "example": "姉妹（しまい）",
+    "extraReadings": [{"reading": "し", "example": "姉妹（しまい）"}],
     "version": 1
   },
   {
@@ -1105,7 +1194,8 @@ const questions = [
     "choices": ["南", "聞", "書", "考"],
     "correctAnswer": "考",
     "reading": "かんが（える）",
-    "example": "考える（かんがえる）",
+    "example": "考え方（かんがえかた）",
+    "extraReadings": [{"reading": "こう", "example": "参考（さんこう）"}],
     "version": 1
   },
   {
@@ -1117,6 +1207,7 @@ const questions = [
     "correctAnswer": "兄",
     "reading": "あに",
     "example": "兄弟（きょうだい）",
+    "extraReadings": [{"reading": "きょう", "example": "兄弟（きょうだい）"}],
     "version": 1
   },
   {
@@ -1128,6 +1219,7 @@ const questions = [
     "correctAnswer": "楽",
     "reading": "たの（しい）",
     "example": "楽しい（たのしい）",
+    "extraReadings": [{"reading": "がく", "example": "音楽（おんがく）"}, {"reading": "たの（しむ）", "example": "楽しむ（たのしむ）"}],
     "version": 1
   },
   {
@@ -1139,6 +1231,7 @@ const questions = [
     "correctAnswer": "羽",
     "reading": "はね",
     "example": "羽根（はね）",
+    "extraReadings": [{"reading": "う", "example": "羽毛（うもう）"}, {"reading": "わ", "example": "一羽（いちわ）"}],
     "version": 1
   },
   {
@@ -1148,8 +1241,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["友", "万", "組", "海"],
     "correctAnswer": "万",
-    "reading": "マン",
-    "example": "一万（いちまん）",
+    "reading": "まん",
+    "example": "一万円（いちまんえん）",
+    "extraReadings": [{"reading": "ばん", "example": "万全（ばんぜん）"}],
     "version": 1
   },
   {
@@ -1160,7 +1254,8 @@ const questions = [
     "choices": ["図", "近", "売", "妹"],
     "correctAnswer": "売",
     "reading": "う（る）",
-    "example": "売る（うる）",
+    "example": "売り場（うりば）",
+    "extraReadings": [{"reading": "ばい", "example": "売買（ばいばい）"}],
     "version": 1
   },
   {
@@ -1171,7 +1266,8 @@ const questions = [
     "choices": ["冬", "道", "多", "店"],
     "correctAnswer": "店",
     "reading": "みせ",
-    "example": "店員（てんいん）",
+    "example": "店先（みせさき）",
+    "extraReadings": [{"reading": "てん", "example": "書店（しょてん）"}],
     "version": 1
   },
   {
@@ -1183,6 +1279,7 @@ const questions = [
     "correctAnswer": "走",
     "reading": "はし（る）",
     "example": "走る（はしる）",
+    "extraReadings": [{"reading": "そう", "example": "走者（そうしゃ）"}],
     "version": 1
   },
   {
@@ -1194,6 +1291,7 @@ const questions = [
     "correctAnswer": "食",
     "reading": "た（べる）",
     "example": "食べる（たべる）",
+    "extraReadings": [{"reading": "しょく", "example": "食事（しょくじ）"}, {"reading": "く（う）", "example": "食う（くう）"}],
     "version": 1
   },
   {
@@ -1205,6 +1303,7 @@ const questions = [
     "correctAnswer": "思",
     "reading": "おも（う）",
     "example": "思う（おもう）",
+    "extraReadings": [{"reading": "し", "example": "思想（しそう）"}],
     "version": 1
   },
   {
@@ -1216,6 +1315,7 @@ const questions = [
     "correctAnswer": "行",
     "reading": "い（く）",
     "example": "行く（いく）",
+    "extraReadings": [{"reading": "こう", "example": "旅行（りょこう）"}, {"reading": "ぎょう", "example": "行事（ぎょうじ）"}, {"reading": "おこな（う）", "example": "行う（おこなう）"}],
     "version": 1
   },
   {
@@ -1227,6 +1327,7 @@ const questions = [
     "correctAnswer": "形",
     "reading": "かたち",
     "example": "三角形（さんかくけい）",
+    "extraReadings": [{"reading": "けい", "example": "図形（ずけい）"}, {"reading": "ぎょう", "example": "人形（にんぎょう）"}, {"reading": "かた", "example": "形（かた）"}],
     "version": 1
   },
   {
@@ -1236,7 +1337,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["活", "作", "米", "形"],
     "correctAnswer": "活",
-    "reading": "カツ",
+    "reading": "かつ",
     "example": "生活（せいかつ）",
     "version": 1
   },
@@ -1249,6 +1350,7 @@ const questions = [
     "correctAnswer": "雲",
     "reading": "くも",
     "example": "雲一つ（くもひとつ）",
+    "extraReadings": [{"reading": "うん", "example": "雲海（うんかい）"}],
     "version": 1
   },
   {
@@ -1260,6 +1362,7 @@ const questions = [
     "correctAnswer": "明",
     "reading": "あか（るい）",
     "example": "明るい（あかるい）",
+    "extraReadings": [{"reading": "めい", "example": "説明（せつめい）"}, {"reading": "みょう", "example": "明日（みょうにち）"}, {"reading": "あ（ける）", "example": "明ける（あける）"}],
     "version": 1
   },
   {
@@ -1270,7 +1373,8 @@ const questions = [
     "choices": ["買", "当", "細", "店"],
     "correctAnswer": "買",
     "reading": "か（う）",
-    "example": "買う（かう）",
+    "example": "買い物（かいもの）",
+    "extraReadings": [{"reading": "ばい", "example": "売買（ばいばい）"}],
     "version": 1
   },
   {
@@ -1280,8 +1384,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["工", "古", "点", "近"],
     "correctAnswer": "点",
-    "reading": "テン",
+    "reading": "てん",
     "example": "点数（てんすう）",
+    "extraReadings": [{"reading": "つ（く）", "example": "点く（つく）"}],
     "version": 1
   },
   {
@@ -1293,6 +1398,7 @@ const questions = [
     "correctAnswer": "多",
     "reading": "おお（い）",
     "example": "多い（おおい）",
+    "extraReadings": [{"reading": "た", "example": "多数（たすう）"}],
     "version": 1
   },
   {
@@ -1304,6 +1410,7 @@ const questions = [
     "correctAnswer": "心",
     "reading": "こころ",
     "example": "安心（あんしん）",
+    "extraReadings": [{"reading": "しん", "example": "安心（あんしん）"}],
     "version": 1
   },
   {
@@ -1315,6 +1422,7 @@ const questions = [
     "correctAnswer": "紙",
     "reading": "かみ",
     "example": "紙飛行機（かみひこうき）",
+    "extraReadings": [{"reading": "し", "example": "用紙（ようし）"}],
     "version": 1
   },
   {
@@ -1326,6 +1434,7 @@ const questions = [
     "correctAnswer": "高",
     "reading": "たか（い）",
     "example": "高い（たかい）",
+    "extraReadings": [{"reading": "こう", "example": "高校（こうこう）"}, {"reading": "たか（まる）", "example": "高まる（たかまる）"}, {"reading": "たか（める）", "example": "高める（たかめる）"}],
     "version": 1
   },
   {
@@ -1337,6 +1446,7 @@ const questions = [
     "correctAnswer": "計",
     "reading": "はか（る）",
     "example": "時計（とけい）",
+    "extraReadings": [{"reading": "けい", "example": "計算（けいさん）"}],
     "version": 1
   },
   {
@@ -1348,6 +1458,7 @@ const questions = [
     "correctAnswer": "間",
     "reading": "あいだ",
     "example": "時間（じかん）",
+    "extraReadings": [{"reading": "かん", "example": "時間（じかん）"}, {"reading": "けん", "example": "世間（せけん）"}],
     "version": 1
   },
   {
@@ -1358,7 +1469,8 @@ const questions = [
     "choices": ["時", "夏", "園", "夜"],
     "correctAnswer": "園",
     "reading": "その",
-    "example": "公園（こうえん）",
+    "example": "花園（はなぞの）",
+    "extraReadings": [{"reading": "えん", "example": "公園（こうえん）"}],
     "version": 1
   },
   {
@@ -1369,7 +1481,8 @@ const questions = [
     "choices": ["京", "明", "鳴", "風"],
     "correctAnswer": "鳴",
     "reading": "な（く）",
-    "example": "鳥が鳴く（とりがなく）",
+    "example": "鳴き声（なきごえ）",
+    "extraReadings": [{"reading": "めい", "example": "悲鳴（ひめい）"}],
     "version": 1
   },
   {
@@ -1381,6 +1494,7 @@ const questions = [
     "correctAnswer": "麦",
     "reading": "むぎ",
     "example": "麦茶（むぎちゃ）",
+    "extraReadings": [{"reading": "ばく", "example": "麦芽（ばくが）"}],
     "version": 1
   },
   {
@@ -1390,8 +1504,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["何", "電", "知", "国"],
     "correctAnswer": "電",
-    "reading": "デン",
-    "example": "電気（でんき）",
+    "reading": "でん",
+    "example": "電車（でんしゃ）",
     "version": 1
   },
   {
@@ -1403,6 +1517,7 @@ const questions = [
     "correctAnswer": "太",
     "reading": "ふと（い）",
     "example": "太い（ふとい）",
+    "extraReadings": [{"reading": "たい", "example": "太陽（たいよう）"}],
     "version": 1
   },
   {
@@ -1414,6 +1529,7 @@ const questions = [
     "correctAnswer": "新",
     "reading": "あたら（しい）",
     "example": "新しい（あたらしい）",
+    "extraReadings": [{"reading": "しん", "example": "新年（しんねん）"}, {"reading": "あら（た）", "example": "新た（あらた）"}],
     "version": 1
   },
   {
@@ -1425,6 +1541,7 @@ const questions = [
     "correctAnswer": "寺",
     "reading": "てら",
     "example": "お寺（おてら）",
+    "extraReadings": [{"reading": "じ", "example": "寺院（じいん）"}],
     "version": 1
   },
   {
@@ -1436,6 +1553,7 @@ const questions = [
     "correctAnswer": "黄",
     "reading": "き",
     "example": "黄色（きいろ）",
+    "extraReadings": [{"reading": "こう", "example": "黄金（こうごん）"}, {"reading": "おう", "example": "黄土（おうど）"}],
     "version": 1
   },
   {
@@ -1446,7 +1564,8 @@ const questions = [
     "choices": ["強", "組", "元", "楽"],
     "correctAnswer": "元",
     "reading": "もと",
-    "example": "元気（げんき）",
+    "example": "元通り（もとどおり）",
+    "extraReadings": [{"reading": "げん", "example": "元気（げんき）"}, {"reading": "がん", "example": "元日（がんじつ）"}],
     "version": 1
   },
   {
@@ -1457,7 +1576,8 @@ const questions = [
     "choices": ["売", "丸", "図", "明"],
     "correctAnswer": "丸",
     "reading": "まる（い）",
-    "example": "丸い（まるい）",
+    "example": "丸い月（まるいつき）",
+    "extraReadings": [{"reading": "がん", "example": "弾丸（だんがん）"}],
     "version": 1
   },
   {
@@ -1469,6 +1589,7 @@ const questions = [
     "correctAnswer": "遠",
     "reading": "とお（い）",
     "example": "遠い（とおい）",
+    "extraReadings": [{"reading": "えん", "example": "遠足（えんそく）"}],
     "version": 1
   },
   {
@@ -1480,6 +1601,7 @@ const questions = [
     "correctAnswer": "毛",
     "reading": "け",
     "example": "毛糸（けいと）",
+    "extraReadings": [{"reading": "もう", "example": "毛細血管（もうさいけっかん）"}],
     "version": 1
   },
   {
@@ -1489,8 +1611,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["親", "自", "顔", "半"],
     "correctAnswer": "半",
-    "reading": "ハン",
+    "reading": "はん",
     "example": "半分（はんぶん）",
+    "extraReadings": [{"reading": "なか（ば）", "example": "半ば（なかば）"}],
     "version": 1
   },
   {
@@ -1501,7 +1624,8 @@ const questions = [
     "choices": ["内", "羽", "刀", "新"],
     "correctAnswer": "刀",
     "reading": "かたな",
-    "example": "日本刀（にほんとう）",
+    "example": "刀（かたな）",
+    "extraReadings": [{"reading": "とう", "example": "名刀（めいとう）"}],
     "version": 1
   },
   {
@@ -1513,6 +1637,7 @@ const questions = [
     "correctAnswer": "体",
     "reading": "からだ",
     "example": "体育（たいいく）",
+    "extraReadings": [{"reading": "てい", "example": "体裁（ていさい）"}],
     "version": 1
   },
   {
@@ -1524,6 +1649,7 @@ const questions = [
     "correctAnswer": "親",
     "reading": "おや",
     "example": "親子（おやこ）",
+    "extraReadings": [{"reading": "しん", "example": "親切（しんせつ）"}, {"reading": "した（しい）", "example": "親しい（したしい）"}],
     "version": 1
   },
   {
@@ -1533,8 +1659,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["顔", "北", "自", "毛"],
     "correctAnswer": "自",
-    "reading": "ジ",
+    "reading": "じ",
     "example": "自分（じぶん）",
+    "extraReadings": [{"reading": "し", "example": "自然（しぜん）"}],
     "version": 1
   },
   {
@@ -1546,6 +1673,7 @@ const questions = [
     "correctAnswer": "合",
     "reading": "あ（う）",
     "example": "合う（あう）",
+    "extraReadings": [{"reading": "ごう", "example": "合格（ごうかく）"}, {"reading": "がっ", "example": "合唱（がっしょう）"}],
     "version": 1
   },
   {
@@ -1557,6 +1685,7 @@ const questions = [
     "correctAnswer": "言",
     "reading": "い（う）",
     "example": "言う（いう）",
+    "extraReadings": [{"reading": "げん", "example": "言語（げんご）"}, {"reading": "ごん", "example": "伝言（でんごん）"}],
     "version": 1
   },
   {
@@ -1567,7 +1696,8 @@ const questions = [
     "choices": ["岩", "来", "星", "汽"],
     "correctAnswer": "岩",
     "reading": "いわ",
-    "example": "岩石（がんせき）",
+    "example": "岩山（いわやま）",
+    "extraReadings": [{"reading": "がん", "example": "岩石（がんせき）"}],
     "version": 1
   },
   {
@@ -1578,7 +1708,8 @@ const questions = [
     "choices": ["線", "万", "昼", "何"],
     "correctAnswer": "何",
     "reading": "なに",
-    "example": "何回（なんかい）",
+    "example": "何時（なんじ）",
+    "extraReadings": [{"reading": "か", "example": "幾何（きか）"}],
     "version": 1
   },
   {
@@ -1588,8 +1719,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["少", "時", "光", "門"],
     "correctAnswer": "門",
-    "reading": "モン",
-    "example": "校門（こうもん）",
+    "reading": "かど",
+    "example": "門松（かどまつ）",
+    "extraReadings": [{"reading": "もん", "example": "校門（こうもん）"}],
     "version": 1
   },
   {
@@ -1599,8 +1731,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["番", "強", "妹", "科"],
     "correctAnswer": "番",
-    "reading": "バン",
-    "example": "番号（ばんごう）",
+    "reading": "ばん",
+    "example": "一番（いちばん）",
     "version": 1
   },
   {
@@ -1612,6 +1744,7 @@ const questions = [
     "correctAnswer": "冬",
     "reading": "ふゆ",
     "example": "冬休み（ふゆやすみ）",
+    "extraReadings": [{"reading": "とう", "example": "冬至（とうじ）"}],
     "version": 1
   },
   {
@@ -1621,8 +1754,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["台", "歩", "走", "友"],
     "correctAnswer": "台",
-    "reading": "ダイ",
+    "reading": "だい",
     "example": "台所（だいどころ）",
+    "extraReadings": [{"reading": "たい", "example": "台風（たいふう）"}],
     "version": 1
   },
   {
@@ -1632,8 +1766,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["図", "行", "麦", "社"],
     "correctAnswer": "図",
-    "reading": "ズ",
+    "reading": "ず",
     "example": "地図（ちず）",
+    "extraReadings": [{"reading": "はか（る）", "example": "図る（はかる）"}, {"reading": "と", "example": "意図（いと）"}],
     "version": 1
   },
   {
@@ -1645,6 +1780,7 @@ const questions = [
     "correctAnswer": "時",
     "reading": "とき",
     "example": "時間（じかん）",
+    "extraReadings": [{"reading": "じ", "example": "時刻（じこく）"}],
     "version": 1
   },
   {
@@ -1655,7 +1791,8 @@ const questions = [
     "choices": ["図", "池", "風", "谷"],
     "correctAnswer": "谷",
     "reading": "たに",
-    "example": "谷川（たにがわ）",
+    "example": "谷間（たにま）",
+    "extraReadings": [{"reading": "こく", "example": "渓谷（けいこく）"}],
     "version": 1
   },
   {
@@ -1666,7 +1803,8 @@ const questions = [
     "choices": ["回", "海", "才", "原"],
     "correctAnswer": "原",
     "reading": "はら",
-    "example": "野原（のはら）",
+    "example": "原っぱ（はらっぱ）",
+    "extraReadings": [{"reading": "げん", "example": "原因（げんいん）"}],
     "version": 1
   },
   {
@@ -1677,7 +1815,8 @@ const questions = [
     "choices": ["晴", "顔", "組", "魚"],
     "correctAnswer": "顔",
     "reading": "かお",
-    "example": "顔色（かおいろ）",
+    "example": "笑顔（えがお）",
+    "extraReadings": [{"reading": "がん", "example": "洗顔（せんがん）"}],
     "version": 1
   },
   {
@@ -1687,8 +1826,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["数", "昼", "週", "科"],
     "correctAnswer": "科",
-    "reading": "カ",
-    "example": "理科（りか）",
+    "reading": "か",
+    "example": "教科書（きょうかしょ）",
     "version": 1
   },
   {
@@ -1700,6 +1839,7 @@ const questions = [
     "correctAnswer": "夜",
     "reading": "よる",
     "example": "夜中（よなか）",
+    "extraReadings": [{"reading": "や", "example": "夜間（やかん）"}, {"reading": "よ", "example": "夜中（よなか）"}],
     "version": 1
   },
   {
@@ -1711,6 +1851,7 @@ const questions = [
     "correctAnswer": "父",
     "reading": "ちち",
     "example": "父親（ちちおや）",
+    "extraReadings": [{"reading": "ふ", "example": "父母（ふぼ）"}],
     "version": 1
   },
   {
@@ -1721,7 +1862,8 @@ const questions = [
     "choices": ["当", "母", "魚", "室"],
     "correctAnswer": "当",
     "reading": "あ（たる）",
-    "example": "当たる（あたる）",
+    "example": "当たり前（あたりまえ）",
+    "extraReadings": [{"reading": "とう", "example": "当番（とうばん）"}],
     "version": 1
   },
   {
@@ -1731,8 +1873,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["冬", "地", "語", "歩"],
     "correctAnswer": "地",
-    "reading": "チ",
+    "reading": "ち",
     "example": "地図（ちず）",
+    "extraReadings": [{"reading": "じ", "example": "地面（じめん）"}],
     "version": 1
   },
   {
@@ -1744,6 +1887,7 @@ const questions = [
     "correctAnswer": "数",
     "reading": "かず",
     "example": "数字（すうじ）",
+    "extraReadings": [{"reading": "すう", "example": "数字（すうじ）"}, {"reading": "かぞ（える）", "example": "数える（かぞえる）"}],
     "version": 1
   },
   {
@@ -1753,7 +1897,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["顔", "里", "記", "室"],
     "correctAnswer": "室",
-    "reading": "シツ",
+    "reading": "しつ",
     "example": "教室（きょうしつ）",
     "version": 1
   },
@@ -1766,6 +1910,7 @@ const questions = [
     "correctAnswer": "国",
     "reading": "くに",
     "example": "国語（こくご）",
+    "extraReadings": [{"reading": "こく", "example": "国民（こくみん）"}],
     "version": 1
   },
   {
@@ -1777,6 +1922,7 @@ const questions = [
     "correctAnswer": "戸",
     "reading": "と",
     "example": "戸口（とぐち）",
+    "extraReadings": [{"reading": "こ", "example": "戸外（こがい）"}],
     "version": 1
   },
   {
@@ -1786,7 +1932,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["番", "丸", "汽", "広"],
     "correctAnswer": "汽",
-    "reading": "キ",
+    "reading": "き",
     "example": "汽車（きしゃ）",
     "version": 1
   },
@@ -1799,6 +1945,7 @@ const questions = [
     "correctAnswer": "夏",
     "reading": "なつ",
     "example": "夏休み（なつやすみ）",
+    "extraReadings": [{"reading": "か", "example": "初夏（しょか）"}, {"reading": "げ", "example": "夏至（げし）"}],
     "version": 1
   },
   {
@@ -1810,6 +1957,7 @@ const questions = [
     "correctAnswer": "野",
     "reading": "の",
     "example": "野原（のはら）",
+    "extraReadings": [{"reading": "や", "example": "野球（やきゅう）"}],
     "version": 1
   },
   {
@@ -1821,6 +1969,7 @@ const questions = [
     "correctAnswer": "風",
     "reading": "かぜ",
     "example": "風船（ふうせん）",
+    "extraReadings": [{"reading": "ふう", "example": "風景（ふうけい）"}, {"reading": "ふ", "example": "風呂（ふろ）"}],
     "version": 1
   },
   {
@@ -1831,7 +1980,8 @@ const questions = [
     "choices": ["東", "園", "首", "羽"],
     "correctAnswer": "東",
     "reading": "ひがし",
-    "example": "東京（とうきょう）",
+    "example": "東口（ひがしぐち）",
+    "extraReadings": [{"reading": "とう", "example": "東京（とうきょう）"}],
     "version": 1
   },
   {
@@ -1843,6 +1993,7 @@ const questions = [
     "correctAnswer": "池",
     "reading": "いけ",
     "example": "池の中（いけのなか）",
+    "extraReadings": [{"reading": "ち", "example": "電池（でんち）"}],
     "version": 1
   },
   {
@@ -1853,7 +2004,8 @@ const questions = [
     "choices": ["引", "海", "外", "西"],
     "correctAnswer": "西",
     "reading": "にし",
-    "example": "西日（にしび）",
+    "example": "西口（にしぐち）",
+    "extraReadings": [{"reading": "せい", "example": "西洋（せいよう）"}, {"reading": "さい", "example": "関西（かんさい）"}],
     "version": 1
   },
   {
@@ -1863,8 +2015,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["岩", "同", "走", "社"],
     "correctAnswer": "社",
-    "reading": "シャ",
+    "reading": "しゃ",
     "example": "会社（かいしゃ）",
+    "extraReadings": [{"reading": "じゃ", "example": "神社（じんじゃ）"}],
     "version": 1
   },
   {
@@ -1876,6 +2029,7 @@ const questions = [
     "correctAnswer": "黒",
     "reading": "くろ（い）",
     "example": "黒い（くろい）",
+    "extraReadings": [{"reading": "こく", "example": "黒板（こくばん）"}],
     "version": 1
   },
   {
@@ -1887,6 +2041,7 @@ const questions = [
     "correctAnswer": "古",
     "reading": "ふる（い）",
     "example": "古い（ふるい）",
+    "extraReadings": [{"reading": "こ", "example": "古代（こだい）"}],
     "version": 1
   },
   {
@@ -1896,8 +2051,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["才", "算", "記", "冬"],
     "correctAnswer": "記",
-    "reading": "キ",
-    "example": "日記（にっき）",
+    "reading": "しる（す）",
+    "example": "記す（しるす）",
+    "extraReadings": [{"reading": "き", "example": "日記（にっき）"}],
     "version": 1
   },
   {
@@ -1909,6 +2065,7 @@ const questions = [
     "correctAnswer": "家",
     "reading": "いえ",
     "example": "家族（かぞく）",
+    "extraReadings": [{"reading": "か", "example": "作家（さっか）"}, {"reading": "け", "example": "家来（けらい）"}, {"reading": "や", "example": "家賃（やちん）"}],
     "version": 1
   },
   {
@@ -1920,6 +2077,7 @@ const questions = [
     "correctAnswer": "友",
     "reading": "とも",
     "example": "友達（ともだち）",
+    "extraReadings": [{"reading": "ゆう", "example": "友人（ゆうじん）"}],
     "version": 1
   },
   {
@@ -1931,6 +2089,7 @@ const questions = [
     "correctAnswer": "分",
     "reading": "わ（かる）",
     "example": "分かる（わかる）",
+    "extraReadings": [{"reading": "ぶん", "example": "自分（じぶん）"}, {"reading": "ふん", "example": "十分（じゅっぷん）"}],
     "version": 1
   },
   {
@@ -1941,7 +2100,8 @@ const questions = [
     "choices": ["答", "記", "北", "国"],
     "correctAnswer": "答",
     "reading": "こた（える）",
-    "example": "答える（こたえる）",
+    "example": "答え（こたえ）",
+    "extraReadings": [{"reading": "とう", "example": "解答（かいとう）"}],
     "version": 1
   },
   {
@@ -1953,6 +2113,7 @@ const questions = [
     "correctAnswer": "知",
     "reading": "し（る）",
     "example": "知る（しる）",
+    "extraReadings": [{"reading": "ち", "example": "知人（ちじん）"}, {"reading": "し（らせる）", "example": "知らせる（しらせる）"}],
     "version": 1
   },
   {
@@ -1964,6 +2125,7 @@ const questions = [
     "correctAnswer": "声",
     "reading": "こえ",
     "example": "歌声（うたごえ）",
+    "extraReadings": [{"reading": "せい", "example": "声明（せいめい）"}, {"reading": "こわ", "example": "声色（こわいろ）"}],
     "version": 1
   },
   {
@@ -1975,6 +2137,7 @@ const questions = [
     "correctAnswer": "弱",
     "reading": "よわ（い）",
     "example": "弱い（よわい）",
+    "extraReadings": [{"reading": "じゃく", "example": "弱点（じゃくてん）"}, {"reading": "よわ（める）", "example": "弱める（よわめる）"}],
     "version": 1
   },
   {
@@ -1986,6 +2149,7 @@ const questions = [
     "correctAnswer": "今",
     "reading": "いま",
     "example": "今日（きょう）",
+    "extraReadings": [{"reading": "こん", "example": "今日（こんにち）"}],
     "version": 1
   },
   {
@@ -1995,7 +2159,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["合", "午", "外", "丸"],
     "correctAnswer": "午",
-    "reading": "ゴ",
+    "reading": "ご",
     "example": "午前（ごぜん）",
     "version": 1
   },
@@ -2007,7 +2171,8 @@ const questions = [
     "choices": ["妹", "食", "帰", "夏"],
     "correctAnswer": "帰",
     "reading": "かえ（る）",
-    "example": "帰る（かえる）",
+    "example": "帰り道（かえりみち）",
+    "extraReadings": [{"reading": "き", "example": "帰国（きこく）"}],
     "version": 1
   },
   {
@@ -2018,7 +2183,8 @@ const questions = [
     "choices": ["歌", "多", "室", "走"],
     "correctAnswer": "歌",
     "reading": "うた",
-    "example": "歌手（かしゅ）",
+    "example": "歌声（うたごえ）",
+    "extraReadings": [{"reading": "か", "example": "校歌（こうか）"}],
     "version": 1
   },
   {
@@ -2028,8 +2194,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["用", "新", "多", "半"],
     "correctAnswer": "用",
-    "reading": "ヨウ",
+    "reading": "よう",
     "example": "用事（ようじ）",
+    "extraReadings": [{"reading": "もち（いる）", "example": "用いる（もちいる）"}],
     "version": 1
   },
   {
@@ -2041,6 +2208,7 @@ const questions = [
     "correctAnswer": "聞",
     "reading": "き（く）",
     "example": "聞く（きく）",
+    "extraReadings": [{"reading": "ぶん", "example": "新聞（しんぶん）"}, {"reading": "き（こえる）", "example": "聞こえる（きこえる）"}],
     "version": 1
   },
   {
@@ -2052,6 +2220,7 @@ const questions = [
     "correctAnswer": "頭",
     "reading": "あたま",
     "example": "頭痛（ずつう）",
+    "extraReadings": [{"reading": "ず", "example": "頭痛（ずつう）"}],
     "version": 1
   },
   {
@@ -2061,8 +2230,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["知", "朝", "茶", "走"],
     "correctAnswer": "茶",
-    "reading": "チャ",
+    "reading": "ちゃ",
     "example": "お茶（おちゃ）",
+    "extraReadings": [{"reading": "さ", "example": "喫茶（きっさ）"}],
     "version": 1
   },
   {
@@ -2074,6 +2244,7 @@ const questions = [
     "correctAnswer": "星",
     "reading": "ほし",
     "example": "星空（ほしぞら）",
+    "extraReadings": [{"reading": "せい", "example": "火星（かせい）"}],
     "version": 1
   },
   {
@@ -2085,6 +2256,7 @@ const questions = [
     "correctAnswer": "首",
     "reading": "くび",
     "example": "首輪（くびわ）",
+    "extraReadings": [{"reading": "しゅ", "example": "首都（しゅと）"}],
     "version": 1
   },
   {
@@ -2094,8 +2266,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["歩", "才", "外", "光"],
     "correctAnswer": "才",
-    "reading": "サイ",
-    "example": "五才（ごさい）",
+    "reading": "さい",
+    "example": "天才（てんさい）",
     "version": 1
   },
   {
@@ -2107,6 +2279,7 @@ const questions = [
     "correctAnswer": "後",
     "reading": "あと",
     "example": "後で（あとで）",
+    "extraReadings": [{"reading": "ご", "example": "午後（ごご）"}, {"reading": "のち", "example": "後ほど（のちほど）"}],
     "version": 1
   },
   {
@@ -2118,6 +2291,7 @@ const questions = [
     "correctAnswer": "弓",
     "reading": "ゆみ",
     "example": "弓矢（ゆみや）",
+    "extraReadings": [{"reading": "きゅう", "example": "弓道（きゅうどう）"}],
     "version": 1
   },
   {
@@ -2127,8 +2301,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["画", "京", "門", "心"],
     "correctAnswer": "画",
-    "reading": "ガ",
-    "example": "絵画（かいが）",
+    "reading": "が",
+    "example": "画用紙（がようし）",
+    "extraReadings": [{"reading": "かく", "example": "計画（けいかく）"}],
     "version": 1
   },
   {
@@ -2138,7 +2313,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["後", "曜", "北", "海"],
     "correctAnswer": "曜",
-    "reading": "ヨウ",
+    "reading": "よう",
     "example": "曜日（ようび）",
     "version": 1
   },
@@ -2150,7 +2325,8 @@ const questions = [
     "choices": ["星", "作", "米", "教"],
     "correctAnswer": "米",
     "reading": "こめ",
-    "example": "米作り（こめづくり）",
+    "example": "米つぶ（こめつぶ）",
+    "extraReadings": [{"reading": "べい", "example": "米国（べいこく）"}, {"reading": "まい", "example": "白米（はくまい）"}],
     "version": 1
   },
   {
@@ -2162,6 +2338,7 @@ const questions = [
     "correctAnswer": "同",
     "reading": "おな（じ）",
     "example": "同じ（おなじ）",
+    "extraReadings": [{"reading": "どう", "example": "同意（どうい）"}],
     "version": 1
   },
   {
@@ -2173,6 +2350,7 @@ const questions = [
     "correctAnswer": "昼",
     "reading": "ひる",
     "example": "昼食（ちゅうしょく）",
+    "extraReadings": [{"reading": "ちゅう", "example": "昼食（ちゅうしょく）"}],
     "version": 1
   },
   {
@@ -2184,6 +2362,7 @@ const questions = [
     "correctAnswer": "晴",
     "reading": "は（れる）",
     "example": "晴れる（はれる）",
+    "extraReadings": [{"reading": "せい", "example": "快晴（かいせい）"}, {"reading": "は（らす）", "example": "晴らす（はらす）"}],
     "version": 1
   },
   {
@@ -2195,6 +2374,7 @@ const questions = [
     "correctAnswer": "秋",
     "reading": "あき",
     "example": "秋祭り（あきまつり）",
+    "extraReadings": [{"reading": "しゅう", "example": "秋分（しゅうぶん）"}],
     "version": 1
   },
   {
@@ -2206,6 +2386,7 @@ const questions = [
     "correctAnswer": "細",
     "reading": "ほそ（い）",
     "example": "細い（ほそい）",
+    "extraReadings": [{"reading": "さい", "example": "細心（さいしん）"}, {"reading": "こま（かい）", "example": "細かい（こまかい）"}],
     "version": 1
   },
   {
@@ -2215,8 +2396,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["計", "毎", "語", "直"],
     "correctAnswer": "語",
-    "reading": "かた（る）",
-    "example": "国語（こくご）",
+    "reading": "ご",
+    "example": "言語（げんご）",
+    "extraReadings": [{"reading": "かた（る）", "example": "語る（かたる）"}],
     "version": 1
   },
   {
@@ -2227,7 +2409,8 @@ const questions = [
     "choices": ["海", "新", "図", "牛"],
     "correctAnswer": "牛",
     "reading": "うし",
-    "example": "牛乳（ぎゅうにゅう）",
+    "example": "牛小屋（うしごや）",
+    "extraReadings": [{"reading": "ぎゅう", "example": "牛乳（ぎゅうにゅう）"}],
     "version": 1
   },
   {
@@ -2239,6 +2422,7 @@ const questions = [
     "correctAnswer": "回",
     "reading": "まわ（る）",
     "example": "回る（まわる）",
+    "extraReadings": [{"reading": "かい", "example": "回数（かいすう）"}, {"reading": "まわ（す）", "example": "回す（まわす）"}],
     "version": 1
   },
   {
@@ -2250,6 +2434,7 @@ const questions = [
     "correctAnswer": "来",
     "reading": "く（る）",
     "example": "来る（くる）",
+    "extraReadings": [{"reading": "らい", "example": "来年（らいねん）"}],
     "version": 1
   },
   {
@@ -2261,6 +2446,7 @@ const questions = [
     "correctAnswer": "歩",
     "reading": "ある（く）",
     "example": "歩く（あるく）",
+    "extraReadings": [{"reading": "ほ", "example": "散歩（さんぽ）"}, {"reading": "ぶ", "example": "歩合（ぶあい）"}],
     "version": 1
   },
   {
@@ -2272,6 +2458,7 @@ const questions = [
     "correctAnswer": "道",
     "reading": "みち",
     "example": "道路（どうろ）",
+    "extraReadings": [{"reading": "どう", "example": "道具（どうぐ）"}, {"reading": "とう", "example": "神道（しんとう）"}],
     "version": 1
   },
   {
@@ -2283,6 +2470,7 @@ const questions = [
     "correctAnswer": "長",
     "reading": "なが（い）",
     "example": "長い（ながい）",
+    "extraReadings": [{"reading": "ちょう", "example": "長男（ちょうなん）"}],
     "version": 1
   },
   {
@@ -2294,6 +2482,7 @@ const questions = [
     "correctAnswer": "切",
     "reading": "き（る）",
     "example": "切る（きる）",
+    "extraReadings": [{"reading": "せつ", "example": "大切（たいせつ）"}, {"reading": "さい", "example": "一切（いっさい）"}],
     "version": 1
   },
   {
@@ -2303,8 +2492,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["昼", "楽", "作", "週"],
     "correctAnswer": "週",
-    "reading": "シュウ",
-    "example": "来週（らいしゅう）",
+    "reading": "しゅう",
+    "example": "毎週（まいしゅう）",
     "version": 1
   },
   {
@@ -2316,6 +2505,7 @@ const questions = [
     "correctAnswer": "作",
     "reading": "つく（る）",
     "example": "作る（つくる）",
+    "extraReadings": [{"reading": "さく", "example": "作文（さくぶん）"}, {"reading": "さ", "example": "作業（さぎょう）"}],
     "version": 1
   },
   {
@@ -2325,8 +2515,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["細", "里", "工", "少"],
     "correctAnswer": "工",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "工作（こうさく）",
+    "extraReadings": [{"reading": "く", "example": "工夫（くふう）"}],
     "version": 1
   },
   {
@@ -2337,7 +2528,8 @@ const questions = [
     "choices": ["自", "内", "魚", "曜"],
     "correctAnswer": "魚",
     "reading": "さかな",
-    "example": "金魚（きんぎょ）",
+    "example": "魚屋（さかなや）",
+    "extraReadings": [{"reading": "ぎょ", "example": "金魚（きんぎょ）"}, {"reading": "うお", "example": "魚市場（うおいちば）"}],
     "version": 1
   },
   {
@@ -2348,7 +2540,8 @@ const questions = [
     "choices": ["黒", "会", "細", "頭"],
     "correctAnswer": "会",
     "reading": "あ（う）",
-    "example": "会う（あう）",
+    "example": "友達に会う（ともだちにあう）",
+    "extraReadings": [{"reading": "かい", "example": "会社（かいしゃ）"}],
     "version": 1
   },
   {
@@ -2360,6 +2553,7 @@ const questions = [
     "correctAnswer": "里",
     "reading": "さと",
     "example": "里山（さとやま）",
+    "extraReadings": [{"reading": "り", "example": "一里塚（いちりづか）"}],
     "version": 1
   },
   {
@@ -2371,6 +2565,7 @@ const questions = [
     "correctAnswer": "母",
     "reading": "はは",
     "example": "母親（ははおや）",
+    "extraReadings": [{"reading": "ぼ", "example": "母校（ぼこう）"}],
     "version": 1
   },
   {
@@ -2382,6 +2577,7 @@ const questions = [
     "correctAnswer": "読",
     "reading": "よ（む）",
     "example": "読む（よむ）",
+    "extraReadings": [{"reading": "どく", "example": "読書（どくしょ）"}, {"reading": "とう", "example": "読点（とうてん）"}],
     "version": 1
   },
   {
@@ -2393,6 +2589,7 @@ const questions = [
     "correctAnswer": "鳥",
     "reading": "とり",
     "example": "小鳥（ことり）",
+    "extraReadings": [{"reading": "ちょう", "example": "白鳥（はくちょう）"}],
     "version": 1
   },
   {
@@ -2404,6 +2601,7 @@ const questions = [
     "correctAnswer": "雪",
     "reading": "ゆき",
     "example": "雪だるま（ゆきだるま）",
+    "extraReadings": [{"reading": "せつ", "example": "積雪（せつ）"}],
     "version": 1
   },
   {
@@ -2415,6 +2613,7 @@ const questions = [
     "correctAnswer": "春",
     "reading": "はる",
     "example": "春休み（はるやすみ）",
+    "extraReadings": [{"reading": "しゅん", "example": "青春（せいしゅん）"}],
     "version": 1
   },
   {
@@ -2424,8 +2623,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["父", "算", "広", "雲"],
     "correctAnswer": "算",
-    "reading": "サン",
-    "example": "計算（けいさん）",
+    "reading": "さん",
+    "example": "算数（さんすう）",
     "version": 1
   },
   {
@@ -2435,8 +2634,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["公", "顔", "近", "市"],
     "correctAnswer": "公",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "公園（こうえん）",
+    "extraReadings": [{"reading": "おおやけ", "example": "公（おおやけ）"}],
     "version": 1
   },
   {
@@ -2446,8 +2646,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["家", "肉", "京", "黒"],
     "correctAnswer": "京",
-    "reading": "キョウ",
+    "reading": "きょう",
     "example": "東京（とうきょう）",
+    "extraReadings": [{"reading": "けい", "example": "京浜（けいひん）"}],
     "version": 1
   },
   {
@@ -2459,6 +2660,7 @@ const questions = [
     "correctAnswer": "海",
     "reading": "うみ",
     "example": "海水浴（かいすいよく）",
+    "extraReadings": [{"reading": "かい", "example": "海水（かいすい）"}],
     "version": 1
   },
   {
@@ -2468,7 +2670,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["細", "今", "理", "後"],
     "correctAnswer": "理",
-    "reading": "リ",
+    "reading": "り",
     "example": "理科（りか）",
     "version": 1
   },
@@ -2479,8 +2681,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["夏", "池", "止", "方"],
     "correctAnswer": "方",
-    "reading": "ホウ",
+    "reading": "ほう",
     "example": "方向（ほうこう）",
+    "extraReadings": [{"reading": "かた", "example": "夕方（ゆうがた）"}],
     "version": 1
   },
   {
@@ -2492,6 +2695,7 @@ const questions = [
     "correctAnswer": "内",
     "reading": "うち",
     "example": "内側（うちがわ）",
+    "extraReadings": [{"reading": "ない", "example": "内部（ないぶ）"}],
     "version": 1
   },
   {
@@ -2503,6 +2707,7 @@ const questions = [
     "correctAnswer": "朝",
     "reading": "あさ",
     "example": "朝食（ちょうしょく）",
+    "extraReadings": [{"reading": "ちょう", "example": "朝刊（ちょうかん）"}],
     "version": 1
   },
   {
@@ -2514,6 +2719,7 @@ const questions = [
     "correctAnswer": "船",
     "reading": "ふね",
     "example": "船旅（ふなたび）",
+    "extraReadings": [{"reading": "せん", "example": "汽船（きせん）"}, {"reading": "ふな", "example": "船旅（ふなたび）"}],
     "version": 1
   },
   {
@@ -2525,6 +2731,7 @@ const questions = [
     "correctAnswer": "書",
     "reading": "か（く）",
     "example": "書く（かく）",
+    "extraReadings": [{"reading": "しょ", "example": "読書（どくしょ）"}],
     "version": 1
   },
   {
@@ -2536,6 +2743,7 @@ const questions = [
     "correctAnswer": "止",
     "reading": "と（まる）",
     "example": "止まる（とまる）",
+    "extraReadings": [{"reading": "し", "example": "中止（ちゅうし）"}, {"reading": "と（める）", "example": "止める（とめる）"}],
     "version": 1
   },
   {
@@ -2547,6 +2755,7 @@ const questions = [
     "correctAnswer": "広",
     "reading": "ひろ（い）",
     "example": "広い（ひろい）",
+    "extraReadings": [{"reading": "こう", "example": "広告（こうこく）"}, {"reading": "ひろ（がる）", "example": "広がる（ひろがる）"}],
     "version": 1
   },
   {
@@ -2558,6 +2767,7 @@ const questions = [
     "correctAnswer": "強",
     "reading": "つよ（い）",
     "example": "強い（つよい）",
+    "extraReadings": [{"reading": "きょう", "example": "強力（きょうりょく）"}, {"reading": "ごう", "example": "強引（ごういん）"}],
     "version": 1
   },
   {
@@ -2567,8 +2777,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["魚", "算", "絵", "岩"],
     "correctAnswer": "絵",
-    "reading": "エ",
+    "reading": "え",
     "example": "絵本（えほん）",
+    "extraReadings": [{"reading": "かい", "example": "絵画（かいが）"}],
     "version": 1
   },
   {
@@ -2580,6 +2791,7 @@ const questions = [
     "correctAnswer": "話",
     "reading": "はなし",
     "example": "お話（おはなし）",
+    "extraReadings": [{"reading": "わ", "example": "電話（でんわ）"}],
     "version": 1
   },
   {
@@ -2591,6 +2803,7 @@ const questions = [
     "correctAnswer": "北",
     "reading": "きた",
     "example": "北風（きたかぜ）",
+    "extraReadings": [{"reading": "ほく", "example": "北海道（ほっかいどう）"}],
     "version": 1
   },
   {
@@ -2602,6 +2815,7 @@ const questions = [
     "correctAnswer": "南",
     "reading": "みなみ",
     "example": "南風（みなみかぜ）",
+    "extraReadings": [{"reading": "なん", "example": "南極（なんきょく）"}],
     "version": 1
   },
   {
@@ -2613,6 +2827,7 @@ const questions = [
     "correctAnswer": "直",
     "reading": "なお（す）",
     "example": "直す（なおす）",
+    "extraReadings": [{"reading": "ちょく", "example": "直線（ちょくせん）"}, {"reading": "なお（る）", "example": "直る（なおる）"}],
     "version": 1
   },
   {
@@ -2622,7 +2837,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["冬", "線", "米", "話"],
     "correctAnswer": "線",
-    "reading": "セン",
+    "reading": "せん",
     "example": "直線（ちょくせん）",
     "version": 1
   },
@@ -2635,6 +2850,7 @@ const questions = [
     "correctAnswer": "少",
     "reading": "すこ（し）",
     "example": "少し（すこし）",
+    "extraReadings": [{"reading": "しょう", "example": "少年（しょうねん）"}],
     "version": 1
   },
   {
@@ -2644,8 +2860,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["市", "里", "雲", "羽"],
     "correctAnswer": "市",
-    "reading": "シ",
+    "reading": "し",
     "example": "市役所（しやくしょ）",
+    "extraReadings": [{"reading": "いち", "example": "市場（いちば）"}],
     "version": 1
   },
   {
@@ -2656,7 +2873,8 @@ const questions = [
     "choices": ["門", "交", "行", "計"],
     "correctAnswer": "交",
     "reading": "まじ（わる）",
-    "example": "交番（こうばん）",
+    "example": "交わる（まじわる）",
+    "extraReadings": [{"reading": "こう", "example": "交通（こうつう）"}, {"reading": "か", "example": "行き交う（ゆきかう）"}],
     "version": 1
   },
   {
@@ -2668,6 +2886,7 @@ const questions = [
     "correctAnswer": "教",
     "reading": "おし（える）",
     "example": "教える（おしえる）",
+    "extraReadings": [{"reading": "きょう", "example": "教室（きょうしつ）"}, {"reading": "おそ（わる）", "example": "教わる（おそわる）"}],
     "version": 1
   },
   {
@@ -2679,6 +2898,7 @@ const questions = [
     "correctAnswer": "外",
     "reading": "そと",
     "example": "外側（そとがわ）",
+    "extraReadings": [{"reading": "がい", "example": "外国（がいこく）"}, {"reading": "げ", "example": "外科（げか）"}, {"reading": "はず（す）", "example": "外す（はずす）"}],
     "version": 1
   },
   {
@@ -2688,8 +2908,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["福", "面", "由", "医"],
     "correctAnswer": "由",
-    "reading": "ユ",
+    "reading": "ゆ",
     "example": "理由（りゆう）",
+    "extraReadings": [{"reading": "ゆう", "example": "自由（じゆう）"}, {"reading": "ゆい", "example": "由緒（ゆいしょ）"}],
     "version": 1
   },
   {
@@ -2701,6 +2922,7 @@ const questions = [
     "correctAnswer": "氷",
     "reading": "こおり",
     "example": "氷水（こおりみず）",
+    "extraReadings": [{"reading": "ひょう", "example": "氷山（ひょうざん）"}],
     "version": 1
   },
   {
@@ -2712,6 +2934,7 @@ const questions = [
     "correctAnswer": "湯",
     "reading": "ゆ",
     "example": "お湯（おゆ）",
+    "extraReadings": [{"reading": "とう", "example": "熱湯（ねっとう）"}],
     "version": 1
   },
   {
@@ -2722,7 +2945,8 @@ const questions = [
     "choices": ["油", "助", "炭", "終"],
     "correctAnswer": "炭",
     "reading": "すみ",
-    "example": "木炭（もくたん）",
+    "example": "炭火（すみび）",
+    "extraReadings": [{"reading": "たん", "example": "石炭（せきたん）"}],
     "version": 1
   },
   {
@@ -2733,7 +2957,8 @@ const questions = [
     "choices": ["都", "真", "去", "両"],
     "correctAnswer": "真",
     "reading": "ま",
-    "example": "真夏（まなつ）",
+    "example": "真っ白（まっしろ）",
+    "extraReadings": [{"reading": "しん", "example": "写真（しゃしん）"}],
     "version": 1
   },
   {
@@ -2744,7 +2969,8 @@ const questions = [
     "choices": ["拾", "幸", "号", "実"],
     "correctAnswer": "拾",
     "reading": "ひろ（う）",
-    "example": "拾う（ひろう）",
+    "example": "落ち葉を拾う（おちばをひろう）",
+    "extraReadings": [{"reading": "しゅう", "example": "収拾（しゅうしゅう）"}],
     "version": 1
   },
   {
@@ -2754,8 +2980,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["医", "駅", "仕", "死"],
     "correctAnswer": "仕",
-    "reading": "シ",
+    "reading": "し",
     "example": "仕事（しごと）",
+    "extraReadings": [{"reading": "つか（える）", "example": "仕える（つかえる）"}],
     "version": 1
   },
   {
@@ -2765,8 +2992,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["両", "等", "銀", "豆"],
     "correctAnswer": "銀",
-    "reading": "ギン",
-    "example": "銀行（ぎんこう）",
+    "reading": "ぎん",
+    "example": "銀色（ぎんいろ）",
     "version": 1
   },
   {
@@ -2778,6 +3005,7 @@ const questions = [
     "correctAnswer": "開",
     "reading": "あ（ける）",
     "example": "開ける（あける）",
+    "extraReadings": [{"reading": "かい", "example": "開会（かいかい）"}, {"reading": "あ（く）", "example": "開く（あく）"}],
     "version": 1
   },
   {
@@ -2789,6 +3017,7 @@ const questions = [
     "correctAnswer": "悪",
     "reading": "わる（い）",
     "example": "悪い（わるい）",
+    "extraReadings": [{"reading": "あく", "example": "悪事（あくじ）"}],
     "version": 1
   },
   {
@@ -2799,7 +3028,8 @@ const questions = [
     "choices": ["取", "事", "悲", "油"],
     "correctAnswer": "油",
     "reading": "あぶら",
-    "example": "石油（せきゆ）",
+    "example": "油絵（あぶらえ）",
+    "extraReadings": [{"reading": "ゆ", "example": "石油（せきゆ）"}],
     "version": 1
   },
   {
@@ -2811,6 +3041,7 @@ const questions = [
     "correctAnswer": "表",
     "reading": "おもて",
     "example": "表と裏（おもてとうら）",
+    "extraReadings": [{"reading": "ひょう", "example": "表現（ひょうげん）"}, {"reading": "あらわ（す）", "example": "表す（あらわす）"}, {"reading": "あらわ（れる）", "example": "表れる（あらわれる）"}],
     "version": 1
   },
   {
@@ -2821,7 +3052,8 @@ const questions = [
     "choices": ["登", "秒", "礼", "事"],
     "correctAnswer": "登",
     "reading": "のぼ（る）",
-    "example": "山に登る（やまにのぼる）",
+    "example": "登る（のぼる）",
+    "extraReadings": [{"reading": "と", "example": "登山（とざん）"}, {"reading": "とう", "example": "登場（とうじょう）"}],
     "version": 1
   },
   {
@@ -2833,6 +3065,7 @@ const questions = [
     "correctAnswer": "短",
     "reading": "みじか（い）",
     "example": "短い（みじかい）",
+    "extraReadings": [{"reading": "たん", "example": "短所（たんしょ）"}],
     "version": 1
   },
   {
@@ -2844,6 +3077,7 @@ const questions = [
     "correctAnswer": "深",
     "reading": "ふか（い）",
     "example": "深い（ふかい）",
+    "extraReadings": [{"reading": "しん", "example": "深夜（しんや）"}, {"reading": "ふか（まる）", "example": "深まる（ふかまる）"}],
     "version": 1
   },
   {
@@ -2855,6 +3089,7 @@ const questions = [
     "correctAnswer": "終",
     "reading": "お（わる）",
     "example": "終わる（おわる）",
+    "extraReadings": [{"reading": "しゅう", "example": "終点（しゅうてん）"}, {"reading": "お（える）", "example": "終える（おえる）"}],
     "version": 1
   },
   {
@@ -2866,6 +3101,7 @@ const questions = [
     "correctAnswer": "死",
     "reading": "し（ぬ）",
     "example": "死ぬ（しぬ）",
+    "extraReadings": [{"reading": "し", "example": "生死（せいし）"}],
     "version": 1
   },
   {
@@ -2875,7 +3111,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["始", "予", "館", "区"],
     "correctAnswer": "区",
-    "reading": "ク",
+    "reading": "く",
     "example": "区役所（くやくしょ）",
     "version": 1
   },
@@ -2886,8 +3122,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["央", "両", "局", "階"],
     "correctAnswer": "階",
-    "reading": "カイ",
-    "example": "二階（にかい）",
+    "reading": "かい",
+    "example": "階段（かいだん）",
     "version": 1
   },
   {
@@ -2898,7 +3134,8 @@ const questions = [
     "choices": ["皿", "屋", "安", "世"],
     "correctAnswer": "安",
     "reading": "やす（い）",
-    "example": "安い（やすい）",
+    "example": "安い店（やすいみせ）",
+    "extraReadings": [{"reading": "あん", "example": "安全（あんぜん）"}],
     "version": 1
   },
   {
@@ -2908,8 +3145,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["有", "局", "業", "君"],
     "correctAnswer": "有",
-    "reading": "ユウ",
-    "example": "有名（ゆうめい）",
+    "reading": "あ（る）",
+    "example": "有り難い（ありがたい）",
+    "extraReadings": [{"reading": "ゆう", "example": "有名（ゆうめい）"}, {"reading": "う", "example": "有無（うむ）"}],
     "version": 1
   },
   {
@@ -2919,8 +3157,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["秒", "式", "想", "表"],
     "correctAnswer": "秒",
-    "reading": "ビョウ",
-    "example": "三十秒（さんじゅうびょう）",
+    "reading": "びょう",
+    "example": "秒速（びょうそく）",
     "version": 1
   },
   {
@@ -2932,6 +3170,7 @@ const questions = [
     "correctAnswer": "等",
     "reading": "ひと（しい）",
     "example": "等しい（ひとしい）",
+    "extraReadings": [{"reading": "とう", "example": "平等（びょうどう）"}],
     "version": 1
   },
   {
@@ -2941,7 +3180,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["談", "陽", "羊", "勉"],
     "correctAnswer": "談",
-    "reading": "ダン",
+    "reading": "だん",
     "example": "相談（そうだん）",
     "version": 1
   },
@@ -2954,6 +3193,7 @@ const questions = [
     "correctAnswer": "進",
     "reading": "すす（む）",
     "example": "進む（すすむ）",
+    "extraReadings": [{"reading": "しん", "example": "進歩（しんぽ）"}, {"reading": "すす（める）", "example": "進める（すすめる）"}],
     "version": 1
   },
   {
@@ -2964,7 +3204,8 @@ const questions = [
     "choices": ["農", "習", "乗", "童"],
     "correctAnswer": "習",
     "reading": "なら（う）",
-    "example": "習う（ならう）",
+    "example": "習い事（ならいごと）",
+    "extraReadings": [{"reading": "しゅう", "example": "学習（がくしゅう）"}],
     "version": 1
   },
   {
@@ -2976,6 +3217,7 @@ const questions = [
     "correctAnswer": "使",
     "reading": "つか（う）",
     "example": "使う（つかう）",
+    "extraReadings": [{"reading": "し", "example": "使用（しよう）"}],
     "version": 1
   },
   {
@@ -2987,6 +3229,7 @@ const questions = [
     "correctAnswer": "苦",
     "reading": "くる（しい）",
     "example": "苦しい（くるしい）",
+    "extraReadings": [{"reading": "く", "example": "苦労（くろう）"}, {"reading": "にが（い）", "example": "苦い（にがい）"}],
     "version": 1
   },
   {
@@ -2998,6 +3241,7 @@ const questions = [
     "correctAnswer": "寒",
     "reading": "さむ（い）",
     "example": "寒い（さむい）",
+    "extraReadings": [{"reading": "かん", "example": "寒冷（かんれい）"}],
     "version": 1
   },
   {
@@ -3009,6 +3253,7 @@ const questions = [
     "correctAnswer": "暗",
     "reading": "くら（い）",
     "example": "暗い（くらい）",
+    "extraReadings": [{"reading": "あん", "example": "暗号（あんごう）"}],
     "version": 1
   },
   {
@@ -3019,7 +3264,8 @@ const questions = [
     "choices": ["部", "有", "遊", "飲"],
     "correctAnswer": "遊",
     "reading": "あそ（ぶ）",
-    "example": "遊ぶ（あそぶ）",
+    "example": "遊び場（あそびば）",
+    "extraReadings": [{"reading": "ゆう", "example": "遊園地（ゆうえんち）"}],
     "version": 1
   },
   {
@@ -3029,8 +3275,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["倍", "豆", "病", "習"],
     "correctAnswer": "病",
-    "reading": "ビョウ",
+    "reading": "びょう",
     "example": "病気（びょうき）",
+    "extraReadings": [{"reading": "や（む）", "example": "病む（やむ）"}],
     "version": 1
   },
   {
@@ -3042,6 +3289,7 @@ const questions = [
     "correctAnswer": "動",
     "reading": "うご（く）",
     "example": "動く（うごく）",
+    "extraReadings": [{"reading": "どう", "example": "運動（うんどう）"}, {"reading": "うご（かす）", "example": "動かす（うごかす）"}],
     "version": 1
   },
   {
@@ -3053,6 +3301,7 @@ const questions = [
     "correctAnswer": "着",
     "reading": "き（る）",
     "example": "服を着る（ふくをきる）",
+    "extraReadings": [{"reading": "ちゃく", "example": "到着（とうちゃく）"}, {"reading": "つ（く）", "example": "着く（つく）"}, {"reading": "き（せる）", "example": "着せる（きせる）"}],
     "version": 1
   },
   {
@@ -3062,8 +3311,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["医", "歯", "世", "味"],
     "correctAnswer": "世",
-    "reading": "セ",
-    "example": "世界（せかい）",
+    "reading": "よ",
+    "example": "世の中（よのなか）",
+    "extraReadings": [{"reading": "せい", "example": "世紀（せいき）"}, {"reading": "せ", "example": "世話（せわ）"}],
     "version": 1
   },
   {
@@ -3075,6 +3325,7 @@ const questions = [
     "correctAnswer": "集",
     "reading": "あつ（める）",
     "example": "集める（あつめる）",
+    "extraReadings": [{"reading": "しゅう", "example": "集中（しゅうちゅう）"}, {"reading": "つど（う）", "example": "集う（つどう）"}],
     "version": 1
   },
   {
@@ -3086,6 +3337,7 @@ const questions = [
     "correctAnswer": "始",
     "reading": "はじ（める）",
     "example": "始める（はじめる）",
+    "extraReadings": [{"reading": "し", "example": "開始（かいし）"}],
     "version": 1
   },
   {
@@ -3095,7 +3347,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["真", "具", "宮", "都"],
     "correctAnswer": "具",
-    "reading": "グ",
+    "reading": "ぐ",
     "example": "道具（どうぐ）",
     "version": 1
   },
@@ -3106,7 +3358,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["由", "所", "感", "流"],
     "correctAnswer": "感",
-    "reading": "カン",
+    "reading": "かん",
     "example": "感想（かんそう）",
     "version": 1
   },
@@ -3117,7 +3369,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["美", "漢", "問", "医"],
     "correctAnswer": "医",
-    "reading": "イ",
+    "reading": "い",
     "example": "医者（いしゃ）",
     "version": 1
   },
@@ -3128,7 +3380,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["緑", "章", "区", "予"],
     "correctAnswer": "予",
-    "reading": "ヨ",
+    "reading": "よ",
     "example": "予定（よてい）",
     "version": 1
   },
@@ -3141,6 +3393,7 @@ const questions = [
     "correctAnswer": "品",
     "reading": "しな",
     "example": "品物（しなもの）",
+    "extraReadings": [{"reading": "ひん", "example": "作品（さくひん）"}],
     "version": 1
   },
   {
@@ -3150,8 +3403,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["院", "童", "区", "箱"],
     "correctAnswer": "童",
-    "reading": "ドウ",
-    "example": "童話（どうわ）",
+    "reading": "わらべ",
+    "example": "童歌（わらべうた）",
+    "extraReadings": [{"reading": "どう", "example": "童話（どうわ）"}],
     "version": 1
   },
   {
@@ -3162,7 +3416,8 @@ const questions = [
     "choices": ["局", "荷", "注", "横"],
     "correctAnswer": "注",
     "reading": "そそ（ぐ）",
-    "example": "注意（ちゅうい）",
+    "example": "注ぐ（そそぐ）",
+    "extraReadings": [{"reading": "ちゅう", "example": "注意（ちゅうい）"}],
     "version": 1
   },
   {
@@ -3174,6 +3429,7 @@ const questions = [
     "correctAnswer": "整",
     "reading": "ととの（える）",
     "example": "整える（ととのえる）",
+    "extraReadings": [{"reading": "せい", "example": "整理（せいり）"}],
     "version": 1
   },
   {
@@ -3184,7 +3440,8 @@ const questions = [
     "choices": ["悲", "笛", "住", "化"],
     "correctAnswer": "住",
     "reading": "す（む）",
-    "example": "住む（すむ）",
+    "example": "住まい（すまい）",
+    "extraReadings": [{"reading": "じゅう", "example": "住所（じゅうしょ）"}],
     "version": 1
   },
   {
@@ -3196,6 +3453,7 @@ const questions = [
     "correctAnswer": "指",
     "reading": "ゆび",
     "example": "指先（ゆびさき）",
+    "extraReadings": [{"reading": "し", "example": "指定（してい）"}],
     "version": 1
   },
   {
@@ -3206,7 +3464,8 @@ const questions = [
     "choices": ["君", "油", "表", "農"],
     "correctAnswer": "君",
     "reading": "きみ",
-    "example": "君たち（きみたち）",
+    "example": "君の名前（きみのなまえ）",
+    "extraReadings": [{"reading": "くん", "example": "君主（くんしゅ）"}],
     "version": 1
   },
   {
@@ -3216,7 +3475,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["緑", "宿", "反", "漢"],
     "correctAnswer": "漢",
-    "reading": "カン",
+    "reading": "かん",
     "example": "漢字（かんじ）",
     "version": 1
   },
@@ -3227,7 +3486,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["登", "委", "相", "箱"],
     "correctAnswer": "委",
-    "reading": "イ",
+    "reading": "い",
     "example": "委員（いいん）",
     "version": 1
   },
@@ -3240,6 +3499,7 @@ const questions = [
     "correctAnswer": "羊",
     "reading": "ひつじ",
     "example": "羊毛（ようもう）",
+    "extraReadings": [{"reading": "よう", "example": "羊毛（ようもう）"}],
     "version": 1
   },
   {
@@ -3251,6 +3511,7 @@ const questions = [
     "correctAnswer": "負",
     "reading": "ま（ける）",
     "example": "負ける（まける）",
+    "extraReadings": [{"reading": "ふ", "example": "負担（ふたん）"}, {"reading": "お（う）", "example": "負う（おう）"}],
     "version": 1
   },
   {
@@ -3260,7 +3521,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["祭", "運", "秒", "農"],
     "correctAnswer": "農",
-    "reading": "ノウ",
+    "reading": "のう",
     "example": "農家（のうか）",
     "version": 1
   },
@@ -3272,7 +3533,8 @@ const questions = [
     "choices": ["次", "緑", "調", "柱"],
     "correctAnswer": "柱",
     "reading": "はしら",
-    "example": "電柱（でんちゅう）",
+    "example": "柱時計（はしらどけい）",
+    "extraReadings": [{"reading": "ちゅう", "example": "電柱（でんちゅう）"}],
     "version": 1
   },
   {
@@ -3284,6 +3546,7 @@ const questions = [
     "correctAnswer": "昔",
     "reading": "むかし",
     "example": "昔話（むかしばなし）",
+    "extraReadings": [{"reading": "じゃく", "example": "今昔（こんじゃく）"}, {"reading": "せき", "example": "昔日（せきじつ）"}],
     "version": 1
   },
   {
@@ -3295,6 +3558,7 @@ const questions = [
     "correctAnswer": "重",
     "reading": "おも（い）",
     "example": "重い（おもい）",
+    "extraReadings": [{"reading": "じゅう", "example": "重要（じゅうよう）"}, {"reading": "ちょう", "example": "貴重（きちょう）"}, {"reading": "かさ（ねる）", "example": "重ねる（かさねる）"}],
     "version": 1
   },
   {
@@ -3306,6 +3570,7 @@ const questions = [
     "correctAnswer": "歯",
     "reading": "は",
     "example": "歯医者（はいしゃ）",
+    "extraReadings": [{"reading": "し", "example": "歯科（しか）"}],
     "version": 1
   },
   {
@@ -3317,6 +3582,7 @@ const questions = [
     "correctAnswer": "係",
     "reading": "かかり",
     "example": "係員（かかりいん）",
+    "extraReadings": [{"reading": "けい", "example": "係数（けいすう）"}],
     "version": 1
   },
   {
@@ -3326,7 +3592,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["銀", "始", "館", "守"],
     "correctAnswer": "館",
-    "reading": "カン",
+    "reading": "かん",
     "example": "図書館（としょかん）",
     "version": 1
   },
@@ -3337,7 +3603,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["意", "取", "区", "部"],
     "correctAnswer": "意",
-    "reading": "イ",
+    "reading": "い",
     "example": "意見（いけん）",
     "version": 1
   },
@@ -3348,8 +3614,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["洋", "乗", "開", "主"],
     "correctAnswer": "洋",
-    "reading": "ヨウ",
-    "example": "洋服（ようふく）",
+    "reading": "よう",
+    "example": "西洋（せいよう）",
     "version": 1
   },
   {
@@ -3359,7 +3625,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["助", "速", "持", "部"],
     "correctAnswer": "部",
-    "reading": "ブ",
+    "reading": "ぶ",
     "example": "部屋（へや）",
     "version": 1
   },
@@ -3371,7 +3637,8 @@ const questions = [
     "choices": ["波", "者", "畑", "想"],
     "correctAnswer": "波",
     "reading": "なみ",
-    "example": "波音（なみおと）",
+    "example": "波打ち際（なみうちぎわ）",
+    "extraReadings": [{"reading": "は", "example": "電波（でんぱ）"}],
     "version": 1
   },
   {
@@ -3381,8 +3648,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["丁", "暗", "仕", "全"],
     "correctAnswer": "丁",
-    "reading": "チョウ",
+    "reading": "ちょう",
     "example": "丁目（ちょうめ）",
+    "extraReadings": [{"reading": "てい", "example": "丁寧（ていねい）"}],
     "version": 1
   },
   {
@@ -3394,6 +3662,7 @@ const questions = [
     "correctAnswer": "全",
     "reading": "すべ（て）",
     "example": "全て（すべて）",
+    "extraReadings": [{"reading": "まった（く）", "example": "全く（まったく）"}],
     "version": 1
   },
   {
@@ -3404,7 +3673,8 @@ const questions = [
     "choices": ["昔", "港", "宿", "相"],
     "correctAnswer": "宿",
     "reading": "やど",
-    "example": "宿題（しゅくだい）",
+    "example": "宿屋（やどや）",
+    "extraReadings": [{"reading": "しゅく", "example": "宿題（しゅくだい）"}],
     "version": 1
   },
   {
@@ -3414,7 +3684,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["詩", "実", "階", "世"],
     "correctAnswer": "詩",
-    "reading": "シ",
+    "reading": "し",
     "example": "詩集（ししゅう）",
     "version": 1
   },
@@ -3427,6 +3697,7 @@ const questions = [
     "correctAnswer": "軽",
     "reading": "かる（い）",
     "example": "軽い（かるい）",
+    "extraReadings": [{"reading": "けい", "example": "軽食（けいしょく）"}],
     "version": 1
   },
   {
@@ -3438,6 +3709,7 @@ const questions = [
     "correctAnswer": "岸",
     "reading": "きし",
     "example": "川岸（かわぎし）",
+    "extraReadings": [{"reading": "がん", "example": "海岸（かいがん）"}],
     "version": 1
   },
   {
@@ -3448,7 +3720,8 @@ const questions = [
     "choices": ["追", "放", "係", "育"],
     "correctAnswer": "育",
     "reading": "そだ（つ）",
-    "example": "育つ（そだつ）",
+    "example": "育ち盛り（そだちざかり）",
+    "extraReadings": [{"reading": "いく", "example": "教育（きょういく）"}],
     "version": 1
   },
   {
@@ -3459,7 +3732,8 @@ const questions = [
     "choices": ["葉", "洋", "仕", "湖"],
     "correctAnswer": "葉",
     "reading": "は",
-    "example": "紅葉（もみじ）",
+    "example": "木の葉（このは）",
+    "extraReadings": [{"reading": "よう", "example": "紅葉（こうよう）"}],
     "version": 1
   },
   {
@@ -3469,7 +3743,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["板", "旅", "着", "服"],
     "correctAnswer": "服",
-    "reading": "フク",
+    "reading": "ふく",
     "example": "洋服（ようふく）",
     "version": 1
   },
@@ -3481,7 +3755,8 @@ const questions = [
     "choices": ["配", "畑", "第", "身"],
     "correctAnswer": "配",
     "reading": "くば（る）",
-    "example": "配る（くばる）",
+    "example": "配り物（くばりもの）",
+    "extraReadings": [{"reading": "はい", "example": "心配（しんぱい）"}],
     "version": 1
   },
   {
@@ -3491,7 +3766,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["昭", "皿", "球", "帳"],
     "correctAnswer": "帳",
-    "reading": "チョウ",
+    "reading": "ちょう",
     "example": "手帳（てちょう）",
     "version": 1
   },
@@ -3504,6 +3779,7 @@ const questions = [
     "correctAnswer": "相",
     "reading": "あい",
     "example": "相手（あいて）",
+    "extraReadings": [{"reading": "しょう", "example": "首相（しゅしょう）"}],
     "version": 1
   },
   {
@@ -3515,6 +3791,7 @@ const questions = [
     "correctAnswer": "所",
     "reading": "ところ",
     "example": "台所（だいどころ）",
+    "extraReadings": [{"reading": "しょ", "example": "住所（じゅうしょ）"}],
     "version": 1
   },
   {
@@ -3526,6 +3803,7 @@ const questions = [
     "correctAnswer": "次",
     "reading": "つぎ",
     "example": "次の日（つぎのひ）",
+    "extraReadings": [{"reading": "じ", "example": "次回（じかい）"}, {"reading": "つ（ぐ）", "example": "次ぐ（つぐ）"}],
     "version": 1
   },
   {
@@ -3537,6 +3815,7 @@ const questions = [
     "correctAnswer": "血",
     "reading": "ち",
     "example": "血液（けつえき）",
+    "extraReadings": [{"reading": "けつ", "example": "血液（けつえき）"}],
     "version": 1
   },
   {
@@ -3548,6 +3827,7 @@ const questions = [
     "correctAnswer": "起",
     "reading": "お（きる）",
     "example": "起きる（おきる）",
+    "extraReadings": [{"reading": "き", "example": "起立（きりつ）"}, {"reading": "お（こる）", "example": "起こる（おこる）"}],
     "version": 1
   },
   {
@@ -3557,8 +3837,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["談", "員", "向", "去"],
     "correctAnswer": "員",
-    "reading": "イン",
-    "example": "会社員（かいしゃいん）",
+    "reading": "いん",
+    "example": "会員（かいいん）",
     "version": 1
   },
   {
@@ -3568,7 +3848,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["注", "陽", "列", "温"],
     "correctAnswer": "陽",
-    "reading": "ヨウ",
+    "reading": "よう",
     "example": "太陽（たいよう）",
     "version": 1
   },
@@ -3579,7 +3859,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["銀", "福", "表", "有"],
     "correctAnswer": "福",
-    "reading": "フク",
+    "reading": "ふく",
     "example": "幸福（こうふく）",
     "version": 1
   },
@@ -3590,7 +3870,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["県", "幸", "皿", "倍"],
     "correctAnswer": "倍",
-    "reading": "バイ",
+    "reading": "ばい",
     "example": "二倍（にばい）",
     "version": 1
   },
@@ -3602,7 +3882,8 @@ const questions = [
     "choices": ["調", "族", "血", "植"],
     "correctAnswer": "調",
     "reading": "しら（べる）",
-    "example": "調べる（しらべる）",
+    "example": "図書館で調べる（としょかんでしらべる）",
+    "extraReadings": [{"reading": "ちょう", "example": "調子（ちょうし）"}],
     "version": 1
   },
   {
@@ -3613,7 +3894,8 @@ const questions = [
     "choices": ["庫", "次", "階", "送"],
     "correctAnswer": "送",
     "reading": "おく（る）",
-    "example": "送る（おくる）",
+    "example": "送り物（おくりもの）",
+    "extraReadings": [{"reading": "そう", "example": "放送（ほうそう）"}],
     "version": 1
   },
   {
@@ -3625,6 +3907,7 @@ const questions = [
     "correctAnswer": "暑",
     "reading": "あつ（い）",
     "example": "暑い（あつい）",
+    "extraReadings": [{"reading": "しょ", "example": "暑中（しょちゅう）"}],
     "version": 1
   },
   {
@@ -3636,6 +3919,7 @@ const questions = [
     "correctAnswer": "事",
     "reading": "こと",
     "example": "出来事（できごと）",
+    "extraReadings": [{"reading": "じ", "example": "事実（じじつ）"}],
     "version": 1
   },
   {
@@ -3646,7 +3930,8 @@ const questions = [
     "choices": ["助", "坂", "神", "決"],
     "correctAnswer": "決",
     "reading": "き（める）",
-    "example": "決める（きめる）",
+    "example": "決め事（きめごと）",
+    "extraReadings": [{"reading": "けつ", "example": "決心（けっしん）"}, {"reading": "き（まる）", "example": "決まり（きまり）"}],
     "version": 1
   },
   {
@@ -3656,7 +3941,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["旅", "病", "期", "岸"],
     "correctAnswer": "期",
-    "reading": "キ",
+    "reading": "き",
     "example": "学期（がっき）",
     "version": 1
   },
@@ -3667,7 +3952,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["院", "進", "登", "相"],
     "correctAnswer": "院",
-    "reading": "イン",
+    "reading": "いん",
     "example": "病院（びょういん）",
     "version": 1
   },
@@ -3679,7 +3964,8 @@ const questions = [
     "choices": ["丁", "調", "様", "予"],
     "correctAnswer": "様",
     "reading": "さま",
-    "example": "お客様（おきゃくさま）",
+    "example": "王様（おうさま）",
+    "extraReadings": [{"reading": "よう", "example": "様子（ようす）"}],
     "version": 1
   },
   {
@@ -3690,7 +3976,8 @@ const questions = [
     "choices": ["物", "坂", "級", "旅"],
     "correctAnswer": "物",
     "reading": "もの",
-    "example": "食べ物（たべもの）",
+    "example": "買い物（かいもの）",
+    "extraReadings": [{"reading": "ぶつ", "example": "生物（せいぶつ）"}, {"reading": "もつ", "example": "荷物（にもつ）"}],
     "version": 1
   },
   {
@@ -3701,7 +3988,7 @@ const questions = [
     "choices": ["拾", "談", "箱", "平"],
     "correctAnswer": "箱",
     "reading": "はこ",
-    "example": "箱の中（はこのなか）",
+    "example": "木箱（きばこ）",
     "version": 1
   },
   {
@@ -3712,7 +3999,8 @@ const questions = [
     "choices": ["登", "様", "礼", "追"],
     "correctAnswer": "追",
     "reading": "お（う）",
-    "example": "追いかける（おいかける）",
+    "example": "犬を追う（いぬをおう）",
+    "extraReadings": [{"reading": "つい", "example": "追加（ついか）"}],
     "version": 1
   },
   {
@@ -3722,8 +4010,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["橋", "想", "都", "投"],
     "correctAnswer": "想",
-    "reading": "ソウ",
-    "example": "予想（よそう）",
+    "reading": "そう",
+    "example": "想像（そうぞう）",
     "version": 1
   },
   {
@@ -3734,7 +4022,8 @@ const questions = [
     "choices": ["助", "苦", "世", "返"],
     "correctAnswer": "助",
     "reading": "たす（ける）",
-    "example": "助ける（たすける）",
+    "example": "人助け（ひとだすけ）",
+    "extraReadings": [{"reading": "じょ", "example": "助言（じょげん）"}, {"reading": "すけ", "example": "助太刀（すけだち）"}],
     "version": 1
   },
   {
@@ -3746,6 +4035,7 @@ const questions = [
     "correctAnswer": "持",
     "reading": "も（つ）",
     "example": "持つ（もつ）",
+    "extraReadings": [{"reading": "じ", "example": "持続（じぞく）"}],
     "version": 1
   },
   {
@@ -3755,8 +4045,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["研", "主", "委", "打"],
     "correctAnswer": "研",
-    "reading": "ケン",
-    "example": "研究（けんきゅう）",
+    "reading": "と（ぐ）",
+    "example": "研ぐ（とぐ）",
+    "extraReadings": [{"reading": "けん", "example": "研究（けんきゅう）"}],
     "version": 1
   },
   {
@@ -3766,8 +4057,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["客", "階", "飲", "両"],
     "correctAnswer": "客",
-    "reading": "キャク",
+    "reading": "きゃく",
     "example": "お客さん（おきゃくさん）",
+    "extraReadings": [{"reading": "かく", "example": "旅客（りょかく）"}],
     "version": 1
   },
   {
@@ -3779,6 +4071,7 @@ const questions = [
     "correctAnswer": "飲",
     "reading": "の（む）",
     "example": "飲む（のむ）",
+    "extraReadings": [{"reading": "いん", "example": "飲料（いんりょう）"}],
     "version": 1
   },
   {
@@ -3789,7 +4082,8 @@ const questions = [
     "choices": ["平", "事", "落", "助"],
     "correctAnswer": "落",
     "reading": "お（ちる）",
-    "example": "落ちる（おちる）",
+    "example": "落ち葉（おちば）",
+    "extraReadings": [{"reading": "らく", "example": "落下（らっか）"}, {"reading": "お", "example": "落とす（おとす）"}],
     "version": 1
   },
   {
@@ -3801,6 +4095,7 @@ const questions = [
     "correctAnswer": "平",
     "reading": "たい（ら）",
     "example": "平ら（たいら）",
+    "extraReadings": [{"reading": "へい", "example": "平和（へいわ）"}, {"reading": "びょう", "example": "平等（びょうどう）"}, {"reading": "ひら", "example": "平屋（ひらや）"}],
     "version": 1
   },
   {
@@ -3811,7 +4106,7 @@ const questions = [
     "choices": ["畑", "集", "豆", "暑"],
     "correctAnswer": "畑",
     "reading": "はたけ",
-    "example": "畑仕事（はたけしごと）",
+    "example": "畑（はたけ）",
     "version": 1
   },
   {
@@ -3823,6 +4118,7 @@ const questions = [
     "correctAnswer": "定",
     "reading": "さだ（める）",
     "example": "予定（よてい）",
+    "extraReadings": [{"reading": "じょう", "example": "定規（じょうぎ）"}, {"reading": "さだ（か）", "example": "定か（さだか）"}],
     "version": 1
   },
   {
@@ -3833,7 +4129,8 @@ const questions = [
     "choices": ["息", "品", "去", "落"],
     "correctAnswer": "息",
     "reading": "いき",
-    "example": "息（いき）",
+    "example": "息切れ（いきぎれ）",
+    "extraReadings": [{"reading": "そく", "example": "休息（きゅうそく）"}],
     "version": 1
   },
   {
@@ -3843,7 +4140,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["昭", "両", "放", "向"],
     "correctAnswer": "昭",
-    "reading": "ショウ",
+    "reading": "しょう",
     "example": "昭和（しょうわ）",
     "version": 1
   },
@@ -3854,7 +4151,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["反", "式", "想", "真"],
     "correctAnswer": "式",
-    "reading": "シキ",
+    "reading": "しき",
     "example": "入学式（にゅうがくしき）",
     "version": 1
   },
@@ -3865,7 +4162,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["起", "式", "礼", "県"],
     "correctAnswer": "県",
-    "reading": "ケン",
+    "reading": "けん",
     "example": "県庁（けんちょう）",
     "version": 1
   },
@@ -3876,8 +4173,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["界", "究", "橋", "軽"],
     "correctAnswer": "究",
-    "reading": "キュウ",
-    "example": "研究（けんきゅう）",
+    "reading": "きわ（める）",
+    "example": "真理を究める（しんりをきわめる）",
+    "extraReadings": [{"reading": "きゅう", "example": "研究（けんきゅう）"}],
     "version": 1
   },
   {
@@ -3888,7 +4186,8 @@ const questions = [
     "choices": ["礼", "笛", "運", "注"],
     "correctAnswer": "運",
     "reading": "はこ（ぶ）",
-    "example": "運ぶ（はこぶ）",
+    "example": "運び屋（はこびや）",
+    "extraReadings": [{"reading": "うん", "example": "運動（うんどう）"}],
     "version": 1
   },
   {
@@ -3899,7 +4198,8 @@ const questions = [
     "choices": ["開", "幸", "路", "流"],
     "correctAnswer": "流",
     "reading": "なが（れる）",
-    "example": "流れる（ながれる）",
+    "example": "流れ星（ながれぼし）",
+    "extraReadings": [{"reading": "りゅう", "example": "流行（りゅうこう）"}, {"reading": "る", "example": "流布（るふ）"}],
     "version": 1
   },
   {
@@ -3911,6 +4211,7 @@ const questions = [
     "correctAnswer": "返",
     "reading": "かえ（す）",
     "example": "返す（かえす）",
+    "extraReadings": [{"reading": "へん", "example": "返事（へんじ）"}, {"reading": "かえ（る）", "example": "返る（かえる）"}],
     "version": 1
   },
   {
@@ -3920,8 +4221,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["昭", "発", "駅", "界"],
     "correctAnswer": "発",
-    "reading": "ハツ",
+    "reading": "はつ",
     "example": "出発（しゅっぱつ）",
+    "extraReadings": [{"reading": "ほつ", "example": "発作（ほっさ）"}],
     "version": 1
   },
   {
@@ -3933,6 +4235,7 @@ const questions = [
     "correctAnswer": "庭",
     "reading": "にわ",
     "example": "庭先（にわさき）",
+    "extraReadings": [{"reading": "てい", "example": "家庭（かてい）"}],
     "version": 1
   },
   {
@@ -3944,6 +4247,7 @@ const questions = [
     "correctAnswer": "速",
     "reading": "はや（い）",
     "example": "速い（はやい）",
+    "extraReadings": [{"reading": "そく", "example": "速度（そくど）"}],
     "version": 1
   },
   {
@@ -3953,8 +4257,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["消", "急", "決", "向"],
     "correctAnswer": "消",
-    "reading": "き（える）",
-    "example": "消える（きえる）",
+    "reading": "け（す）",
+    "example": "消す（けす）",
+    "extraReadings": [{"reading": "しょう", "example": "消化（しょうか）"}],
     "version": 1
   },
   {
@@ -3964,8 +4269,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["実", "族", "委", "港"],
     "correctAnswer": "実",
-    "reading": "み",
-    "example": "木の実（きのみ）",
+    "reading": "みの（る）",
+    "example": "稲が実る（いねがみのる）",
+    "extraReadings": [{"reading": "じつ", "example": "事実（じじつ）"}, {"reading": "み", "example": "木の実（きのみ）"}],
     "version": 1
   },
   {
@@ -3975,7 +4281,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["係", "庫", "局", "次"],
     "correctAnswer": "庫",
-    "reading": "コ",
+    "reading": "こ",
     "example": "倉庫（そうこ）",
     "version": 1
   },
@@ -3987,7 +4293,8 @@ const questions = [
     "choices": ["急", "写", "根", "役"],
     "correctAnswer": "急",
     "reading": "いそ（ぐ）",
-    "example": "急ぐ（いそぐ）",
+    "example": "急ぎ足（いそぎあし）",
+    "extraReadings": [{"reading": "きゅう", "example": "急用（きゅうよう）"}],
     "version": 1
   },
   {
@@ -3999,6 +4306,7 @@ const questions = [
     "correctAnswer": "泳",
     "reading": "およ（ぐ）",
     "example": "泳ぐ（およぐ）",
+    "extraReadings": [{"reading": "えい", "example": "水泳（すいえい）"}],
     "version": 1
   },
   {
@@ -4009,7 +4317,8 @@ const questions = [
     "choices": ["期", "旅", "局", "平"],
     "correctAnswer": "旅",
     "reading": "たび",
-    "example": "旅行（りょこう）",
+    "example": "旅人（たびびと）",
+    "extraReadings": [{"reading": "りょ", "example": "旅行（りょこう）"}],
     "version": 1
   },
   {
@@ -4019,7 +4328,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["勉", "有", "帳", "豆"],
     "correctAnswer": "勉",
-    "reading": "ベン",
+    "reading": "べん",
     "example": "勉強（べんきょう）",
     "version": 1
   },
@@ -4030,8 +4339,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["反", "昔", "笛", "筆"],
     "correctAnswer": "反",
-    "reading": "ハン",
+    "reading": "はん",
     "example": "反対（はんたい）",
+    "extraReadings": [{"reading": "たん", "example": "反物（たんもの）"}],
     "version": 1
   },
   {
@@ -4042,7 +4352,8 @@ const questions = [
     "choices": ["育", "化", "笛", "打"],
     "correctAnswer": "笛",
     "reading": "ふえ",
-    "example": "口笛（くちぶえ）",
+    "example": "縦笛（たてぶえ）",
+    "extraReadings": [{"reading": "てき", "example": "汽笛（きてき）"}],
     "version": 1
   },
   {
@@ -4052,7 +4363,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["美", "族", "登", "波"],
     "correctAnswer": "族",
-    "reading": "ゾク",
+    "reading": "ぞく",
     "example": "家族（かぞく）",
     "version": 1
   },
@@ -4063,8 +4374,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["商", "短", "昭", "習"],
     "correctAnswer": "商",
-    "reading": "ショウ",
+    "reading": "しょう",
     "example": "商店（しょうてん）",
+    "extraReadings": [{"reading": "あきな（う）", "example": "商う（あきなう）"}],
     "version": 1
   },
   {
@@ -4075,7 +4387,8 @@ const questions = [
     "choices": ["局", "申", "写", "習"],
     "correctAnswer": "写",
     "reading": "うつ（す）",
-    "example": "写す（うつす）",
+    "example": "絵を写す（えをうつす）",
+    "extraReadings": [{"reading": "しゃ", "example": "写真（しゃしん）"}],
     "version": 1
   },
   {
@@ -4086,7 +4399,8 @@ const questions = [
     "choices": ["息", "湖", "橋", "勉"],
     "correctAnswer": "湖",
     "reading": "みずうみ",
-    "example": "湖水（こすい）",
+    "example": "湖畔（こはん）",
+    "extraReadings": [{"reading": "こ", "example": "湖水（こすい）"}],
     "version": 1
   },
   {
@@ -4096,7 +4410,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["題", "級", "倍", "帳"],
     "correctAnswer": "級",
-    "reading": "キュウ",
+    "reading": "きゅう",
     "example": "学級（がっきゅう）",
     "version": 1
   },
@@ -4107,7 +4421,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["号", "駅", "等", "皿"],
     "correctAnswer": "駅",
-    "reading": "エキ",
+    "reading": "えき",
     "example": "駅前（えきまえ）",
     "version": 1
   },
@@ -4118,7 +4432,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["住", "式", "整", "両"],
     "correctAnswer": "両",
-    "reading": "リョウ",
+    "reading": "りょう",
     "example": "両手（りょうて）",
     "version": 1
   },
@@ -4131,6 +4445,7 @@ const questions = [
     "correctAnswer": "放",
     "reading": "はな（す）",
     "example": "放す（はなす）",
+    "extraReadings": [{"reading": "ほう", "example": "放送（ほうそう）"}, {"reading": "はな（つ）", "example": "放つ（はなつ）"}],
     "version": 1
   },
   {
@@ -4142,6 +4457,7 @@ const questions = [
     "correctAnswer": "坂",
     "reading": "さか",
     "example": "坂道（さかみち）",
+    "extraReadings": [{"reading": "はん", "example": "急坂（きゅうはん）"}],
     "version": 1
   },
   {
@@ -4151,7 +4467,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["緑", "植", "鉄", "章"],
     "correctAnswer": "鉄",
-    "reading": "テツ",
+    "reading": "てつ",
     "example": "鉄道（てつどう）",
     "version": 1
   },
@@ -4164,6 +4480,7 @@ const questions = [
     "correctAnswer": "他",
     "reading": "ほか",
     "example": "他の人（ほかのひと）",
+    "extraReadings": [{"reading": "た", "example": "他人（たにん）"}],
     "version": 1
   },
   {
@@ -4173,7 +4490,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["宿", "第", "章", "取"],
     "correctAnswer": "章",
-    "reading": "ショウ",
+    "reading": "しょう",
     "example": "文章（ぶんしょう）",
     "version": 1
   },
@@ -4186,6 +4503,7 @@ const questions = [
     "correctAnswer": "者",
     "reading": "もの",
     "example": "学者（がくしゃ）",
+    "extraReadings": [{"reading": "しゃ", "example": "記者（きしゃ）"}],
     "version": 1
   },
   {
@@ -4197,6 +4515,7 @@ const questions = [
     "correctAnswer": "向",
     "reading": "む（く）",
     "example": "向く（むく）",
+    "extraReadings": [{"reading": "こう", "example": "向上（こうじょう）"}, {"reading": "む（ける）", "example": "向ける（むける）"}],
     "version": 1
   },
   {
@@ -4207,7 +4526,8 @@ const questions = [
     "choices": ["君", "反", "宮", "集"],
     "correctAnswer": "宮",
     "reading": "みや",
-    "example": "宮殿（きゅうでん）",
+    "example": "宮参り（みやまいり）",
+    "extraReadings": [{"reading": "きゅう", "example": "宮殿（きゅうでん）"}, {"reading": "ぐう", "example": "神宮（じんぐう）"}],
     "version": 1
   },
   {
@@ -4217,7 +4537,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["央", "客", "詩", "洋"],
     "correctAnswer": "央",
-    "reading": "オウ",
+    "reading": "おう",
     "example": "中央（ちゅうおう）",
     "version": 1
   },
@@ -4230,6 +4550,7 @@ const questions = [
     "correctAnswer": "緑",
     "reading": "みどり",
     "example": "緑色（みどりいろ）",
+    "extraReadings": [{"reading": "りょく", "example": "緑茶（りょくちゃ）"}],
     "version": 1
   },
   {
@@ -4241,6 +4562,7 @@ const questions = [
     "correctAnswer": "味",
     "reading": "あじ",
     "example": "味見（あじみ）",
+    "extraReadings": [{"reading": "み", "example": "意味（いみ）"}, {"reading": "あじ（わう）", "example": "味わう（あじわう）"}],
     "version": 1
   },
   {
@@ -4251,7 +4573,8 @@ const questions = [
     "choices": ["予", "板", "酒", "定"],
     "correctAnswer": "板",
     "reading": "いた",
-    "example": "黒板（こくばん）",
+    "example": "板前（いたまえ）",
+    "extraReadings": [{"reading": "ばん", "example": "黒板（こくばん）"}],
     "version": 1
   },
   {
@@ -4263,6 +4586,7 @@ const questions = [
     "correctAnswer": "転",
     "reading": "ころ（がる）",
     "example": "転がる（ころがる）",
+    "extraReadings": [{"reading": "てん", "example": "転倒（てんとう）"}, {"reading": "ころ（ぶ）", "example": "転ぶ（ころぶ）"}],
     "version": 1
   },
   {
@@ -4273,7 +4597,8 @@ const questions = [
     "choices": ["打", "実", "反", "医"],
     "correctAnswer": "打",
     "reading": "う（つ）",
-    "example": "打つ（うつ）",
+    "example": "打ち上げ（うちあげ）",
+    "extraReadings": [{"reading": "だ", "example": "打線（だせん）"}],
     "version": 1
   },
   {
@@ -4285,6 +4610,7 @@ const questions = [
     "correctAnswer": "勝",
     "reading": "か（つ）",
     "example": "勝つ（かつ）",
+    "extraReadings": [{"reading": "しょう", "example": "勝利（しょうり）"}, {"reading": "まさ（る）", "example": "勝る（まさる）"}],
     "version": 1
   },
   {
@@ -4296,6 +4622,7 @@ const questions = [
     "correctAnswer": "主",
     "reading": "ぬし",
     "example": "持ち主（もちぬし）",
+    "extraReadings": [{"reading": "しゅ", "example": "主人（しゅじん）"}, {"reading": "おも", "example": "主な（おもな）"}],
     "version": 1
   },
   {
@@ -4307,6 +4634,7 @@ const questions = [
     "correctAnswer": "幸",
     "reading": "しあわ（せ）",
     "example": "幸せ（しあわせ）",
+    "extraReadings": [{"reading": "こう", "example": "幸運（こううん）"}, {"reading": "さいわ（い）", "example": "幸い（さいわい）"}],
     "version": 1
   },
   {
@@ -4316,7 +4644,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["童", "調", "球", "鉄"],
     "correctAnswer": "球",
-    "reading": "キュウ",
+    "reading": "きゅう",
     "example": "野球（やきゅう）",
     "version": 1
   },
@@ -4328,7 +4656,8 @@ const questions = [
     "choices": ["商", "第", "礼", "横"],
     "correctAnswer": "横",
     "reading": "よこ",
-    "example": "横道（よこみち）",
+    "example": "横顔（よこがお）",
+    "extraReadings": [{"reading": "おう", "example": "横断（おうだん）"}],
     "version": 1
   },
   {
@@ -4338,8 +4667,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["実", "礼", "深", "着"],
     "correctAnswer": "礼",
-    "reading": "レイ",
+    "reading": "れい",
     "example": "お礼（おれい）",
+    "extraReadings": [{"reading": "らい", "example": "礼拝（らいはい）"}],
     "version": 1
   },
   {
@@ -4351,6 +4681,7 @@ const questions = [
     "correctAnswer": "命",
     "reading": "いのち",
     "example": "生命（せいめい）",
+    "extraReadings": [{"reading": "みょう", "example": "寿命（じゅみょう）"}],
     "version": 1
   },
   {
@@ -4362,6 +4693,7 @@ const questions = [
     "correctAnswer": "皮",
     "reading": "かわ",
     "example": "毛皮（けがわ）",
+    "extraReadings": [{"reading": "ひ", "example": "皮膚（ひふ）"}],
     "version": 1
   },
   {
@@ -4371,8 +4703,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["表", "期", "究", "都"],
     "correctAnswer": "都",
-    "reading": "ト",
+    "reading": "と",
     "example": "都会（とかい）",
+    "extraReadings": [{"reading": "つ", "example": "都合（つごう）"}, {"reading": "みやこ", "example": "都（みやこ）"}],
     "version": 1
   },
   {
@@ -4382,8 +4715,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["開", "対", "区", "旅"],
     "correctAnswer": "対",
-    "reading": "タイ",
+    "reading": "たい",
     "example": "反対（はんたい）",
+    "extraReadings": [{"reading": "つい", "example": "対句（ついく）"}],
     "version": 1
   },
   {
@@ -4394,7 +4728,8 @@ const questions = [
     "choices": ["乗", "世", "皿", "植"],
     "correctAnswer": "乗",
     "reading": "の（る）",
-    "example": "乗る（のる）",
+    "example": "電車に乗る（でんしゃにのる）",
+    "extraReadings": [{"reading": "じょう", "example": "乗車（じょうしゃ）"}],
     "version": 1
   },
   {
@@ -4405,7 +4740,8 @@ const questions = [
     "choices": ["守", "有", "持", "速"],
     "correctAnswer": "守",
     "reading": "まも（る）",
-    "example": "守る（まもる）",
+    "example": "守り神（まもりがみ）",
+    "extraReadings": [{"reading": "しゅ", "example": "守備（しゅび）"}, {"reading": "す", "example": "留守（るす）"}],
     "version": 1
   },
   {
@@ -4417,6 +4753,7 @@ const questions = [
     "correctAnswer": "港",
     "reading": "みなと",
     "example": "港町（みなとまち）",
+    "extraReadings": [{"reading": "こう", "example": "空港（くうこう）"}],
     "version": 1
   },
   {
@@ -4428,6 +4765,7 @@ const questions = [
     "correctAnswer": "去",
     "reading": "さ（る）",
     "example": "去年（きょねん）",
+    "extraReadings": [{"reading": "きょ", "example": "去年（きょねん）"}, {"reading": "こ", "example": "過去（かこ）"}],
     "version": 1
   },
   {
@@ -4439,6 +4777,7 @@ const questions = [
     "correctAnswer": "屋",
     "reading": "や",
     "example": "本屋（ほんや）",
+    "extraReadings": [{"reading": "おく", "example": "屋上（おくじょう）"}],
     "version": 1
   },
   {
@@ -4448,7 +4787,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["庫", "館", "列", "丁"],
     "correctAnswer": "列",
-    "reading": "レツ",
+    "reading": "れつ",
     "example": "列車（れっしゃ）",
     "version": 1
   },
@@ -4459,8 +4798,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["受", "漢", "州", "面"],
     "correctAnswer": "面",
-    "reading": "メン",
+    "reading": "めん",
     "example": "画面（がめん）",
+    "extraReadings": [{"reading": "おもて", "example": "面（おもて）"}, {"reading": "おも", "example": "面影（おもかげ）"}],
     "version": 1
   },
   {
@@ -4471,7 +4811,8 @@ const questions = [
     "choices": ["真", "皿", "悲", "港"],
     "correctAnswer": "悲",
     "reading": "かな（しい）",
-    "example": "悲しい（かなしい）",
+    "example": "悲しみ（かなしみ）",
+    "extraReadings": [{"reading": "ひ", "example": "悲鳴（ひめい）"}],
     "version": 1
   },
   {
@@ -4481,8 +4822,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["習", "度", "皮", "開"],
     "correctAnswer": "度",
-    "reading": "ド",
+    "reading": "ど",
     "example": "今度（こんど）",
+    "extraReadings": [{"reading": "たび", "example": "度々（たびたび）"}, {"reading": "たく", "example": "支度（したく）"}],
     "version": 1
   },
   {
@@ -4494,6 +4836,7 @@ const questions = [
     "correctAnswer": "待",
     "reading": "ま（つ）",
     "example": "待つ（まつ）",
+    "extraReadings": [{"reading": "たい", "example": "期待（きたい）"}],
     "version": 1
   },
   {
@@ -4504,7 +4847,8 @@ const questions = [
     "choices": ["重", "宮", "題", "植"],
     "correctAnswer": "植",
     "reading": "う（える）",
-    "example": "植える（うえる）",
+    "example": "植え木（うえき）",
+    "extraReadings": [{"reading": "しょく", "example": "植物（しょくぶつ）"}],
     "version": 1
   },
   {
@@ -4516,6 +4860,7 @@ const questions = [
     "correctAnswer": "取",
     "reading": "と（る）",
     "example": "取る（とる）",
+    "extraReadings": [{"reading": "しゅ", "example": "取材（しゅざい）"}],
     "version": 1
   },
   {
@@ -4525,7 +4870,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["号", "血", "始", "洋"],
     "correctAnswer": "号",
-    "reading": "ゴウ",
+    "reading": "ごう",
     "example": "番号（ばんごう）",
     "version": 1
   },
@@ -4538,6 +4883,7 @@ const questions = [
     "correctAnswer": "橋",
     "reading": "はし",
     "example": "橋を渡る（はしをわたる）",
+    "extraReadings": [{"reading": "きょう", "example": "鉄橋（てっきょう）"}],
     "version": 1
   },
   {
@@ -4549,6 +4895,7 @@ const questions = [
     "correctAnswer": "温",
     "reading": "あたた（かい）",
     "example": "温かい（あたたかい）",
+    "extraReadings": [{"reading": "おん", "example": "温度（おんど）"}, {"reading": "あたた（める）", "example": "温める（あたためる）"}],
     "version": 1
   },
   {
@@ -4558,8 +4905,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["福", "練", "他", "化"],
     "correctAnswer": "練",
-    "reading": "レン",
-    "example": "練習（れんしゅう）",
+    "reading": "ね（る）",
+    "example": "計画を練る（けいかくをねる）",
+    "extraReadings": [{"reading": "れん", "example": "練習（れんしゅう）"}],
     "version": 1
   },
   {
@@ -4570,7 +4918,8 @@ const questions = [
     "choices": ["次", "持", "問", "君"],
     "correctAnswer": "問",
     "reading": "と（う）",
-    "example": "質問（しつもん）",
+    "example": "問い合わせ（といあわせ）",
+    "extraReadings": [{"reading": "もん", "example": "質問（しつもん）"}],
     "version": 1
   },
   {
@@ -4582,6 +4931,7 @@ const questions = [
     "correctAnswer": "美",
     "reading": "うつく（しい）",
     "example": "美しい（うつくしい）",
+    "extraReadings": [{"reading": "び", "example": "美術（びじゅつ）"}],
     "version": 1
   },
   {
@@ -4592,7 +4942,8 @@ const questions = [
     "choices": ["板", "投", "章", "式"],
     "correctAnswer": "投",
     "reading": "な（げる）",
-    "example": "投げる（なげる）",
+    "example": "投げ縄（なげなわ）",
+    "extraReadings": [{"reading": "とう", "example": "投書（とうしょ）"}],
     "version": 1
   },
   {
@@ -4604,6 +4955,7 @@ const questions = [
     "correctAnswer": "代",
     "reading": "か（わる）",
     "example": "代わる（かわる）",
+    "extraReadings": [{"reading": "だい", "example": "時代（じだい）"}, {"reading": "たい", "example": "交代（こうたい）"}],
     "version": 1
   },
   {
@@ -4614,7 +4966,8 @@ const questions = [
     "choices": ["向", "受", "申", "談"],
     "correctAnswer": "申",
     "reading": "もう（す）",
-    "example": "申す（もうす）",
+    "example": "申し込み（もうしこみ）",
+    "extraReadings": [{"reading": "しん", "example": "申告（しんこく）"}],
     "version": 1
   },
   {
@@ -4626,6 +4979,7 @@ const questions = [
     "correctAnswer": "酒",
     "reading": "さけ",
     "example": "お酒（おさけ）",
+    "extraReadings": [{"reading": "しゅ", "example": "日本酒（にほんしゅ）"}],
     "version": 1
   },
   {
@@ -4637,6 +4991,7 @@ const questions = [
     "correctAnswer": "根",
     "reading": "ね",
     "example": "木の根（きのね）",
+    "extraReadings": [{"reading": "こん", "example": "根気（こんき）"}],
     "version": 1
   },
   {
@@ -4646,8 +5001,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["炭", "血", "業", "暑"],
     "correctAnswer": "業",
-    "reading": "ギョウ",
+    "reading": "ぎょう",
     "example": "作業（さぎょう）",
+    "extraReadings": [{"reading": "わざ", "example": "神業（かみわざ）"}],
     "version": 1
   },
   {
@@ -4657,8 +5013,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["反", "化", "題", "筆"],
     "correctAnswer": "化",
-    "reading": "カ",
-    "example": "変化（へんか）",
+    "reading": "ば（ける）",
+    "example": "化ける（ばける）",
+    "extraReadings": [{"reading": "か", "example": "変化（へんか）"}, {"reading": "け", "example": "化粧（けしょう）"}],
     "version": 1
   },
   {
@@ -4668,7 +5025,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["路", "味", "平", "部"],
     "correctAnswer": "路",
-    "reading": "ロ",
+    "reading": "ろ",
     "example": "道路（どうろ）",
     "version": 1
   },
@@ -4679,8 +5036,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["役", "取", "泳", "者"],
     "correctAnswer": "役",
-    "reading": "ヤク",
+    "reading": "やく",
     "example": "役目（やくめ）",
+    "extraReadings": [{"reading": "えき", "example": "現役（げんえき）"}],
     "version": 1
   },
   {
@@ -4692,6 +5050,7 @@ const questions = [
     "correctAnswer": "鼻",
     "reading": "はな",
     "example": "鼻歌（はなうた）",
+    "extraReadings": [{"reading": "び", "example": "鼻炎（びえん）"}],
     "version": 1
   },
   {
@@ -4703,6 +5062,7 @@ const questions = [
     "correctAnswer": "豆",
     "reading": "まめ",
     "example": "豆腐（とうふ）",
+    "extraReadings": [{"reading": "とう", "example": "大豆（だいず）"}],
     "version": 1
   },
   {
@@ -4712,7 +5072,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["打", "歯", "第", "表"],
     "correctAnswer": "第",
-    "reading": "ダイ",
+    "reading": "だい",
     "example": "第一（だいいち）",
     "version": 1
   },
@@ -4724,7 +5084,8 @@ const questions = [
     "choices": ["横", "身", "味", "球"],
     "correctAnswer": "身",
     "reading": "み",
-    "example": "身長（しんちょう）",
+    "example": "身近（みぢか）",
+    "extraReadings": [{"reading": "しん", "example": "身長（しんちょう）"}],
     "version": 1
   },
   {
@@ -4736,6 +5097,7 @@ const questions = [
     "correctAnswer": "受",
     "reading": "う（ける）",
     "example": "受ける（うける）",
+    "extraReadings": [{"reading": "じゅ", "example": "受験（じゅけん）"}, {"reading": "う（かる）", "example": "受かる（うかる）"}],
     "version": 1
   },
   {
@@ -4747,6 +5109,7 @@ const questions = [
     "correctAnswer": "祭",
     "reading": "まつ（り）",
     "example": "夏祭り（なつまつり）",
+    "extraReadings": [{"reading": "さい", "example": "文化祭（ぶんかさい）"}],
     "version": 1
   },
   {
@@ -4758,6 +5121,7 @@ const questions = [
     "correctAnswer": "曲",
     "reading": "ま（がる）",
     "example": "曲がる（まがる）",
+    "extraReadings": [{"reading": "きょく", "example": "曲線（きょくせん）"}, {"reading": "ま（げる）", "example": "曲げる（まげる）"}],
     "version": 1
   },
   {
@@ -4769,6 +5133,7 @@ const questions = [
     "correctAnswer": "荷",
     "reading": "に",
     "example": "荷物（にもつ）",
+    "extraReadings": [{"reading": "か", "example": "出荷（しゅっか）"}],
     "version": 1
   },
   {
@@ -4778,8 +5143,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["君", "待", "宮", "和"],
     "correctAnswer": "和",
-    "reading": "ワ",
+    "reading": "わ",
     "example": "平和（へいわ）",
+    "extraReadings": [{"reading": "なご（む）", "example": "和む（なごむ）"}, {"reading": "やわ（らぐ）", "example": "和らぐ（やわらぐ）"}],
     "version": 1
   },
   {
@@ -4791,6 +5157,7 @@ const questions = [
     "correctAnswer": "薬",
     "reading": "くすり",
     "example": "薬局（やっきょく）",
+    "extraReadings": [{"reading": "やく", "example": "薬品（やくひん）"}],
     "version": 1
   },
   {
@@ -4802,6 +5169,7 @@ const questions = [
     "correctAnswer": "筆",
     "reading": "ふで",
     "example": "筆箱（ふでばこ）",
+    "extraReadings": [{"reading": "ひつ", "example": "鉛筆（えんぴつ）"}],
     "version": 1
   },
   {
@@ -4812,7 +5180,8 @@ const questions = [
     "choices": ["助", "駅", "実", "島"],
     "correctAnswer": "島",
     "reading": "しま",
-    "example": "島国（しまぐに）",
+    "example": "小島（こじま）",
+    "extraReadings": [{"reading": "とう", "example": "半島（はんとう）"}],
     "version": 1
   },
   {
@@ -4822,7 +5191,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["真", "橋", "族", "題"],
     "correctAnswer": "題",
-    "reading": "ダイ",
+    "reading": "だい",
     "example": "問題（もんだい）",
     "version": 1
   },
@@ -4834,7 +5203,8 @@ const questions = [
     "choices": ["神", "炭", "章", "真"],
     "correctAnswer": "神",
     "reading": "かみ",
-    "example": "神社（じんじゃ）",
+    "example": "神様（かみさま）",
+    "extraReadings": [{"reading": "しん", "example": "神社（じんじゃ）"}, {"reading": "じん", "example": "神宮（じんぐう）"}],
     "version": 1
   },
   {
@@ -4844,7 +5214,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["真", "級", "州", "業"],
     "correctAnswer": "州",
-    "reading": "シュウ",
+    "reading": "しゅう",
     "example": "本州（ほんしゅう）",
     "version": 1
   },
@@ -4856,7 +5226,7 @@ const questions = [
     "choices": ["他", "感", "皿", "進"],
     "correctAnswer": "皿",
     "reading": "さら",
-    "example": "お皿（おさら）",
+    "example": "皿洗い（さらあらい）",
     "version": 1
   },
   {
@@ -4866,7 +5236,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["平", "岸", "様", "局"],
     "correctAnswer": "局",
-    "reading": "キョク",
+    "reading": "きょく",
     "example": "郵便局（ゆうびんきょく）",
     "version": 1
   },
@@ -4877,7 +5247,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["打", "界", "波", "庫"],
     "correctAnswer": "界",
-    "reading": "カイ",
+    "reading": "かい",
     "example": "世界（せかい）",
     "version": 1
   },
@@ -4890,6 +5260,7 @@ const questions = [
     "correctAnswer": "民",
     "reading": "たみ",
     "example": "国民（こくみん）",
+    "extraReadings": [{"reading": "みん", "example": "民間（みんかん）"}],
     "version": 1
   },
   {
@@ -4899,7 +5270,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["関", "熊", "票", "梅"],
     "correctAnswer": "票",
-    "reading": "ヒョウ",
+    "reading": "ひょう",
     "example": "投票（とうひょう）",
     "version": 1
   },
@@ -4910,7 +5281,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["典", "縄", "老", "徒"],
     "correctAnswer": "典",
-    "reading": "テン",
+    "reading": "てん",
     "example": "辞典（じてん）",
     "version": 1
   },
@@ -4921,8 +5292,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["周", "残", "材", "然"],
     "correctAnswer": "然",
-    "reading": "ゼン",
+    "reading": "ぜん",
     "example": "自然（しぜん）",
+    "extraReadings": [{"reading": "ねん", "example": "天然（てんねん）"}],
     "version": 1
   },
   {
@@ -4933,7 +5305,8 @@ const questions = [
     "choices": ["機", "念", "唱", "崎"],
     "correctAnswer": "唱",
     "reading": "とな（える）",
-    "example": "合唱（がっしょう）",
+    "example": "唱える（となえる）",
+    "extraReadings": [{"reading": "しょう", "example": "合唱（がっしょう）"}],
     "version": 1
   },
   {
@@ -4944,7 +5317,8 @@ const questions = [
     "choices": ["徳", "刷", "令", "産"],
     "correctAnswer": "産",
     "reading": "う（む）",
-    "example": "産まれる（うまれる）",
+    "example": "子を産む（こをうむ）",
+    "extraReadings": [{"reading": "さん", "example": "生産（せいさん）"}],
     "version": 1
   },
   {
@@ -4954,8 +5328,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["健", "法", "臣", "唱"],
     "correctAnswer": "健",
-    "reading": "ケン",
+    "reading": "けん",
     "example": "健康（けんこう）",
+    "extraReadings": [{"reading": "すこ（やか）", "example": "健やか（すこやか）"}],
     "version": 1
   },
   {
@@ -4966,7 +5341,8 @@ const questions = [
     "choices": ["泣", "灯", "競", "約"],
     "correctAnswer": "泣",
     "reading": "な（く）",
-    "example": "泣く（なく）",
+    "example": "泣き声（なきごえ）",
+    "extraReadings": [{"reading": "きゅう", "example": "号泣（ごうきゅう）"}],
     "version": 1
   },
   {
@@ -4976,7 +5352,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["浅", "械", "加", "滋"],
     "correctAnswer": "械",
-    "reading": "カイ",
+    "reading": "かい",
     "example": "機械（きかい）",
     "version": 1
   },
@@ -4987,7 +5363,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["欠", "不", "愛", "察"],
     "correctAnswer": "愛",
-    "reading": "アイ",
+    "reading": "あい",
     "example": "愛情（あいじょう）",
     "version": 1
   },
@@ -5000,6 +5376,7 @@ const questions = [
     "correctAnswer": "無",
     "reading": "な（い）",
     "example": "無い（ない）",
+    "extraReadings": [{"reading": "む", "example": "無理（むり）"}, {"reading": "ぶ", "example": "無事（ぶじ）"}],
     "version": 1
   },
   {
@@ -5009,7 +5386,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["標", "泣", "改", "成"],
     "correctAnswer": "標",
-    "reading": "ヒョウ",
+    "reading": "ひょう",
     "example": "目標（もくひょう）",
     "version": 1
   },
@@ -5022,6 +5399,7 @@ const questions = [
     "correctAnswer": "伝",
     "reading": "つた（える）",
     "example": "伝える（つたえる）",
+    "extraReadings": [{"reading": "でん", "example": "伝記（でんき）"}],
     "version": 1
   },
   {
@@ -5032,7 +5410,8 @@ const questions = [
     "choices": ["冷", "初", "争", "連"],
     "correctAnswer": "争",
     "reading": "あらそ（う）",
-    "example": "争う（あらそう）",
+    "example": "勝負を争う（しょうぶをあらそう）",
+    "extraReadings": [{"reading": "そう", "example": "戦争（せんそう）"}],
     "version": 1
   },
   {
@@ -5043,7 +5422,8 @@ const questions = [
     "choices": ["底", "案", "信", "焼"],
     "correctAnswer": "焼",
     "reading": "や（く）",
-    "example": "焼く（やく）",
+    "example": "焼き魚（やきざかな）",
+    "extraReadings": [{"reading": "しょう", "example": "燃焼（ねんしょう）"}],
     "version": 1
   },
   {
@@ -5055,6 +5435,7 @@ const questions = [
     "correctAnswer": "散",
     "reading": "ち（る）",
     "example": "花が散る（はながちる）",
+    "extraReadings": [{"reading": "さん", "example": "散歩（さんぽ）"}],
     "version": 1
   },
   {
@@ -5064,8 +5445,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["帯", "栃", "街", "験"],
     "correctAnswer": "験",
-    "reading": "ケン",
-    "example": "実験（じっけん）",
+    "reading": "けん",
+    "example": "試験（しけん）",
     "version": 1
   },
   {
@@ -5075,7 +5456,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["静", "笑", "給", "帯"],
     "correctAnswer": "給",
-    "reading": "キュウ",
+    "reading": "きゅう",
     "example": "給食（きゅうしょく）",
     "version": 1
   },
@@ -5086,7 +5467,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["害", "倉", "覚", "辺"],
     "correctAnswer": "害",
-    "reading": "ガイ",
+    "reading": "がい",
     "example": "災害（さいがい）",
     "version": 1
   },
@@ -5097,7 +5478,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["挙", "案", "倉", "健"],
     "correctAnswer": "案",
-    "reading": "アン",
+    "reading": "あん",
     "example": "案内（あんない）",
     "version": 1
   },
@@ -5108,7 +5489,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["未", "約", "沖", "節"],
     "correctAnswer": "約",
-    "reading": "ヤク",
+    "reading": "やく",
     "example": "約束（やくそく）",
     "version": 1
   },
@@ -5119,8 +5500,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["治", "料", "菜", "不"],
     "correctAnswer": "不",
-    "reading": "フ",
+    "reading": "ふ",
     "example": "不安（ふあん）",
+    "extraReadings": [{"reading": "ぶ", "example": "不器用（ぶきよう）"}],
     "version": 1
   },
   {
@@ -5130,8 +5512,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["径", "積", "徒", "縄"],
     "correctAnswer": "徒",
-    "reading": "ト",
-    "example": "生徒（せいと）",
+    "reading": "と",
+    "example": "徒歩（とほ）",
     "version": 1
   },
   {
@@ -5142,7 +5524,8 @@ const questions = [
     "choices": ["郡", "官", "倉", "印"],
     "correctAnswer": "倉",
     "reading": "くら",
-    "example": "倉庫（そうこ）",
+    "example": "倉の中（くらのなか）",
+    "extraReadings": [{"reading": "そう", "example": "倉庫（そうこ）"}],
     "version": 1
   },
   {
@@ -5153,7 +5536,8 @@ const questions = [
     "choices": ["観", "照", "熱", "富"],
     "correctAnswer": "照",
     "reading": "て（る）",
-    "example": "日照り（ひでり）",
+    "example": "照らす（てらす）",
+    "extraReadings": [{"reading": "しょう", "example": "対照（たいしょう）"}],
     "version": 1
   },
   {
@@ -5164,7 +5548,8 @@ const questions = [
     "choices": ["帯", "残", "児", "信"],
     "correctAnswer": "残",
     "reading": "のこ（る）",
-    "example": "残る（のこる）",
+    "example": "残り物（のこりもの）",
+    "extraReadings": [{"reading": "ざん", "example": "残念（ざんねん）"}],
     "version": 1
   },
   {
@@ -5176,6 +5561,7 @@ const questions = [
     "correctAnswer": "固",
     "reading": "かた（い）",
     "example": "固い（かたい）",
+    "extraReadings": [{"reading": "こ", "example": "固体（こたい）"}, {"reading": "かた（める）", "example": "固める（かためる）"}],
     "version": 1
   },
   {
@@ -5186,7 +5572,8 @@ const questions = [
     "choices": ["挙", "関", "佐", "貨"],
     "correctAnswer": "挙",
     "reading": "あ（げる）",
-    "example": "手を挙げる（てをあげる）",
+    "example": "挙げる（あげる）",
+    "extraReadings": [{"reading": "きょ", "example": "選挙（せんきょ）"}],
     "version": 1
   },
   {
@@ -5198,6 +5585,7 @@ const questions = [
     "correctAnswer": "街",
     "reading": "まち",
     "example": "街角（まちかど）",
+    "extraReadings": [{"reading": "がい", "example": "商店街（しょうてんがい）"}, {"reading": "かい", "example": "街道（かいどう）"}],
     "version": 1
   },
   {
@@ -5207,7 +5595,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["機", "以", "祝", "働"],
     "correctAnswer": "以",
-    "reading": "イ",
+    "reading": "い",
     "example": "以上（いじょう）",
     "version": 1
   },
@@ -5218,8 +5606,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["梨", "勇", "栃", "治"],
     "correctAnswer": "勇",
-    "reading": "いさ（ましい）",
+    "reading": "ゆう",
     "example": "勇気（ゆうき）",
+    "extraReadings": [{"reading": "いさ（ましい）", "example": "勇ましい（いさましい）"}],
     "version": 1
   },
   {
@@ -5229,7 +5618,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["熊", "夫", "成", "徳"],
     "correctAnswer": "夫",
-    "reading": "フ",
+    "reading": "ふ",
     "example": "夫婦（ふうふ）",
     "version": 1
   },
@@ -5241,7 +5630,8 @@ const questions = [
     "choices": ["博", "努", "働", "周"],
     "correctAnswer": "努",
     "reading": "つと（める）",
-    "example": "努力（どりょく）",
+    "example": "努める（つとめる）",
+    "extraReadings": [{"reading": "ど", "example": "努力（どりょく）"}],
     "version": 1
   },
   {
@@ -5264,6 +5654,7 @@ const questions = [
     "correctAnswer": "城",
     "reading": "しろ",
     "example": "お城（おしろ）",
+    "extraReadings": [{"reading": "じょう", "example": "城下（じょうか）"}],
     "version": 1
   },
   {
@@ -5273,7 +5664,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["氏", "課", "児", "特"],
     "correctAnswer": "氏",
-    "reading": "シ",
+    "reading": "し",
     "example": "氏名（しめい）",
     "version": 1
   },
@@ -5284,8 +5675,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["功", "熊", "害", "失"],
     "correctAnswer": "功",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "成功（せいこう）",
+    "extraReadings": [{"reading": "く", "example": "功徳（くどく）"}],
     "version": 1
   },
   {
@@ -5295,8 +5687,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["群", "漁", "類", "機"],
     "correctAnswer": "漁",
-    "reading": "ギョ",
-    "example": "漁業（ぎょぎょう）",
+    "reading": "りょう",
+    "example": "漁師（りょうし）",
+    "extraReadings": [{"reading": "ぎょ", "example": "漁業（ぎょぎょう）"}],
     "version": 1
   },
   {
@@ -5306,8 +5699,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["帯", "老", "希", "各"],
     "correctAnswer": "各",
-    "reading": "カク",
-    "example": "各地（かくち）",
+    "reading": "おのおの",
+    "example": "各々（おのおの）",
+    "extraReadings": [{"reading": "かく", "example": "各地（かくち）"}],
     "version": 1
   },
   {
@@ -5317,8 +5711,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["兵", "衣", "牧", "課"],
     "correctAnswer": "衣",
-    "reading": "イ",
-    "example": "衣服（いふく）",
+    "reading": "ころも",
+    "example": "衣（ころも）",
+    "extraReadings": [{"reading": "い", "example": "衣服（いふく）"}],
     "version": 1
   },
   {
@@ -5328,8 +5723,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["要", "札", "周", "浅"],
     "correctAnswer": "要",
-    "reading": "かなめ",
-    "example": "必要（ひつよう）",
+    "reading": "い（る）",
+    "example": "要る（いる）",
+    "extraReadings": [{"reading": "よう", "example": "重要（じゅうよう）"}],
     "version": 1
   },
   {
@@ -5339,8 +5735,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["挙", "残", "付", "典"],
     "correctAnswer": "付",
-    "reading": "つ（ける）",
-    "example": "気を付ける（きをつける）",
+    "reading": "つ（く）",
+    "example": "付き合い（つきあい）",
+    "extraReadings": [{"reading": "ふ", "example": "寄付（きふ）"}],
     "version": 1
   },
   {
@@ -5350,7 +5747,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["失", "灯", "差", "別"],
     "correctAnswer": "灯",
-    "reading": "ひ",
+    "reading": "とう",
     "example": "電灯（でんとう）",
     "version": 1
   },
@@ -5363,6 +5760,7 @@ const questions = [
     "correctAnswer": "束",
     "reading": "たば",
     "example": "花束（はなたば）",
+    "extraReadings": [{"reading": "そく", "example": "約束（やくそく）"}],
     "version": 1
   },
   {
@@ -5374,6 +5772,7 @@ const questions = [
     "correctAnswer": "縄",
     "reading": "なわ",
     "example": "縄跳び（なわとび）",
+    "extraReadings": [{"reading": "じょう", "example": "縄文（じょうもん）"}],
     "version": 1
   },
   {
@@ -5383,7 +5782,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["司", "未", "軍", "管"],
     "correctAnswer": "司",
-    "reading": "シ",
+    "reading": "し",
     "example": "司会（しかい）",
     "version": 1
   },
@@ -5396,6 +5795,7 @@ const questions = [
     "correctAnswer": "好",
     "reading": "す（き）",
     "example": "好き（すき）",
+    "extraReadings": [{"reading": "こう", "example": "好意（こうい）"}, {"reading": "この（む）", "example": "好む（このむ）"}],
     "version": 1
   },
   {
@@ -5407,6 +5807,7 @@ const questions = [
     "correctAnswer": "共",
     "reading": "とも",
     "example": "共に（ともに）",
+    "extraReadings": [{"reading": "きょう", "example": "共通（きょうつう）"}],
     "version": 1
   },
   {
@@ -5418,6 +5819,7 @@ const questions = [
     "correctAnswer": "覚",
     "reading": "おぼ（える）",
     "example": "覚える（おぼえる）",
+    "extraReadings": [{"reading": "かく", "example": "感覚（かんかく）"}, {"reading": "さ（める）", "example": "覚める（さめる）"}],
     "version": 1
   },
   {
@@ -5427,8 +5829,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["置", "位", "続", "労"],
     "correctAnswer": "位",
-    "reading": "イ",
-    "example": "一位（いちい）",
+    "reading": "くらい",
+    "example": "位取り（くらいどり）",
+    "extraReadings": [{"reading": "い", "example": "地位（ちい）"}],
     "version": 1
   },
   {
@@ -5438,8 +5841,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["折", "滋", "養", "量"],
     "correctAnswer": "養",
-    "reading": "ヨウ",
-    "example": "栄養（えいよう）",
+    "reading": "やしな（う）",
+    "example": "養う（やしなう）",
+    "extraReadings": [{"reading": "よう", "example": "栄養（えいよう）"}],
     "version": 1
   },
   {
@@ -5449,8 +5853,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["共", "府", "阪", "説"],
     "correctAnswer": "府",
-    "reading": "フ",
-    "example": "大阪府（おおさかふ）",
+    "reading": "ふ",
+    "example": "京都府（きょうとふ）",
     "version": 1
   },
   {
@@ -5462,6 +5866,7 @@ const questions = [
     "correctAnswer": "働",
     "reading": "はたら（く）",
     "example": "働く（はたらく）",
+    "extraReadings": [{"reading": "どう", "example": "稼働（かどう）"}],
     "version": 1
   },
   {
@@ -5473,6 +5878,7 @@ const questions = [
     "correctAnswer": "側",
     "reading": "がわ",
     "example": "内側（うちがわ）",
+    "extraReadings": [{"reading": "そく", "example": "側面（そくめん）"}],
     "version": 1
   },
   {
@@ -5482,8 +5888,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["的", "験", "末", "臣"],
     "correctAnswer": "臣",
-    "reading": "シン",
+    "reading": "しん",
     "example": "大臣（だいじん）",
+    "extraReadings": [{"reading": "じん", "example": "家臣（かしん）"}],
     "version": 1
   },
   {
@@ -5494,7 +5901,8 @@ const questions = [
     "choices": ["成", "省", "試", "養"],
     "correctAnswer": "試",
     "reading": "ため（す）",
-    "example": "試す（ためす）",
+    "example": "試し読み（ためしよみ）",
+    "extraReadings": [{"reading": "し", "example": "試合（しあい）"}],
     "version": 1
   },
   {
@@ -5506,6 +5914,7 @@ const questions = [
     "correctAnswer": "香",
     "reading": "かお（り）",
     "example": "香り（かおり）",
+    "extraReadings": [{"reading": "こう", "example": "香水（こうすい）"}],
     "version": 1
   },
   {
@@ -5515,7 +5924,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["法", "別", "景", "協"],
     "correctAnswer": "協",
-    "reading": "キョウ",
+    "reading": "きょう",
     "example": "協力（きょうりょく）",
     "version": 1
   },
@@ -5527,7 +5936,7 @@ const questions = [
     "choices": ["願", "潟", "縄", "貨"],
     "correctAnswer": "潟",
     "reading": "かた",
-    "example": "新潟（にいがた）",
+    "example": "干潟（ひがた）",
     "version": 1
   },
   {
@@ -5538,7 +5947,7 @@ const questions = [
     "choices": ["城", "低", "副", "茨"],
     "correctAnswer": "茨",
     "reading": "いばら",
-    "example": "茨城（いばらき）",
+    "example": "茨の道（いばらのみち）",
     "version": 1
   },
   {
@@ -5549,7 +5958,8 @@ const questions = [
     "choices": ["浴", "差", "好", "以"],
     "correctAnswer": "浴",
     "reading": "あ（びる）",
-    "example": "水を浴びる（みずをあびる）",
+    "example": "浴びる（あびる）",
+    "extraReadings": [{"reading": "よく", "example": "入浴（にゅうよく）"}],
     "version": 1
   },
   {
@@ -5559,8 +5969,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["沖", "阜", "観", "氏"],
     "correctAnswer": "阜",
-    "reading": "フ",
-    "example": "岐阜（ぎふ）",
+    "reading": "ふ",
+    "example": "岐阜県（ぎふけん）",
     "version": 1
   },
   {
@@ -5570,7 +5980,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["希", "特", "兆", "借"],
     "correctAnswer": "特",
-    "reading": "トク",
+    "reading": "とく",
     "example": "特別（とくべつ）",
     "version": 1
   },
@@ -5583,6 +5993,7 @@ const questions = [
     "correctAnswer": "続",
     "reading": "つづ（く）",
     "example": "続く（つづく）",
+    "extraReadings": [{"reading": "ぞく", "example": "続出（ぞくしゅつ）"}, {"reading": "つづ（ける）", "example": "続ける（つづける）"}],
     "version": 1
   },
   {
@@ -5592,8 +6003,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["争", "奈", "貨", "信"],
     "correctAnswer": "信",
-    "reading": "シン",
-    "example": "信号（しんごう）",
+    "reading": "しん（じる）",
+    "example": "信じる（しんじる）",
+    "extraReadings": [{"reading": "しん", "example": "信号（しんごう）"}],
     "version": 1
   },
   {
@@ -5603,8 +6015,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["児", "媛", "位", "折"],
     "correctAnswer": "児",
-    "reading": "ジ",
+    "reading": "じ",
     "example": "児童（じどう）",
+    "extraReadings": [{"reading": "に", "example": "小児科（しょうにか）"}],
     "version": 1
   },
   {
@@ -5614,8 +6027,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["訓", "飛", "候", "静"],
     "correctAnswer": "候",
-    "reading": "コウ",
-    "example": "気候（きこう）",
+    "reading": "こう",
+    "example": "天候（てんこう）",
     "version": 1
   },
   {
@@ -5627,6 +6040,7 @@ const questions = [
     "correctAnswer": "鏡",
     "reading": "かがみ",
     "example": "手鏡（てかがみ）",
+    "extraReadings": [{"reading": "きょう", "example": "望遠鏡（ぼうえんきょう）"}],
     "version": 1
   },
   {
@@ -5636,8 +6050,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["希", "富", "完", "協"],
     "correctAnswer": "完",
-    "reading": "カン",
-    "example": "完成（かんせい）",
+    "reading": "かん",
+    "example": "完全（かんぜん）",
     "version": 1
   },
   {
@@ -5648,7 +6062,8 @@ const questions = [
     "choices": ["周", "印", "満", "求"],
     "correctAnswer": "印",
     "reading": "しるし",
-    "example": "目印（めじるし）",
+    "example": "印をつける（しるしをつける）",
+    "extraReadings": [{"reading": "いん", "example": "印刷（いんさつ）"}],
     "version": 1
   },
   {
@@ -5658,8 +6073,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["径", "利", "完", "以"],
     "correctAnswer": "利",
-    "reading": "リ",
+    "reading": "り",
     "example": "便利（べんり）",
+    "extraReadings": [{"reading": "き（く）", "example": "利く（きく）"}],
     "version": 1
   },
   {
@@ -5670,7 +6086,8 @@ const questions = [
     "choices": ["松", "富", "達", "笑"],
     "correctAnswer": "富",
     "reading": "と（む）",
-    "example": "富士山（ふじさん）",
+    "example": "富む（とむ）",
+    "extraReadings": [{"reading": "ふ", "example": "富士山（ふじさん）"}, {"reading": "ふう", "example": "富貴（ふうき）"}],
     "version": 1
   },
   {
@@ -5680,7 +6097,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["器", "徳", "的", "賀"],
     "correctAnswer": "徳",
-    "reading": "トク",
+    "reading": "とく",
     "example": "道徳（どうとく）",
     "version": 1
   },
@@ -5691,7 +6108,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["鏡", "良", "最", "卒"],
     "correctAnswer": "卒",
-    "reading": "ソツ",
+    "reading": "そつ",
     "example": "卒業（そつぎょう）",
     "version": 1
   },
@@ -5703,7 +6120,8 @@ const questions = [
     "choices": ["井", "改", "側", "浴"],
     "correctAnswer": "井",
     "reading": "い",
-    "example": "天井（てんじょう）",
+    "example": "井戸（いど）",
+    "extraReadings": [{"reading": "せい", "example": "天井（てんじょう）"}],
     "version": 1
   },
   {
@@ -5715,6 +6133,7 @@ const questions = [
     "correctAnswer": "治",
     "reading": "なお（る）",
     "example": "病気が治る（びょうきがなおる）",
+    "extraReadings": [{"reading": "じ", "example": "政治（せいじ）"}, {"reading": "おさ（める）", "example": "治める（おさめる）"}],
     "version": 1
   },
   {
@@ -5724,7 +6143,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["崎", "康", "群", "良"],
     "correctAnswer": "康",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "健康（けんこう）",
     "version": 1
   },
@@ -5736,7 +6155,8 @@ const questions = [
     "choices": ["競", "孫", "井", "末"],
     "correctAnswer": "競",
     "reading": "きそ（う）",
-    "example": "競争（きょうそう）",
+    "example": "競う（きそう）",
+    "extraReadings": [{"reading": "きょう", "example": "競争（きょうそう）"}, {"reading": "けい", "example": "競馬（けいば）"}],
     "version": 1
   },
   {
@@ -5746,8 +6166,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["浅", "官", "照", "敗"],
     "correctAnswer": "官",
-    "reading": "カン",
-    "example": "警官（けいかん）",
+    "reading": "かん",
+    "example": "官庁（かんちょう）",
     "version": 1
   },
   {
@@ -5757,7 +6177,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["努", "器", "英", "利"],
     "correctAnswer": "英",
-    "reading": "エイ",
+    "reading": "えい",
     "example": "英語（えいご）",
     "version": 1
   },
@@ -5768,8 +6188,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["孫", "陸", "底", "続"],
     "correctAnswer": "陸",
-    "reading": "リク",
-    "example": "着陸（ちゃくりく）",
+    "reading": "りく",
+    "example": "大陸（たいりく）",
     "version": 1
   },
   {
@@ -5779,8 +6199,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["副", "阪", "季", "完"],
     "correctAnswer": "副",
-    "reading": "フク",
-    "example": "副業（ふくぎょう）",
+    "reading": "ふく",
+    "example": "副会長（ふくかいちょう）",
     "version": 1
   },
   {
@@ -5791,7 +6211,7 @@ const questions = [
     "choices": ["建", "兆", "案", "栃"],
     "correctAnswer": "栃",
     "reading": "とち",
-    "example": "栃木（とちぎ）",
+    "example": "栃木県（とちぎけん）",
     "version": 1
   },
   {
@@ -5802,7 +6222,8 @@ const questions = [
     "choices": ["辞", "孫", "機", "軍"],
     "correctAnswer": "孫",
     "reading": "まご",
-    "example": "孫娘（まごむすめ）",
+    "example": "孫（まご）",
+    "extraReadings": [{"reading": "そん", "example": "子孫（しそん）"}],
     "version": 1
   },
   {
@@ -5814,6 +6235,7 @@ const questions = [
     "correctAnswer": "成",
     "reading": "な（る）",
     "example": "成功（せいこう）",
+    "extraReadings": [{"reading": "せい", "example": "成功（せいこう）"}, {"reading": "じょう", "example": "成就（じょうじゅ）"}, {"reading": "な（す）", "example": "成す（なす）"}],
     "version": 1
   },
   {
@@ -5823,8 +6245,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["群", "滋", "梨", "験"],
     "correctAnswer": "滋",
-    "reading": "ジ",
-    "example": "滋賀（しが）",
+    "reading": "じ",
+    "example": "滋養（じよう）",
     "version": 1
   },
   {
@@ -5834,8 +6256,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["栃", "佐", "郡", "完"],
     "correctAnswer": "佐",
-    "reading": "サ",
-    "example": "佐賀（さが）",
+    "reading": "さ",
+    "example": "佐賀県（さがけん）",
     "version": 1
   },
   {
@@ -5845,8 +6267,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["周", "借", "管", "極"],
     "correctAnswer": "極",
-    "reading": "キョク",
-    "example": "北極（ほっきょく）",
+    "reading": "きわ（める）",
+    "example": "極める（きわめる）",
+    "extraReadings": [{"reading": "きょく", "example": "北極（ほっきょく）"}, {"reading": "ごく", "example": "極楽（ごくらく）"}],
     "version": 1
   },
   {
@@ -5856,8 +6279,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["望", "未", "願", "管"],
     "correctAnswer": "管",
-    "reading": "カン",
-    "example": "水道管（すいどうかん）",
+    "reading": "くだ",
+    "example": "管を通す（くだをとおす）",
+    "extraReadings": [{"reading": "かん", "example": "水道管（すいどうかん）"}],
     "version": 1
   },
   {
@@ -5868,7 +6292,8 @@ const questions = [
     "choices": ["達", "軍", "栄", "民"],
     "correctAnswer": "栄",
     "reading": "さか（える）",
-    "example": "栄養（えいよう）",
+    "example": "栄える（さかえる）",
+    "extraReadings": [{"reading": "えい", "example": "光栄（こうえい）"}],
     "version": 1
   },
   {
@@ -5879,7 +6304,8 @@ const questions = [
     "choices": ["要", "芸", "良", "競"],
     "correctAnswer": "良",
     "reading": "よ（い）",
-    "example": "良い（よい）",
+    "example": "良い子（よいこ）",
+    "extraReadings": [{"reading": "りょう", "example": "良心（りょうしん）"}],
     "version": 1
   },
   {
@@ -5889,7 +6315,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["不", "差", "兵", "信"],
     "correctAnswer": "兵",
-    "reading": "ヘイ",
+    "reading": "へい",
     "example": "兵隊（へいたい）",
     "version": 1
   },
@@ -5900,7 +6326,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["官", "奈", "察", "望"],
     "correctAnswer": "奈",
-    "reading": "ナ",
+    "reading": "な",
     "example": "奈良（なら）",
     "version": 1
   },
@@ -5912,7 +6338,8 @@ const questions = [
     "choices": ["照", "帯", "民", "末"],
     "correctAnswer": "帯",
     "reading": "おび",
-    "example": "熱帯（ねったい）",
+    "example": "帯（おび）",
+    "extraReadings": [{"reading": "たい", "example": "地帯（ちたい）"}, {"reading": "お（びる）", "example": "帯びる（おびる）"}],
     "version": 1
   },
   {
@@ -5922,8 +6349,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["巣", "博", "省", "協"],
     "correctAnswer": "省",
-    "reading": "かえり（みる）",
-    "example": "反省（はんせい）",
+    "reading": "しょう",
+    "example": "省略（しょうりゃく）",
+    "extraReadings": [{"reading": "せい", "example": "反省（はんせい）"}, {"reading": "はぶ（く）", "example": "省く（はぶく）"}, {"reading": "かえり（みる）", "example": "省みる（かえりみる）"}],
     "version": 1
   },
   {
@@ -5934,7 +6362,8 @@ const questions = [
     "choices": ["芽", "辞", "極", "勇"],
     "correctAnswer": "辞",
     "reading": "や（める）",
-    "example": "辞典（じてん）",
+    "example": "辞める（やめる）",
+    "extraReadings": [{"reading": "じ", "example": "辞書（じしょ）"}],
     "version": 1
   },
   {
@@ -5956,7 +6385,7 @@ const questions = [
     "choices": ["省", "固", "熊", "陸"],
     "correctAnswer": "熊",
     "reading": "くま",
-    "example": "熊本（くまもと）",
+    "example": "熊の子（くまのこ）",
     "version": 1
   },
   {
@@ -5968,6 +6397,7 @@ const questions = [
     "correctAnswer": "関",
     "reading": "せき",
     "example": "関係（かんけい）",
+    "extraReadings": [{"reading": "かか（わる）", "example": "関わる（かかわる）"}],
     "version": 1
   },
   {
@@ -5977,7 +6407,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["芸", "媛", "景", "灯"],
     "correctAnswer": "媛",
-    "reading": "エン",
+    "reading": "えん",
     "example": "愛媛（えひめ）",
     "version": 1
   },
@@ -5988,7 +6418,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["料", "望", "必", "各"],
     "correctAnswer": "料",
-    "reading": "リョウ",
+    "reading": "りょう",
     "example": "料理（りょうり）",
     "version": 1
   },
@@ -6011,7 +6441,7 @@ const questions = [
     "choices": ["量", "陸", "梨", "栄"],
     "correctAnswer": "梨",
     "reading": "なし",
-    "example": "山梨（やまなし）",
+    "example": "梨の実（なしのみ）",
     "version": 1
   },
   {
@@ -6021,7 +6451,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["札", "隊", "続", "不"],
     "correctAnswer": "隊",
-    "reading": "タイ",
+    "reading": "たい",
     "example": "軍隊（ぐんたい）",
     "version": 1
   },
@@ -6034,6 +6464,7 @@ const questions = [
     "correctAnswer": "清",
     "reading": "きよ（い）",
     "example": "清水（しみず）",
+    "extraReadings": [{"reading": "せい", "example": "清潔（せいけつ）"}, {"reading": "きよ（らか）", "example": "清らか（きよらか）"}],
     "version": 1
   },
   {
@@ -6044,7 +6475,8 @@ const questions = [
     "choices": ["鹿", "札", "争", "治"],
     "correctAnswer": "鹿",
     "reading": "しか",
-    "example": "鹿児島（かごしま）",
+    "example": "鹿（しか）",
+    "extraReadings": [{"reading": "か", "example": "鹿児島（かごしま）"}],
     "version": 1
   },
   {
@@ -6055,7 +6487,8 @@ const questions = [
     "choices": ["街", "岐", "阜", "菜"],
     "correctAnswer": "菜",
     "reading": "な",
-    "example": "野菜（やさい）",
+    "example": "菜の花（なのはな）",
+    "extraReadings": [{"reading": "さい", "example": "野菜（やさい）"}],
     "version": 1
   },
   {
@@ -6065,7 +6498,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["訓", "奈", "副", "巣"],
     "correctAnswer": "訓",
-    "reading": "クン",
+    "reading": "くん",
     "example": "訓読み（くんよみ）",
     "version": 1
   },
@@ -6076,7 +6509,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["令", "観", "初", "帯"],
     "correctAnswer": "観",
-    "reading": "カン",
+    "reading": "かん",
     "example": "観光（かんこう）",
     "version": 1
   },
@@ -6089,6 +6522,7 @@ const questions = [
     "correctAnswer": "塩",
     "reading": "しお",
     "example": "塩水（しおみず）",
+    "extraReadings": [{"reading": "えん", "example": "塩分（えんぶん）"}],
     "version": 1
   },
   {
@@ -6098,8 +6532,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["量", "無", "別", "散"],
     "correctAnswer": "量",
-    "reading": "リョウ",
+    "reading": "りょう",
     "example": "分量（ぶんりょう）",
+    "extraReadings": [{"reading": "はか（る）", "example": "量る（はかる）"}],
     "version": 1
   },
   {
@@ -6111,6 +6546,7 @@ const questions = [
     "correctAnswer": "辺",
     "reading": "あた（り）",
     "example": "周辺（しゅうへん）",
+    "extraReadings": [{"reading": "べ", "example": "海辺（うみべ）"}],
     "version": 1
   },
   {
@@ -6122,6 +6558,7 @@ const questions = [
     "correctAnswer": "熱",
     "reading": "あつ（い）",
     "example": "熱い（あつい）",
+    "extraReadings": [{"reading": "ねつ", "example": "発熱（はつねつ）"}],
     "version": 1
   },
   {
@@ -6131,8 +6568,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["衣", "達", "希", "孫"],
     "correctAnswer": "達",
-    "reading": "タツ",
+    "reading": "たつ",
     "example": "友達（ともだち）",
+    "extraReadings": [{"reading": "だち", "example": "友達（ともだち）"}],
     "version": 1
   },
   {
@@ -6144,6 +6582,7 @@ const questions = [
     "correctAnswer": "静",
     "reading": "しず（か）",
     "example": "静か（しずか）",
+    "extraReadings": [{"reading": "せい", "example": "静止（せいし）"}, {"reading": "じょう", "example": "静脈（じょうみゃく）"}, {"reading": "しず（まる）", "example": "静まる（しずまる）"}],
     "version": 1
   },
   {
@@ -6155,6 +6594,7 @@ const questions = [
     "correctAnswer": "失",
     "reading": "うしな（う）",
     "example": "失う（うしなう）",
+    "extraReadings": [{"reading": "しつ", "example": "失礼（しつれい）"}],
     "version": 1
   },
   {
@@ -6166,6 +6606,7 @@ const questions = [
     "correctAnswer": "最",
     "reading": "もっと（も）",
     "example": "最も（もっとも）",
+    "extraReadings": [{"reading": "さい", "example": "最後（さいご）"}],
     "version": 1
   },
   {
@@ -6175,7 +6616,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["氏", "飛", "老", "軍"],
     "correctAnswer": "軍",
-    "reading": "グン",
+    "reading": "ぐん",
     "example": "軍隊（ぐんたい）",
     "version": 1
   },
@@ -6187,7 +6628,8 @@ const questions = [
     "choices": ["置", "管", "願", "積"],
     "correctAnswer": "願",
     "reading": "ねが（う）",
-    "example": "願う（ねがう）",
+    "example": "願い事（ねがいごと）",
+    "extraReadings": [{"reading": "がん", "example": "願書（がんしょ）"}],
     "version": 1
   },
   {
@@ -6198,7 +6640,7 @@ const questions = [
     "choices": ["努", "岡", "録", "必"],
     "correctAnswer": "岡",
     "reading": "おか",
-    "example": "福岡（ふくおか）",
+    "example": "静岡（しずおか）",
     "version": 1
   },
   {
@@ -6209,7 +6651,8 @@ const questions = [
     "choices": ["泣", "輪", "求", "滋"],
     "correctAnswer": "輪",
     "reading": "わ",
-    "example": "花輪（はなわ）",
+    "example": "指輪（ゆびわ）",
+    "extraReadings": [{"reading": "りん", "example": "車輪（しゃりん）"}],
     "version": 1
   },
   {
@@ -6221,6 +6664,7 @@ const questions = [
     "correctAnswer": "変",
     "reading": "か（わる）",
     "example": "変わる（かわる）",
+    "extraReadings": [{"reading": "へん", "example": "変化（へんか）"}],
     "version": 1
   },
   {
@@ -6230,7 +6674,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["便", "念", "奈", "焼"],
     "correctAnswer": "念",
-    "reading": "ネン",
+    "reading": "ねん",
     "example": "記念（きねん）",
     "version": 1
   },
@@ -6241,8 +6685,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["省", "児", "要", "単"],
     "correctAnswer": "単",
-    "reading": "タン",
-    "example": "簡単（かんたん）",
+    "reading": "たん",
+    "example": "単語（たんご）",
     "version": 1
   },
   {
@@ -6252,7 +6696,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["潟", "労", "便", "席"],
     "correctAnswer": "席",
-    "reading": "セキ",
+    "reading": "せき",
     "example": "座席（ざせき）",
     "version": 1
   },
@@ -6265,6 +6709,7 @@ const questions = [
     "correctAnswer": "借",
     "reading": "か（りる）",
     "example": "借りる（かりる）",
+    "extraReadings": [{"reading": "しゃく", "example": "借金（しゃっきん）"}],
     "version": 1
   },
   {
@@ -6275,7 +6720,7 @@ const questions = [
     "choices": ["愛", "司", "埼", "梅"],
     "correctAnswer": "埼",
     "reading": "さい",
-    "example": "埼玉（さいたま）",
+    "example": "埼玉県（さいたまけん）",
     "version": 1
   },
   {
@@ -6285,7 +6730,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["松", "郡", "続", "菜"],
     "correctAnswer": "郡",
-    "reading": "グン",
+    "reading": "ぐん",
     "example": "郡部（ぐんぶ）",
     "version": 1
   },
@@ -6296,8 +6741,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["径", "辞", "勇", "岐"],
     "correctAnswer": "岐",
-    "reading": "ギ",
-    "example": "岐阜（ぎふ）",
+    "reading": "き",
+    "example": "分岐（ぶんき）",
     "version": 1
   },
   {
@@ -6307,7 +6752,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["梨", "標", "置", "億"],
     "correctAnswer": "億",
-    "reading": "オク",
+    "reading": "おく",
     "example": "一億（いちおく）",
     "version": 1
   },
@@ -6318,7 +6763,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["孫", "改", "英", "類"],
     "correctAnswer": "類",
-    "reading": "ルイ",
+    "reading": "るい",
     "example": "種類（しゅるい）",
     "version": 1
   },
@@ -6329,8 +6774,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["便", "典", "府", "省"],
     "correctAnswer": "便",
-    "reading": "ベン",
-    "example": "郵便（ゆうびん）",
+    "reading": "べん",
+    "example": "便利（べんり）",
+    "extraReadings": [{"reading": "びん", "example": "郵便（ゆうびん）"}, {"reading": "たよ（り）", "example": "便り（たより）"}],
     "version": 1
   },
   {
@@ -6342,6 +6788,7 @@ const questions = [
     "correctAnswer": "敗",
     "reading": "やぶ（れる）",
     "example": "失敗（しっぱい）",
+    "extraReadings": [{"reading": "はい", "example": "失敗（しっぱい）"}],
     "version": 1
   },
   {
@@ -6352,7 +6799,8 @@ const questions = [
     "choices": ["養", "改", "置", "求"],
     "correctAnswer": "置",
     "reading": "お（く）",
-    "example": "置く（おく）",
+    "example": "置き場（おきば）",
+    "extraReadings": [{"reading": "ち", "example": "位置（いち）"}],
     "version": 1
   },
   {
@@ -6364,6 +6812,7 @@ const questions = [
     "correctAnswer": "積",
     "reading": "つ（もる）",
     "example": "面積（めんせき）",
+    "extraReadings": [{"reading": "せき", "example": "面積（めんせき）"}],
     "version": 1
   },
   {
@@ -6375,6 +6824,7 @@ const questions = [
     "correctAnswer": "種",
     "reading": "たね",
     "example": "種類（しゅるい）",
+    "extraReadings": [{"reading": "しゅ", "example": "種類（しゅるい）"}],
     "version": 1
   },
   {
@@ -6384,8 +6834,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["材", "働", "種", "固"],
     "correctAnswer": "材",
-    "reading": "ザイ",
-    "example": "材料（ざいりょう）",
+    "reading": "ざい",
+    "example": "材木（ざいもく）",
     "version": 1
   },
   {
@@ -6397,6 +6847,7 @@ const questions = [
     "correctAnswer": "群",
     "reading": "む（れる）",
     "example": "群馬（ぐんま）",
+    "extraReadings": [{"reading": "む（れ）", "example": "群れ（むれ）"}, {"reading": "むら（がる）", "example": "群がる（むらがる）"}],
     "version": 1
   },
   {
@@ -6406,7 +6857,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["鹿", "希", "茨", "置"],
     "correctAnswer": "希",
-    "reading": "キ",
+    "reading": "き",
     "example": "希望（きぼう）",
     "version": 1
   },
@@ -6419,6 +6870,7 @@ const questions = [
     "correctAnswer": "加",
     "reading": "くわ（える）",
     "example": "加える（くわえる）",
+    "extraReadings": [{"reading": "か", "example": "加入（かにゅう）"}, {"reading": "くわ", "example": "加わる（くわわる）"}],
     "version": 1
   },
   {
@@ -6428,7 +6880,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["博", "崎", "案", "令"],
     "correctAnswer": "令",
-    "reading": "レイ",
+    "reading": "れい",
     "example": "命令（めいれい）",
     "version": 1
   },
@@ -6441,6 +6893,7 @@ const questions = [
     "correctAnswer": "包",
     "reading": "つつ（む）",
     "example": "包む（つつむ）",
+    "extraReadings": [{"reading": "ほう", "example": "包帯（ほうたい）"}],
     "version": 1
   },
   {
@@ -6451,7 +6904,8 @@ const questions = [
     "choices": ["印", "失", "梅", "副"],
     "correctAnswer": "梅",
     "reading": "うめ",
-    "example": "梅雨（つゆ）",
+    "example": "梅干し（うめぼし）",
+    "extraReadings": [{"reading": "ばい", "example": "梅雨（ばいう）"}],
     "version": 1
   },
   {
@@ -6463,6 +6917,7 @@ const questions = [
     "correctAnswer": "仲",
     "reading": "なか",
     "example": "仲間（なかま）",
+    "extraReadings": [{"reading": "ちゅう", "example": "仲裁（ちゅうさい）"}],
     "version": 1
   },
   {
@@ -6474,6 +6929,7 @@ const questions = [
     "correctAnswer": "折",
     "reading": "お（る）",
     "example": "折る（おる）",
+    "extraReadings": [{"reading": "せつ", "example": "右折（うせつ）"}],
     "version": 1
   },
   {
@@ -6495,7 +6951,7 @@ const questions = [
     "choices": ["鏡", "願", "勇", "崎"],
     "correctAnswer": "崎",
     "reading": "さき",
-    "example": "長崎（ながさき）",
+    "example": "長崎県（ながさきけん）",
     "version": 1
   },
   {
@@ -6505,7 +6961,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["芽", "末", "祝", "径"],
     "correctAnswer": "径",
-    "reading": "ケイ",
+    "reading": "けい",
     "example": "直径（ちょっけい）",
     "version": 1
   },
@@ -6516,7 +6972,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["季", "倉", "底", "漁"],
     "correctAnswer": "季",
-    "reading": "キ",
+    "reading": "き",
     "example": "季節（きせつ）",
     "version": 1
   },
@@ -6529,6 +6985,7 @@ const questions = [
     "correctAnswer": "果",
     "reading": "は（たす）",
     "example": "果物（くだもの）",
+    "extraReadings": [{"reading": "か", "example": "結果（けっか）"}],
     "version": 1
   },
   {
@@ -6540,6 +6997,7 @@ const questions = [
     "correctAnswer": "冷",
     "reading": "つめ（たい）",
     "example": "冷たい（つめたい）",
+    "extraReadings": [{"reading": "ひ（やす）", "example": "冷やす（ひやす）"}, {"reading": "さ（める）", "example": "冷める（さめる）"}],
     "version": 1
   },
   {
@@ -6549,8 +7007,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["固", "氏", "夫", "法"],
     "correctAnswer": "法",
-    "reading": "ホウ",
+    "reading": "ほう",
     "example": "方法（ほうほう）",
+    "extraReadings": [{"reading": "はっ", "example": "法度（はっと）"}],
     "version": 1
   },
   {
@@ -6560,8 +7019,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["巣", "博", "梨", "養"],
     "correctAnswer": "博",
-    "reading": "ハク",
-    "example": "博物館（はくぶつかん）",
+    "reading": "はく",
+    "example": "博士（はかせ）",
     "version": 1
   },
   {
@@ -6572,7 +7031,7 @@ const questions = [
     "choices": ["果", "冷", "候", "沖"],
     "correctAnswer": "沖",
     "reading": "おき",
-    "example": "沖縄（おきなわ）",
+    "example": "沖合（おきあい）",
     "version": 1
   },
   {
@@ -6582,8 +7041,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["札", "達", "節", "養"],
     "correctAnswer": "節",
-    "reading": "セツ",
-    "example": "季節（きせつ）",
+    "reading": "ふし",
+    "example": "竹の節（たけのふし）",
+    "extraReadings": [{"reading": "せつ", "example": "季節（きせつ）"}, {"reading": "せち", "example": "節会（せちえ）"}],
     "version": 1
   },
   {
@@ -6595,6 +7055,7 @@ const questions = [
     "correctAnswer": "祝",
     "reading": "いわ（う）",
     "example": "祝う（いわう）",
+    "extraReadings": [{"reading": "しゅく", "example": "祝日（しゅくじつ）"}],
     "version": 1
   },
   {
@@ -6604,8 +7065,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["郡", "別", "察", "昨"],
     "correctAnswer": "昨",
-    "reading": "サク",
-    "example": "昨日（きのう）",
+    "reading": "さく",
+    "example": "昨年（さくねん）",
     "version": 1
   },
   {
@@ -6615,8 +7076,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["景", "良", "臣", "縄"],
     "correctAnswer": "景",
-    "reading": "ケイ",
-    "example": "景色（けしき）",
+    "reading": "けい",
+    "example": "風景（ふうけい）",
     "version": 1
   },
   {
@@ -6627,7 +7088,7 @@ const questions = [
     "choices": ["旗", "械", "各", "静"],
     "correctAnswer": "旗",
     "reading": "はた",
-    "example": "国旗（こっき）",
+    "example": "旗をふる（はたをふる）",
     "version": 1
   },
   {
@@ -6637,7 +7098,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["郡", "鹿", "貨", "令"],
     "correctAnswer": "貨",
-    "reading": "カ",
+    "reading": "か",
     "example": "貨物（かもつ）",
     "version": 1
   },
@@ -6650,6 +7111,7 @@ const questions = [
     "correctAnswer": "例",
     "reading": "たと（える）",
     "example": "例えば（たとえば）",
+    "extraReadings": [{"reading": "れい", "example": "例外（れいがい）"}],
     "version": 1
   },
   {
@@ -6660,7 +7122,8 @@ const questions = [
     "choices": ["望", "阪", "加", "唱"],
     "correctAnswer": "望",
     "reading": "のぞ（む）",
-    "example": "希望（きぼう）",
+    "example": "望む（のぞむ）",
+    "extraReadings": [{"reading": "ぼう", "example": "希望（きぼう）"}],
     "version": 1
   },
   {
@@ -6670,7 +7133,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["阪", "加", "念", "未"],
     "correctAnswer": "阪",
-    "reading": "ハン",
+    "reading": "さか",
     "example": "大阪（おおさか）",
     "version": 1
   },
@@ -6681,8 +7144,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["印", "好", "媛", "兆"],
     "correctAnswer": "兆",
-    "reading": "チョウ",
-    "example": "兆し（きざし）",
+    "reading": "ちょう",
+    "example": "一兆円（いっちょうえん）",
+    "extraReadings": [{"reading": "きざ（し）", "example": "兆し（きざし）"}],
     "version": 1
   },
   {
@@ -6692,8 +7156,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["富", "録", "泣", "説"],
     "correctAnswer": "説",
-    "reading": "と（く）",
+    "reading": "せつ",
     "example": "説明（せつめい）",
+    "extraReadings": [{"reading": "ぜい", "example": "遊説（ゆうぜい）"}, {"reading": "と（く）", "example": "説く（とく）"}],
     "version": 1
   },
   {
@@ -6703,7 +7168,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["茨", "果", "順", "建"],
     "correctAnswer": "順",
-    "reading": "ジュン",
+    "reading": "じゅん",
     "example": "順番（じゅんばん）",
     "version": 1
   },
@@ -6716,6 +7181,7 @@ const questions = [
     "correctAnswer": "札",
     "reading": "ふだ",
     "example": "名札（なふだ）",
+    "extraReadings": [{"reading": "さつ", "example": "千円札（せんえんさつ）"}],
     "version": 1
   },
   {
@@ -6725,7 +7191,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["芸", "司", "縄", "良"],
     "correctAnswer": "芸",
-    "reading": "ゲイ",
+    "reading": "げい",
     "example": "芸術（げいじゅつ）",
     "version": 1
   },
@@ -6736,8 +7202,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["兵", "賀", "芽", "器"],
     "correctAnswer": "器",
-    "reading": "キ",
+    "reading": "き",
     "example": "楽器（がっき）",
+    "extraReadings": [{"reading": "うつわ", "example": "器（うつわ）"}],
     "version": 1
   },
   {
@@ -6747,7 +7214,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["課", "折", "功", "周"],
     "correctAnswer": "課",
-    "reading": "カ",
+    "reading": "か",
     "example": "課題（かだい）",
     "version": 1
   },
@@ -6760,6 +7227,7 @@ const questions = [
     "correctAnswer": "連",
     "reading": "つ（れる）",
     "example": "連れる（つれる）",
+    "extraReadings": [{"reading": "れん", "example": "連絡（れんらく）"}, {"reading": "つら（なる）", "example": "連なる（つらなる）"}],
     "version": 1
   },
   {
@@ -6769,7 +7237,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["香", "節", "牧", "産"],
     "correctAnswer": "牧",
-    "reading": "ボク",
+    "reading": "ぼく",
     "example": "牧場（ぼくじょう）",
     "version": 1
   },
@@ -6782,6 +7250,7 @@ const questions = [
     "correctAnswer": "飯",
     "reading": "めし",
     "example": "朝飯（あさめし）",
+    "extraReadings": [{"reading": "はん", "example": "夕飯（ゆうはん）"}],
     "version": 1
   },
   {
@@ -6793,6 +7262,7 @@ const questions = [
     "correctAnswer": "低",
     "reading": "ひく（い）",
     "example": "低い（ひくい）",
+    "extraReadings": [{"reading": "てい", "example": "低下（ていか）"}, {"reading": "ひく（める）", "example": "低める（ひくめる）"}],
     "version": 1
   },
   {
@@ -6804,6 +7274,7 @@ const questions = [
     "correctAnswer": "浅",
     "reading": "あさ（い）",
     "example": "浅い（あさい）",
+    "extraReadings": [{"reading": "せん", "example": "浅薄（せんぱく）"}],
     "version": 1
   },
   {
@@ -6813,8 +7284,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["別", "課", "末", "初"],
     "correctAnswer": "初",
-    "reading": "はじ（めて）",
+    "reading": "はじ（め）",
     "example": "初めて（はじめて）",
+    "extraReadings": [{"reading": "しょ", "example": "最初（さいしょ）"}, {"reading": "はつ", "example": "初雪（はつゆき）"}, {"reading": "うい", "example": "初々しい（ういういしい）"}],
     "version": 1
   },
   {
@@ -6825,7 +7297,8 @@ const questions = [
     "choices": ["刷", "栃", "城", "要"],
     "correctAnswer": "刷",
     "reading": "す（る）",
-    "example": "印刷（いんさつ）",
+    "example": "刷る（する）",
+    "extraReadings": [{"reading": "さつ", "example": "印刷（いんさつ）"}],
     "version": 1
   },
   {
@@ -6837,6 +7310,7 @@ const questions = [
     "correctAnswer": "欠",
     "reading": "か（ける）",
     "example": "欠ける（かける）",
+    "extraReadings": [{"reading": "けつ", "example": "欠席（けっせき）"}],
     "version": 1
   },
   {
@@ -6846,7 +7320,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["差", "議", "機", "官"],
     "correctAnswer": "機",
-    "reading": "キ",
+    "reading": "き",
     "example": "機械（きかい）",
     "version": 1
   },
@@ -6858,7 +7332,8 @@ const questions = [
     "choices": ["結", "芽", "民", "老"],
     "correctAnswer": "芽",
     "reading": "め",
-    "example": "新芽（しんめ）",
+    "example": "芽が出る（めがでる）",
+    "extraReadings": [{"reading": "が", "example": "発芽（はつが）"}],
     "version": 1
   },
   {
@@ -6869,7 +7344,8 @@ const questions = [
     "choices": ["副", "老", "節", "好"],
     "correctAnswer": "老",
     "reading": "お（いる）",
-    "example": "老人（ろうじん）",
+    "example": "老いる（おいる）",
+    "extraReadings": [{"reading": "ろう", "example": "老人（ろうじん）"}],
     "version": 1
   },
   {
@@ -6880,7 +7356,8 @@ const questions = [
     "choices": ["功", "郡", "成", "末"],
     "correctAnswer": "末",
     "reading": "すえ",
-    "example": "年末（ねんまつ）",
+    "example": "末っ子（すえっこ）",
+    "extraReadings": [{"reading": "まつ", "example": "年末（ねんまつ）"}],
     "version": 1
   },
   {
@@ -6892,6 +7369,7 @@ const questions = [
     "correctAnswer": "飛",
     "reading": "と（ぶ）",
     "example": "飛ぶ（とぶ）",
+    "extraReadings": [{"reading": "ひ", "example": "飛躍（ひやく）"}, {"reading": "と（ばす）", "example": "飛ばす（とばす）"}],
     "version": 1
   },
   {
@@ -6902,7 +7380,8 @@ const questions = [
     "choices": ["鏡", "典", "底", "静"],
     "correctAnswer": "底",
     "reading": "そこ",
-    "example": "海底（かいてい）",
+    "example": "海の底（うみのそこ）",
+    "extraReadings": [{"reading": "てい", "example": "海底（かいてい）"}],
     "version": 1
   },
   {
@@ -6913,7 +7392,8 @@ const questions = [
     "choices": ["児", "栄", "挙", "戦"],
     "correctAnswer": "戦",
     "reading": "たたか（う）",
-    "example": "戦う（たたかう）",
+    "example": "戦い（たたかい）",
+    "extraReadings": [{"reading": "せん", "example": "戦争（せんそう）"}, {"reading": "いくさ", "example": "戦（いくさ）"}],
     "version": 1
   },
   {
@@ -6924,7 +7404,8 @@ const questions = [
     "choices": ["松", "議", "訓", "熱"],
     "correctAnswer": "松",
     "reading": "まつ",
-    "example": "松の木（まつのき）",
+    "example": "松林（まつばやし）",
+    "extraReadings": [{"reading": "しょう", "example": "松竹（しょうちく）"}],
     "version": 1
   },
   {
@@ -6934,8 +7415,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["栄", "差", "察", "加"],
     "correctAnswer": "察",
-    "reading": "サツ",
-    "example": "警察（けいさつ）",
+    "reading": "さつ",
+    "example": "観察（かんさつ）",
     "version": 1
   },
   {
@@ -6947,6 +7428,7 @@ const questions = [
     "correctAnswer": "結",
     "reading": "むす（ぶ）",
     "example": "結ぶ（むすぶ）",
+    "extraReadings": [{"reading": "けつ", "example": "結果（けっか）"}, {"reading": "ゆ（う）", "example": "結う（ゆう）"}],
     "version": 1
   },
   {
@@ -6956,7 +7438,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["治", "械", "害", "議"],
     "correctAnswer": "議",
-    "reading": "ギ",
+    "reading": "ぎ",
     "example": "会議（かいぎ）",
     "version": 1
   },
@@ -6967,8 +7449,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["害", "賀", "極", "固"],
     "correctAnswer": "賀",
-    "reading": "ガ",
-    "example": "佐賀（さが）",
+    "reading": "が",
+    "example": "年賀状（ねんがじょう）",
     "version": 1
   },
   {
@@ -6978,7 +7460,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["令", "案", "結", "労"],
     "correctAnswer": "労",
-    "reading": "ロウ",
+    "reading": "ろう",
     "example": "苦労（くろう）",
     "version": 1
   },
@@ -6991,6 +7473,7 @@ const questions = [
     "correctAnswer": "満",
     "reading": "み（ちる）",
     "example": "満ちる（みちる）",
+    "extraReadings": [{"reading": "まん", "example": "満点（まんてん）"}],
     "version": 1
   },
   {
@@ -7002,6 +7485,7 @@ const questions = [
     "correctAnswer": "必",
     "reading": "かなら（ず）",
     "example": "必ず（かならず）",
+    "extraReadings": [{"reading": "ひつ", "example": "必要（ひつよう）"}],
     "version": 1
   },
   {
@@ -7011,8 +7495,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["的", "清", "包", "機"],
     "correctAnswer": "的",
-    "reading": "テキ",
-    "example": "目的（もくてき）",
+    "reading": "まと",
+    "example": "的当て（まとあて）",
+    "extraReadings": [{"reading": "てき", "example": "目的（もくてき）"}],
     "version": 1
   },
   {
@@ -7023,7 +7508,8 @@ const questions = [
     "choices": ["照", "浴", "康", "選"],
     "correctAnswer": "選",
     "reading": "えら（ぶ）",
-    "example": "選ぶ（えらぶ）",
+    "example": "選び出す（えらびだす）",
+    "extraReadings": [{"reading": "せん", "example": "選手（せんしゅ）"}],
     "version": 1
   },
   {
@@ -7035,6 +7521,7 @@ const questions = [
     "correctAnswer": "笑",
     "reading": "わら（う）",
     "example": "笑う（わらう）",
+    "extraReadings": [{"reading": "しょう", "example": "苦笑（くしょう）"}],
     "version": 1
   },
   {
@@ -7044,8 +7531,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["治", "課", "参", "例"],
     "correctAnswer": "参",
-    "reading": "サン",
-    "example": "参加（さんか）",
+    "reading": "まい（る）",
+    "example": "墓参り（はかまいり）",
+    "extraReadings": [{"reading": "さん", "example": "参加（さんか）"}],
     "version": 1
   },
   {
@@ -7057,6 +7545,7 @@ const questions = [
     "correctAnswer": "建",
     "reading": "た（てる）",
     "example": "建てる（たてる）",
+    "extraReadings": [{"reading": "けん", "example": "建設（けんせつ）"}],
     "version": 1
   },
   {
@@ -7067,7 +7556,8 @@ const questions = [
     "choices": ["求", "官", "以", "未"],
     "correctAnswer": "求",
     "reading": "もと（める）",
-    "example": "求める（もとめる）",
+    "example": "助けを求める（たすけをもとめる）",
+    "extraReadings": [{"reading": "きゅう", "example": "要求（ようきゅう）"}],
     "version": 1
   },
   {
@@ -7079,6 +7569,7 @@ const questions = [
     "correctAnswer": "改",
     "reading": "あらた（める）",
     "example": "改める（あらためる）",
+    "extraReadings": [{"reading": "かい", "example": "改良（かいりょう）"}],
     "version": 1
   },
   {
@@ -7088,7 +7579,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["省", "熊", "録", "共"],
     "correctAnswer": "録",
-    "reading": "ロク",
+    "reading": "ろく",
     "example": "記録（きろく）",
     "version": 1
   },
@@ -7099,7 +7590,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["岡", "未", "鏡", "熱"],
     "correctAnswer": "未",
-    "reading": "ミ",
+    "reading": "み",
     "example": "未来（みらい）",
     "version": 1
   },
@@ -7112,6 +7603,7 @@ const questions = [
     "correctAnswer": "暴",
     "reading": "あば（れる）",
     "example": "暴れる（あばれる）",
+    "extraReadings": [{"reading": "ぼう", "example": "乱暴（らんぼう）"}, {"reading": "ばく", "example": "暴露（ばくろ）"}],
     "version": 1
   },
   {
@@ -7121,7 +7613,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["製", "非", "妻", "保"],
     "correctAnswer": "非",
-    "reading": "ヒ",
+    "reading": "ひ",
     "example": "非常（ひじょう）",
     "version": 1
   },
@@ -7132,7 +7624,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["留", "停", "謝", "寄"],
     "correctAnswer": "停",
-    "reading": "テイ",
+    "reading": "てい",
     "example": "停止（ていし）",
     "version": 1
   },
@@ -7145,6 +7637,7 @@ const questions = [
     "correctAnswer": "設",
     "reading": "もう（ける）",
     "example": "設ける（もうける）",
+    "extraReadings": [{"reading": "せつ", "example": "設計（せっけい）"}],
     "version": 1
   },
   {
@@ -7156,6 +7649,7 @@ const questions = [
     "correctAnswer": "招",
     "reading": "まね（く）",
     "example": "招く（まねく）",
+    "extraReadings": [{"reading": "しょう", "example": "招待（しょうたい）"}],
     "version": 1
   },
   {
@@ -7165,8 +7659,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["師", "総", "士", "枝"],
     "correctAnswer": "士",
-    "reading": "シ",
-    "example": "兵士（へいし）",
+    "reading": "し",
+    "example": "消防士（しょうぼうし）",
     "version": 1
   },
   {
@@ -7176,7 +7670,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["演", "備", "航", "防"],
     "correctAnswer": "航",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "航海（こうかい）",
     "version": 1
   },
@@ -7188,7 +7682,8 @@ const questions = [
     "choices": ["経", "罪", "得", "許"],
     "correctAnswer": "許",
     "reading": "ゆる（す）",
-    "example": "許す（ゆるす）",
+    "example": "許し（ゆるし）",
+    "extraReadings": [{"reading": "きょ", "example": "許可（きょか）"}],
     "version": 1
   },
   {
@@ -7200,6 +7695,7 @@ const questions = [
     "correctAnswer": "解",
     "reading": "と（く）",
     "example": "解く（とく）",
+    "extraReadings": [{"reading": "かい", "example": "解決（かいけつ）"}, {"reading": "と（ける）", "example": "解ける（とける）"}, {"reading": "げ", "example": "解熱（げねつ）"}],
     "version": 1
   },
   {
@@ -7209,8 +7705,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["酸", "設", "圧", "税"],
     "correctAnswer": "圧",
-    "reading": "アツ",
+    "reading": "あつ",
     "example": "圧力（あつりょく）",
+    "extraReadings": [{"reading": "お（す）", "example": "圧す（おす）"}],
     "version": 1
   },
   {
@@ -7220,7 +7717,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["因", "額", "義", "脈"],
     "correctAnswer": "脈",
-    "reading": "ミャク",
+    "reading": "みゃく",
     "example": "山脈（さんみゃく）",
     "version": 1
   },
@@ -7231,8 +7728,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["費", "桜", "情", "益"],
     "correctAnswer": "費",
-    "reading": "ヒ",
-    "example": "費用（ひよう）",
+    "reading": "つい（やす）",
+    "example": "費やす（ついやす）",
+    "extraReadings": [{"reading": "ひ", "example": "費用（ひよう）"}],
     "version": 1
   },
   {
@@ -7242,8 +7740,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["築", "舎", "提", "可"],
     "correctAnswer": "提",
-    "reading": "テイ",
-    "example": "提案（ていあん）",
+    "reading": "さ（げる）",
+    "example": "提げる（さげる）",
+    "extraReadings": [{"reading": "てい", "example": "提案（ていあん）"}],
     "version": 1
   },
   {
@@ -7255,6 +7754,7 @@ const questions = [
     "correctAnswer": "絶",
     "reading": "た（える）",
     "example": "絶える（たえる）",
+    "extraReadings": [{"reading": "ぜつ", "example": "絶対（ぜったい）"}, {"reading": "た（つ）", "example": "絶つ（たつ）"}],
     "version": 1
   },
   {
@@ -7264,7 +7764,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["婦", "示", "貯", "証"],
     "correctAnswer": "証",
-    "reading": "ショウ",
+    "reading": "しょう",
     "example": "証明（しょうめい）",
     "version": 1
   },
@@ -7277,6 +7777,7 @@ const questions = [
     "correctAnswer": "支",
     "reading": "ささ（える）",
     "example": "支える（ささえる）",
+    "extraReadings": [{"reading": "し", "example": "支店（してん）"}],
     "version": 1
   },
   {
@@ -7286,7 +7787,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["導", "際", "準", "鉱"],
     "correctAnswer": "鉱",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "鉱山（こうざん）",
     "version": 1
   },
@@ -7298,7 +7799,8 @@ const questions = [
     "choices": ["境", "性", "潔", "居"],
     "correctAnswer": "境",
     "reading": "さかい",
-    "example": "国境（こっきょう）",
+    "example": "境目（さかいめ）",
+    "extraReadings": [{"reading": "きょう", "example": "国境（こっきょう）"}, {"reading": "けい", "example": "境内（けいだい）"}],
     "version": 1
   },
   {
@@ -7308,8 +7810,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["豊", "格", "祖", "逆"],
     "correctAnswer": "格",
-    "reading": "カク",
+    "reading": "かく",
     "example": "性格（せいかく）",
+    "extraReadings": [{"reading": "こう", "example": "格子（こうし）"}],
     "version": 1
   },
   {
@@ -7321,6 +7824,7 @@ const questions = [
     "correctAnswer": "囲",
     "reading": "かこ（む）",
     "example": "囲む（かこむ）",
+    "extraReadings": [{"reading": "い", "example": "周囲（しゅうい）"}],
     "version": 1
   },
   {
@@ -7332,6 +7836,7 @@ const questions = [
     "correctAnswer": "務",
     "reading": "つと（める）",
     "example": "務める（つとめる）",
+    "extraReadings": [{"reading": "む", "example": "事務（じむ）"}],
     "version": 1
   },
   {
@@ -7342,7 +7847,8 @@ const questions = [
     "choices": ["枝", "綿", "堂", "備"],
     "correctAnswer": "備",
     "reading": "そな（える）",
-    "example": "準備（じゅんび）",
+    "example": "備え（そなえ）",
+    "extraReadings": [{"reading": "び", "example": "準備（じゅんび）"}],
     "version": 1
   },
   {
@@ -7354,6 +7860,7 @@ const questions = [
     "correctAnswer": "程",
     "reading": "ほど",
     "example": "程度（ていど）",
+    "extraReadings": [{"reading": "てい", "example": "程度（ていど）"}],
     "version": 1
   },
   {
@@ -7363,7 +7870,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["応", "独", "弁", "祖"],
     "correctAnswer": "祖",
-    "reading": "ソ",
+    "reading": "そ",
     "example": "祖父（そふ）",
     "version": 1
   },
@@ -7374,7 +7881,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["災", "銅", "象", "際"],
     "correctAnswer": "象",
-    "reading": "ゾウ",
+    "reading": "ぞう",
     "example": "象（ぞう）",
     "version": 1
   },
@@ -7385,7 +7892,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["略", "製", "史", "精"],
     "correctAnswer": "史",
-    "reading": "シ",
+    "reading": "し",
     "example": "歴史（れきし）",
     "version": 1
   },
@@ -7398,6 +7905,7 @@ const questions = [
     "correctAnswer": "構",
     "reading": "かま（える）",
     "example": "構える（かまえる）",
+    "extraReadings": [{"reading": "こう", "example": "構造（こうぞう）"}],
     "version": 1
   },
   {
@@ -7407,7 +7915,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["可", "統", "均", "提"],
     "correctAnswer": "均",
-    "reading": "キン",
+    "reading": "きん",
     "example": "平均（へいきん）",
     "version": 1
   },
@@ -7420,6 +7928,7 @@ const questions = [
     "correctAnswer": "確",
     "reading": "たし（か）",
     "example": "確か（たしか）",
+    "extraReadings": [{"reading": "かく", "example": "確認（かくにん）"}],
     "version": 1
   },
   {
@@ -7430,7 +7939,8 @@ const questions = [
     "choices": ["燃", "移", "停", "防"],
     "correctAnswer": "移",
     "reading": "うつ（る）",
-    "example": "移る（うつる）",
+    "example": "都会に移る（とかいにうつる）",
+    "extraReadings": [{"reading": "い", "example": "移動（いどう）"}],
     "version": 1
   },
   {
@@ -7441,7 +7951,8 @@ const questions = [
     "choices": ["夢", "個", "幹", "停"],
     "correctAnswer": "夢",
     "reading": "ゆめ",
-    "example": "夢を見る（ゆめをみる）",
+    "example": "夢見（ゆめみ）",
+    "extraReadings": [{"reading": "む", "example": "悪夢（あくむ）"}],
     "version": 1
   },
   {
@@ -7451,7 +7962,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["評", "価", "過", "救"],
     "correctAnswer": "評",
-    "reading": "ヒョウ",
+    "reading": "ひょう",
     "example": "評判（ひょうばん）",
     "version": 1
   },
@@ -7462,7 +7973,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["適", "規", "資", "略"],
     "correctAnswer": "適",
-    "reading": "テキ",
+    "reading": "てき",
     "example": "適当（てきとう）",
     "version": 1
   },
@@ -7473,8 +7984,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["河", "素", "謝", "税"],
     "correctAnswer": "素",
-    "reading": "ソ",
-    "example": "素直（すなお）",
+    "reading": "もと",
+    "example": "素顔（すがお）",
+    "extraReadings": [{"reading": "そ", "example": "素材（そざい）"}, {"reading": "す", "example": "素顔（すがお）"}],
     "version": 1
   },
   {
@@ -7484,8 +7996,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["賞", "非", "術", "能"],
     "correctAnswer": "賞",
-    "reading": "ショウ",
-    "example": "賞状（しょうじょう）",
+    "reading": "しょう",
+    "example": "賞品（しょうひん）",
     "version": 1
   },
   {
@@ -7496,7 +8008,8 @@ const questions = [
     "choices": ["比", "潔", "志", "均"],
     "correctAnswer": "志",
     "reading": "こころざ（す）",
-    "example": "意志（いし）",
+    "example": "志す（こころざす）",
+    "extraReadings": [{"reading": "し", "example": "志望（しぼう）"}],
     "version": 1
   },
   {
@@ -7506,8 +8019,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["興", "織", "武", "久"],
     "correctAnswer": "興",
-    "reading": "キョウ",
+    "reading": "きょう",
     "example": "興味（きょうみ）",
+    "extraReadings": [{"reading": "こう", "example": "復興（ふっこう）"}],
     "version": 1
   },
   {
@@ -7517,7 +8031,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["因", "勢", "禁", "永"],
     "correctAnswer": "禁",
-    "reading": "キン",
+    "reading": "きん",
     "example": "禁止（きんし）",
     "version": 1
   },
@@ -7528,8 +8042,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["防", "額", "得", "術"],
     "correctAnswer": "額",
-    "reading": "ガク",
+    "reading": "がく",
     "example": "金額（きんがく）",
+    "extraReadings": [{"reading": "ひたい", "example": "額（ひたい）"}],
     "version": 1
   },
   {
@@ -7539,7 +8054,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["因", "査", "築", "喜"],
     "correctAnswer": "因",
-    "reading": "イン",
+    "reading": "いん",
     "example": "原因（げんいん）",
     "version": 1
   },
@@ -7551,7 +8066,8 @@ const questions = [
     "choices": ["賛", "迷", "圧", "留"],
     "correctAnswer": "迷",
     "reading": "まよ（う）",
-    "example": "迷う（まよう）",
+    "example": "迷い道（まよいみち）",
+    "extraReadings": [{"reading": "めい", "example": "迷路（めいろ）"}],
     "version": 1
   },
   {
@@ -7563,6 +8079,7 @@ const questions = [
     "correctAnswer": "貧",
     "reading": "まず（しい）",
     "example": "貧しい（まずしい）",
+    "extraReadings": [{"reading": "ひん", "example": "貧富（ひんぷ）"}, {"reading": "びん", "example": "貧乏（びんぼう）"}],
     "version": 1
   },
   {
@@ -7572,8 +8089,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["潔", "統", "条", "弁"],
     "correctAnswer": "統",
-    "reading": "トウ",
-    "example": "伝統（でんとう）",
+    "reading": "す（べる）",
+    "example": "統べる（すべる）",
+    "extraReadings": [{"reading": "とう", "example": "統一（とういつ）"}],
     "version": 1
   },
   {
@@ -7583,7 +8101,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["編", "総", "耕", "適"],
     "correctAnswer": "総",
-    "reading": "ソウ",
+    "reading": "そう",
     "example": "総合（そうごう）",
     "version": 1
   },
@@ -7594,7 +8112,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["再", "防", "築", "条"],
     "correctAnswer": "条",
-    "reading": "ジョウ",
+    "reading": "じょう",
     "example": "条件（じょうけん）",
     "version": 1
   },
@@ -7606,7 +8124,7 @@ const questions = [
     "choices": ["枝", "居", "幹", "易"],
     "correctAnswer": "枝",
     "reading": "えだ",
-    "example": "木の枝（きのえだ）",
+    "example": "小枝（こえだ）",
     "version": 1
   },
   {
@@ -7616,8 +8134,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["団", "経", "講", "査"],
     "correctAnswer": "講",
-    "reading": "コウ",
-    "example": "講義（こうぎ）",
+    "reading": "こう",
+    "example": "講演（こうえん）",
     "version": 1
   },
   {
@@ -7627,8 +8145,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["護", "団", "絶", "句"],
     "correctAnswer": "句",
-    "reading": "ク",
-    "example": "俳句（はいく）",
+    "reading": "く",
+    "example": "句読点（くとうてん）",
     "version": 1
   },
   {
@@ -7638,7 +8156,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["刊", "往", "夢", "防"],
     "correctAnswer": "刊",
-    "reading": "カン",
+    "reading": "かん",
     "example": "週刊誌（しゅうかんし）",
     "version": 1
   },
@@ -7650,7 +8168,8 @@ const questions = [
     "choices": ["絶", "額", "永", "妻"],
     "correctAnswer": "永",
     "reading": "なが（い）",
-    "example": "永遠（えいえん）",
+    "example": "永い眠り（ながいねむり）",
+    "extraReadings": [{"reading": "えい", "example": "永遠（えいえん）"}],
     "version": 1
   },
   {
@@ -7661,7 +8180,8 @@ const questions = [
     "choices": ["義", "綿", "規", "識"],
     "correctAnswer": "綿",
     "reading": "わた",
-    "example": "綿毛（わたげ）",
+    "example": "綿（わた）",
+    "extraReadings": [{"reading": "めん", "example": "木綿（もめん）"}],
     "version": 1
   },
   {
@@ -7672,7 +8192,8 @@ const questions = [
     "choices": ["舎", "布", "再", "務"],
     "correctAnswer": "布",
     "reading": "ぬの",
-    "example": "布地（ぬのじ）",
+    "example": "布団（ふとん）",
+    "extraReadings": [{"reading": "ふ", "example": "財布（さいふ）"}],
     "version": 1
   },
   {
@@ -7682,7 +8203,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["武", "採", "堂", "非"],
     "correctAnswer": "堂",
-    "reading": "ドウ",
+    "reading": "どう",
     "example": "食堂（しょくどう）",
     "version": 1
   },
@@ -7695,6 +8216,7 @@ const questions = [
     "correctAnswer": "造",
     "reading": "つく（る）",
     "example": "造船（ぞうせん）",
+    "extraReadings": [{"reading": "ぞう", "example": "造船（ぞうせん）"}],
     "version": 1
   },
   {
@@ -7704,7 +8226,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["制", "領", "状", "損"],
     "correctAnswer": "状",
-    "reading": "ジョウ",
+    "reading": "じょう",
     "example": "年賀状（ねんがじょう）",
     "version": 1
   },
@@ -7715,8 +8237,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["序", "技", "師", "布"],
     "correctAnswer": "師",
-    "reading": "シ",
-    "example": "医師（いし）",
+    "reading": "し",
+    "example": "教師（きょうし）",
     "version": 1
   },
   {
@@ -7727,7 +8249,8 @@ const questions = [
     "choices": ["減", "招", "刊", "告"],
     "correctAnswer": "告",
     "reading": "つ（げる）",
-    "example": "告げる（つげる）",
+    "example": "別れを告げる（わかれをつげる）",
+    "extraReadings": [{"reading": "こく", "example": "広告（こうこく）"}],
     "version": 1
   },
   {
@@ -7738,7 +8261,8 @@ const questions = [
     "choices": ["幹", "益", "型", "績"],
     "correctAnswer": "型",
     "reading": "かた",
-    "example": "血液型（けつえきがた）",
+    "example": "型紙（かたがみ）",
+    "extraReadings": [{"reading": "けい", "example": "典型（てんけい）"}],
     "version": 1
   },
   {
@@ -7750,6 +8274,7 @@ const questions = [
     "correctAnswer": "幹",
     "reading": "みき",
     "example": "木の幹（きのみき）",
+    "extraReadings": [{"reading": "かん", "example": "幹事（かんじ）"}],
     "version": 1
   },
   {
@@ -7770,8 +8295,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["輸", "賞", "任", "比"],
     "correctAnswer": "輸",
-    "reading": "ユ",
-    "example": "輸入（ゆにゅう）",
+    "reading": "ゆ",
+    "example": "輸出（ゆしゅつ）",
     "version": 1
   },
   {
@@ -7781,7 +8306,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["刊", "統", "制", "婦"],
     "correctAnswer": "婦",
-    "reading": "フ",
+    "reading": "ふ",
     "example": "夫婦（ふうふ）",
     "version": 1
   },
@@ -7792,7 +8317,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["接", "状", "素", "銅"],
     "correctAnswer": "銅",
-    "reading": "ドウ",
+    "reading": "どう",
     "example": "銅像（どうぞう）",
     "version": 1
   },
@@ -7803,8 +8328,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["過", "職", "評", "像"],
     "correctAnswer": "像",
-    "reading": "ゾウ",
-    "example": "銅像（どうぞう）",
+    "reading": "ぞう",
+    "example": "仏像（ぶつぞう）",
     "version": 1
   },
   {
@@ -7814,8 +8339,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["技", "提", "税", "常"],
     "correctAnswer": "常",
-    "reading": "つね",
-    "example": "日常（にちじょう）",
+    "reading": "じょう",
+    "example": "常識（じょうしき）",
+    "extraReadings": [{"reading": "つね", "example": "常に（つねに）"}],
     "version": 1
   },
   {
@@ -7825,7 +8351,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["提", "士", "築", "資"],
     "correctAnswer": "資",
-    "reading": "シ",
+    "reading": "し",
     "example": "資料（しりょう）",
     "version": 1
   },
@@ -7836,8 +8362,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["態", "混", "基", "評"],
     "correctAnswer": "混",
-    "reading": "ま（ざる）",
-    "example": "混ざる（まざる）",
+    "reading": "ま（ぜる）",
+    "example": "色を混ぜる（いろをまぜる）",
+    "extraReadings": [{"reading": "こん", "example": "混雑（こんざつ）"}, {"reading": "ま（じる）", "example": "水が混じる（みずがまじる）"}],
     "version": 1
   },
   {
@@ -7848,7 +8375,8 @@ const questions = [
     "choices": ["比", "績", "堂", "経"],
     "correctAnswer": "経",
     "reading": "へ（る）",
-    "example": "経験（けいけん）",
+    "example": "経る（へる）",
+    "extraReadings": [{"reading": "けい", "example": "経験（けいけん）"}, {"reading": "きょう", "example": "お経（おきょう）"}],
     "version": 1
   },
   {
@@ -7859,7 +8387,8 @@ const questions = [
     "choices": ["術", "慣", "謝", "史"],
     "correctAnswer": "慣",
     "reading": "な（れる）",
-    "example": "慣れる（なれる）",
+    "example": "慣れ親しむ（なれしたしむ）",
+    "extraReadings": [{"reading": "かん", "example": "習慣（しゅうかん）"}],
     "version": 1
   },
   {
@@ -7869,7 +8398,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["構", "能", "寄", "衛"],
     "correctAnswer": "衛",
-    "reading": "エイ",
+    "reading": "えい",
     "example": "衛生（えいせい）",
     "version": 1
   },
@@ -7881,7 +8410,8 @@ const questions = [
     "choices": ["喜", "余", "綿", "均"],
     "correctAnswer": "余",
     "reading": "あま（る）",
-    "example": "余る（あまる）",
+    "example": "余り（あまり）",
+    "extraReadings": [{"reading": "よ", "example": "余分（よぶん）"}, {"reading": "あま", "example": "余す（あます）"}],
     "version": 1
   },
   {
@@ -7891,8 +8421,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["毒", "識", "武", "厚"],
     "correctAnswer": "武",
-    "reading": "ブ",
+    "reading": "ぶ",
     "example": "武士（ぶし）",
+    "extraReadings": [{"reading": "む", "example": "武者（むしゃ）"}],
     "version": 1
   },
   {
@@ -7903,7 +8434,8 @@ const questions = [
     "choices": ["喜", "導", "態", "造"],
     "correctAnswer": "導",
     "reading": "みちび（く）",
-    "example": "指導（しどう）",
+    "example": "導く（みちびく）",
+    "extraReadings": [{"reading": "どう", "example": "指導（しどう）"}],
     "version": 1
   },
   {
@@ -7915,6 +8447,7 @@ const questions = [
     "correctAnswer": "増",
     "reading": "ふ（える）",
     "example": "増える（ふえる）",
+    "extraReadings": [{"reading": "ぞう", "example": "増加（ぞうか）"}, {"reading": "ま（す）", "example": "増す（ます）"}],
     "version": 1
   },
   {
@@ -7924,8 +8457,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["額", "能", "祖", "情"],
     "correctAnswer": "情",
-    "reading": "ジョウ",
-    "example": "友情（ゆうじょう）",
+    "reading": "なさ（け）",
+    "example": "情け（なさけ）",
+    "extraReadings": [{"reading": "じょう", "example": "感情（かんじょう）"}],
     "version": 1
   },
   {
@@ -7937,6 +8471,7 @@ const questions = [
     "correctAnswer": "飼",
     "reading": "か（う）",
     "example": "犬を飼う（いぬをかう）",
+    "extraReadings": [{"reading": "し", "example": "飼育（しいく）"}],
     "version": 1
   },
   {
@@ -7946,7 +8481,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["提", "史", "査", "応"],
     "correctAnswer": "査",
-    "reading": "サ",
+    "reading": "さ",
     "example": "調査（ちょうさ）",
     "version": 1
   },
@@ -7958,7 +8493,8 @@ const questions = [
     "choices": ["測", "潔", "河", "復"],
     "correctAnswer": "潔",
     "reading": "いさぎよ（い）",
-    "example": "清潔（せいけつ）",
+    "example": "潔い（いさぎよい）",
+    "extraReadings": [{"reading": "けつ", "example": "清潔（せいけつ）"}],
     "version": 1
   },
   {
@@ -7968,7 +8504,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["停", "眼", "費", "象"],
     "correctAnswer": "眼",
-    "reading": "ガン",
+    "reading": "がん",
     "example": "眼鏡（めがね）",
     "version": 1
   },
@@ -7980,7 +8516,8 @@ const questions = [
     "choices": ["示", "易", "率", "毒"],
     "correctAnswer": "易",
     "reading": "やさ（しい）",
-    "example": "容易（ようい）",
+    "example": "易しい（やさしい）",
+    "extraReadings": [{"reading": "い", "example": "容易（ようい）"}, {"reading": "えき", "example": "貿易（ぼうえき）"}],
     "version": 1
   },
   {
@@ -7990,7 +8527,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["講", "紀", "災", "容"],
     "correctAnswer": "容",
-    "reading": "ヨウ",
+    "reading": "よう",
     "example": "内容（ないよう）",
     "version": 1
   },
@@ -8001,8 +8538,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["衛", "復", "限", "液"],
     "correctAnswer": "復",
-    "reading": "フク",
-    "example": "回復（かいふく）",
+    "reading": "ふく",
+    "example": "復習（ふくしゅう）",
     "version": 1
   },
   {
@@ -8014,6 +8551,7 @@ const questions = [
     "correctAnswer": "得",
     "reading": "え（る）",
     "example": "得る（える）",
+    "extraReadings": [{"reading": "とく", "example": "得意（とくい）"}],
     "version": 1
   },
   {
@@ -8023,7 +8561,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["修", "検", "則", "政"],
     "correctAnswer": "則",
-    "reading": "ソク",
+    "reading": "そく",
     "example": "規則（きそく）",
     "version": 1
   },
@@ -8036,6 +8574,7 @@ const questions = [
     "correctAnswer": "織",
     "reading": "お（る）",
     "example": "織物（おりもの）",
+    "extraReadings": [{"reading": "しき", "example": "組織（そしき）"}, {"reading": "しょく", "example": "染織（せんしょく）"}, {"reading": "おり", "example": "織物（おりもの）"}],
     "version": 1
   },
   {
@@ -8047,6 +8586,7 @@ const questions = [
     "correctAnswer": "示",
     "reading": "しめ（す）",
     "example": "示す（しめす）",
+    "extraReadings": [{"reading": "じ", "example": "展示（てんじ）"}],
     "version": 1
   },
   {
@@ -8058,6 +8598,7 @@ const questions = [
     "correctAnswer": "再",
     "reading": "ふたた（び）",
     "example": "再び（ふたたび）",
+    "extraReadings": [{"reading": "さい", "example": "再会（さいかい）"}, {"reading": "さ", "example": "再来年（さらいねん）"}],
     "version": 1
   },
   {
@@ -8067,8 +8608,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["謝", "貯", "勢", "件"],
     "correctAnswer": "件",
-    "reading": "ケン",
-    "example": "事件（じけん）",
+    "reading": "けん",
+    "example": "用件（ようけん）",
     "version": 1
   },
   {
@@ -8078,7 +8619,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["政", "益", "紀", "術"],
     "correctAnswer": "紀",
-    "reading": "キ",
+    "reading": "き",
     "example": "世紀（せいき）",
     "version": 1
   },
@@ -8089,8 +8630,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["価", "益", "停", "迷"],
     "correctAnswer": "益",
-    "reading": "エキ",
+    "reading": "えき",
     "example": "利益（りえき）",
+    "extraReadings": [{"reading": "やく", "example": "御利益（ごりやく）"}],
     "version": 1
   },
   {
@@ -8100,7 +8642,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["略", "際", "得", "囲"],
     "correctAnswer": "略",
-    "reading": "リャク",
+    "reading": "りゃく",
     "example": "省略（しょうりゃく）",
     "version": 1
   },
@@ -8111,7 +8653,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["弁", "複", "提", "型"],
     "correctAnswer": "複",
-    "reading": "フク",
+    "reading": "ふく",
     "example": "複雑（ふくざつ）",
     "version": 1
   },
@@ -8122,7 +8664,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["規", "務", "毒", "性"],
     "correctAnswer": "毒",
-    "reading": "ドク",
+    "reading": "どく",
     "example": "毒気（どっき）",
     "version": 1
   },
@@ -8135,6 +8677,7 @@ const questions = [
     "correctAnswer": "測",
     "reading": "はか（る）",
     "example": "測る（はかる）",
+    "extraReadings": [{"reading": "そく", "example": "測定（そくてい）"}],
     "version": 1
   },
   {
@@ -8144,7 +8687,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["構", "妻", "制", "職"],
     "correctAnswer": "職",
-    "reading": "ショク",
+    "reading": "しょく",
     "example": "職業（しょくぎょう）",
     "version": 1
   },
@@ -8166,8 +8709,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["限", "災", "築", "効"],
     "correctAnswer": "災",
-    "reading": "サイ",
-    "example": "火災（かさい）",
+    "reading": "わざわ（い）",
+    "example": "災い（わざわい）",
+    "extraReadings": [{"reading": "さい", "example": "災害（さいがい）"}],
     "version": 1
   },
   {
@@ -8177,7 +8721,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["険", "型", "限", "織"],
     "correctAnswer": "険",
-    "reading": "けわ（しい）",
+    "reading": "けん",
     "example": "危険（きけん）",
     "version": 1
   },
@@ -8190,6 +8734,7 @@ const questions = [
     "correctAnswer": "基",
     "reading": "もと（づく）",
     "example": "基本（きほん）",
+    "extraReadings": [{"reading": "もと", "example": "基（もと）"}],
     "version": 1
   },
   {
@@ -8199,7 +8744,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["液", "暴", "略", "件"],
     "correctAnswer": "液",
-    "reading": "エキ",
+    "reading": "えき",
     "example": "血液（けつえき）",
     "version": 1
   },
@@ -8211,7 +8756,8 @@ const questions = [
     "choices": ["均", "留", "費", "酸"],
     "correctAnswer": "留",
     "reading": "と（める）",
-    "example": "留守（るす）",
+    "example": "気に留める（きにとめる）",
+    "extraReadings": [{"reading": "る", "example": "留守（るす）"}, {"reading": "りゅう", "example": "留学（りゅうがく）"}],
     "version": 1
   },
   {
@@ -8223,6 +8769,7 @@ const questions = [
     "correctAnswer": "仏",
     "reading": "ほとけ",
     "example": "仏様（ほとけさま）",
+    "extraReadings": [{"reading": "ぶつ", "example": "仏像（ぶつぞう）"}],
     "version": 1
   },
   {
@@ -8232,8 +8779,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["綿", "刊", "報", "独"],
     "correctAnswer": "独",
-    "reading": "ドク",
-    "example": "独立（どくりつ）",
+    "reading": "ひと（り）",
+    "example": "独り言（ひとりごと）",
+    "extraReadings": [{"reading": "どく", "example": "独立（どくりつ）"}],
     "version": 1
   },
   {
@@ -8243,8 +8791,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["貿", "規", "属", "刊"],
     "correctAnswer": "属",
-    "reading": "ゾク",
-    "example": "金属（きんぞく）",
+    "reading": "ぞく",
+    "example": "所属（しょぞく）",
     "version": 1
   },
   {
@@ -8254,7 +8802,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["旧", "護", "費", "制"],
     "correctAnswer": "制",
-    "reading": "セイ",
+    "reading": "せい",
     "example": "制服（せいふく）",
     "version": 1
   },
@@ -8265,7 +8813,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["製", "識", "弁", "責"],
     "correctAnswer": "識",
-    "reading": "シキ",
+    "reading": "しき",
     "example": "知識（ちしき）",
     "version": 1
   },
@@ -8278,6 +8826,7 @@ const questions = [
     "correctAnswer": "妻",
     "reading": "つま",
     "example": "夫妻（ふさい）",
+    "extraReadings": [{"reading": "さい", "example": "愛妻（あいさい）"}],
     "version": 1
   },
   {
@@ -8287,7 +8836,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["績", "検", "枝", "能"],
     "correctAnswer": "検",
-    "reading": "ケン",
+    "reading": "けん",
     "example": "検査（けんさ）",
     "version": 1
   },
@@ -8299,7 +8848,8 @@ const questions = [
     "choices": ["寄", "構", "責", "液"],
     "correctAnswer": "寄",
     "reading": "よ（る）",
-    "example": "寄る（よる）",
+    "example": "寄り道（よりみち）",
+    "extraReadings": [{"reading": "き", "example": "寄付（きふ）"}, {"reading": "よ", "example": "寄せる（よせる）"}],
     "version": 1
   },
   {
@@ -8309,7 +8859,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["演", "仮", "績", "検"],
     "correctAnswer": "演",
-    "reading": "エン",
+    "reading": "えん",
     "example": "演奏（えんそう）",
     "version": 1
   },
@@ -8320,8 +8870,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["飼", "採", "領", "件"],
     "correctAnswer": "領",
-    "reading": "リョウ",
-    "example": "大統領（だいとうりょう）",
+    "reading": "りょう",
+    "example": "領土（りょうど）",
     "version": 1
   },
   {
@@ -8332,7 +8882,8 @@ const questions = [
     "choices": ["粉", "逆", "快", "酸"],
     "correctAnswer": "粉",
     "reading": "こな",
-    "example": "小麦粉（こむぎこ）",
+    "example": "粉雪（こなゆき）",
+    "extraReadings": [{"reading": "ふん", "example": "粉末（ふんまつ）"}],
     "version": 1
   },
   {
@@ -8343,7 +8894,8 @@ const questions = [
     "choices": ["精", "賛", "任", "過"],
     "correctAnswer": "任",
     "reading": "まか（せる）",
-    "example": "任せる（まかせる）",
+    "example": "仕事を任せる（しごとをまかせる）",
+    "extraReadings": [{"reading": "にん", "example": "責任（せきにん）"}],
     "version": 1
   },
   {
@@ -8353,8 +8905,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["税", "率", "情", "過"],
     "correctAnswer": "率",
-    "reading": "リツ",
-    "example": "確率（かくりつ）",
+    "reading": "ひき（いる）",
+    "example": "率いる（ひきいる）",
+    "extraReadings": [{"reading": "りつ", "example": "確率（かくりつ）"}, {"reading": "そつ", "example": "軽率（けいそつ）"}],
     "version": 1
   },
   {
@@ -8364,8 +8917,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["救", "性", "枝", "版"],
     "correctAnswer": "性",
-    "reading": "セイ",
+    "reading": "せい",
     "example": "性格（せいかく）",
+    "extraReadings": [{"reading": "しょう", "example": "本性（ほんしょう）"}],
     "version": 1
   },
   {
@@ -8375,8 +8929,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["質", "略", "財", "損"],
     "correctAnswer": "質",
-    "reading": "シツ",
+    "reading": "しつ",
     "example": "性質（せいしつ）",
+    "extraReadings": [{"reading": "しち", "example": "質屋（しちや）"}],
     "version": 1
   },
   {
@@ -8387,7 +8942,8 @@ const questions = [
     "choices": ["設", "寄", "謝", "採"],
     "correctAnswer": "採",
     "reading": "と（る）",
-    "example": "採用（さいよう）",
+    "example": "採る（とる）",
+    "extraReadings": [{"reading": "さい", "example": "採集（さいしゅう）"}],
     "version": 1
   },
   {
@@ -8399,6 +8955,7 @@ const questions = [
     "correctAnswer": "限",
     "reading": "かぎ（る）",
     "example": "限る（かぎる）",
+    "extraReadings": [{"reading": "げん", "example": "限度（げんど）"}],
     "version": 1
   },
   {
@@ -8408,7 +8965,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["貧", "防", "規", "増"],
     "correctAnswer": "規",
-    "reading": "キ",
+    "reading": "き",
     "example": "規則（きそく）",
     "version": 1
   },
@@ -8419,8 +8976,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["堂", "飼", "貯", "応"],
     "correctAnswer": "応",
-    "reading": "こた（える）",
-    "example": "応じる（おうじる）",
+    "reading": "おう",
+    "example": "応援（おうえん）",
     "version": 1
   },
   {
@@ -8430,7 +8987,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["歴", "旧", "判", "構"],
     "correctAnswer": "歴",
-    "reading": "レキ",
+    "reading": "れき",
     "example": "歴史（れきし）",
     "version": 1
   },
@@ -8443,6 +9000,7 @@ const questions = [
     "correctAnswer": "編",
     "reading": "あ（む）",
     "example": "編む（あむ）",
+    "extraReadings": [{"reading": "へん", "example": "編集（へんしゅう）"}],
     "version": 1
   },
   {
@@ -8454,6 +9012,7 @@ const questions = [
     "correctAnswer": "燃",
     "reading": "も（える）",
     "example": "燃える（もえる）",
+    "extraReadings": [{"reading": "ねん", "example": "燃料（ねんりょう）"}, {"reading": "も（やす）", "example": "燃やす（もやす）"}],
     "version": 1
   },
   {
@@ -8474,7 +9033,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["型", "政", "厚", "護"],
     "correctAnswer": "政",
-    "reading": "セイ",
+    "reading": "せい",
     "example": "政治（せいじ）",
     "version": 1
   },
@@ -8485,7 +9044,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["張", "永", "舎", "飼"],
     "correctAnswer": "舎",
-    "reading": "シャ",
+    "reading": "しゃ",
     "example": "校舎（こうしゃ）",
     "version": 1
   },
@@ -8496,8 +9055,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["条", "賛", "句", "際"],
     "correctAnswer": "際",
-    "reading": "きわ",
+    "reading": "さい",
     "example": "国際（こくさい）",
+    "extraReadings": [{"reading": "きわ", "example": "際立つ（きわだつ）"}],
     "version": 1
   },
   {
@@ -8509,6 +9069,7 @@ const questions = [
     "correctAnswer": "現",
     "reading": "あらわ（れる）",
     "example": "現れる（あらわれる）",
+    "extraReadings": [{"reading": "げん", "example": "現在（げんざい）"}, {"reading": "あらわ（す）", "example": "現す（あらわす）"}],
     "version": 1
   },
   {
@@ -8519,7 +9080,8 @@ const questions = [
     "choices": ["非", "喜", "団", "資"],
     "correctAnswer": "喜",
     "reading": "よろこ（ぶ）",
-    "example": "喜ぶ（よろこぶ）",
+    "example": "喜び（よろこび）",
+    "extraReadings": [{"reading": "き", "example": "喜劇（きげき）"}],
     "version": 1
   },
   {
@@ -8529,7 +9091,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["得", "脈", "因", "往"],
     "correctAnswer": "往",
-    "reading": "オウ",
+    "reading": "おう",
     "example": "往復（おうふく）",
     "version": 1
   },
@@ -8540,7 +9102,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["態", "舎", "弁", "可"],
     "correctAnswer": "弁",
-    "reading": "ベン",
+    "reading": "べん",
     "example": "弁当（べんとう）",
     "version": 1
   },
@@ -8551,7 +9113,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["在", "句", "告", "能"],
     "correctAnswer": "能",
-    "reading": "ノウ",
+    "reading": "のう",
     "example": "能力（のうりょく）",
     "version": 1
   },
@@ -8563,7 +9125,8 @@ const questions = [
     "choices": ["破", "妻", "貸", "桜"],
     "correctAnswer": "貸",
     "reading": "か（す）",
-    "example": "貸す（かす）",
+    "example": "貸し出し（かしだし）",
+    "extraReadings": [{"reading": "たい", "example": "賃貸（ちんたい）"}],
     "version": 1
   },
   {
@@ -8575,6 +9138,7 @@ const questions = [
     "correctAnswer": "勢",
     "reading": "いきお（い）",
     "example": "勢い（いきおい）",
+    "extraReadings": [{"reading": "せい", "example": "勢力（せいりょく）"}],
     "version": 1
   },
   {
@@ -8586,6 +9150,7 @@ const questions = [
     "correctAnswer": "謝",
     "reading": "あやま（る）",
     "example": "謝る（あやまる）",
+    "extraReadings": [{"reading": "しゃ", "example": "感謝（かんしゃ）"}],
     "version": 1
   },
   {
@@ -8595,7 +9160,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["移", "効", "在", "紀"],
     "correctAnswer": "在",
-    "reading": "ザイ",
+    "reading": "ざい",
     "example": "現在（げんざい）",
     "version": 1
   },
@@ -8608,6 +9173,7 @@ const questions = [
     "correctAnswer": "減",
     "reading": "へ（る）",
     "example": "減る（へる）",
+    "extraReadings": [{"reading": "げん", "example": "減少（げんしょう）"}, {"reading": "へ（らす）", "example": "減らす（へらす）"}],
     "version": 1
   },
   {
@@ -8618,7 +9184,8 @@ const questions = [
     "choices": ["張", "資", "技", "保"],
     "correctAnswer": "技",
     "reading": "わざ",
-    "example": "技術（ぎじゅつ）",
+    "example": "技（わざ）",
+    "extraReadings": [{"reading": "ぎ", "example": "技術（ぎじゅつ）"}],
     "version": 1
   },
   {
@@ -8629,7 +9196,8 @@ const questions = [
     "choices": ["弁", "能", "桜", "性"],
     "correctAnswer": "桜",
     "reading": "さくら",
-    "example": "桜の花（さくらのはな）",
+    "example": "桜並木（さくらなみき）",
+    "extraReadings": [{"reading": "おう", "example": "桜花（おうか）"}],
     "version": 1
   },
   {
@@ -8641,6 +9209,7 @@ const questions = [
     "correctAnswer": "保",
     "reading": "たも（つ）",
     "example": "保つ（たもつ）",
+    "extraReadings": [{"reading": "ほ", "example": "保護（ほご）"}],
     "version": 1
   },
   {
@@ -8652,6 +9221,7 @@ const questions = [
     "correctAnswer": "破",
     "reading": "やぶ（る）",
     "example": "破る（やぶる）",
+    "extraReadings": [{"reading": "は", "example": "破産（はさん）"}],
     "version": 1
   },
   {
@@ -8661,7 +9231,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["態", "構", "寄", "比"],
     "correctAnswer": "態",
-    "reading": "タイ",
+    "reading": "たい",
     "example": "態度（たいど）",
     "version": 1
   },
@@ -8672,8 +9242,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["格", "快", "精", "豊"],
     "correctAnswer": "精",
-    "reading": "セイ",
-    "example": "精一杯（せいいっぱい）",
+    "reading": "せい",
+    "example": "精米（せいまい）",
+    "extraReadings": [{"reading": "しょう", "example": "精進（しょうじん）"}],
     "version": 1
   },
   {
@@ -8683,8 +9254,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["貿", "織", "圧", "授"],
     "correctAnswer": "授",
-    "reading": "ジュ",
-    "example": "授業（じゅぎょう）",
+    "reading": "さず（ける）",
+    "example": "授ける（さずける）",
+    "extraReadings": [{"reading": "じゅ", "example": "授業（じゅぎょう）"}],
     "version": 1
   },
   {
@@ -8694,8 +9266,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["枝", "精", "常", "財"],
     "correctAnswer": "財",
-    "reading": "ザイ",
+    "reading": "ざい",
     "example": "財産（ざいさん）",
+    "extraReadings": [{"reading": "さい", "example": "財布（さいふ）"}],
     "version": 1
   },
   {
@@ -8705,8 +9278,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["故", "混", "制", "液"],
     "correctAnswer": "故",
-    "reading": "ゆえ",
-    "example": "事故（じこ）",
+    "reading": "こ",
+    "example": "故郷（こきょう）",
     "version": 1
   },
   {
@@ -8716,8 +9289,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["領", "義", "容", "招"],
     "correctAnswer": "義",
-    "reading": "ギ",
-    "example": "正義（せいぎ）",
+    "reading": "ぎ",
+    "example": "意義（いぎ）",
     "version": 1
   },
   {
@@ -8727,8 +9300,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["減", "価", "非", "可"],
     "correctAnswer": "可",
-    "reading": "カ",
-    "example": "許可（きょか）",
+    "reading": "か",
+    "example": "可能（かのう）",
     "version": 1
   },
   {
@@ -8739,7 +9312,8 @@ const questions = [
     "choices": ["複", "格", "酸", "墓"],
     "correctAnswer": "墓",
     "reading": "はか",
-    "example": "お墓（おはか）",
+    "example": "墓参り（はかまいり）",
+    "extraReadings": [{"reading": "ぼ", "example": "墓地（ぼち）"}],
     "version": 1
   },
   {
@@ -8750,7 +9324,8 @@ const questions = [
     "choices": ["犯", "程", "仮", "導"],
     "correctAnswer": "犯",
     "reading": "おか（す）",
-    "example": "犯人（はんにん）",
+    "example": "犯す（おかす）",
+    "extraReadings": [{"reading": "はん", "example": "犯人（はんにん）"}],
     "version": 1
   },
   {
@@ -8760,8 +9335,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["編", "団", "許", "術"],
     "correctAnswer": "団",
-    "reading": "ダン",
+    "reading": "だん",
     "example": "団体（だんたい）",
+    "extraReadings": [{"reading": "とん", "example": "布団（ふとん）"}],
     "version": 1
   },
   {
@@ -8771,7 +9347,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["賞", "製", "留", "快"],
     "correctAnswer": "製",
-    "reading": "セイ",
+    "reading": "せい",
     "example": "製品（せいひん）",
     "version": 1
   },
@@ -8782,8 +9358,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["査", "接", "修", "河"],
     "correctAnswer": "修",
-    "reading": "シュウ",
-    "example": "修理（しゅうり）",
+    "reading": "おさ（める）",
+    "example": "修める（おさめる）",
+    "extraReadings": [{"reading": "しゅう", "example": "修理（しゅうり）"}, {"reading": "しゅ", "example": "修行（しゅぎょう）"}],
     "version": 1
   },
   {
@@ -8794,7 +9371,8 @@ const questions = [
     "choices": ["評", "罪", "脈", "非"],
     "correctAnswer": "罪",
     "reading": "つみ",
-    "example": "犯罪（はんざい）",
+    "example": "罪人（つみびと）",
+    "extraReadings": [{"reading": "ざい", "example": "犯罪（はんざい）"}],
     "version": 1
   },
   {
@@ -8804,7 +9382,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["快", "眼", "個", "造"],
     "correctAnswer": "個",
-    "reading": "コ",
+    "reading": "こ",
     "example": "個人（こじん）",
     "version": 1
   },
@@ -8815,8 +9393,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["興", "能", "逆", "豊"],
     "correctAnswer": "逆",
-    "reading": "さか（らう）",
-    "example": "逆らう（さからう）",
+    "reading": "ぎゃく",
+    "example": "逆転（ぎゃくてん）",
+    "extraReadings": [{"reading": "さか（らう）", "example": "流れに逆らう（ながれにさからう）"}],
     "version": 1
   },
   {
@@ -8826,8 +9405,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["判", "常", "永", "仮"],
     "correctAnswer": "仮",
-    "reading": "カリ",
+    "reading": "かり",
     "example": "仮面（かめん）",
+    "extraReadings": [{"reading": "か", "example": "仮定（かてい）"}, {"reading": "け", "example": "仮病（けびょう）"}],
     "version": 1
   },
   {
@@ -8837,8 +9417,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["規", "豊", "破", "報"],
     "correctAnswer": "報",
-    "reading": "ホウ",
-    "example": "予報（よほう）",
+    "reading": "ほう",
+    "example": "情報（じょうほう）",
     "version": 1
   },
   {
@@ -8848,8 +9428,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["判", "史", "常", "綿"],
     "correctAnswer": "判",
-    "reading": "ハン",
-    "example": "裁判（さいばん）",
+    "reading": "はん",
+    "example": "判断（はんだん）",
+    "extraReadings": [{"reading": "ばん", "example": "大判（おおばん）"}],
     "version": 1
   },
   {
@@ -8861,6 +9442,7 @@ const questions = [
     "correctAnswer": "断",
     "reading": "ことわ（る）",
     "example": "断る（ことわる）",
+    "extraReadings": [{"reading": "だん", "example": "判断（はんだん）"}],
     "version": 1
   },
   {
@@ -8870,7 +9452,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["税", "永", "判", "境"],
     "correctAnswer": "税",
-    "reading": "ゼイ",
+    "reading": "ぜい",
     "example": "税金（ぜいきん）",
     "version": 1
   },
@@ -8883,6 +9465,7 @@ const questions = [
     "correctAnswer": "述",
     "reading": "の（べる）",
     "example": "述べる（のべる）",
+    "extraReadings": [{"reading": "じゅつ", "example": "記述（きじゅつ）"}],
     "version": 1
   },
   {
@@ -8894,6 +9477,7 @@ const questions = [
     "correctAnswer": "殺",
     "reading": "ころ（す）",
     "example": "殺す（ころす）",
+    "extraReadings": [{"reading": "さつ", "example": "殺人（さつじん）"}],
     "version": 1
   },
   {
@@ -8903,7 +9487,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["護", "像", "容", "非"],
     "correctAnswer": "護",
-    "reading": "ゴ",
+    "reading": "ご",
     "example": "保護（ほご）",
     "version": 1
   },
@@ -8916,6 +9500,7 @@ const questions = [
     "correctAnswer": "久",
     "reading": "ひさ（しい）",
     "example": "久しぶり（ひさしぶり）",
+    "extraReadings": [{"reading": "きゅう", "example": "永久（えいきゅう）"}],
     "version": 1
   },
   {
@@ -8925,7 +9510,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["性", "価", "複", "眼"],
     "correctAnswer": "価",
-    "reading": "カ",
+    "reading": "か",
     "example": "価格（かかく）",
     "version": 1
   },
@@ -8938,6 +9523,7 @@ const questions = [
     "correctAnswer": "豊",
     "reading": "ゆた（か）",
     "example": "豊か（ゆたか）",
+    "extraReadings": [{"reading": "ほう", "example": "豊作（ほうさく）"}],
     "version": 1
   },
   {
@@ -8947,7 +9533,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["技", "経", "綿", "版"],
     "correctAnswer": "版",
-    "reading": "ハン",
+    "reading": "はん",
     "example": "出版（しゅっぱん）",
     "version": 1
   },
@@ -8959,7 +9545,8 @@ const questions = [
     "choices": ["述", "招", "往", "築"],
     "correctAnswer": "築",
     "reading": "きず（く）",
-    "example": "建築（けんちく）",
+    "example": "築く（きずく）",
+    "extraReadings": [{"reading": "ちく", "example": "建築（けんちく）"}],
     "version": 1
   },
   {
@@ -8970,7 +9557,8 @@ const questions = [
     "choices": ["責", "製", "圧", "状"],
     "correctAnswer": "責",
     "reading": "せ（める）",
-    "example": "責任（せきにん）",
+    "example": "責める（せめる）",
+    "extraReadings": [{"reading": "せき", "example": "責任（せきにん）"}],
     "version": 1
   },
   {
@@ -8980,8 +9568,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["額", "版", "術", "測"],
     "correctAnswer": "術",
-    "reading": "ジュツ",
-    "example": "技術（ぎじゅつ）",
+    "reading": "じゅつ",
+    "example": "手術（しゅじゅつ）",
     "version": 1
   },
   {
@@ -8991,8 +9579,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["喜", "規", "賞", "雑"],
     "correctAnswer": "雑",
-    "reading": "ザツ",
-    "example": "雑誌（ざっし）",
+    "reading": "ざつ",
+    "example": "雑談（ざつだん）",
+    "extraReadings": [{"reading": "ぞう", "example": "雑煮（ぞうに）"}],
     "version": 1
   },
   {
@@ -9003,7 +9592,8 @@ const questions = [
     "choices": ["責", "効", "停", "喜"],
     "correctAnswer": "効",
     "reading": "き（く）",
-    "example": "効果（こうか）",
+    "example": "効く（きく）",
+    "extraReadings": [{"reading": "こう", "example": "効果（こうか）"}],
     "version": 1
   },
   {
@@ -9013,8 +9603,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["性", "志", "旧", "能"],
     "correctAnswer": "旧",
-    "reading": "キュウ",
-    "example": "旧式（きゅうしき）",
+    "reading": "きゅう",
+    "example": "旧友（きゅうゆう）",
     "version": 1
   },
   {
@@ -9025,7 +9615,8 @@ const questions = [
     "choices": ["賛", "損", "河", "序"],
     "correctAnswer": "河",
     "reading": "かわ",
-    "example": "河口（かこう）",
+    "example": "河原（かわら）",
+    "extraReadings": [{"reading": "か", "example": "運河（うんが）"}],
     "version": 1
   },
   {
@@ -9036,7 +9627,8 @@ const questions = [
     "choices": ["鉱", "防", "政", "営"],
     "correctAnswer": "防",
     "reading": "ふせ（ぐ）",
-    "example": "予防（よぼう）",
+    "example": "防ぎ方（ふせぎかた）",
+    "extraReadings": [{"reading": "ぼう", "example": "予防（よぼう）"}],
     "version": 1
   },
   {
@@ -9048,6 +9640,7 @@ const questions = [
     "correctAnswer": "比",
     "reading": "くら（べる）",
     "example": "比べる（くらべる）",
+    "extraReadings": [{"reading": "ひ", "example": "比較（ひかく）"}],
     "version": 1
   },
   {
@@ -9057,7 +9650,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["脈", "採", "貯", "費"],
     "correctAnswer": "貯",
-    "reading": "チョ",
+    "reading": "ちょ",
     "example": "貯金（ちょきん）",
     "version": 1
   },
@@ -9068,7 +9661,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["績", "経", "墓", "耕"],
     "correctAnswer": "績",
-    "reading": "セキ",
+    "reading": "せき",
     "example": "成績（せいせき）",
     "version": 1
   },
@@ -9079,7 +9672,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["版", "測", "団", "準"],
     "correctAnswer": "準",
-    "reading": "ジュン",
+    "reading": "じゅん",
     "example": "準備（じゅんび）",
     "version": 1
   },
@@ -9103,6 +9696,7 @@ const questions = [
     "correctAnswer": "厚",
     "reading": "あつ（い）",
     "example": "厚い（あつい）",
+    "extraReadings": [{"reading": "こう", "example": "厚意（こうい）"}],
     "version": 1
   },
   {
@@ -9114,6 +9708,7 @@ const questions = [
     "correctAnswer": "救",
     "reading": "すく（う）",
     "example": "救う（すくう）",
+    "extraReadings": [{"reading": "きゅう", "example": "救急（きゅうきゅう）"}],
     "version": 1
   },
   {
@@ -9125,6 +9720,7 @@ const questions = [
     "correctAnswer": "過",
     "reading": "す（ぎる）",
     "example": "食べ過ぎ（たべすぎ）",
+    "extraReadings": [{"reading": "か", "example": "通過（つうか）"}, {"reading": "あやま（ち）", "example": "過ち（あやまち）"}, {"reading": "す（ごす）", "example": "過ごす（すごす）"}],
     "version": 1
   },
   {
@@ -9134,7 +9730,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["責", "貿", "妻", "幹"],
     "correctAnswer": "貿",
-    "reading": "ボウ",
+    "reading": "ぼう",
     "example": "貿易（ぼうえき）",
     "version": 1
   },
@@ -9146,7 +9742,8 @@ const questions = [
     "choices": ["損", "効", "肥", "燃"],
     "correctAnswer": "肥",
     "reading": "こ（える）",
-    "example": "肥料（ひりょう）",
+    "example": "土地が肥える（とちがこえる）",
+    "extraReadings": [{"reading": "ひ", "example": "肥料（ひりょう）"}],
     "version": 1
   },
   {
@@ -9157,7 +9754,8 @@ const questions = [
     "choices": ["士", "識", "張", "価"],
     "correctAnswer": "張",
     "reading": "は（る）",
-    "example": "張る（はる）",
+    "example": "張り切る（はりきる）",
+    "extraReadings": [{"reading": "ちょう", "example": "主張（しゅちょう）"}],
     "version": 1
   },
   {
@@ -9167,7 +9765,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["貧", "接", "製", "義"],
     "correctAnswer": "接",
-    "reading": "セツ",
+    "reading": "せつ",
     "example": "接続（せつぞく）",
     "version": 1
   },
@@ -9178,7 +9776,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["禁", "序", "証", "義"],
     "correctAnswer": "序",
-    "reading": "ジョ",
+    "reading": "じょ",
     "example": "順序（じゅんじょ）",
     "version": 1
   },
@@ -9189,7 +9787,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["罪", "貸", "属", "賛"],
     "correctAnswer": "賛",
-    "reading": "サン",
+    "reading": "さん",
     "example": "賛成（さんせい）",
     "version": 1
   },
@@ -9202,6 +9800,7 @@ const questions = [
     "correctAnswer": "耕",
     "reading": "たがや（す）",
     "example": "耕す（たがやす）",
+    "extraReadings": [{"reading": "こう", "example": "耕作（こうさく）"}],
     "version": 1
   },
   {
@@ -9213,6 +9812,7 @@ const questions = [
     "correctAnswer": "居",
     "reading": "い（る）",
     "example": "居間（いま）",
+    "extraReadings": [{"reading": "きょ", "example": "住居（じゅうきょ）"}, {"reading": "い", "example": "居眠り（いねむり）"}],
     "version": 1
   },
   {
@@ -9224,6 +9824,7 @@ const questions = [
     "correctAnswer": "快",
     "reading": "こころよ（い）",
     "example": "快い（こころよい）",
+    "extraReadings": [{"reading": "かい", "example": "快晴（かいせい）"}],
     "version": 1
   },
   {
@@ -9235,6 +9836,7 @@ const questions = [
     "correctAnswer": "幼",
     "reading": "おさな（い）",
     "example": "幼い（おさない）",
+    "extraReadings": [{"reading": "よう", "example": "幼児（ようじ）"}],
     "version": 1
   },
   {
@@ -9246,6 +9848,7 @@ const questions = [
     "correctAnswer": "並",
     "reading": "なら（ぶ）",
     "example": "並ぶ（ならぶ）",
+    "extraReadings": [{"reading": "へい", "example": "並行（へいこう）"}, {"reading": "なみ", "example": "並木（なみき）"}, {"reading": "なら（べる）", "example": "並べる（ならべる）"}],
     "version": 1
   },
   {
@@ -9255,8 +9858,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["秘", "糖", "熟", "域"],
     "correctAnswer": "糖",
-    "reading": "トウ",
-    "example": "砂糖（さとう）",
+    "reading": "とう",
+    "example": "糖分（とうぶん）",
     "version": 1
   },
   {
@@ -9266,7 +9869,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["晩", "片", "盟", "宅"],
     "correctAnswer": "宅",
-    "reading": "タク",
+    "reading": "たく",
     "example": "自宅（じたく）",
     "version": 1
   },
@@ -9278,7 +9881,8 @@ const questions = [
     "choices": ["誠", "訳", "賃", "幼"],
     "correctAnswer": "誠",
     "reading": "まこと",
-    "example": "誠実（せいじつ）",
+    "example": "誠（まこと）",
+    "extraReadings": [{"reading": "せい", "example": "誠実（せいじつ）"}],
     "version": 1
   },
   {
@@ -9289,7 +9893,8 @@ const questions = [
     "choices": ["届", "将", "縦", "済"],
     "correctAnswer": "縦",
     "reading": "たて",
-    "example": "縦横（たてよこ）",
+    "example": "縦書き（たてがき）",
+    "extraReadings": [{"reading": "じゅう", "example": "縦横（じゅうおう）"}],
     "version": 1
   },
   {
@@ -9299,7 +9904,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["朗", "収", "勤", "策"],
     "correctAnswer": "策",
-    "reading": "サク",
+    "reading": "さく",
     "example": "対策（たいさく）",
     "version": 1
   },
@@ -9310,7 +9915,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["裏", "蒸", "視", "憲"],
     "correctAnswer": "憲",
-    "reading": "ケン",
+    "reading": "けん",
     "example": "憲法（けんぽう）",
     "version": 1
   },
@@ -9323,6 +9928,7 @@ const questions = [
     "correctAnswer": "危",
     "reading": "あぶ（ない）",
     "example": "危ない（あぶない）",
+    "extraReadings": [{"reading": "き", "example": "危険（きけん）"}, {"reading": "あや（うい）", "example": "危うい（あやうい）"}],
     "version": 1
   },
   {
@@ -9332,7 +9938,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["胃", "紅", "並", "穀"],
     "correctAnswer": "胃",
-    "reading": "イ",
+    "reading": "い",
     "example": "胃薬（いぐすり）",
     "version": 1
   },
@@ -9345,6 +9951,7 @@ const questions = [
     "correctAnswer": "欲",
     "reading": "ほ（しい）",
     "example": "欲しい（ほしい）",
+    "extraReadings": [{"reading": "よく", "example": "欲望（よくぼう）"}, {"reading": "ほっ（する）", "example": "欲する（ほっする）"}],
     "version": 1
   },
   {
@@ -9354,7 +9961,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["陛", "后", "灰", "否"],
     "correctAnswer": "陛",
-    "reading": "ヘイ",
+    "reading": "へい",
     "example": "陛下（へいか）",
     "version": 1
   },
@@ -9365,8 +9972,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["届", "討", "肺", "暖"],
     "correctAnswer": "届",
-    "reading": "とど（く）",
-    "example": "届く（とどく）",
+    "reading": "とど（ける）",
+    "example": "荷物を届ける（にもつをとどける）",
+    "extraReadings": [{"reading": "とど（く）", "example": "手紙が届く（てがみがとどく）"}],
     "version": 1
   },
   {
@@ -9376,8 +9984,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["担", "将", "私", "劇"],
     "correctAnswer": "担",
-    "reading": "にな（う）",
-    "example": "担当（たんとう）",
+    "reading": "かつ（ぐ）",
+    "example": "担ぐ（かつぐ）",
+    "extraReadings": [{"reading": "たん", "example": "担当（たんとう）"}],
     "version": 1
   },
   {
@@ -9389,6 +9998,7 @@ const questions = [
     "correctAnswer": "舌",
     "reading": "した",
     "example": "舌打ち（したうち）",
+    "extraReadings": [{"reading": "ぜつ", "example": "毒舌（どくぜつ）"}],
     "version": 1
   },
   {
@@ -9400,6 +10010,7 @@ const questions = [
     "correctAnswer": "縮",
     "reading": "ちぢ（む）",
     "example": "縮む（ちぢむ）",
+    "extraReadings": [{"reading": "しゅく", "example": "短縮（たんしゅく）"}, {"reading": "ちぢ（める）", "example": "縮める（ちぢめる）"}, {"reading": "ちぢ（れる）", "example": "縮れる（ちぢれる）"}],
     "version": 1
   },
   {
@@ -9409,8 +10020,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["署", "冊", "蚕", "層"],
     "correctAnswer": "冊",
-    "reading": "サツ",
+    "reading": "さつ",
     "example": "一冊（いっさつ）",
+    "extraReadings": [{"reading": "さく", "example": "短冊（たんざく）"}],
     "version": 1
   },
   {
@@ -9421,7 +10033,8 @@ const questions = [
     "choices": ["認", "論", "干", "源"],
     "correctAnswer": "源",
     "reading": "みなもと",
-    "example": "資源（しげん）",
+    "example": "源（みなもと）",
+    "extraReadings": [{"reading": "げん", "example": "資源（しげん）"}],
     "version": 1
   },
   {
@@ -9432,7 +10045,7 @@ const questions = [
     "choices": ["株", "腸", "頂", "机"],
     "correctAnswer": "机",
     "reading": "つくえ",
-    "example": "机の上（つくえのうえ）",
+    "example": "机（つくえ）",
     "version": 1
   },
   {
@@ -9444,6 +10057,7 @@ const questions = [
     "correctAnswer": "異",
     "reading": "こと（なる）",
     "example": "異なる（ことなる）",
+    "extraReadings": [{"reading": "い", "example": "異常（いじょう）"}],
     "version": 1
   },
   {
@@ -9453,7 +10067,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["庁", "翌", "寸", "臓"],
     "correctAnswer": "翌",
-    "reading": "ヨク",
+    "reading": "よく",
     "example": "翌日（よくじつ）",
     "version": 1
   },
@@ -9466,6 +10080,7 @@ const questions = [
     "correctAnswer": "閉",
     "reading": "と（じる）",
     "example": "閉じる（とじる）",
+    "extraReadings": [{"reading": "へい", "example": "閉会（へいかい）"}, {"reading": "し（まる）", "example": "閉まる（しまる）"}, {"reading": "し（める）", "example": "閉める（しめる）"}],
     "version": 1
   },
   {
@@ -9477,6 +10092,7 @@ const questions = [
     "correctAnswer": "難",
     "reading": "むずか（しい）",
     "example": "難しい（むずかしい）",
+    "extraReadings": [{"reading": "なん", "example": "困難（こんなん）"}],
     "version": 1
   },
   {
@@ -9487,7 +10103,8 @@ const questions = [
     "choices": ["泉", "優", "臓", "探"],
     "correctAnswer": "探",
     "reading": "さが（す）",
-    "example": "探す（さがす）",
+    "example": "本を探す（ほんをさがす）",
+    "extraReadings": [{"reading": "たん", "example": "探検（たんけん）"}, {"reading": "さぐ（る）", "example": "様子を探る（ようすをさぐる）"}],
     "version": 1
   },
   {
@@ -9497,7 +10114,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["補", "幼", "寸", "宣"],
     "correctAnswer": "宣",
-    "reading": "セン",
+    "reading": "せん",
     "example": "宣言（せんげん）",
     "version": 1
   },
@@ -9508,8 +10125,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["忘", "熟", "巻", "肺"],
     "correctAnswer": "熟",
-    "reading": "ジュク",
-    "example": "熟語（じゅくご）",
+    "reading": "う（れる）",
+    "example": "熟れた実（うれたみ）",
+    "extraReadings": [{"reading": "じゅく", "example": "成熟（せいじゅく）"}],
     "version": 1
   },
   {
@@ -9521,6 +10139,7 @@ const questions = [
     "correctAnswer": "蚕",
     "reading": "かいこ",
     "example": "養蚕（ようさん）",
+    "extraReadings": [{"reading": "さん", "example": "養蚕（ようさん）"}],
     "version": 1
   },
   {
@@ -9532,6 +10151,7 @@ const questions = [
     "correctAnswer": "厳",
     "reading": "きび（しい）",
     "example": "厳しい（きびしい）",
+    "extraReadings": [{"reading": "げん", "example": "厳重（げんじゅう）"}, {"reading": "ごん", "example": "荘厳（そうごん）"}, {"reading": "おごそ", "example": "厳か（おごそか）"}],
     "version": 1
   },
   {
@@ -9541,7 +10161,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["秘", "揮", "吸", "覧"],
     "correctAnswer": "揮",
-    "reading": "キ",
+    "reading": "き",
     "example": "指揮（しき）",
     "version": 1
   },
@@ -9552,8 +10172,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["后", "傷", "処", "遺"],
     "correctAnswer": "遺",
-    "reading": "イ",
+    "reading": "い",
     "example": "遺産（いさん）",
+    "extraReadings": [{"reading": "ゆい", "example": "遺言（ゆいごん）"}],
     "version": 1
   },
   {
@@ -9565,6 +10186,7 @@ const questions = [
     "correctAnswer": "乱",
     "reading": "みだ（れる）",
     "example": "乱れる（みだれる）",
+    "extraReadings": [{"reading": "らん", "example": "混乱（こんらん）"}],
     "version": 1
   },
   {
@@ -9575,7 +10197,8 @@ const questions = [
     "choices": ["片", "痛", "否", "諸"],
     "correctAnswer": "片",
     "reading": "かた",
-    "example": "片方（かたほう）",
+    "example": "片手（かたて）",
+    "extraReadings": [{"reading": "へん", "example": "破片（はへん）"}],
     "version": 1
   },
   {
@@ -9586,7 +10209,8 @@ const questions = [
     "choices": ["値", "乳", "皇", "拡"],
     "correctAnswer": "乳",
     "reading": "ちち",
-    "example": "牛乳（ぎゅうにゅう）",
+    "example": "乳（ちち）",
+    "extraReadings": [{"reading": "にゅう", "example": "牛乳（ぎゅうにゅう）"}],
     "version": 1
   },
   {
@@ -9596,7 +10220,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["遺", "后", "尺", "誕"],
     "correctAnswer": "誕",
-    "reading": "タン",
+    "reading": "たん",
     "example": "誕生日（たんじょうび）",
     "version": 1
   },
@@ -9608,7 +10232,8 @@ const questions = [
     "choices": ["専", "映", "腹", "絹"],
     "correctAnswer": "専",
     "reading": "もっぱ（ら）",
-    "example": "専門（せんもん）",
+    "example": "専ら（もっぱら）",
+    "extraReadings": [{"reading": "せん", "example": "専門（せんもん）"}],
     "version": 1
   },
   {
@@ -9618,8 +10243,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["糖", "若", "純", "否"],
     "correctAnswer": "純",
-    "reading": "ジュン",
-    "example": "単純（たんじゅん）",
+    "reading": "じゅん",
+    "example": "純白（じゅんぱく）",
     "version": 1
   },
   {
@@ -9631,6 +10256,7 @@ const questions = [
     "correctAnswer": "至",
     "reading": "いた（る）",
     "example": "至る（いたる）",
+    "extraReadings": [{"reading": "し", "example": "冬至（とうじ）"}],
     "version": 1
   },
   {
@@ -9640,8 +10266,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["己", "忘", "亡", "装"],
     "correctAnswer": "己",
-    "reading": "おのれ",
+    "reading": "こ",
     "example": "自己（じこ）",
+    "extraReadings": [{"reading": "おのれ", "example": "己（おのれ）"}],
     "version": 1
   },
   {
@@ -9651,8 +10278,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["呼", "貴", "討", "宇"],
     "correctAnswer": "貴",
-    "reading": "たっと（い）",
-    "example": "貴重（きちょう）",
+    "reading": "とうと（い）",
+    "example": "貴い（とうとい）",
+    "extraReadings": [{"reading": "き", "example": "貴重（きちょう）"}],
     "version": 1
   },
   {
@@ -9662,7 +10290,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["宝", "脳", "域", "権"],
     "correctAnswer": "域",
-    "reading": "イキ",
+    "reading": "いき",
     "example": "地域（ちいき）",
     "version": 1
   },
@@ -9675,6 +10303,7 @@ const questions = [
     "correctAnswer": "卵",
     "reading": "たまご",
     "example": "卵焼き（たまごやき）",
+    "extraReadings": [{"reading": "らん", "example": "産卵（さんらん）"}],
     "version": 1
   },
   {
@@ -9685,7 +10314,8 @@ const questions = [
     "choices": ["乱", "補", "翌", "腹"],
     "correctAnswer": "補",
     "reading": "おぎな（う）",
-    "example": "補う（おぎなう）",
+    "example": "補い（おぎない）",
+    "extraReadings": [{"reading": "ほ", "example": "補強（ほきょう）"}],
     "version": 1
   },
   {
@@ -9697,6 +10327,7 @@ const questions = [
     "correctAnswer": "認",
     "reading": "みと（める）",
     "example": "認める（みとめる）",
+    "extraReadings": [{"reading": "にん", "example": "認定（にんてい）"}],
     "version": 1
   },
   {
@@ -9706,7 +10337,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["痛", "革", "段", "訪"],
     "correctAnswer": "段",
-    "reading": "ダン",
+    "reading": "だん",
     "example": "階段（かいだん）",
     "version": 1
   },
@@ -9718,7 +10349,8 @@ const questions = [
     "choices": ["誤", "痛", "泉", "肺"],
     "correctAnswer": "泉",
     "reading": "いずみ",
-    "example": "温泉（おんせん）",
+    "example": "泉（いずみ）",
+    "extraReadings": [{"reading": "せん", "example": "温泉（おんせん）"}],
     "version": 1
   },
   {
@@ -9728,7 +10360,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["危", "処", "蒸", "賃"],
     "correctAnswer": "処",
-    "reading": "ショ",
+    "reading": "しょ",
     "example": "処理（しょり）",
     "version": 1
   },
@@ -9741,6 +10373,7 @@ const questions = [
     "correctAnswer": "私",
     "reading": "わたし",
     "example": "私たち（わたしたち）",
+    "extraReadings": [{"reading": "し", "example": "私立（しりつ）"}, {"reading": "わたくし", "example": "私（わたくし）"}],
     "version": 1
   },
   {
@@ -9752,6 +10385,7 @@ const questions = [
     "correctAnswer": "呼",
     "reading": "よ（ぶ）",
     "example": "呼ぶ（よぶ）",
+    "extraReadings": [{"reading": "こ", "example": "呼応（こおう）"}],
     "version": 1
   },
   {
@@ -9763,6 +10397,7 @@ const questions = [
     "correctAnswer": "疑",
     "reading": "うたが（う）",
     "example": "疑う（うたがう）",
+    "extraReadings": [{"reading": "ぎ", "example": "疑問（ぎもん）"}],
     "version": 1
   },
   {
@@ -9772,7 +10407,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["腸", "宇", "宝", "延"],
     "correctAnswer": "宇",
-    "reading": "ウ",
+    "reading": "う",
     "example": "宇宙（うちゅう）",
     "version": 1
   },
@@ -9783,8 +10418,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["覧", "密", "灰", "洗"],
     "correctAnswer": "覧",
-    "reading": "ラン",
-    "example": "一覧（いちらん）",
+    "reading": "らん",
+    "example": "展覧会（てんらんかい）",
     "version": 1
   },
   {
@@ -9794,8 +10429,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["奏", "庁", "暮", "派"],
     "correctAnswer": "暮",
-    "reading": "く（れる）",
-    "example": "日が暮れる（ひがくれる）",
+    "reading": "く（らす）",
+    "example": "暮らし（くらし）",
+    "extraReadings": [{"reading": "ぼ", "example": "歳暮（せいぼ）"}],
     "version": 1
   },
   {
@@ -9807,6 +10443,7 @@ const questions = [
     "correctAnswer": "納",
     "reading": "おさ（める）",
     "example": "納める（おさめる）",
+    "extraReadings": [{"reading": "のう", "example": "納税（のうぜい）"}, {"reading": "な", "example": "納屋（なや）"}],
     "version": 1
   },
   {
@@ -9817,7 +10454,8 @@ const questions = [
     "choices": ["宝", "骨", "暖", "俳"],
     "correctAnswer": "暖",
     "reading": "あたた（かい）",
-    "example": "暖かい（あたたかい）",
+    "example": "暖かい日（あたたかいひ）",
+    "extraReadings": [{"reading": "だん", "example": "暖房（だんぼう）"}],
     "version": 1
   },
   {
@@ -9829,6 +10467,7 @@ const questions = [
     "correctAnswer": "洗",
     "reading": "あら（う）",
     "example": "洗う（あらう）",
+    "extraReadings": [{"reading": "せん", "example": "洗剤（せんざい）"}],
     "version": 1
   },
   {
@@ -9838,7 +10477,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["署", "穴", "密", "専"],
     "correctAnswer": "署",
-    "reading": "ショ",
+    "reading": "しょ",
     "example": "警察署（けいさつしょ）",
     "version": 1
   },
@@ -9851,6 +10490,7 @@ const questions = [
     "correctAnswer": "姿",
     "reading": "すがた",
     "example": "姿勢（しせい）",
+    "extraReadings": [{"reading": "し", "example": "姿勢（しせい）"}],
     "version": 1
   },
   {
@@ -9861,7 +10501,8 @@ const questions = [
     "choices": ["誤", "補", "縮", "盛"],
     "correctAnswer": "誤",
     "reading": "あやま（る）",
-    "example": "誤る（あやまる）",
+    "example": "誤り（あやまり）",
+    "extraReadings": [{"reading": "ご", "example": "誤解（ごかい）"}],
     "version": 1
   },
   {
@@ -9873,6 +10514,7 @@ const questions = [
     "correctAnswer": "吸",
     "reading": "す（う）",
     "example": "息を吸う（いきをすう）",
+    "extraReadings": [{"reading": "きゅう", "example": "吸収（きゅうしゅう）"}],
     "version": 1
   },
   {
@@ -9884,6 +10526,7 @@ const questions = [
     "correctAnswer": "映",
     "reading": "うつ（る）",
     "example": "映る（うつる）",
+    "extraReadings": [{"reading": "えい", "example": "映画（えいが）"}, {"reading": "は（える）", "example": "夕映え（ゆうばえ）"}],
     "version": 1
   },
   {
@@ -9894,7 +10537,8 @@ const questions = [
     "choices": ["朗", "裏", "片", "射"],
     "correctAnswer": "裏",
     "reading": "うら",
-    "example": "裏側（うらがわ）",
+    "example": "裏口（うらぐち）",
+    "extraReadings": [{"reading": "り", "example": "脳裏（のうり）"}],
     "version": 1
   },
   {
@@ -9906,6 +10550,7 @@ const questions = [
     "correctAnswer": "宝",
     "reading": "たから",
     "example": "宝物（たからもの）",
+    "extraReadings": [{"reading": "ほう", "example": "国宝（こくほう）"}],
     "version": 1
   },
   {
@@ -9915,7 +10560,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["臓", "脳", "翌", "勤"],
     "correctAnswer": "脳",
-    "reading": "ノウ",
+    "reading": "のう",
     "example": "頭脳（ずのう）",
     "version": 1
   },
@@ -9928,6 +10573,7 @@ const questions = [
     "correctAnswer": "値",
     "reading": "ね",
     "example": "価値（かち）",
+    "extraReadings": [{"reading": "ち", "example": "価値（かち）"}, {"reading": "あたい", "example": "値（あたい）"}],
     "version": 1
   },
   {
@@ -9938,7 +10584,8 @@ const questions = [
     "choices": ["補", "机", "染", "翌"],
     "correctAnswer": "染",
     "reading": "そ（める）",
-    "example": "染める（そめる）",
+    "example": "布を染める（ぬのをそめる）",
+    "extraReadings": [{"reading": "せん", "example": "感染（かんせん）"}, {"reading": "し（みる）", "example": "色が染みる（いろがしみる）"}],
     "version": 1
   },
   {
@@ -9948,7 +10595,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["諸", "拝", "除", "寸"],
     "correctAnswer": "諸",
-    "reading": "ショ",
+    "reading": "しょ",
     "example": "諸国（しょこく）",
     "version": 1
   },
@@ -9959,7 +10606,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["障", "視", "律", "著"],
     "correctAnswer": "視",
-    "reading": "シ",
+    "reading": "し",
     "example": "視力（しりょく）",
     "version": 1
   },
@@ -9970,7 +10617,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["后", "乳", "縦", "呼"],
     "correctAnswer": "后",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "皇后（こうごう）",
     "version": 1
   },
@@ -9981,8 +10628,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["翌", "供", "暖", "絹"],
     "correctAnswer": "供",
-    "reading": "そな（える）",
-    "example": "子供（こども）",
+    "reading": "とも",
+    "example": "お供（おとも）",
+    "extraReadings": [{"reading": "きょう", "example": "供給（きょうきゅう）"}, {"reading": "く", "example": "供養（くよう）"}],
     "version": 1
   },
   {
@@ -9994,6 +10642,7 @@ const questions = [
     "correctAnswer": "延",
     "reading": "の（びる）",
     "example": "延びる（のびる）",
+    "extraReadings": [{"reading": "えん", "example": "延長（えんちょう）"}, {"reading": "の（べる）", "example": "延べる（のべる）"}],
     "version": 1
   },
   {
@@ -10003,7 +10652,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["警", "律", "蚕", "閉"],
     "correctAnswer": "律",
-    "reading": "リツ",
+    "reading": "りつ",
     "example": "法律（ほうりつ）",
     "version": 1
   },
@@ -10014,8 +10663,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["閉", "論", "訪", "寸"],
     "correctAnswer": "訪",
-    "reading": "おとず（れる）",
-    "example": "訪れる（おとずれる）",
+    "reading": "たず（ねる）",
+    "example": "訪ねる（たずねる）",
+    "extraReadings": [{"reading": "ほう", "example": "訪問（ほうもん）"}],
     "version": 1
   },
   {
@@ -10025,8 +10675,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["障", "宙", "派", "権"],
     "correctAnswer": "派",
-    "reading": "ハ",
-    "example": "派手（はで）",
+    "reading": "は",
+    "example": "立派（りっぱ）",
     "version": 1
   },
   {
@@ -10036,7 +10686,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["宙", "座", "憲", "危"],
     "correctAnswer": "宙",
-    "reading": "チュウ",
+    "reading": "ちゅう",
     "example": "宇宙（うちゅう）",
     "version": 1
   },
@@ -10047,8 +10697,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["班", "賃", "銭", "延"],
     "correctAnswer": "銭",
-    "reading": "ぜに",
-    "example": "小銭（こぜに）",
+    "reading": "せん",
+    "example": "金銭（きんせん）",
+    "extraReadings": [{"reading": "ぜに", "example": "小銭（こぜに）"}],
     "version": 1
   },
   {
@@ -10060,6 +10711,7 @@ const questions = [
     "correctAnswer": "除",
     "reading": "のぞ（く）",
     "example": "除く（のぞく）",
+    "extraReadings": [{"reading": "じょ", "example": "除草（じょそう）"}, {"reading": "じ", "example": "掃除（そうじ）"}],
     "version": 1
   },
   {
@@ -10069,8 +10721,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["尺", "賃", "詞", "恩"],
     "correctAnswer": "詞",
-    "reading": "シ",
-    "example": "歌詞（かし）",
+    "reading": "し",
+    "example": "名詞（めいし）",
     "version": 1
   },
   {
@@ -10080,7 +10732,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["射", "沿", "孝", "奏"],
     "correctAnswer": "孝",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "親孝行（おやこうこう）",
     "version": 1
   },
@@ -10093,6 +10745,7 @@ const questions = [
     "correctAnswer": "胸",
     "reading": "むね",
     "example": "胸元（むなもと）",
+    "extraReadings": [{"reading": "きょう", "example": "度胸（どきょう）"}],
     "version": 1
   },
   {
@@ -10103,7 +10756,8 @@ const questions = [
     "choices": ["沿", "盟", "腸", "糖"],
     "correctAnswer": "沿",
     "reading": "そ（う）",
-    "example": "海に沿う（うみにそう）",
+    "example": "川沿い（かわぞい）",
+    "extraReadings": [{"reading": "えん", "example": "沿線（えんせん）"}],
     "version": 1
   },
   {
@@ -10115,6 +10769,7 @@ const questions = [
     "correctAnswer": "臨",
     "reading": "のぞ（む）",
     "example": "臨む（のぞむ）",
+    "extraReadings": [{"reading": "りん", "example": "臨時（りんじ）"}],
     "version": 1
   },
   {
@@ -10126,6 +10781,7 @@ const questions = [
     "correctAnswer": "亡",
     "reading": "な（くなる）",
     "example": "亡くなる（なくなる）",
+    "extraReadings": [{"reading": "ぼう", "example": "死亡（しぼう）"}, {"reading": "もう", "example": "亡者（もうじゃ）"}],
     "version": 1
   },
   {
@@ -10137,6 +10793,7 @@ const questions = [
     "correctAnswer": "拝",
     "reading": "おが（む）",
     "example": "拝む（おがむ）",
+    "extraReadings": [{"reading": "はい", "example": "拝見（はいけん）"}],
     "version": 1
   },
   {
@@ -10146,7 +10803,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["忠", "灰", "翌", "后"],
     "correctAnswer": "忠",
-    "reading": "チュウ",
+    "reading": "ちゅう",
     "example": "忠実（ちゅうじつ）",
     "version": 1
   },
@@ -10157,8 +10814,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["盟", "善", "派", "存"],
     "correctAnswer": "善",
-    "reading": "ゼン",
-    "example": "善悪（ぜんあく）",
+    "reading": "ぜん",
+    "example": "善意（ぜんい）",
     "version": 1
   },
   {
@@ -10168,8 +10825,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["専", "源", "承", "私"],
     "correctAnswer": "承",
-    "reading": "ショウ",
-    "example": "承知（しょうち）",
+    "reading": "うけたまわ（る）",
+    "example": "話を承る（はなしをうけたまわる）",
+    "extraReadings": [{"reading": "しょう", "example": "承知（しょうち）"}],
     "version": 1
   },
   {
@@ -10179,7 +10837,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["鋼", "推", "誌", "延"],
     "correctAnswer": "誌",
-    "reading": "シ",
+    "reading": "し",
     "example": "雑誌（ざっし）",
     "version": 1
   },
@@ -10190,7 +10848,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["誠", "貴", "届", "皇"],
     "correctAnswer": "皇",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "天皇（てんのう）",
     "version": 1
   },
@@ -10201,7 +10859,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["派", "郷", "供", "乳"],
     "correctAnswer": "郷",
-    "reading": "キョウ",
+    "reading": "きょう",
     "example": "故郷（こきょう）",
     "version": 1
   },
@@ -10212,7 +10870,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["探", "貴", "映", "恩"],
     "correctAnswer": "恩",
-    "reading": "オン",
+    "reading": "おん",
     "example": "恩人（おんじん）",
     "version": 1
   },
@@ -10224,7 +10882,8 @@ const questions = [
     "choices": ["朗", "筋", "皇", "沿"],
     "correctAnswer": "朗",
     "reading": "ほが（らか）",
-    "example": "明朗（めいろう）",
+    "example": "朗らか（ほがらか）",
+    "extraReadings": [{"reading": "ろう", "example": "朗読（ろうどく）"}],
     "version": 1
   },
   {
@@ -10235,7 +10894,8 @@ const questions = [
     "choices": ["済", "危", "善", "忘"],
     "correctAnswer": "忘",
     "reading": "わす（れる）",
-    "example": "忘れる（わすれる）",
+    "example": "忘れ物（わすれもの）",
+    "extraReadings": [{"reading": "ぼう", "example": "忘年会（ぼうねんかい）"}],
     "version": 1
   },
   {
@@ -10247,6 +10907,7 @@ const questions = [
     "correctAnswer": "背",
     "reading": "せ",
     "example": "背中（せなか）",
+    "extraReadings": [{"reading": "はい", "example": "背景（はいけい）"}, {"reading": "そむ（く）", "example": "背く（そむく）"}],
     "version": 1
   },
   {
@@ -10256,8 +10917,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["染", "宅", "勤", "著"],
     "correctAnswer": "著",
-    "reading": "いちじる（しい）",
-    "example": "著しい（いちじるしい）",
+    "reading": "ちょ",
+    "example": "著者（ちょしゃ）",
+    "extraReadings": [{"reading": "あらわ（す）", "example": "著す（あらわす）"}, {"reading": "いちじる（しい）", "example": "著しい（いちじるしい）"}],
     "version": 1
   },
   {
@@ -10268,7 +10930,8 @@ const questions = [
     "choices": ["障", "我", "値", "奏"],
     "correctAnswer": "奏",
     "reading": "かな（でる）",
-    "example": "演奏（えんそう）",
+    "example": "奏でる（かなでる）",
+    "extraReadings": [{"reading": "そう", "example": "演奏（えんそう）"}],
     "version": 1
   },
   {
@@ -10278,7 +10941,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["将", "宣", "穀", "権"],
     "correctAnswer": "将",
-    "reading": "ショウ",
+    "reading": "しょう",
     "example": "将来（しょうらい）",
     "version": 1
   },
@@ -10289,7 +10952,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["拝", "磁", "沿", "討"],
     "correctAnswer": "磁",
-    "reading": "ジ",
+    "reading": "じ",
     "example": "磁石（じしゃく）",
     "version": 1
   },
@@ -10301,7 +10964,8 @@ const questions = [
     "choices": ["紅", "片", "仁", "穀"],
     "correctAnswer": "紅",
     "reading": "べに",
-    "example": "紅茶（こうちゃ）",
+    "example": "紅色（べにいろ）",
+    "extraReadings": [{"reading": "こう", "example": "紅茶（こうちゃ）"}, {"reading": "く", "example": "真紅（しんく）"}],
     "version": 1
   },
   {
@@ -10313,6 +10977,7 @@ const questions = [
     "correctAnswer": "勤",
     "reading": "つと（める）",
     "example": "勤める（つとめる）",
+    "extraReadings": [{"reading": "きん", "example": "勤務（きんむ）"}],
     "version": 1
   },
   {
@@ -10324,6 +10989,7 @@ const questions = [
     "correctAnswer": "我",
     "reading": "われ",
     "example": "我々（われわれ）",
+    "extraReadings": [{"reading": "わ", "example": "我が家（わがや）"}],
     "version": 1
   },
   {
@@ -10333,7 +10999,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["肺", "乱", "論", "垂"],
     "correctAnswer": "論",
-    "reading": "ロン",
+    "reading": "ろん",
     "example": "議論（ぎろん）",
     "version": 1
   },
@@ -10344,8 +11010,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["盛", "棒", "装", "蔵"],
     "correctAnswer": "棒",
-    "reading": "ボウ",
-    "example": "棒読み（ぼうよみ）",
+    "reading": "ぼう",
+    "example": "鉄棒（てつぼう）",
     "version": 1
   },
   {
@@ -10355,7 +11021,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["密", "値", "卵", "肺"],
     "correctAnswer": "肺",
-    "reading": "ハイ",
+    "reading": "はい",
     "example": "肺活量（はいかつりょう）",
     "version": 1
   },
@@ -10366,7 +11032,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["忘", "庁", "縮", "砂"],
     "correctAnswer": "庁",
-    "reading": "チョウ",
+    "reading": "ちょう",
     "example": "県庁（けんちょう）",
     "version": 1
   },
@@ -10379,6 +11045,7 @@ const questions = [
     "correctAnswer": "窓",
     "reading": "まど",
     "example": "窓口（まどぐち）",
+    "extraReadings": [{"reading": "そう", "example": "同窓会（どうそうかい）"}],
     "version": 1
   },
   {
@@ -10390,6 +11057,7 @@ const questions = [
     "correctAnswer": "傷",
     "reading": "きず",
     "example": "傷口（きずぐち）",
+    "extraReadings": [{"reading": "しょう", "example": "負傷（ふしょう）"}, {"reading": "いた（む）", "example": "傷む（いたむ）"}],
     "version": 1
   },
   {
@@ -10399,8 +11067,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["専", "忘", "射", "聖"],
     "correctAnswer": "射",
-    "reading": "シャ",
-    "example": "注射（ちゅうしゃ）",
+    "reading": "い（る）",
+    "example": "射る（いる）",
+    "extraReadings": [{"reading": "しゃ", "example": "発射（はっしゃ）"}],
     "version": 1
   },
   {
@@ -10410,8 +11079,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["降", "看", "劇", "創"],
     "correctAnswer": "降",
-    "reading": "お（りる）",
-    "example": "降りる（おりる）",
+    "reading": "ふ（る）",
+    "example": "降る（ふる）",
+    "extraReadings": [{"reading": "こう", "example": "以降（いこう）"}, {"reading": "お（りる）", "example": "降りる（おりる）"}],
     "version": 1
   },
   {
@@ -10423,6 +11093,7 @@ const questions = [
     "correctAnswer": "筋",
     "reading": "すじ",
     "example": "筋肉（きんにく）",
+    "extraReadings": [{"reading": "きん", "example": "筋肉（きんにく）"}],
     "version": 1
   },
   {
@@ -10434,6 +11105,7 @@ const questions = [
     "correctAnswer": "灰",
     "reading": "はい",
     "example": "灰色（はいいろ）",
+    "extraReadings": [{"reading": "かい", "example": "石灰（せっかい）"}],
     "version": 1
   },
   {
@@ -10443,8 +11115,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["后", "枚", "鋼", "除"],
     "correctAnswer": "枚",
-    "reading": "マイ",
-    "example": "一枚（いちまい）",
+    "reading": "まい",
+    "example": "枚数（まいすう）",
     "version": 1
   },
   {
@@ -10454,7 +11126,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["潮", "紅", "俳", "郵"],
     "correctAnswer": "俳",
-    "reading": "ハイ",
+    "reading": "はい",
     "example": "俳句（はいく）",
     "version": 1
   },
@@ -10467,6 +11139,7 @@ const questions = [
     "correctAnswer": "頂",
     "reading": "いただ（く）",
     "example": "頂く（いただく）",
+    "extraReadings": [{"reading": "ちょう", "example": "頂上（ちょうじょう）"}, {"reading": "いただき", "example": "山の頂（やまのいただき）"}],
     "version": 1
   },
   {
@@ -10476,8 +11149,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["疑", "創", "警", "討"],
     "correctAnswer": "創",
-    "reading": "ソウ",
-    "example": "創造（そうぞう）",
+    "reading": "そう",
+    "example": "創作（そうさく）",
     "version": 1
   },
   {
@@ -10487,8 +11160,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["障", "敵", "派", "拝"],
     "correctAnswer": "障",
-    "reading": "さわ（る）",
+    "reading": "しょう",
     "example": "故障（こしょう）",
+    "extraReadings": [{"reading": "さわ（る）", "example": "障る（さわる）"}],
     "version": 1
   },
   {
@@ -10500,6 +11174,7 @@ const questions = [
     "correctAnswer": "捨",
     "reading": "す（てる）",
     "example": "捨てる（すてる）",
+    "extraReadings": [{"reading": "しゃ", "example": "取捨（しゅしゃ）"}],
     "version": 1
   },
   {
@@ -10510,7 +11185,8 @@ const questions = [
     "choices": ["危", "暮", "処", "鋼"],
     "correctAnswer": "鋼",
     "reading": "はがね",
-    "example": "鉄鋼（てっこう）",
+    "example": "鋼（はがね）",
+    "extraReadings": [{"reading": "こう", "example": "鋼鉄（こうてつ）"}],
     "version": 1
   },
   {
@@ -10520,7 +11196,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["系", "熟", "危", "批"],
     "correctAnswer": "系",
-    "reading": "ケイ",
+    "reading": "けい",
     "example": "系統（けいとう）",
     "version": 1
   },
@@ -10531,7 +11207,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["絹", "警", "拡", "宗"],
     "correctAnswer": "拡",
-    "reading": "カク",
+    "reading": "かく",
     "example": "拡大（かくだい）",
     "version": 1
   },
@@ -10542,8 +11218,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["姿", "秘", "党", "幕"],
     "correctAnswer": "幕",
-    "reading": "マク",
-    "example": "開幕（かいまく）",
+    "reading": "まく",
+    "example": "幕開け（まくあけ）",
+    "extraReadings": [{"reading": "ばく", "example": "幕府（ばくふ）"}],
     "version": 1
   },
   {
@@ -10553,7 +11230,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["寸", "班", "敬", "翌"],
     "correctAnswer": "班",
-    "reading": "ハン",
+    "reading": "はん",
     "example": "班長（はんちょう）",
     "version": 1
   },
@@ -10564,7 +11241,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["背", "腸", "射", "骨"],
     "correctAnswer": "腸",
-    "reading": "チョウ",
+    "reading": "ちょう",
     "example": "胃腸（いちょう）",
     "version": 1
   },
@@ -10576,7 +11253,8 @@ const questions = [
     "choices": ["臓", "閣", "供", "装"],
     "correctAnswer": "装",
     "reading": "よそお（う）",
-    "example": "服装（ふくそう）",
+    "example": "装う（よそおう）",
+    "extraReadings": [{"reading": "そう", "example": "服装（ふくそう）"}, {"reading": "しょう", "example": "衣装（いしょう）"}],
     "version": 1
   },
   {
@@ -10588,6 +11266,7 @@ const questions = [
     "correctAnswer": "蒸",
     "reading": "む（す）",
     "example": "蒸す（むす）",
+    "extraReadings": [{"reading": "じょう", "example": "蒸気（じょうき）"}],
     "version": 1
   },
   {
@@ -10597,8 +11276,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["疑", "尺", "勤", "盟"],
     "correctAnswer": "尺",
-    "reading": "シャク",
-    "example": "尺八（しゃくはち）",
+    "reading": "しゃく",
+    "example": "尺度（しゃくど）",
     "version": 1
   },
   {
@@ -10610,6 +11289,7 @@ const questions = [
     "correctAnswer": "刻",
     "reading": "きざ（む）",
     "example": "刻む（きざむ）",
+    "extraReadings": [{"reading": "こく", "example": "時刻（じこく）"}],
     "version": 1
   },
   {
@@ -10620,7 +11300,8 @@ const questions = [
     "choices": ["敬", "郵", "痛", "忘"],
     "correctAnswer": "敬",
     "reading": "うやま（う）",
-    "example": "敬う（うやまう）",
+    "example": "先生を敬う（せんせいをうやまう）",
+    "extraReadings": [{"reading": "けい", "example": "尊敬（そんけい）"}],
     "version": 1
   },
   {
@@ -10632,6 +11313,7 @@ const questions = [
     "correctAnswer": "革",
     "reading": "かわ",
     "example": "革靴（かわぐつ）",
+    "extraReadings": [{"reading": "かく", "example": "改革（かいかく）"}],
     "version": 1
   },
   {
@@ -10641,7 +11323,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["密", "卵", "就", "盟"],
     "correctAnswer": "密",
-    "reading": "ミツ",
+    "reading": "みつ",
     "example": "秘密（ひみつ）",
     "version": 1
   },
@@ -10652,7 +11334,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["晩", "仁", "忠", "将"],
     "correctAnswer": "晩",
-    "reading": "バン",
+    "reading": "ばん",
     "example": "今晩（こんばん）",
     "version": 1
   },
@@ -10665,6 +11347,7 @@ const questions = [
     "correctAnswer": "潮",
     "reading": "しお",
     "example": "潮風（しおかぜ）",
+    "extraReadings": [{"reading": "ちょう", "example": "満潮（まんちょう）"}],
     "version": 1
   },
   {
@@ -10674,7 +11357,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["層", "諸", "磁", "仁"],
     "correctAnswer": "層",
-    "reading": "ソウ",
+    "reading": "そう",
     "example": "地層（ちそう）",
     "version": 1
   },
@@ -10686,7 +11369,8 @@ const questions = [
     "choices": ["幼", "聖", "棒", "針"],
     "correctAnswer": "針",
     "reading": "はり",
-    "example": "時計の針（とけいのはり）",
+    "example": "針金（はりがね）",
+    "extraReadings": [{"reading": "しん", "example": "方針（ほうしん）"}],
     "version": 1
   },
   {
@@ -10698,6 +11382,7 @@ const questions = [
     "correctAnswer": "若",
     "reading": "わか（い）",
     "example": "若い（わかい）",
+    "extraReadings": [{"reading": "じゃく", "example": "若干（じゃっかん）"}],
     "version": 1
   },
   {
@@ -10707,7 +11392,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["洗", "穀", "縦", "臨"],
     "correctAnswer": "穀",
-    "reading": "コク",
+    "reading": "こく",
     "example": "穀物（こくもつ）",
     "version": 1
   },
@@ -10718,7 +11403,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["宣", "系", "警", "胃"],
     "correctAnswer": "警",
-    "reading": "ケイ",
+    "reading": "けい",
     "example": "警察（けいさつ）",
     "version": 1
   },
@@ -10729,7 +11414,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["著", "垂", "閣", "后"],
     "correctAnswer": "閣",
-    "reading": "カク",
+    "reading": "かく",
     "example": "内閣（ないかく）",
     "version": 1
   },
@@ -10740,7 +11425,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["詞", "盟", "探", "批"],
     "correctAnswer": "盟",
-    "reading": "メイ",
+    "reading": "めい",
     "example": "同盟（どうめい）",
     "version": 1
   },
@@ -10752,7 +11437,8 @@ const questions = [
     "choices": ["聖", "否", "裁", "異"],
     "correctAnswer": "否",
     "reading": "いな",
-    "example": "否定（ひてい）",
+    "example": "否（いな）",
+    "extraReadings": [{"reading": "ひ", "example": "否定（ひてい）"}],
     "version": 1
   },
   {
@@ -10762,8 +11448,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["絹", "尺", "盛", "賃"],
     "correctAnswer": "賃",
-    "reading": "チン",
-    "example": "運賃（うんちん）",
+    "reading": "ちん",
+    "example": "家賃（やちん）",
     "version": 1
   },
   {
@@ -10775,6 +11461,7 @@ const questions = [
     "correctAnswer": "操",
     "reading": "あやつ（る）",
     "example": "操る（あやつる）",
+    "extraReadings": [{"reading": "そう", "example": "体操（たいそう）"}],
     "version": 1
   },
   {
@@ -10784,8 +11471,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["承", "恩", "仁", "俳"],
     "correctAnswer": "仁",
-    "reading": "ジン",
+    "reading": "じん",
     "example": "仁義（じんぎ）",
+    "extraReadings": [{"reading": "に", "example": "仁王（におう）"}],
     "version": 1
   },
   {
@@ -10795,7 +11483,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["訳", "寸", "樹", "糖"],
     "correctAnswer": "樹",
-    "reading": "ジュ",
+    "reading": "じゅ",
     "example": "樹木（じゅもく）",
     "version": 1
   },
@@ -10808,6 +11496,7 @@ const questions = [
     "correctAnswer": "骨",
     "reading": "ほね",
     "example": "背骨（せぼね）",
+    "extraReadings": [{"reading": "こつ", "example": "白骨（はっこつ）"}],
     "version": 1
   },
   {
@@ -10817,7 +11506,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["届", "劇", "域", "優"],
     "correctAnswer": "劇",
-    "reading": "ゲキ",
+    "reading": "げき",
     "example": "劇場（げきじょう）",
     "version": 1
   },
@@ -10829,7 +11518,8 @@ const questions = [
     "choices": ["姿", "枚", "割", "銭"],
     "correctAnswer": "割",
     "reading": "わ（る）",
-    "example": "割る（わる）",
+    "example": "割り算（わりざん）",
+    "extraReadings": [{"reading": "かつ", "example": "分割（ぶんかつ）"}],
     "version": 1
   },
   {
@@ -10839,8 +11529,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["腸", "誌", "閉", "模"],
     "correctAnswer": "模",
-    "reading": "モ",
-    "example": "模型（もけい）",
+    "reading": "も",
+    "example": "模様（もよう）",
+    "extraReadings": [{"reading": "ぼ", "example": "規模（きぼ）"}],
     "version": 1
   },
   {
@@ -10850,7 +11541,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["后", "批", "閉", "肺"],
     "correctAnswer": "批",
-    "reading": "ヒ",
+    "reading": "ひ",
     "example": "批判（ひはん）",
     "version": 1
   },
@@ -10863,6 +11554,7 @@ const questions = [
     "correctAnswer": "痛",
     "reading": "いた（い）",
     "example": "痛い（いたい）",
+    "extraReadings": [{"reading": "つう", "example": "痛感（つうかん）"}],
     "version": 1
   },
   {
@@ -10873,7 +11565,8 @@ const questions = [
     "choices": ["覧", "模", "蔵", "存"],
     "correctAnswer": "蔵",
     "reading": "くら",
-    "example": "蔵書（ぞうしょ）",
+    "example": "蔵（くら）",
+    "extraReadings": [{"reading": "ぞう", "example": "冷蔵庫（れいぞうこ）"}],
     "version": 1
   },
   {
@@ -10885,6 +11578,7 @@ const questions = [
     "correctAnswer": "垂",
     "reading": "た（れる）",
     "example": "垂れる（たれる）",
+    "extraReadings": [{"reading": "すい", "example": "垂直（すいちょく）"}, {"reading": "た（らす）", "example": "垂らす（たらす）"}],
     "version": 1
   },
   {
@@ -10896,6 +11590,7 @@ const questions = [
     "correctAnswer": "収",
     "reading": "おさ（める）",
     "example": "収める（おさめる）",
+    "extraReadings": [{"reading": "しゅう", "example": "収入（しゅうにゅう）"}, {"reading": "おさ（まる）", "example": "収まる（おさまる）"}],
     "version": 1
   },
   {
@@ -10907,6 +11602,7 @@ const questions = [
     "correctAnswer": "困",
     "reading": "こま（る）",
     "example": "困る（こまる）",
+    "extraReadings": [{"reading": "こん", "example": "困難（こんなん）"}],
     "version": 1
   },
   {
@@ -10917,7 +11613,8 @@ const questions = [
     "choices": ["創", "激", "宗", "臓"],
     "correctAnswer": "激",
     "reading": "はげ（しい）",
-    "example": "激しい（はげしい）",
+    "example": "激しい雨（はげしいあめ）",
+    "extraReadings": [{"reading": "げき", "example": "激流（げきりゅう）"}],
     "version": 1
   },
   {
@@ -10940,6 +11637,7 @@ const questions = [
     "correctAnswer": "訳",
     "reading": "わけ",
     "example": "言い訳（いいわけ）",
+    "extraReadings": [{"reading": "やく", "example": "通訳（つうやく）"}],
     "version": 1
   },
   {
@@ -10949,8 +11647,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["皇", "宅", "宙", "秘"],
     "correctAnswer": "秘",
-    "reading": "ヒ",
-    "example": "秘密（ひみつ）",
+    "reading": "ひ（める）",
+    "example": "秘める（ひめる）",
+    "extraReadings": [{"reading": "ひ", "example": "秘密（ひみつ）"}],
     "version": 1
   },
   {
@@ -10961,7 +11660,8 @@ const questions = [
     "choices": ["善", "敵", "縦", "班"],
     "correctAnswer": "敵",
     "reading": "かたき",
-    "example": "敵チーム（てきチーム）",
+    "example": "敵（かたき）",
+    "extraReadings": [{"reading": "てき", "example": "敵意（てきい）"}],
     "version": 1
   },
   {
@@ -10971,7 +11671,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["臓", "納", "若", "賃"],
     "correctAnswer": "臓",
-    "reading": "ゾウ",
+    "reading": "ぞう",
     "example": "心臓（しんぞう）",
     "version": 1
   },
@@ -10983,7 +11683,8 @@ const questions = [
     "choices": ["従", "至", "宗", "推"],
     "correctAnswer": "推",
     "reading": "お（す）",
-    "example": "推理（すいり）",
+    "example": "推す（おす）",
+    "extraReadings": [{"reading": "すい", "example": "推理（すいり）"}],
     "version": 1
   },
   {
@@ -10993,8 +11694,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["縮", "諸", "宗", "段"],
     "correctAnswer": "宗",
-    "reading": "シュウ",
+    "reading": "しゅう",
     "example": "宗教（しゅうきょう）",
+    "extraReadings": [{"reading": "そう", "example": "宗家（そうけ）"}],
     "version": 1
   },
   {
@@ -11006,6 +11708,7 @@ const questions = [
     "correctAnswer": "砂",
     "reading": "すな",
     "example": "砂場（すなば）",
+    "extraReadings": [{"reading": "さ", "example": "土砂（どしゃ）"}],
     "version": 1
   },
   {
@@ -11027,7 +11730,8 @@ const questions = [
     "choices": ["存", "干", "勤", "銭"],
     "correctAnswer": "干",
     "reading": "ほ（す）",
-    "example": "干す（ほす）",
+    "example": "干し物（ほしもの）",
+    "extraReadings": [{"reading": "かん", "example": "干潮（かんちょう）"}],
     "version": 1
   },
   {
@@ -11037,7 +11741,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["臨", "尺", "困", "郵"],
     "correctAnswer": "郵",
-    "reading": "ユウ",
+    "reading": "ゆう",
     "example": "郵便（ゆうびん）",
     "version": 1
   },
@@ -11049,7 +11753,8 @@ const questions = [
     "choices": ["密", "系", "骨", "俵"],
     "correctAnswer": "俵",
     "reading": "たわら",
-    "example": "土俵（どひょう）",
+    "example": "米俵（こめだわら）",
+    "extraReadings": [{"reading": "ひょう", "example": "土俵（どひょう）"}],
     "version": 1
   },
   {
@@ -11059,8 +11764,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["胸", "展", "警", "承"],
     "correctAnswer": "展",
-    "reading": "テン",
-    "example": "展覧会（てんらんかい）",
+    "reading": "てん",
+    "example": "展開（てんかい）",
     "version": 1
   },
   {
@@ -11070,8 +11775,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["存", "尊", "誠", "郷"],
     "correctAnswer": "存",
-    "reading": "ソン",
-    "example": "存在（そんざい）",
+    "reading": "ぞん",
+    "example": "存じる（ぞんじる）",
+    "extraReadings": [{"reading": "そん", "example": "存在（そんざい）"}],
     "version": 1
   },
   {
@@ -11081,7 +11787,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["律", "裏", "密", "寸"],
     "correctAnswer": "寸",
-    "reading": "スン",
+    "reading": "すん",
     "example": "寸法（すんぽう）",
     "version": 1
   },
@@ -11093,7 +11799,8 @@ const questions = [
     "choices": ["我", "樹", "就", "憲"],
     "correctAnswer": "就",
     "reading": "つ（く）",
-    "example": "就職（しゅうしょく）",
+    "example": "就く（つく）",
+    "extraReadings": [{"reading": "しゅう", "example": "就職（しゅうしょく）"}],
     "version": 1
   },
   {
@@ -11104,7 +11811,8 @@ const questions = [
     "choices": ["論", "寸", "座", "皇"],
     "correctAnswer": "座",
     "reading": "すわ（る）",
-    "example": "座る（すわる）",
+    "example": "いすに座る（いすにすわる）",
+    "extraReadings": [{"reading": "ざ", "example": "座席（ざせき）"}],
     "version": 1
   },
   {
@@ -11114,7 +11822,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["腹", "券", "秘", "若"],
     "correctAnswer": "券",
-    "reading": "ケン",
+    "reading": "けん",
     "example": "入場券（にゅうじょうけん）",
     "version": 1
   },
@@ -11126,7 +11834,8 @@ const questions = [
     "choices": ["巻", "模", "灰", "域"],
     "correctAnswer": "巻",
     "reading": "ま（く）",
-    "example": "巻物（まきもの）",
+    "example": "巻き物（まきもの）",
+    "extraReadings": [{"reading": "かん", "example": "上巻（じょうかん）"}],
     "version": 1
   },
   {
@@ -11138,6 +11847,7 @@ const questions = [
     "correctAnswer": "優",
     "reading": "やさ（しい）",
     "example": "優しい（やさしい）",
+    "extraReadings": [{"reading": "ゆう", "example": "優勝（ゆうしょう）"}],
     "version": 1
   },
   {
@@ -11149,6 +11859,7 @@ const questions = [
     "correctAnswer": "腹",
     "reading": "はら",
     "example": "腹痛（ふくつう）",
+    "extraReadings": [{"reading": "ふく", "example": "腹痛（ふくつう）"}],
     "version": 1
   },
   {
@@ -11159,7 +11870,8 @@ const questions = [
     "choices": ["看", "討", "穀", "盛"],
     "correctAnswer": "討",
     "reading": "う（つ）",
-    "example": "検討（けんとう）",
+    "example": "討つ（うつ）",
+    "extraReadings": [{"reading": "とう", "example": "討論（とうろん）"}],
     "version": 1
   },
   {
@@ -11171,6 +11883,7 @@ const questions = [
     "correctAnswer": "尊",
     "reading": "とうと（い）",
     "example": "尊い（とうとい）",
+    "extraReadings": [{"reading": "そん", "example": "尊敬（そんけい）"}],
     "version": 1
   },
   {
@@ -11180,8 +11893,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["己", "亡", "呼", "盛"],
     "correctAnswer": "盛",
-    "reading": "さか（ん）",
-    "example": "盛ん（さかん）",
+    "reading": "も（る）",
+    "example": "盛る（もる）",
+    "extraReadings": [{"reading": "せい", "example": "全盛（ぜんせい）"}, {"reading": "さか（ん）", "example": "盛んに（さかんに）"}],
     "version": 1
   },
   {
@@ -11191,8 +11905,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["傷", "創", "衆", "孝"],
     "correctAnswer": "衆",
-    "reading": "シュウ",
-    "example": "大衆（たいしゅう）",
+    "reading": "しゅう",
+    "example": "観衆（かんしゅう）",
     "version": 1
   },
   {
@@ -11203,7 +11917,8 @@ const questions = [
     "choices": ["呼", "厳", "誕", "済"],
     "correctAnswer": "済",
     "reading": "す（む）",
-    "example": "済む（すむ）",
+    "example": "用事が済む（ようじがすむ）",
+    "extraReadings": [{"reading": "さい", "example": "経済（けいざい）"}],
     "version": 1
   },
   {
@@ -11215,6 +11930,7 @@ const questions = [
     "correctAnswer": "絹",
     "reading": "きぬ",
     "example": "絹糸（きぬいと）",
+    "extraReadings": [{"reading": "けん", "example": "純絹（じゅんけん）"}],
     "version": 1
   },
   {
@@ -11224,8 +11940,8 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["策", "映", "看", "討"],
     "correctAnswer": "看",
-    "reading": "カン",
-    "example": "看板（かんばん）",
+    "reading": "かん",
+    "example": "看護（かんご）",
     "version": 1
   },
   {
@@ -11237,6 +11953,7 @@ const questions = [
     "correctAnswer": "預",
     "reading": "あず（ける）",
     "example": "預ける（あずける）",
+    "extraReadings": [{"reading": "よ", "example": "預金（よきん）"}, {"reading": "あず（かる）", "example": "預かる（あずかる）"}],
     "version": 1
   },
   {
@@ -11246,8 +11963,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["呼", "我", "奮", "刻"],
     "correctAnswer": "奮",
-    "reading": "フン",
-    "example": "興奮（こうふん）",
+    "reading": "ふる（う）",
+    "example": "奮う（ふるう）",
+    "extraReadings": [{"reading": "ふん", "example": "奮闘（ふんとう）"}],
     "version": 1
   },
   {
@@ -11257,7 +11975,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["誤", "宇", "党", "危"],
     "correctAnswer": "党",
-    "reading": "トウ",
+    "reading": "とう",
     "example": "政党（せいとう）",
     "version": 1
   },
@@ -11270,6 +11988,7 @@ const questions = [
     "correctAnswer": "退",
     "reading": "しりぞ（く）",
     "example": "退く（しりぞく）",
+    "extraReadings": [{"reading": "たい", "example": "退院（たいいん）"}],
     "version": 1
   },
   {
@@ -11279,7 +11998,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["聖", "処", "頂", "敵"],
     "correctAnswer": "聖",
-    "reading": "セイ",
+    "reading": "せい",
     "example": "聖火（せいか）",
     "version": 1
   },
@@ -11291,7 +12010,8 @@ const questions = [
     "choices": ["値", "系", "従", "灰"],
     "correctAnswer": "従",
     "reading": "したが（う）",
-    "example": "従う（したがう）",
+    "example": "指示に従う（しじにしたがう）",
+    "extraReadings": [{"reading": "じゅう", "example": "従来（じゅうらい）"}],
     "version": 1
   },
   {
@@ -11301,8 +12021,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["党", "論", "臨", "裁"],
     "correctAnswer": "裁",
-    "reading": "さば（く）",
-    "example": "裁判（さいばん）",
+    "reading": "た（つ）",
+    "example": "裁つ（たつ）",
+    "extraReadings": [{"reading": "さい", "example": "裁判（さいばん）"}],
     "version": 1
   },
   {
@@ -11312,8 +12033,9 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["権", "欲", "鋼", "捨"],
     "correctAnswer": "権",
-    "reading": "ケン",
+    "reading": "けん",
     "example": "権利（けんり）",
+    "extraReadings": [{"reading": "ごん", "example": "権現（ごんげん）"}],
     "version": 1
   },
   {
@@ -11323,7 +12045,7 @@ const questions = [
     "questionType": "multipleChoice",
     "choices": ["裁", "簡", "欲", "樹"],
     "correctAnswer": "簡",
-    "reading": "カン",
+    "reading": "かん",
     "example": "簡単（かんたん）",
     "version": 1
   },
@@ -11332,10 +12054,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "丈",
     "questionType": "multipleChoice",
-    "choices": ["丈","欄","盤","込"],
+    "choices": ["丈", "欄", "盤", "込"],
     "correctAnswer": "丈",
-    "reading": "ジョウ",
-    "example": "丈夫（じょうぶ）",
+    "reading": "たけ",
+    "example": "背丈（せたけ）",
+    "extraReadings": [{"reading": "じょう", "example": "丈夫（じょうぶ）"}],
     "version": 1
   },
   {
@@ -11343,10 +12066,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "与",
     "questionType": "multipleChoice",
-    "choices": ["透","与","恋","称"],
+    "choices": ["透", "与", "恋", "称"],
     "correctAnswer": "与",
     "reading": "あた（える）",
     "example": "与える（あたえる）",
+    "extraReadings": [{"reading": "よ", "example": "与党（よとう）"}],
     "version": 1
   },
   {
@@ -11354,10 +12078,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "丘",
     "questionType": "multipleChoice",
-    "choices": ["芋","慮","丘","寝"],
+    "choices": ["芋", "慮", "丘", "寝"],
     "correctAnswer": "丘",
     "reading": "おか",
     "example": "丘（おか）",
+    "extraReadings": [{"reading": "きゅう", "example": "丘陵（きゅうりょう）"}],
     "version": 1
   },
   {
@@ -11365,9 +12090,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "丹",
     "questionType": "multipleChoice",
-    "choices": ["較","丹","僧","与"],
+    "choices": ["較", "丹", "僧", "与"],
     "correctAnswer": "丹",
-    "reading": "タン",
+    "reading": "たん",
     "example": "丹念（たんねん）",
     "version": 1
   },
@@ -11376,10 +12101,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "乾",
     "questionType": "multipleChoice",
-    "choices": ["婚","怒","冒","乾"],
+    "choices": ["婚", "怒", "冒", "乾"],
     "correctAnswer": "乾",
     "reading": "かわ（く）",
     "example": "乾く（かわく）",
+    "extraReadings": [{"reading": "かん", "example": "乾燥（かんそう）"}, {"reading": "かわ（かす）", "example": "乾かす（かわかす）"}],
     "version": 1
   },
   {
@@ -11387,7 +12113,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "互",
     "questionType": "multipleChoice",
-    "choices": ["載","浜","奴","互"],
+    "choices": ["載", "浜", "奴", "互"],
     "correctAnswer": "互",
     "reading": "たが（い）",
     "example": "互い（たがい）",
@@ -11398,9 +12124,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "介",
     "questionType": "multipleChoice",
-    "choices": ["般","屈","慮","介"],
+    "choices": ["般", "屈", "慮", "介"],
     "correctAnswer": "介",
-    "reading": "カイ",
+    "reading": "かい",
     "example": "紹介（しょうかい）",
     "version": 1
   },
@@ -11409,10 +12135,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "仰",
     "questionType": "multipleChoice",
-    "choices": ["恥","惑","仰","到"],
+    "choices": ["恥", "惑", "仰", "到"],
     "correctAnswer": "仰",
     "reading": "あお（ぐ）",
-    "example": "仰ぐ（あおぐ）",
+    "example": "空を仰ぐ（あおぐ）",
+    "extraReadings": [{"reading": "ぎょう", "example": "信仰（しんこう）"}, {"reading": "おお（せ）", "example": "仰せ（おおせ）"}],
     "version": 1
   },
   {
@@ -11420,10 +12147,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "伺",
     "questionType": "multipleChoice",
-    "choices": ["伺","雅","震","劣"],
+    "choices": ["伺", "雅", "震", "劣"],
     "correctAnswer": "伺",
     "reading": "うかが（う）",
-    "example": "伺う（うかがう）",
+    "example": "お話を伺う（うかがう）",
+    "extraReadings": [{"reading": "し", "example": "伺候（しこう）"}],
     "version": 1
   },
   {
@@ -11431,10 +12159,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "依",
     "questionType": "multipleChoice",
-    "choices": ["叫","描","依","乾"],
+    "choices": ["叫", "描", "依", "乾"],
     "correctAnswer": "依",
-    "reading": "イ",
+    "reading": "い",
     "example": "依頼（いらい）",
+    "extraReadings": [{"reading": "え", "example": "帰依（きえ）"}],
     "version": 1
   },
   {
@@ -11442,10 +12171,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "侵",
     "questionType": "multipleChoice",
-    "choices": ["侵","刺","離","腕"],
+    "choices": ["侵", "刺", "離", "腕"],
     "correctAnswer": "侵",
     "reading": "おか（す）",
-    "example": "侵す（おかす）",
+    "example": "国境を侵す（おかす）",
+    "extraReadings": [{"reading": "しん", "example": "侵入（しんにゅう）"}],
     "version": 1
   },
   {
@@ -11453,10 +12183,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "俗",
     "questionType": "multipleChoice",
-    "choices": ["澄","含","跳","俗"],
+    "choices": ["澄", "含", "跳", "俗"],
     "correctAnswer": "俗",
-    "reading": "ゾク",
-    "example": "風俗（ふうぞく）",
+    "reading": "ぞく",
+    "example": "俗語（ぞくご）",
     "version": 1
   },
   {
@@ -11464,10 +12194,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "倒",
     "questionType": "multipleChoice",
-    "choices": ["倒","畳","枯","抱"],
+    "choices": ["倒", "畳", "枯", "抱"],
     "correctAnswer": "倒",
     "reading": "たお（れる）",
-    "example": "倒れる（たおれる）",
+    "example": "木が倒れる（たおれる）",
+    "extraReadings": [{"reading": "とう", "example": "倒産（とうさん）"}, {"reading": "たお（す）", "example": "敵を倒す（たおす）"}],
     "version": 1
   },
   {
@@ -11475,10 +12206,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "偉",
     "questionType": "multipleChoice",
-    "choices": ["惑","歳","偉","載"],
+    "choices": ["惑", "歳", "偉", "載"],
     "correctAnswer": "偉",
     "reading": "えら（い）",
-    "example": "偉い（えらい）",
+    "example": "偉い人（えらいひと）",
+    "extraReadings": [{"reading": "い", "example": "偉大（いだい）"}],
     "version": 1
   },
   {
@@ -11486,10 +12218,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "傍",
     "questionType": "multipleChoice",
-    "choices": ["狂","傍","惑","枯"],
+    "choices": ["狂", "傍", "惑", "枯"],
     "correctAnswer": "傍",
     "reading": "かたわ（ら）",
-    "example": "傍ら（かたわら）",
+    "example": "道の傍ら（かたわら）",
+    "extraReadings": [{"reading": "ぼう", "example": "傍観（ぼうかん）"}],
     "version": 1
   },
   {
@@ -11497,10 +12230,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "傾",
     "questionType": "multipleChoice",
-    "choices": ["傾","詳","匹","闘"],
+    "choices": ["傾", "詳", "匹", "闘"],
     "correctAnswer": "傾",
     "reading": "かたむ（く）",
-    "example": "傾く（かたむく）",
+    "example": "船が傾く（かたむく）",
+    "extraReadings": [{"reading": "けい", "example": "傾向（けいこう）"}, {"reading": "かたむ（ける）", "example": "耳を傾ける（かたむける）"}],
     "version": 1
   },
   {
@@ -11508,9 +12242,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "僧",
     "questionType": "multipleChoice",
-    "choices": ["姓","僧","騒","脚"],
+    "choices": ["姓", "僧", "騒", "脚"],
     "correctAnswer": "僧",
-    "reading": "ソウ",
+    "reading": "そう",
     "example": "僧侶（そうりょ）",
     "version": 1
   },
@@ -11519,9 +12253,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "儀",
     "questionType": "multipleChoice",
-    "choices": ["儀","抵","紫","壱"],
+    "choices": ["儀", "抵", "紫", "壱"],
     "correctAnswer": "儀",
-    "reading": "ギ",
+    "reading": "ぎ",
     "example": "儀式（ぎしき）",
     "version": 1
   },
@@ -11530,10 +12264,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "兼",
     "questionType": "multipleChoice",
-    "choices": ["誉","兼","斜","扱"],
+    "choices": ["誉", "兼", "斜", "扱"],
     "correctAnswer": "兼",
     "reading": "か（ねる）",
-    "example": "兼ねる（かねる）",
+    "example": "趣味と実益を兼ねる（かねる）",
+    "extraReadings": [{"reading": "けん", "example": "兼用（けんよう）"}],
     "version": 1
   },
   {
@@ -11541,10 +12276,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "冒",
     "questionType": "multipleChoice",
-    "choices": ["舟","丹","稿","冒"],
+    "choices": ["舟", "丹", "稿", "冒"],
     "correctAnswer": "冒",
     "reading": "おか（す）",
-    "example": "冒険（ぼうけん）",
+    "example": "危険を冒す（おかす）",
+    "extraReadings": [{"reading": "ぼう", "example": "冒険（ぼうけん）"}],
     "version": 1
   },
   {
@@ -11552,10 +12288,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "凡",
     "questionType": "multipleChoice",
-    "choices": ["凡","浜","威","盾"],
+    "choices": ["凡", "浜", "威", "盾"],
     "correctAnswer": "凡",
-    "reading": "ボン",
+    "reading": "ぼん",
     "example": "平凡（へいぼん）",
+    "extraReadings": [{"reading": "はん", "example": "凡例（はんれい）"}],
     "version": 1
   },
   {
@@ -11563,10 +12300,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "凶",
     "questionType": "multipleChoice",
-    "choices": ["押","恋","凶","悩"],
+    "choices": ["押", "恋", "凶", "悩"],
     "correctAnswer": "凶",
-    "reading": "キョウ",
-    "example": "凶悪（きょうあく）",
+    "reading": "きょう",
+    "example": "凶作（きょうさく）",
     "version": 1
   },
   {
@@ -11574,10 +12311,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "刈",
     "questionType": "multipleChoice",
-    "choices": ["壱","刈","麗","環"],
+    "choices": ["壱", "刈", "麗", "環"],
     "correctAnswer": "刈",
     "reading": "か（る）",
-    "example": "刈る（かる）",
+    "example": "草を刈る（かる）",
     "version": 1
   },
   {
@@ -11585,9 +12322,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "到",
     "questionType": "multipleChoice",
-    "choices": ["到","旨","柄","更"],
+    "choices": ["到", "旨", "柄", "更"],
     "correctAnswer": "到",
-    "reading": "トウ",
+    "reading": "とう",
     "example": "到着（とうちゃく）",
     "version": 1
   },
@@ -11596,10 +12333,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "刺",
     "questionType": "multipleChoice",
-    "choices": ["鋭","刺","扱","涙"],
+    "choices": ["鋭", "刺", "扱", "涙"],
     "correctAnswer": "刺",
     "reading": "さ（す）",
-    "example": "刺す（さす）",
+    "example": "針で刺す（さす）",
+    "extraReadings": [{"reading": "し", "example": "刺激（しげき）"}],
     "version": 1
   },
   {
@@ -11607,9 +12345,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "剣",
     "questionType": "multipleChoice",
-    "choices": ["剣","弐","慎","抗"],
+    "choices": ["剣", "弐", "慎", "抗"],
     "correctAnswer": "剣",
-    "reading": "ケン",
+    "reading": "けん",
     "example": "剣道（けんどう）",
     "version": 1
   },
@@ -11618,10 +12356,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "剤",
     "questionType": "multipleChoice",
-    "choices": ["肩","戯","剤","奥"],
+    "choices": ["肩", "戯", "剤", "奥"],
     "correctAnswer": "剤",
-    "reading": "ザイ",
-    "example": "洗剤（せんざい）",
+    "reading": "ざい",
+    "example": "薬剤（やくざい）",
     "version": 1
   },
   {
@@ -11629,10 +12367,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "劣",
     "questionType": "multipleChoice",
-    "choices": ["甘","劣","況","屈"],
+    "choices": ["甘", "劣", "況", "屈"],
     "correctAnswer": "劣",
     "reading": "おと（る）",
-    "example": "劣る（おとる）",
+    "example": "力が劣る（おとる）",
+    "extraReadings": [{"reading": "れつ", "example": "劣勢（れっせい）"}],
     "version": 1
   },
   {
@@ -11640,10 +12379,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "勧",
     "questionType": "multipleChoice",
-    "choices": ["越","塔","柄","勧"],
+    "choices": ["越", "塔", "柄", "勧"],
     "correctAnswer": "勧",
     "reading": "すす（める）",
-    "example": "勧める（すすめる）",
+    "example": "本を勧める（すすめる）",
+    "extraReadings": [{"reading": "かん", "example": "勧告（かんこく）"}],
     "version": 1
   },
   {
@@ -11651,10 +12391,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "匹",
     "questionType": "multipleChoice",
-    "choices": ["歓","鉛","匹","執"],
+    "choices": ["歓", "鉛", "匹", "執"],
     "correctAnswer": "匹",
     "reading": "ひき",
-    "example": "一匹（いっぴき）",
+    "example": "二匹（にひき）",
+    "extraReadings": [{"reading": "ひっ", "example": "匹敵（ひってき）"}],
     "version": 1
   },
   {
@@ -11662,10 +12403,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "占",
     "questionType": "multipleChoice",
-    "choices": ["敷","占","鮮","狂"],
+    "choices": ["敷", "占", "鮮", "狂"],
     "correctAnswer": "占",
-    "reading": "し（める）",
-    "example": "占める（しめる）",
+    "reading": "うらな（う）",
+    "example": "運勢を占う（うらなう）",
+    "extraReadings": [{"reading": "し（める）", "example": "過半数を占める（しめる）"}, {"reading": "せん", "example": "占領（せんりょう）"}],
     "version": 1
   },
   {
@@ -11673,9 +12415,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "即",
     "questionType": "multipleChoice",
-    "choices": ["即","凶","傾","芋"],
+    "choices": ["即", "凶", "傾", "芋"],
     "correctAnswer": "即",
-    "reading": "ソク",
+    "reading": "そく",
     "example": "即座（そくざ）",
     "version": 1
   },
@@ -11684,10 +12426,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "却",
     "questionType": "multipleChoice",
-    "choices": ["蓄","黙","却","趣"],
+    "choices": ["蓄", "黙", "却", "趣"],
     "correctAnswer": "却",
-    "reading": "キャク",
-    "example": "却下（きゃっか）",
+    "reading": "きゃく",
+    "example": "返却（へんきゃく）",
     "version": 1
   },
   {
@@ -11695,10 +12437,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "及",
     "questionType": "multipleChoice",
-    "choices": ["拠","監","欄","及"],
+    "choices": ["拠", "監", "欄", "及"],
     "correctAnswer": "及",
     "reading": "およ（ぶ）",
-    "example": "及ぶ（およぶ）",
+    "example": "被害が及ぶ（およぶ）",
+    "extraReadings": [{"reading": "きゅう", "example": "普及（ふきゅう）"}, {"reading": "およ（ぼす）", "example": "影響を及ぼす（およぼす）"}],
     "version": 1
   },
   {
@@ -11706,10 +12449,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "叫",
     "questionType": "multipleChoice",
-    "choices": ["秀","抗","雷","叫"],
+    "choices": ["秀", "抗", "雷", "叫"],
     "correctAnswer": "叫",
     "reading": "さけ（ぶ）",
-    "example": "叫ぶ（さけぶ）",
+    "example": "大声で叫ぶ（さけぶ）",
+    "extraReadings": [{"reading": "きょう", "example": "絶叫（ぜっきょう）"}],
     "version": 1
   },
   {
@@ -11717,10 +12461,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "召",
     "questionType": "multipleChoice",
-    "choices": ["丘","剤","召","粒"],
+    "choices": ["丘", "剤", "召", "粒"],
     "correctAnswer": "召",
     "reading": "め（す）",
-    "example": "召集（しょうしゅう）",
+    "example": "お召し上がり（おめしあがり）",
+    "extraReadings": [{"reading": "しょう", "example": "召集（しょうしゅう）"}],
     "version": 1
   },
   {
@@ -11728,10 +12473,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "吐",
     "questionType": "multipleChoice",
-    "choices": ["吐","執","汚","脚"],
+    "choices": ["吐", "執", "汚", "脚"],
     "correctAnswer": "吐",
     "reading": "は（く）",
-    "example": "吐く（はく）",
+    "example": "息を吐く（はく）",
+    "extraReadings": [{"reading": "と", "example": "吐露（とろ）"}],
     "version": 1
   },
   {
@@ -11739,10 +12485,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "含",
     "questionType": "multipleChoice",
-    "choices": ["悩","桃","含","環"],
+    "choices": ["悩", "桃", "含", "環"],
     "correctAnswer": "含",
     "reading": "ふく（む）",
-    "example": "含む（ふくむ）",
+    "example": "水分を含む（ふくむ）",
+    "extraReadings": [{"reading": "がん", "example": "含有（がんゆう）"}, {"reading": "ふく（める）", "example": "税を含める（ふくめる）"}],
     "version": 1
   },
   {
@@ -11750,10 +12497,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "吹",
     "questionType": "multipleChoice",
-    "choices": ["澄","寝","吹","維"],
+    "choices": ["澄", "寝", "吹", "維"],
     "correctAnswer": "吹",
     "reading": "ふ（く）",
-    "example": "吹く（ふく）",
+    "example": "風が吹く（ふく）",
+    "extraReadings": [{"reading": "すい", "example": "吹奏（すいそう）"}],
     "version": 1
   },
   {
@@ -11761,10 +12509,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "咲",
     "questionType": "multipleChoice",
-    "choices": ["慮","咲","抜","朱"],
+    "choices": ["慮", "咲", "抜", "朱"],
     "correctAnswer": "咲",
     "reading": "さ（く）",
-    "example": "咲く（さく）",
+    "example": "花が咲く（さく）",
     "version": 1
   },
   {
@@ -11772,10 +12520,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "唐",
     "questionType": "multipleChoice",
-    "choices": ["唐","粒","烈","狩"],
+    "choices": ["唐", "粒", "烈", "狩"],
     "correctAnswer": "唐",
-    "reading": "から",
-    "example": "唐揚げ（からあげ）",
+    "reading": "とう",
+    "example": "唐辛子（とうがらし）",
+    "extraReadings": [{"reading": "から", "example": "唐揚げ（からあげ）"}],
     "version": 1
   },
   {
@@ -11783,10 +12532,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "嘆",
     "questionType": "multipleChoice",
-    "choices": ["堅","凡","震","嘆"],
+    "choices": ["堅", "凡", "震", "嘆"],
     "correctAnswer": "嘆",
     "reading": "なげ（く）",
-    "example": "嘆く（なげく）",
+    "example": "不運を嘆く（なげく）",
+    "extraReadings": [{"reading": "たん", "example": "感嘆（かんたん）"}],
     "version": 1
   },
   {
@@ -11794,10 +12544,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "噴",
     "questionType": "multipleChoice",
-    "choices": ["僧","噴","占","跳"],
+    "choices": ["僧", "噴", "占", "跳"],
     "correctAnswer": "噴",
     "reading": "ふ（く）",
-    "example": "噴火（ふんか）",
+    "example": "火を噴く（ふく）",
+    "extraReadings": [{"reading": "ふん", "example": "噴火（ふんか）"}],
     "version": 1
   },
   {
@@ -11805,9 +12556,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "圏",
     "questionType": "multipleChoice",
-    "choices": ["獲","獣","勧","圏"],
+    "choices": ["獲", "獣", "勧", "圏"],
     "correctAnswer": "圏",
-    "reading": "ケン",
+    "reading": "けん",
     "example": "首都圏（しゅとけん）",
     "version": 1
   },
@@ -11816,9 +12567,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "坊",
     "questionType": "multipleChoice",
-    "choices": ["賦","濁","坊","狂"],
+    "choices": ["賦", "濁", "坊", "狂"],
     "correctAnswer": "坊",
-    "reading": "ボウ",
+    "reading": "ぼう",
     "example": "坊主（ぼうず）",
     "version": 1
   },
@@ -11827,10 +12578,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "執",
     "questionType": "multipleChoice",
-    "choices": ["儀","執","忙","緯"],
+    "choices": ["儀", "執", "忙", "緯"],
     "correctAnswer": "執",
     "reading": "と（る）",
-    "example": "執筆（しっぴつ）",
+    "example": "事務を執る（とる）",
+    "extraReadings": [{"reading": "しつ", "example": "執筆（しっぴつ）"}, {"reading": "しゅう", "example": "執着（しゅうちゃく）"}],
     "version": 1
   },
   {
@@ -11838,10 +12590,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "堅",
     "questionType": "multipleChoice",
-    "choices": ["弐","堅","抵","旬"],
+    "choices": ["弐", "堅", "抵", "旬"],
     "correctAnswer": "堅",
     "reading": "かた（い）",
-    "example": "堅い（かたい）",
+    "example": "堅い約束（かたいやくそく）",
+    "extraReadings": [{"reading": "けん", "example": "堅実（けんじつ）"}],
     "version": 1
   },
   {
@@ -11849,9 +12602,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "堤",
     "questionType": "multipleChoice",
-    "choices": ["尾","響","堤","震"],
+    "choices": ["尾", "響", "堤", "震"],
     "correctAnswer": "堤",
-    "reading": "つつみ",
+    "reading": "てい",
     "example": "堤防（ていぼう）",
     "version": 1
   },
@@ -11860,10 +12613,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "塔",
     "questionType": "multipleChoice",
-    "choices": ["繰","獲","離","塔"],
+    "choices": ["繰", "獲", "離", "塔"],
     "correctAnswer": "塔",
-    "reading": "トウ",
-    "example": "塔（とう）",
+    "reading": "とう",
+    "example": "鉄塔（てっとう）",
     "version": 1
   },
   {
@@ -11871,10 +12624,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "壁",
     "questionType": "multipleChoice",
-    "choices": ["茂","壁","狂","罰"],
+    "choices": ["茂", "壁", "狂", "罰"],
     "correctAnswer": "壁",
     "reading": "かべ",
     "example": "壁（かべ）",
+    "extraReadings": [{"reading": "へき", "example": "壁画（へきが）"}],
     "version": 1
   },
   {
@@ -11882,10 +12636,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "壊",
     "questionType": "multipleChoice",
-    "choices": ["鮮","薄","壊","慮"],
+    "choices": ["鮮", "薄", "壊", "慮"],
     "correctAnswer": "壊",
     "reading": "こわ（す）",
     "example": "壊す（こわす）",
+    "extraReadings": [{"reading": "かい", "example": "破壊（はかい）"}, {"reading": "こわ（れる）", "example": "壊れる（こわれる）"}],
     "version": 1
   },
   {
@@ -11893,9 +12648,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "壱",
     "questionType": "multipleChoice",
-    "choices": ["戯","敏","遣","壱"],
+    "choices": ["戯", "敏", "遣", "壱"],
     "correctAnswer": "壱",
-    "reading": "イチ",
+    "reading": "いち",
     "example": "壱万円（いちまんえん）",
     "version": 1
   },
@@ -11904,9 +12659,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "奇",
     "questionType": "multipleChoice",
-    "choices": ["軒","烈","砲","奇"],
+    "choices": ["軒", "烈", "砲", "奇"],
     "correctAnswer": "奇",
-    "reading": "キ",
+    "reading": "き",
     "example": "奇妙（きみょう）",
     "version": 1
   },
@@ -11915,10 +12670,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "奥",
     "questionType": "multipleChoice",
-    "choices": ["恵","浜","奥","頼"],
+    "choices": ["恵", "浜", "奥", "頼"],
     "correctAnswer": "奥",
     "reading": "おく",
-    "example": "奥（おく）",
+    "example": "奥深い（おくぶかい）",
+    "extraReadings": [{"reading": "おう", "example": "奥義（おうぎ）"}],
     "version": 1
   },
   {
@@ -11926,9 +12682,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "奴",
     "questionType": "multipleChoice",
-    "choices": ["舟","脱","娘","奴"],
+    "choices": ["舟", "脱", "娘", "奴"],
     "correctAnswer": "奴",
-    "reading": "ド",
+    "reading": "ど",
     "example": "奴隷（どれい）",
     "version": 1
   },
@@ -11937,10 +12693,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "妙",
     "questionType": "multipleChoice",
-    "choices": ["凶","跡","添","妙"],
+    "choices": ["凶", "跡", "添", "妙"],
     "correctAnswer": "妙",
-    "reading": "ミョウ",
-    "example": "妙案（みょうあん）",
+    "reading": "みょう",
+    "example": "奇妙（きみょう）",
     "version": 1
   },
   {
@@ -11948,10 +12704,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "姓",
     "questionType": "multipleChoice",
-    "choices": ["砲","姓","桃","腕"],
+    "choices": ["砲", "姓", "桃", "腕"],
     "correctAnswer": "姓",
-    "reading": "セイ",
+    "reading": "せい",
     "example": "姓名（せいめい）",
+    "extraReadings": [{"reading": "しょう", "example": "百姓（ひゃくしょう）"}],
     "version": 1
   },
   {
@@ -11959,9 +12716,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "威",
     "questionType": "multipleChoice",
-    "choices": ["匹","吹","撃","威"],
+    "choices": ["匹", "吹", "撃", "威"],
     "correctAnswer": "威",
-    "reading": "イ",
+    "reading": "い",
     "example": "威力（いりょく）",
     "version": 1
   },
@@ -11970,7 +12727,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "娘",
     "questionType": "multipleChoice",
-    "choices": ["娘","依","剣","恋"],
+    "choices": ["娘", "依", "剣", "恋"],
     "correctAnswer": "娘",
     "reading": "むすめ",
     "example": "娘（むすめ）",
@@ -11981,9 +12738,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "婚",
     "questionType": "multipleChoice",
-    "choices": ["郎","婚","称","陣"],
+    "choices": ["郎", "婚", "称", "陣"],
     "correctAnswer": "婚",
-    "reading": "コン",
+    "reading": "こん",
     "example": "結婚（けっこん）",
     "version": 1
   },
@@ -11992,10 +12749,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "寂",
     "questionType": "multipleChoice",
-    "choices": ["弾","寂","恒","況"],
+    "choices": ["弾", "寂", "恒", "況"],
     "correctAnswer": "寂",
     "reading": "さび（しい）",
-    "example": "寂しい（さびしい）",
+    "example": "寂しい夜（さびしいよる）",
+    "extraReadings": [{"reading": "じゃく", "example": "静寂（せいじゃく）"}, {"reading": "せき", "example": "寂寞（せきばく）"}],
     "version": 1
   },
   {
@@ -12003,10 +12761,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "寝",
     "questionType": "multipleChoice",
-    "choices": ["浜","盆","及","寝"],
+    "choices": ["浜", "盆", "及", "寝"],
     "correctAnswer": "寝",
     "reading": "ね（る）",
     "example": "寝る（ねる）",
+    "extraReadings": [{"reading": "しん", "example": "寝台（しんだい）"}],
     "version": 1
   },
   {
@@ -12014,10 +12773,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "尋",
     "questionType": "multipleChoice",
-    "choices": ["尋","依","召","儀"],
+    "choices": ["尋", "依", "召", "儀"],
     "correctAnswer": "尋",
     "reading": "たず（ねる）",
-    "example": "尋ねる（たずねる）",
+    "example": "道を尋ねる（たずねる）",
+    "extraReadings": [{"reading": "じん", "example": "尋問（じんもん）"}],
     "version": 1
   },
   {
@@ -12025,10 +12785,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "尽",
     "questionType": "multipleChoice",
-    "choices": ["軒","麗","尽","畳"],
+    "choices": ["軒", "麗", "尽", "畳"],
     "correctAnswer": "尽",
-    "reading": "つ（くす）",
-    "example": "尽くす（つくす）",
+    "reading": "つ（きる）",
+    "example": "力が尽きる（つきる）",
+    "extraReadings": [{"reading": "じん", "example": "尽力（じんりょく）"}, {"reading": "つ（くす）", "example": "全力を尽くす（つくす）"}],
     "version": 1
   },
   {
@@ -12036,10 +12797,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "尾",
     "questionType": "multipleChoice",
-    "choices": ["尾","豪","搬","舞"],
+    "choices": ["尾", "豪", "搬", "舞"],
     "correctAnswer": "尾",
     "reading": "お",
-    "example": "尾（お）",
+    "example": "尾根（おね）",
+    "extraReadings": [{"reading": "び", "example": "尾行（びこう）"}],
     "version": 1
   },
   {
@@ -12047,10 +12809,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "屈",
     "questionType": "multipleChoice",
-    "choices": ["噴","屈","襲","刺"],
+    "choices": ["噴", "屈", "襲", "刺"],
     "correctAnswer": "屈",
-    "reading": "クツ",
-    "example": "屈伸（くっしん）",
+    "reading": "くつ",
+    "example": "退屈（たいくつ）",
     "version": 1
   },
   {
@@ -12058,7 +12820,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "峠",
     "questionType": "multipleChoice",
-    "choices": ["峠","奥","露","浸"],
+    "choices": ["峠", "奥", "露", "浸"],
     "correctAnswer": "峠",
     "reading": "とうげ",
     "example": "峠（とうげ）",
@@ -12069,10 +12831,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "峰",
     "questionType": "multipleChoice",
-    "choices": ["峰","彩","被","尾"],
+    "choices": ["峰", "彩", "被", "尾"],
     "correctAnswer": "峰",
     "reading": "みね",
-    "example": "峰（みね）",
+    "example": "山の峰（やまのみね）",
+    "extraReadings": [{"reading": "ほう", "example": "霊峰（れいほう）"}],
     "version": 1
   },
   {
@@ -12080,10 +12843,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "巡",
     "questionType": "multipleChoice",
-    "choices": ["尽","狭","巡","隷"],
+    "choices": ["尽", "狭", "巡", "隷"],
     "correctAnswer": "巡",
     "reading": "めぐ（る）",
-    "example": "巡る（めぐる）",
+    "example": "各地を巡る（めぐる）",
+    "extraReadings": [{"reading": "じゅん", "example": "巡査（じゅんさ）"}],
     "version": 1
   },
   {
@@ -12091,9 +12855,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "巨",
     "questionType": "multipleChoice",
-    "choices": ["恒","畳","巨","項"],
+    "choices": ["恒", "畳", "巨", "項"],
     "correctAnswer": "巨",
-    "reading": "キョ",
+    "reading": "きょ",
     "example": "巨大（きょだい）",
     "version": 1
   },
@@ -12102,9 +12866,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "帽",
     "questionType": "multipleChoice",
-    "choices": ["透","帽","蓄","彼"],
+    "choices": ["透", "帽", "蓄", "彼"],
     "correctAnswer": "帽",
-    "reading": "ボウ",
+    "reading": "ぼう",
     "example": "帽子（ぼうし）",
     "version": 1
   },
@@ -12113,10 +12877,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "幅",
     "questionType": "multipleChoice",
-    "choices": ["込","娘","幅","渡"],
+    "choices": ["込", "娘", "幅", "渡"],
     "correctAnswer": "幅",
     "reading": "はば",
-    "example": "幅（はば）",
+    "example": "道幅（みちはば）",
+    "extraReadings": [{"reading": "ふく", "example": "大幅（おおはば）"}],
     "version": 1
   },
   {
@@ -12124,10 +12889,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "幾",
     "questionType": "multipleChoice",
-    "choices": ["屈","幾","沢","滴"],
+    "choices": ["屈", "幾", "沢", "滴"],
     "correctAnswer": "幾",
     "reading": "いく",
     "example": "幾つ（いくつ）",
+    "extraReadings": [{"reading": "き", "example": "幾何（きか）"}],
     "version": 1
   },
   {
@@ -12135,10 +12901,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "床",
     "questionType": "multipleChoice",
-    "choices": ["踊","床","塔","髪"],
+    "choices": ["踊", "床", "塔", "髪"],
     "correctAnswer": "床",
     "reading": "ゆか",
-    "example": "床（ゆか）",
+    "example": "床板（ゆかいた）",
+    "extraReadings": [{"reading": "とこ", "example": "床屋（とこや）"}, {"reading": "しょう", "example": "起床（きしょう）"}],
     "version": 1
   },
   {
@@ -12146,10 +12913,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "弐",
     "questionType": "multipleChoice",
-    "choices": ["泊","薄","弐","欄"],
+    "choices": ["泊", "薄", "弐", "欄"],
     "correctAnswer": "弐",
-    "reading": "ニ",
-    "example": "金弐万円（きんにまんえん）",
+    "reading": "に",
+    "example": "弐万円（にまんえん）",
     "version": 1
   },
   {
@@ -12157,10 +12924,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "弾",
     "questionType": "multipleChoice",
-    "choices": ["朽","逃","弾","描"],
+    "choices": ["朽", "逃", "弾", "描"],
     "correctAnswer": "弾",
     "reading": "ひ（く）",
-    "example": "弾く（ひく）",
+    "example": "ピアノを弾く（ひく）",
+    "extraReadings": [{"reading": "だん", "example": "弾丸（だんがん）"}, {"reading": "はず（む）", "example": "話が弾む（はずむ）"}, {"reading": "たま", "example": "弾（たま）"}],
     "version": 1
   },
   {
@@ -12168,10 +12936,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "彩",
     "questionType": "multipleChoice",
-    "choices": ["継","鑑","冒","彩"],
+    "choices": ["継", "鑑", "冒", "彩"],
     "correctAnswer": "彩",
     "reading": "いろど（る）",
-    "example": "彩る（いろどる）",
+    "example": "花で彩る（いろどる）",
+    "extraReadings": [{"reading": "さい", "example": "色彩（しきさい）"}],
     "version": 1
   },
   {
@@ -12179,10 +12948,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "影",
     "questionType": "multipleChoice",
-    "choices": ["狂","傾","影","皆"],
+    "choices": ["狂", "傾", "影", "皆"],
     "correctAnswer": "影",
     "reading": "かげ",
     "example": "影（かげ）",
+    "extraReadings": [{"reading": "えい", "example": "影響（えいきょう）"}],
     "version": 1
   },
   {
@@ -12190,10 +12960,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "彼",
     "questionType": "multipleChoice",
-    "choices": ["彼","畳","歓","互"],
+    "choices": ["彼", "畳", "歓", "互"],
     "correctAnswer": "彼",
     "reading": "かれ",
     "example": "彼（かれ）",
+    "extraReadings": [{"reading": "ひ", "example": "彼我（ひが）"}, {"reading": "かの", "example": "彼の地（かのち）"}],
     "version": 1
   },
   {
@@ -12201,9 +12972,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "征",
     "questionType": "multipleChoice",
-    "choices": ["致","援","姓","征"],
+    "choices": ["致", "援", "姓", "征"],
     "correctAnswer": "征",
-    "reading": "セイ",
+    "reading": "せい",
     "example": "遠征（えんせい）",
     "version": 1
   },
@@ -12212,10 +12983,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "御",
     "questionType": "multipleChoice",
-    "choices": ["御","鑑","汗","偉"],
+    "choices": ["御", "鑑", "汗", "偉"],
     "correctAnswer": "御",
-    "reading": "ゴ",
-    "example": "御飯（ごはん）",
+    "reading": "おん",
+    "example": "御礼（おんれい）",
+    "extraReadings": [{"reading": "ぎょ", "example": "制御（せいぎょ）"}],
     "version": 1
   },
   {
@@ -12223,10 +12995,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "微",
     "questionType": "multipleChoice",
-    "choices": ["沈","微","荒","吐"],
+    "choices": ["沈", "微", "荒", "吐"],
     "correctAnswer": "微",
-    "reading": "ビ",
-    "example": "微妙（びみょう）",
+    "reading": "び",
+    "example": "微笑（びしょう）",
     "version": 1
   },
   {
@@ -12234,9 +13006,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "徴",
     "questionType": "multipleChoice",
-    "choices": ["丘","沼","躍","徴"],
+    "choices": ["丘", "沼", "躍", "徴"],
     "correctAnswer": "徴",
-    "reading": "チョウ",
+    "reading": "ちょう",
     "example": "特徴（とくちょう）",
     "version": 1
   },
@@ -12245,10 +13017,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "忙",
     "questionType": "multipleChoice",
-    "choices": ["浜","繰","忙","狭"],
+    "choices": ["浜", "繰", "忙", "狭"],
     "correctAnswer": "忙",
     "reading": "いそが（しい）",
     "example": "忙しい（いそがしい）",
+    "extraReadings": [{"reading": "ぼう", "example": "多忙（たぼう）"}],
     "version": 1
   },
   {
@@ -12256,10 +13029,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "怒",
     "questionType": "multipleChoice",
-    "choices": ["鮮","驚","頼","怒"],
+    "choices": ["鮮", "驚", "頼", "怒"],
     "correctAnswer": "怒",
     "reading": "おこ（る）",
-    "example": "怒る（おこる）",
+    "example": "先生が怒る（おこる）",
+    "extraReadings": [{"reading": "ど", "example": "怒号（どごう）"}, {"reading": "いか（る）", "example": "怒り（いかり）"}],
     "version": 1
   },
   {
@@ -12267,10 +13041,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "怖",
     "questionType": "multipleChoice",
-    "choices": ["怖","黙","劣","壁"],
+    "choices": ["怖", "黙", "劣", "壁"],
     "correctAnswer": "怖",
     "reading": "こわ（い）",
-    "example": "怖い（こわい）",
+    "example": "怖い話（こわいはなし）",
+    "extraReadings": [{"reading": "ふ", "example": "恐怖（きょうふ）"}],
     "version": 1
   },
   {
@@ -12278,10 +13053,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "恋",
     "questionType": "multipleChoice",
-    "choices": ["縁","扱","触","恋"],
+    "choices": ["縁", "扱", "触", "恋"],
     "correctAnswer": "恋",
     "reading": "こい",
-    "example": "恋（こい）",
+    "example": "恋人（こいびと）",
+    "extraReadings": [{"reading": "れん", "example": "恋愛（れんあい）"}, {"reading": "こ（う）", "example": "故郷を恋う（こう）"}],
     "version": 1
   },
   {
@@ -12289,10 +13065,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "恐",
     "questionType": "multipleChoice",
-    "choices": ["恐","紫","堤","影"],
+    "choices": ["恐", "紫", "堤", "影"],
     "correctAnswer": "恐",
-    "reading": "おそ（ろしい）",
-    "example": "恐ろしい（おそろしい）",
+    "reading": "おそ（れる）",
+    "example": "失敗を恐れる（おそれる）",
+    "extraReadings": [{"reading": "きょう", "example": "恐怖（きょうふ）"}, {"reading": "おそ（ろしい）", "example": "恐ろしい（おそろしい）"}],
     "version": 1
   },
   {
@@ -12300,9 +13077,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "恒",
     "questionType": "multipleChoice",
-    "choices": ["噴","秀","恒","弾"],
+    "choices": ["噴", "秀", "恒", "弾"],
     "correctAnswer": "恒",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "恒例（こうれい）",
     "version": 1
   },
@@ -12311,10 +13088,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "恥",
     "questionType": "multipleChoice",
-    "choices": ["恥","誉","舟","暦"],
+    "choices": ["恥", "誉", "舟", "暦"],
     "correctAnswer": "恥",
     "reading": "は（じる）",
-    "example": "恥じる（はじる）",
+    "example": "過ちを恥じる（はじる）",
+    "extraReadings": [{"reading": "ち", "example": "恥辱（ちじょく）"}, {"reading": "はじ", "example": "恥（はじ）"}],
     "version": 1
   },
   {
@@ -12322,10 +13100,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "恵",
     "questionType": "multipleChoice",
-    "choices": ["征","鎖","恵","盗"],
+    "choices": ["征", "鎖", "恵", "盗"],
     "correctAnswer": "恵",
     "reading": "めぐ（む）",
-    "example": "恵む（めぐむ）",
+    "example": "恵まれる（めぐまれる）",
+    "extraReadings": [{"reading": "けい", "example": "恩恵（おんけい）"}, {"reading": "え", "example": "知恵（ちえ）"}],
     "version": 1
   },
   {
@@ -12333,10 +13112,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "悩",
     "questionType": "multipleChoice",
-    "choices": ["戒","稲","悩","汚"],
+    "choices": ["戒", "稲", "悩", "汚"],
     "correctAnswer": "悩",
     "reading": "なや（む）",
-    "example": "悩む（なやむ）",
+    "example": "進路に悩む（なやむ）",
+    "extraReadings": [{"reading": "のう", "example": "悩殺（のうさつ）"}],
     "version": 1
   },
   {
@@ -12344,10 +13124,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "惑",
     "questionType": "multipleChoice",
-    "choices": ["盗","範","刈","惑"],
+    "choices": ["盗", "範", "刈", "惑"],
     "correctAnswer": "惑",
     "reading": "まど（う）",
-    "example": "惑う（まどう）",
+    "example": "戸惑う（とまどう）",
+    "extraReadings": [{"reading": "わく", "example": "惑星（わくせい）"}],
     "version": 1
   },
   {
@@ -12355,10 +13136,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "惨",
     "questionType": "multipleChoice",
-    "choices": ["斜","惨","皆","躍"],
+    "choices": ["斜", "惨", "皆", "躍"],
     "correctAnswer": "惨",
-    "reading": "サン",
+    "reading": "さん",
     "example": "悲惨（ひさん）",
+    "extraReadings": [{"reading": "みじ（め）", "example": "惨め（みじめ）"}],
     "version": 1
   },
   {
@@ -12366,10 +13148,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "慎",
     "questionType": "multipleChoice",
-    "choices": ["繁","慎","脚","獲"],
+    "choices": ["繁", "慎", "脚", "獲"],
     "correctAnswer": "慎",
     "reading": "つつし（む）",
-    "example": "慎む（つつしむ）",
+    "example": "言葉を慎む（つつしむ）",
+    "extraReadings": [{"reading": "しん", "example": "慎重（しんちょう）"}],
     "version": 1
   },
   {
@@ -12377,9 +13160,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "慢",
     "questionType": "multipleChoice",
-    "choices": ["丈","慢","兼","襲"],
+    "choices": ["丈", "慢", "兼", "襲"],
     "correctAnswer": "慢",
-    "reading": "マン",
+    "reading": "まん",
     "example": "自慢（じまん）",
     "version": 1
   },
@@ -12388,10 +13171,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "慮",
     "questionType": "multipleChoice",
-    "choices": ["慮","依","濃","儀"],
+    "choices": ["慮", "依", "濃", "儀"],
     "correctAnswer": "慮",
-    "reading": "リョ",
-    "example": "遠慮（えんりょ）",
+    "reading": "りょ",
+    "example": "配慮（はいりょ）",
     "version": 1
   },
   {
@@ -12399,9 +13182,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "憶",
     "questionType": "multipleChoice",
-    "choices": ["憶","踊","拍","普"],
+    "choices": ["憶", "踊", "拍", "普"],
     "correctAnswer": "憶",
-    "reading": "オク",
+    "reading": "おく",
     "example": "記憶（きおく）",
     "version": 1
   },
@@ -12410,10 +13193,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "戒",
     "questionType": "multipleChoice",
-    "choices": ["皆","傍","称","戒"],
+    "choices": ["皆", "傍", "称", "戒"],
     "correctAnswer": "戒",
     "reading": "いまし（める）",
-    "example": "戒める（いましめる）",
+    "example": "自分を戒める（いましめる）",
+    "extraReadings": [{"reading": "かい", "example": "警戒（けいかい）"}],
     "version": 1
   },
   {
@@ -12421,10 +13205,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "戯",
     "questionType": "multipleChoice",
-    "choices": ["盆","暦","戯","皆"],
+    "choices": ["盆", "暦", "戯", "皆"],
     "correctAnswer": "戯",
     "reading": "たわむ（れる）",
-    "example": "戯れる（たわむれる）",
+    "example": "犬と戯れる（たわむれる）",
+    "extraReadings": [{"reading": "ぎ", "example": "遊戯（ゆうぎ）"}],
     "version": 1
   },
   {
@@ -12432,10 +13217,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "扇",
     "questionType": "multipleChoice",
-    "choices": ["舗","隷","恐","扇"],
+    "choices": ["舗", "隷", "恐", "扇"],
     "correctAnswer": "扇",
     "reading": "おうぎ",
     "example": "扇（おうぎ）",
+    "extraReadings": [{"reading": "せん", "example": "扇風機（せんぷうき）"}],
     "version": 1
   },
   {
@@ -12443,10 +13229,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "払",
     "questionType": "multipleChoice",
-    "choices": ["維","抵","髪","払"],
+    "choices": ["維", "抵", "髪", "払"],
     "correctAnswer": "払",
     "reading": "はら（う）",
-    "example": "払う（はらう）",
+    "example": "代金を払う（はらう）",
     "version": 1
   },
   {
@@ -12454,7 +13240,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "扱",
     "questionType": "multipleChoice",
-    "choices": ["渡","隣","扱","陣"],
+    "choices": ["渡", "隣", "扱", "陣"],
     "correctAnswer": "扱",
     "reading": "あつか（う）",
     "example": "扱う（あつかう）",
@@ -12465,9 +13251,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "抗",
     "questionType": "multipleChoice",
-    "choices": ["抗","騒","添","鬼"],
+    "choices": ["抗", "騒", "添", "鬼"],
     "correctAnswer": "抗",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "抵抗（ていこう）",
     "version": 1
   },
@@ -12476,10 +13262,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "抜",
     "questionType": "multipleChoice",
-    "choices": ["影","抜","頼","麗"],
+    "choices": ["影", "抜", "頼", "麗"],
     "correctAnswer": "抜",
     "reading": "ぬ（く）",
     "example": "抜く（ぬく）",
+    "extraReadings": [{"reading": "ばつ", "example": "抜群（ばつぐん）"}, {"reading": "ぬ（ける）", "example": "抜ける（ぬける）"}],
     "version": 1
   },
   {
@@ -12487,10 +13274,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "抱",
     "questionType": "multipleChoice",
-    "choices": ["滴","抱","峠","敷"],
+    "choices": ["滴", "抱", "峠", "敷"],
     "correctAnswer": "抱",
     "reading": "だ（く）",
     "example": "抱く（だく）",
+    "extraReadings": [{"reading": "いだ（く）", "example": "抱く（いだく）"}, {"reading": "かか（える）", "example": "抱える（かかえる）"}, {"reading": "ほう", "example": "抱負（ほうふ）"}],
     "version": 1
   },
   {
@@ -12498,9 +13286,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "抵",
     "questionType": "multipleChoice",
-    "choices": ["握","抵","戒","滴"],
+    "choices": ["握", "抵", "戒", "滴"],
     "correctAnswer": "抵",
-    "reading": "テイ",
+    "reading": "てい",
     "example": "抵抗（ていこう）",
     "version": 1
   },
@@ -12509,10 +13297,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "押",
     "questionType": "multipleChoice",
-    "choices": ["鎖","煮","紫","押"],
+    "choices": ["鎖", "煮", "紫", "押"],
     "correctAnswer": "押",
     "reading": "お（す）",
     "example": "押す（おす）",
+    "extraReadings": [{"reading": "おう", "example": "押収（おうしゅう）"}, {"reading": "お（さえる）", "example": "押さえる（おさえる）"}],
     "version": 1
   },
   {
@@ -12520,10 +13309,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "拍",
     "questionType": "multipleChoice",
-    "choices": ["桃","拍","稿","殖"],
+    "choices": ["桃", "拍", "稿", "殖"],
     "correctAnswer": "拍",
-    "reading": "ハク",
+    "reading": "はく",
     "example": "拍手（はくしゅ）",
+    "extraReadings": [{"reading": "ひょう", "example": "拍子（ひょうし）"}],
     "version": 1
   },
   {
@@ -12531,9 +13321,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "拓",
     "questionType": "multipleChoice",
-    "choices": ["拓","暇","奥","与"],
+    "choices": ["拓", "暇", "奥", "与"],
     "correctAnswer": "拓",
-    "reading": "タク",
+    "reading": "たく",
     "example": "開拓（かいたく）",
     "version": 1
   },
@@ -12542,10 +13332,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "拠",
     "questionType": "multipleChoice",
-    "choices": ["拠","紋","互","咲"],
+    "choices": ["拠", "紋", "互", "咲"],
     "correctAnswer": "拠",
-    "reading": "キョ",
+    "reading": "きょ",
     "example": "根拠（こんきょ）",
+    "extraReadings": [{"reading": "こ", "example": "証拠（しょうこ）"}],
     "version": 1
   },
   {
@@ -12553,10 +13344,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "振",
     "questionType": "multipleChoice",
-    "choices": ["脚","嘆","振","肪"],
+    "choices": ["脚", "嘆", "振", "肪"],
     "correctAnswer": "振",
     "reading": "ふ（る）",
     "example": "振る（ふる）",
+    "extraReadings": [{"reading": "しん", "example": "振動（しんどう）"}],
     "version": 1
   },
   {
@@ -12564,10 +13356,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "捕",
     "questionType": "multipleChoice",
-    "choices": ["捕","抵","砲","拓"],
+    "choices": ["捕", "抵", "砲", "拓"],
     "correctAnswer": "捕",
     "reading": "と（らえる）",
     "example": "捕らえる（とらえる）",
+    "extraReadings": [{"reading": "つか（まる）", "example": "捕まる（つかまる）"}, {"reading": "ほ", "example": "捕獲（ほかく）"}, {"reading": "と（る）", "example": "捕る（とる）"}],
     "version": 1
   },
   {
@@ -12575,10 +13368,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "掘",
     "questionType": "multipleChoice",
-    "choices": ["拍","寝","郎","掘"],
+    "choices": ["拍", "寝", "郎", "掘"],
     "correctAnswer": "掘",
     "reading": "ほ（る）",
     "example": "掘る（ほる）",
+    "extraReadings": [{"reading": "くつ", "example": "発掘（はっくつ）"}],
     "version": 1
   },
   {
@@ -12586,10 +13380,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "描",
     "questionType": "multipleChoice",
-    "choices": ["絡","奥","瞬","描"],
+    "choices": ["絡", "奥", "瞬", "描"],
     "correctAnswer": "描",
     "reading": "えが（く）",
     "example": "描く（えがく）",
+    "extraReadings": [{"reading": "びょう", "example": "描写（びょうしゃ）"}, {"reading": "か（く）", "example": "描く（かく）"}],
     "version": 1
   },
   {
@@ -12597,10 +13392,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "握",
     "questionType": "multipleChoice",
-    "choices": ["壁","握","摘","鑑"],
+    "choices": ["壁", "握", "摘", "鑑"],
     "correctAnswer": "握",
     "reading": "にぎ（る）",
     "example": "握る（にぎる）",
+    "extraReadings": [{"reading": "あく", "example": "握手（あくしゅ）"}],
     "version": 1
   },
   {
@@ -12608,9 +13404,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "援",
     "questionType": "multipleChoice",
-    "choices": ["迫","援","勧","煙"],
+    "choices": ["迫", "援", "勧", "煙"],
     "correctAnswer": "援",
-    "reading": "エン",
+    "reading": "えん",
     "example": "応援（おうえん）",
     "version": 1
   },
@@ -12619,9 +13415,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "搬",
     "questionType": "multipleChoice",
-    "choices": ["緯","濃","濁","搬"],
+    "choices": ["緯", "濃", "濁", "搬"],
     "correctAnswer": "搬",
-    "reading": "ハン",
+    "reading": "はん",
     "example": "運搬（うんぱん）",
     "version": 1
   },
@@ -12630,10 +13426,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "摘",
     "questionType": "multipleChoice",
-    "choices": ["摘","巨","隣","敷"],
+    "choices": ["摘", "巨", "隣", "敷"],
     "correctAnswer": "摘",
     "reading": "つ（む）",
     "example": "摘む（つむ）",
+    "extraReadings": [{"reading": "てき", "example": "指摘（してき）"}],
     "version": 1
   },
   {
@@ -12641,10 +13438,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "撃",
     "questionType": "multipleChoice",
-    "choices": ["払","援","撃","抱"],
+    "choices": ["払", "援", "撃", "抱"],
     "correctAnswer": "撃",
     "reading": "う（つ）",
     "example": "撃つ（うつ）",
+    "extraReadings": [{"reading": "げき", "example": "攻撃（こうげき）"}],
     "version": 1
   },
   {
@@ -12652,10 +13450,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "攻",
     "questionType": "multipleChoice",
-    "choices": ["弐","盆","攻","浸"],
+    "choices": ["弐", "盆", "攻", "浸"],
     "correctAnswer": "攻",
     "reading": "せ（める）",
     "example": "攻める（せめる）",
+    "extraReadings": [{"reading": "こう", "example": "攻撃（こうげき）"}],
     "version": 1
   },
   {
@@ -12663,9 +13462,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "敏",
     "questionType": "multipleChoice",
-    "choices": ["敏","巡","暇","齢"],
+    "choices": ["敏", "巡", "暇", "齢"],
     "correctAnswer": "敏",
-    "reading": "ビン",
+    "reading": "びん",
     "example": "敏感（びんかん）",
     "version": 1
   },
@@ -12674,10 +13473,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "敷",
     "questionType": "multipleChoice",
-    "choices": ["押","傍","吹","敷"],
+    "choices": ["押", "傍", "吹", "敷"],
     "correctAnswer": "敷",
     "reading": "し（く）",
     "example": "敷く（しく）",
+    "extraReadings": [{"reading": "ふ", "example": "敷設（ふせつ）"}],
     "version": 1
   },
   {
@@ -12685,10 +13485,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "斜",
     "questionType": "multipleChoice",
-    "choices": ["摘","膚","斜","齢"],
+    "choices": ["摘", "膚", "斜", "齢"],
     "correctAnswer": "斜",
     "reading": "なな（め）",
     "example": "斜め（ななめ）",
+    "extraReadings": [{"reading": "しゃ", "example": "斜面（しゃめん）"}],
     "version": 1
   },
   {
@@ -12696,10 +13497,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "旨",
     "questionType": "multipleChoice",
-    "choices": ["療","旨","微","恵"],
+    "choices": ["療", "旨", "微", "恵"],
     "correctAnswer": "旨",
     "reading": "むね",
     "example": "要旨（ようし）",
+    "extraReadings": [{"reading": "し", "example": "要旨（ようし）"}, {"reading": "うま（い）", "example": "旨い（うまい）"}],
     "version": 1
   },
   {
@@ -12707,10 +13509,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "旬",
     "questionType": "multipleChoice",
-    "choices": ["倒","吐","霧","旬"],
+    "choices": ["倒", "吐", "霧", "旬"],
     "correctAnswer": "旬",
-    "reading": "シュン",
-    "example": "旬（しゅん）",
+    "reading": "しゅん",
+    "example": "旬の野菜（しゅんのやさい）",
+    "extraReadings": [{"reading": "じゅん", "example": "上旬（じょうじゅん）"}],
     "version": 1
   },
   {
@@ -12718,9 +13521,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "是",
     "questionType": "multipleChoice",
-    "choices": ["娘","遣","祈","是"],
+    "choices": ["娘", "遣", "祈", "是"],
     "correctAnswer": "是",
-    "reading": "ゼ",
+    "reading": "ぜ",
     "example": "是非（ぜひ）",
     "version": 1
   },
@@ -12729,9 +13532,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "普",
     "questionType": "multipleChoice",
-    "choices": ["普","況","歳","更"],
+    "choices": ["普", "況", "歳", "更"],
     "correctAnswer": "普",
-    "reading": "フ",
+    "reading": "ふ",
     "example": "普通（ふつう）",
     "version": 1
   },
@@ -12740,10 +13543,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "暇",
     "questionType": "multipleChoice",
-    "choices": ["旨","況","互","暇"],
+    "choices": ["旨", "況", "互", "暇"],
     "correctAnswer": "暇",
     "reading": "ひま",
     "example": "暇（ひま）",
+    "extraReadings": [{"reading": "か", "example": "休暇（きゅうか）"}],
     "version": 1
   },
   {
@@ -12751,10 +13555,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "暦",
     "questionType": "multipleChoice",
-    "choices": ["吹","婚","翼","暦"],
+    "choices": ["吹", "婚", "翼", "暦"],
     "correctAnswer": "暦",
     "reading": "こよみ",
     "example": "暦（こよみ）",
+    "extraReadings": [{"reading": "れき", "example": "西暦（せいれき）"}],
     "version": 1
   },
   {
@@ -12762,10 +13567,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "曇",
     "questionType": "multipleChoice",
-    "choices": ["彩","釈","曇","脂"],
+    "choices": ["彩", "釈", "曇", "脂"],
     "correctAnswer": "曇",
     "reading": "くも（る）",
     "example": "曇る（くもる）",
+    "extraReadings": [{"reading": "どん", "example": "曇天（どんてん）"}],
     "version": 1
   },
   {
@@ -12773,10 +13579,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "更",
     "questionType": "multipleChoice",
-    "choices": ["載","陣","丈","更"],
+    "choices": ["載", "陣", "丈", "更"],
     "correctAnswer": "更",
     "reading": "さら",
     "example": "更に（さらに）",
+    "extraReadings": [{"reading": "こう", "example": "更新（こうしん）"}, {"reading": "ふ（ける）", "example": "夜が更ける（よるがふける）"}],
     "version": 1
   },
   {
@@ -12784,10 +13591,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "替",
     "questionType": "multipleChoice",
-    "choices": ["替","響","丹","網"],
+    "choices": ["替", "響", "丹", "網"],
     "correctAnswer": "替",
     "reading": "か（える）",
     "example": "替える（かえる）",
+    "extraReadings": [{"reading": "たい", "example": "交替（こうたい）"}, {"reading": "か（わる）", "example": "替わる（かわる）"}],
     "version": 1
   },
   {
@@ -12795,9 +13603,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "朱",
     "questionType": "multipleChoice",
-    "choices": ["乾","謡","罰","朱"],
+    "choices": ["乾", "謡", "罰", "朱"],
     "correctAnswer": "朱",
-    "reading": "シュ",
+    "reading": "しゅ",
     "example": "朱色（しゅいろ）",
     "version": 1
   },
@@ -12806,10 +13614,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "朽",
     "questionType": "multipleChoice",
-    "choices": ["握","到","怖","朽"],
+    "choices": ["握", "到", "怖", "朽"],
     "correctAnswer": "朽",
     "reading": "く（ちる）",
     "example": "朽ちる（くちる）",
+    "extraReadings": [{"reading": "きゅう", "example": "不朽（ふきゅう）"}],
     "version": 1
   },
   {
@@ -12817,10 +13626,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "杯",
     "questionType": "multipleChoice",
-    "choices": ["依","杯","越","尽"],
+    "choices": ["依", "杯", "越", "尽"],
     "correctAnswer": "杯",
-    "reading": "さかずき",
-    "example": "一杯（いっぱい）",
+    "reading": "はい",
+    "example": "乾杯（かんぱい）",
+    "extraReadings": [{"reading": "さかずき", "example": "杯（さかずき）"}],
     "version": 1
   },
   {
@@ -12828,10 +13638,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "枯",
     "questionType": "multipleChoice",
-    "choices": ["薄","枯","霧","響"],
+    "choices": ["薄", "枯", "霧", "響"],
     "correctAnswer": "枯",
     "reading": "か（れる）",
     "example": "枯れる（かれる）",
+    "extraReadings": [{"reading": "こ", "example": "栄枯（えいこ）"}, {"reading": "か（らす）", "example": "枯らす（からす）"}],
     "version": 1
   },
   {
@@ -12839,10 +13650,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "柄",
     "questionType": "multipleChoice",
-    "choices": ["凡","柄","端","爆"],
+    "choices": ["凡", "柄", "端", "爆"],
     "correctAnswer": "柄",
     "reading": "がら",
-    "example": "柄（がら）",
+    "example": "絵柄（えがら）",
+    "extraReadings": [{"reading": "え", "example": "柄（え）"}, {"reading": "へい", "example": "横柄（おうへい）"}],
     "version": 1
   },
   {
@@ -12850,10 +13662,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "柔",
     "questionType": "multipleChoice",
-    "choices": ["冒","柔","郎","繰"],
+    "choices": ["冒", "柔", "郎", "繰"],
     "correctAnswer": "柔",
     "reading": "やわ（らか）",
     "example": "柔らかい（やわらかい）",
+    "extraReadings": [{"reading": "じゅう", "example": "柔道（じゅうどう）"}, {"reading": "にゅう", "example": "柔和（にゅうわ）"}, {"reading": "やわ（らかい）", "example": "柔らかい（やわらかい）"}],
     "version": 1
   },
   {
@@ -12861,10 +13674,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "桃",
     "questionType": "multipleChoice",
-    "choices": ["朱","即","巨","桃"],
+    "choices": ["朱", "即", "巨", "桃"],
     "correctAnswer": "桃",
     "reading": "もも",
     "example": "桃（もも）",
+    "extraReadings": [{"reading": "とう", "example": "桃源郷（とうげんきょう）"}],
     "version": 1
   },
   {
@@ -12872,10 +13686,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "欄",
     "questionType": "multipleChoice",
-    "choices": ["狭","眠","欄","瞬"],
+    "choices": ["狭", "眠", "欄", "瞬"],
     "correctAnswer": "欄",
-    "reading": "ラン",
-    "example": "欄（らん）",
+    "reading": "らん",
+    "example": "空欄（くうらん）",
     "version": 1
   },
   {
@@ -12883,9 +13697,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "歓",
     "questionType": "multipleChoice",
-    "choices": ["朽","歓","膚","刺"],
+    "choices": ["朽", "歓", "膚", "刺"],
     "correctAnswer": "歓",
-    "reading": "カン",
+    "reading": "かん",
     "example": "歓迎（かんげい）",
     "version": 1
   },
@@ -12894,10 +13708,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "歳",
     "questionType": "multipleChoice",
-    "choices": ["込","況","遣","歳"],
+    "choices": ["込", "況", "遣", "歳"],
     "correctAnswer": "歳",
-    "reading": "サイ",
-    "example": "歳月（さいげつ）",
+    "reading": "さい",
+    "example": "二歳（にさい）",
+    "extraReadings": [{"reading": "せい", "example": "歳暮（せいぼ）"}],
     "version": 1
   },
   {
@@ -12905,10 +13720,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "殖",
     "questionType": "multipleChoice",
-    "choices": ["旨","紋","婚","殖"],
+    "choices": ["旨", "紋", "婚", "殖"],
     "correctAnswer": "殖",
     "reading": "ふ（える）",
     "example": "殖える（ふえる）",
+    "extraReadings": [{"reading": "しょく", "example": "繁殖（はんしょく）"}, {"reading": "ふ（やす）", "example": "殖やす（ふやす）"}],
     "version": 1
   },
   {
@@ -12916,10 +13732,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "殿",
     "questionType": "multipleChoice",
-    "choices": ["殿","雄","匹","鑑"],
+    "choices": ["殿", "雄", "匹", "鑑"],
     "correctAnswer": "殿",
     "reading": "との",
     "example": "殿様（とのさま）",
+    "extraReadings": [{"reading": "でん", "example": "宮殿（きゅうでん）"}],
     "version": 1
   },
   {
@@ -12927,10 +13744,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "汗",
     "questionType": "multipleChoice",
-    "choices": ["浸","汗","豪","抵"],
+    "choices": ["浸", "汗", "豪", "抵"],
     "correctAnswer": "汗",
     "reading": "あせ",
     "example": "汗（あせ）",
+    "extraReadings": [{"reading": "かん", "example": "発汗（はっかん）"}],
     "version": 1
   },
   {
@@ -12938,10 +13756,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "汚",
     "questionType": "multipleChoice",
-    "choices": ["汚","舟","兼","霧"],
+    "choices": ["汚", "舟", "兼", "霧"],
     "correctAnswer": "汚",
     "reading": "きたな（い）",
     "example": "汚い（きたない）",
+    "extraReadings": [{"reading": "お", "example": "汚染（おせん）"}, {"reading": "よご（れる）", "example": "汚れる（よごれる）"}, {"reading": "よご（す）", "example": "汚す（よごす）"}],
     "version": 1
   },
   {
@@ -12949,10 +13768,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "沈",
     "questionType": "multipleChoice",
-    "choices": ["忙","沈","尽","描"],
+    "choices": ["忙", "沈", "尽", "描"],
     "correctAnswer": "沈",
     "reading": "しず（む）",
     "example": "沈む（しずむ）",
+    "extraReadings": [{"reading": "ちん", "example": "沈黙（ちんもく）"}, {"reading": "しず（める）", "example": "沈める（しずめる）"}],
     "version": 1
   },
   {
@@ -12960,10 +13780,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "沢",
     "questionType": "multipleChoice",
-    "choices": ["沢","抜","歓","範"],
+    "choices": ["沢", "抜", "歓", "範"],
     "correctAnswer": "沢",
     "reading": "さわ",
     "example": "沢（さわ）",
+    "extraReadings": [{"reading": "たく", "example": "沢山（たくさん）"}],
     "version": 1
   },
   {
@@ -12971,7 +13792,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "沼",
     "questionType": "multipleChoice",
-    "choices": ["遅","絡","沼","舟"],
+    "choices": ["遅", "絡", "沼", "舟"],
     "correctAnswer": "沼",
     "reading": "ぬま",
     "example": "沼（ぬま）",
@@ -12982,9 +13803,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "況",
     "questionType": "multipleChoice",
-    "choices": ["暇","況","鬼","惑"],
+    "choices": ["暇", "況", "鬼", "惑"],
     "correctAnswer": "況",
-    "reading": "キョウ",
+    "reading": "きょう",
     "example": "状況（じょうきょう）",
     "version": 1
   },
@@ -12993,10 +13814,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "泊",
     "questionType": "multipleChoice",
-    "choices": ["拠","範","娘","泊"],
+    "choices": ["拠", "範", "娘", "泊"],
     "correctAnswer": "泊",
     "reading": "と（まる）",
     "example": "泊まる（とまる）",
+    "extraReadings": [{"reading": "はく", "example": "宿泊（しゅくはく）"}, {"reading": "と（める）", "example": "泊める（とめる）"}],
     "version": 1
   },
   {
@@ -13004,10 +13826,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "浜",
     "questionType": "multipleChoice",
-    "choices": ["遅","浜","闘","盆"],
+    "choices": ["遅", "浜", "闘", "盆"],
     "correctAnswer": "浜",
     "reading": "はま",
-    "example": "浜（はま）",
+    "example": "浜辺（はまべ）",
     "version": 1
   },
   {
@@ -13015,10 +13837,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "浮",
     "questionType": "multipleChoice",
-    "choices": ["眠","儀","浮","彼"],
+    "choices": ["眠", "儀", "浮", "彼"],
     "correctAnswer": "浮",
     "reading": "う（く）",
     "example": "浮く（うく）",
+    "extraReadings": [{"reading": "ふ", "example": "浮上（ふじょう）"}, {"reading": "う（かぶ）", "example": "浮かぶ（うかぶ）"}, {"reading": "う（かべる）", "example": "浮かべる（うかべる）"}],
     "version": 1
   },
   {
@@ -13026,10 +13849,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "浸",
     "questionType": "multipleChoice",
-    "choices": ["浸","奇","奴","弐"],
+    "choices": ["浸", "奇", "奴", "弐"],
     "correctAnswer": "浸",
     "reading": "ひた（す）",
     "example": "浸す（ひたす）",
+    "extraReadings": [{"reading": "しん", "example": "浸水（しんすい）"}, {"reading": "ひた（る）", "example": "浸る（ひたる）"}],
     "version": 1
   },
   {
@@ -13037,10 +13861,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "涙",
     "questionType": "multipleChoice",
-    "choices": ["涙","腐","贈","迫"],
+    "choices": ["涙", "腐", "贈", "迫"],
     "correctAnswer": "涙",
     "reading": "なみだ",
     "example": "涙（なみだ）",
+    "extraReadings": [{"reading": "るい", "example": "感涙（かんるい）"}],
     "version": 1
   },
   {
@@ -13048,10 +13873,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "淡",
     "questionType": "multipleChoice",
-    "choices": ["儀","征","膚","淡"],
+    "choices": ["儀", "征", "膚", "淡"],
     "correctAnswer": "淡",
     "reading": "あわ（い）",
     "example": "淡い（あわい）",
+    "extraReadings": [{"reading": "たん", "example": "淡水（たんすい）"}],
     "version": 1
   },
   {
@@ -13059,10 +13885,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "添",
     "questionType": "multipleChoice",
-    "choices": ["彼","添","突","砲"],
+    "choices": ["彼", "添", "突", "砲"],
     "correctAnswer": "添",
     "reading": "そ（える）",
     "example": "添える（そえる）",
+    "extraReadings": [{"reading": "てん", "example": "添加（てんか）"}, {"reading": "そ（う）", "example": "添う（そう）"}],
     "version": 1
   },
   {
@@ -13070,10 +13897,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "渡",
     "questionType": "multipleChoice",
-    "choices": ["称","溶","秀","渡"],
+    "choices": ["称", "溶", "秀", "渡"],
     "correctAnswer": "渡",
     "reading": "わた（る）",
     "example": "渡る（わたる）",
+    "extraReadings": [{"reading": "と", "example": "渡航（とこう）"}, {"reading": "わた（す）", "example": "渡す（わたす）"}],
     "version": 1
   },
   {
@@ -13081,10 +13909,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "溶",
     "questionType": "multipleChoice",
-    "choices": ["剤","跡","溶","遣"],
+    "choices": ["剤", "跡", "溶", "遣"],
     "correctAnswer": "溶",
     "reading": "と（ける）",
     "example": "溶ける（とける）",
+    "extraReadings": [{"reading": "よう", "example": "溶液（ようえき）"}, {"reading": "と（かす）", "example": "溶かす（とかす）"}, {"reading": "と（く）", "example": "溶く（とく）"}],
     "version": 1
   },
   {
@@ -13092,10 +13921,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "滴",
     "questionType": "multipleChoice",
-    "choices": ["較","吐","滴","敷"],
+    "choices": ["較", "吐", "滴", "敷"],
     "correctAnswer": "滴",
     "reading": "しずく",
     "example": "滴（しずく）",
+    "extraReadings": [{"reading": "てき", "example": "水滴（すいてき）"}, {"reading": "したた（る）", "example": "滴る（したたる）"}],
     "version": 1
   },
   {
@@ -13103,9 +13933,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "漫",
     "questionType": "multipleChoice",
-    "choices": ["描","漫","倒","煙"],
+    "choices": ["描", "漫", "倒", "煙"],
     "correctAnswer": "漫",
-    "reading": "マン",
+    "reading": "まん",
     "example": "漫画（まんが）",
     "version": 1
   },
@@ -13114,10 +13944,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "澄",
     "questionType": "multipleChoice",
-    "choices": ["為","澄","寂","玄"],
+    "choices": ["為", "澄", "寂", "玄"],
     "correctAnswer": "澄",
     "reading": "す（む）",
     "example": "澄む（すむ）",
+    "extraReadings": [{"reading": "す（ます）", "example": "澄ます（すます）"}],
     "version": 1
   },
   {
@@ -13125,10 +13956,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "濁",
     "questionType": "multipleChoice",
-    "choices": ["鼓","絡","濁","恥"],
+    "choices": ["鼓", "絡", "濁", "恥"],
     "correctAnswer": "濁",
     "reading": "にご（る）",
     "example": "濁る（にごる）",
+    "extraReadings": [{"reading": "だく", "example": "濁流（だくりゅう）"}, {"reading": "にご（す）", "example": "濁す（にごす）"}],
     "version": 1
   },
   {
@@ -13136,10 +13968,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "濃",
     "questionType": "multipleChoice",
-    "choices": ["巨","濃","鋭","麗"],
+    "choices": ["巨", "濃", "鋭", "麗"],
     "correctAnswer": "濃",
     "reading": "こ（い）",
     "example": "濃い（こい）",
+    "extraReadings": [{"reading": "のう", "example": "濃度（のうど）"}],
     "version": 1
   },
   {
@@ -13147,10 +13980,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "為",
     "questionType": "multipleChoice",
-    "choices": ["為","奴","畳","殿"],
+    "choices": ["為", "奴", "畳", "殿"],
     "correctAnswer": "為",
     "reading": "ため",
-    "example": "為に（ために）",
+    "example": "人の為（ひとのため）",
+    "extraReadings": [{"reading": "い", "example": "行為（こうい）"}],
     "version": 1
   },
   {
@@ -13158,9 +13992,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "烈",
     "questionType": "multipleChoice",
-    "choices": ["烈","浜","絡","透"],
+    "choices": ["烈", "浜", "絡", "透"],
     "correctAnswer": "烈",
-    "reading": "レツ",
+    "reading": "れつ",
     "example": "強烈（きょうれつ）",
     "version": 1
   },
@@ -13169,10 +14003,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "煙",
     "questionType": "multipleChoice",
-    "choices": ["嘆","煙","抗","砲"],
+    "choices": ["嘆", "煙", "抗", "砲"],
     "correctAnswer": "煙",
     "reading": "けむり",
     "example": "煙（けむり）",
+    "extraReadings": [{"reading": "えん", "example": "禁煙（きんえん）"}, {"reading": "けむ（い）", "example": "煙い（けむい）"}],
     "version": 1
   },
   {
@@ -13180,10 +14015,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "煮",
     "questionType": "multipleChoice",
-    "choices": ["恋","煮","菓","為"],
+    "choices": ["恋", "煮", "菓", "為"],
     "correctAnswer": "煮",
     "reading": "に（る）",
     "example": "煮る（にる）",
+    "extraReadings": [{"reading": "しゃ", "example": "煮沸（しゃふつ）"}, {"reading": "に（える）", "example": "煮える（にえる）"}],
     "version": 1
   },
   {
@@ -13191,9 +14027,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "燥",
     "questionType": "multipleChoice",
-    "choices": ["誉","燥","奴","幾"],
+    "choices": ["誉", "燥", "奴", "幾"],
     "correctAnswer": "燥",
-    "reading": "ソウ",
+    "reading": "そう",
     "example": "乾燥（かんそう）",
     "version": 1
   },
@@ -13202,9 +14038,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "爆",
     "questionType": "multipleChoice",
-    "choices": ["爆","髪","奇","較"],
+    "choices": ["爆", "髪", "奇", "較"],
     "correctAnswer": "爆",
-    "reading": "バク",
+    "reading": "ばく",
     "example": "爆発（ばくはつ）",
     "version": 1
   },
@@ -13213,10 +14049,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "狂",
     "questionType": "multipleChoice",
-    "choices": ["刺","狂","怖","澄"],
+    "choices": ["刺", "狂", "怖", "澄"],
     "correctAnswer": "狂",
     "reading": "くる（う）",
     "example": "狂う（くるう）",
+    "extraReadings": [{"reading": "きょう", "example": "狂気（きょうき）"}],
     "version": 1
   },
   {
@@ -13224,10 +14061,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "狩",
     "questionType": "multipleChoice",
-    "choices": ["唐","恥","狩","称"],
+    "choices": ["唐", "恥", "狩", "称"],
     "correctAnswer": "狩",
     "reading": "か（る）",
     "example": "狩る（かる）",
+    "extraReadings": [{"reading": "しゅ", "example": "狩猟（しゅりょう）"}],
     "version": 1
   },
   {
@@ -13235,10 +14073,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "狭",
     "questionType": "multipleChoice",
-    "choices": ["迫","浮","狭","陰"],
+    "choices": ["迫", "浮", "狭", "陰"],
     "correctAnswer": "狭",
     "reading": "せま（い）",
     "example": "狭い（せまい）",
+    "extraReadings": [{"reading": "きょう", "example": "狭義（きょうぎ）"}, {"reading": "せば（まる）", "example": "狭まる（せばまる）"}],
     "version": 1
   },
   {
@@ -13246,9 +14085,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "猛",
     "questionType": "multipleChoice",
-    "choices": ["猛","儀","寂","渡"],
+    "choices": ["猛", "儀", "寂", "渡"],
     "correctAnswer": "猛",
-    "reading": "モウ",
+    "reading": "もう",
     "example": "猛烈（もうれつ）",
     "version": 1
   },
@@ -13257,10 +14096,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "獣",
     "questionType": "multipleChoice",
-    "choices": ["腰","獣","髪","駆"],
+    "choices": ["腰", "獣", "髪", "駆"],
     "correctAnswer": "獣",
     "reading": "けもの",
     "example": "獣（けもの）",
+    "extraReadings": [{"reading": "じゅう", "example": "猛獣（もうじゅう）"}],
     "version": 1
   },
   {
@@ -13268,10 +14108,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "獲",
     "questionType": "multipleChoice",
-    "choices": ["惨","漫","突","獲"],
+    "choices": ["惨", "漫", "突", "獲"],
     "correctAnswer": "獲",
     "reading": "え（る）",
     "example": "獲る（える）",
+    "extraReadings": [{"reading": "かく", "example": "獲得（かくとく）"}],
     "version": 1
   },
   {
@@ -13279,9 +14120,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "玄",
     "questionType": "multipleChoice",
-    "choices": ["越","豪","鼓","玄"],
+    "choices": ["越", "豪", "鼓", "玄"],
     "correctAnswer": "玄",
-    "reading": "ゲン",
+    "reading": "げん",
     "example": "玄関（げんかん）",
     "version": 1
   },
@@ -13290,10 +14131,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "珍",
     "questionType": "multipleChoice",
-    "choices": ["倒","珍","搬","狭"],
+    "choices": ["倒", "珍", "搬", "狭"],
     "correctAnswer": "珍",
     "reading": "めずら（しい）",
     "example": "珍しい（めずらしい）",
+    "extraReadings": [{"reading": "ちん", "example": "珍品（ちんぴん）"}],
     "version": 1
   },
   {
@@ -13301,9 +14143,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "環",
     "questionType": "multipleChoice",
-    "choices": ["縁","巨","屈","環"],
+    "choices": ["縁", "巨", "屈", "環"],
     "correctAnswer": "環",
-    "reading": "カン",
+    "reading": "かん",
     "example": "環境（かんきょう）",
     "version": 1
   },
@@ -13312,10 +14154,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "甘",
     "questionType": "multipleChoice",
-    "choices": ["震","執","婚","甘"],
+    "choices": ["震", "執", "婚", "甘"],
     "correctAnswer": "甘",
     "reading": "あま（い）",
     "example": "甘い（あまい）",
+    "extraReadings": [{"reading": "かん", "example": "甘味（かんみ）"}, {"reading": "あま（える）", "example": "甘える（あまえる）"}],
     "version": 1
   },
   {
@@ -13323,10 +14166,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "畳",
     "questionType": "multipleChoice",
-    "choices": ["巨","畳","鋭","般"],
+    "choices": ["巨", "畳", "鋭", "般"],
     "correctAnswer": "畳",
-    "reading": "たたみ",
-    "example": "畳（たたみ）",
+    "reading": "たた（む）",
+    "example": "畳む（たたむ）",
+    "extraReadings": [{"reading": "たたみ", "example": "畳（たたみ）"}, {"reading": "じょう", "example": "一畳（いちじょう）"}],
     "version": 1
   },
   {
@@ -13334,10 +14178,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "疲",
     "questionType": "multipleChoice",
-    "choices": ["鎖","肪","販","疲"],
+    "choices": ["鎖", "肪", "販", "疲"],
     "correctAnswer": "疲",
     "reading": "つか（れる）",
     "example": "疲れる（つかれる）",
+    "extraReadings": [{"reading": "ひ", "example": "疲労（ひろう）"}],
     "version": 1
   },
   {
@@ -13345,9 +14190,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "療",
     "questionType": "multipleChoice",
-    "choices": ["微","療","暦","彩"],
+    "choices": ["微", "療", "暦", "彩"],
     "correctAnswer": "療",
-    "reading": "リョウ",
+    "reading": "りょう",
     "example": "治療（ちりょう）",
     "version": 1
   },
@@ -13356,10 +14201,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "皆",
     "questionType": "multipleChoice",
-    "choices": ["獣","跳","抜","皆"],
+    "choices": ["獣", "跳", "抜", "皆"],
     "correctAnswer": "皆",
     "reading": "みな",
     "example": "皆（みな）",
+    "extraReadings": [{"reading": "かい", "example": "皆無（かいむ）"}],
     "version": 1
   },
   {
@@ -13367,10 +14213,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "盆",
     "questionType": "multipleChoice",
-    "choices": ["姓","溶","尋","盆"],
+    "choices": ["姓", "溶", "尋", "盆"],
     "correctAnswer": "盆",
-    "reading": "ボン",
-    "example": "お盆（おぼん）",
+    "reading": "ぼん",
+    "example": "盆踊り（ぼんおどり）",
     "version": 1
   },
   {
@@ -13378,10 +14224,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "盗",
     "questionType": "multipleChoice",
-    "choices": ["砲","盗","冒","俗"],
+    "choices": ["砲", "盗", "冒", "俗"],
     "correctAnswer": "盗",
     "reading": "ぬす（む）",
     "example": "盗む（ぬすむ）",
+    "extraReadings": [{"reading": "とう", "example": "盗難（とうなん）"}],
     "version": 1
   },
   {
@@ -13389,9 +14236,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "監",
     "questionType": "multipleChoice",
-    "choices": ["寝","刈","監","違"],
+    "choices": ["寝", "刈", "監", "違"],
     "correctAnswer": "監",
-    "reading": "カン",
+    "reading": "かん",
     "example": "監督（かんとく）",
     "version": 1
   },
@@ -13400,9 +14247,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "盤",
     "questionType": "multipleChoice",
-    "choices": ["斜","盤","雷","鋭"],
+    "choices": ["斜", "盤", "雷", "鋭"],
     "correctAnswer": "盤",
-    "reading": "バン",
+    "reading": "ばん",
     "example": "基盤（きばん）",
     "version": 1
   },
@@ -13411,10 +14258,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "盾",
     "questionType": "multipleChoice",
-    "choices": ["幅","翼","盾","徴"],
+    "choices": ["幅", "翼", "盾", "徴"],
     "correctAnswer": "盾",
     "reading": "たて",
     "example": "盾（たて）",
+    "extraReadings": [{"reading": "じゅん", "example": "矛盾（むじゅん）"}],
     "version": 1
   },
   {
@@ -13422,10 +14270,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "眠",
     "questionType": "multipleChoice",
-    "choices": ["眠","烈","兼","鋭"],
+    "choices": ["眠", "烈", "兼", "鋭"],
     "correctAnswer": "眠",
     "reading": "ねむ（る）",
     "example": "眠る（ねむる）",
+    "extraReadings": [{"reading": "みん", "example": "睡眠（すいみん）"}, {"reading": "ねむ（い）", "example": "眠い（ねむい）"}],
     "version": 1
   },
   {
@@ -13433,10 +14282,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "瞬",
     "questionType": "multipleChoice",
-    "choices": ["瞬","驚","坊","狂"],
+    "choices": ["瞬", "驚", "坊", "狂"],
     "correctAnswer": "瞬",
     "reading": "またた（く）",
     "example": "瞬く（またたく）",
+    "extraReadings": [{"reading": "しゅん", "example": "瞬間（しゅんかん）"}],
     "version": 1
   },
   {
@@ -13444,10 +14294,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "矛",
     "questionType": "multipleChoice",
-    "choices": ["矛","沼","旬","抱"],
+    "choices": ["矛", "沼", "旬", "抱"],
     "correctAnswer": "矛",
     "reading": "ほこ",
-    "example": "矛盾（むじゅん）",
+    "example": "矛（ほこ）",
+    "extraReadings": [{"reading": "む", "example": "矛盾（むじゅん）"}],
     "version": 1
   },
   {
@@ -13455,9 +14306,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "砲",
     "questionType": "multipleChoice",
-    "choices": ["芋","唐","砲","浸"],
+    "choices": ["芋", "唐", "砲", "浸"],
     "correctAnswer": "砲",
-    "reading": "ホウ",
+    "reading": "ほう",
     "example": "大砲（たいほう）",
     "version": 1
   },
@@ -13466,10 +14317,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "祈",
     "questionType": "multipleChoice",
-    "choices": ["杯","祈","隷","違"],
+    "choices": ["杯", "祈", "隷", "違"],
     "correctAnswer": "祈",
     "reading": "いの（る）",
     "example": "祈る（いのる）",
+    "extraReadings": [{"reading": "き", "example": "祈願（きがん）"}],
     "version": 1
   },
   {
@@ -13477,10 +14329,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "秀",
     "questionType": "multipleChoice",
-    "choices": ["峰","隠","秀","寝"],
+    "choices": ["峰", "隠", "秀", "寝"],
     "correctAnswer": "秀",
-    "reading": "シュウ",
-    "example": "優秀（ゆうしゅう）",
+    "reading": "ひい（でる）",
+    "example": "秀でる（ひいでる）",
+    "extraReadings": [{"reading": "しゅう", "example": "優秀（ゆうしゅう）"}],
     "version": 1
   },
   {
@@ -13488,9 +14341,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "称",
     "questionType": "multipleChoice",
-    "choices": ["抵","称","瞬","紹"],
+    "choices": ["抵", "称", "瞬", "紹"],
     "correctAnswer": "称",
-    "reading": "ショウ",
+    "reading": "しょう",
     "example": "名称（めいしょう）",
     "version": 1
   },
@@ -13499,10 +14352,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "稲",
     "questionType": "multipleChoice",
-    "choices": ["汗","稲","援","帽"],
+    "choices": ["汗", "稲", "援", "帽"],
     "correctAnswer": "稲",
     "reading": "いね",
     "example": "稲（いね）",
+    "extraReadings": [{"reading": "いな", "example": "稲光（いなびかり）"}, {"reading": "とう", "example": "水稲（すいとう）"}],
     "version": 1
   },
   {
@@ -13510,9 +14364,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "稿",
     "questionType": "multipleChoice",
-    "choices": ["描","稿","扇","弐"],
+    "choices": ["描", "稿", "扇", "弐"],
     "correctAnswer": "稿",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "原稿（げんこう）",
     "version": 1
   },
@@ -13521,10 +14375,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "突",
     "questionType": "multipleChoice",
-    "choices": ["絡","突","杯","跳"],
+    "choices": ["絡", "突", "杯", "跳"],
     "correctAnswer": "突",
     "reading": "つ（く）",
     "example": "突く（つく）",
+    "extraReadings": [{"reading": "とつ", "example": "突然（とつぜん）"}],
     "version": 1
   },
   {
@@ -13532,10 +14387,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "端",
     "questionType": "multipleChoice",
-    "choices": ["踊","端","娘","吹"],
+    "choices": ["踊", "端", "娘", "吹"],
     "correctAnswer": "端",
     "reading": "はし",
     "example": "端（はし）",
+    "extraReadings": [{"reading": "たん", "example": "端正（たんせい）"}, {"reading": "は", "example": "端数（はすう）"}, {"reading": "はた", "example": "道端（みちばた）"}],
     "version": 1
   },
   {
@@ -13543,9 +14399,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "箇",
     "questionType": "multipleChoice",
-    "choices": ["浜","被","玄","箇"],
+    "choices": ["浜", "被", "玄", "箇"],
     "correctAnswer": "箇",
-    "reading": "カ",
+    "reading": "か",
     "example": "箇所（かしょ）",
     "version": 1
   },
@@ -13554,9 +14410,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "範",
     "questionType": "multipleChoice",
-    "choices": ["弐","罰","雅","範"],
+    "choices": ["弐", "罰", "雅", "範"],
     "correctAnswer": "範",
-    "reading": "ハン",
+    "reading": "はん",
     "example": "模範（もはん）",
     "version": 1
   },
@@ -13565,10 +14421,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "粒",
     "questionType": "multipleChoice",
-    "choices": ["粒","威","姓","端"],
+    "choices": ["粒", "威", "姓", "端"],
     "correctAnswer": "粒",
     "reading": "つぶ",
     "example": "粒（つぶ）",
+    "extraReadings": [{"reading": "りゅう", "example": "粒子（りゅうし）"}],
     "version": 1
   },
   {
@@ -13576,10 +14433,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "紋",
     "questionType": "multipleChoice",
-    "choices": ["狂","況","紋","恥"],
+    "choices": ["狂", "況", "紋", "恥"],
     "correctAnswer": "紋",
-    "reading": "モン",
-    "example": "紋様（もんよう）",
+    "reading": "もん",
+    "example": "紋章（もんしょう）",
     "version": 1
   },
   {
@@ -13587,10 +14444,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "紫",
     "questionType": "multipleChoice",
-    "choices": ["紫","鼓","曇","違"],
+    "choices": ["紫", "鼓", "曇", "違"],
     "correctAnswer": "紫",
     "reading": "むらさき",
-    "example": "紫（むらさき）",
+    "example": "紫色（むらさきいろ）",
+    "extraReadings": [{"reading": "し", "example": "紫外線（しがいせん）"}],
     "version": 1
   },
   {
@@ -13598,9 +14456,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "紹",
     "questionType": "multipleChoice",
-    "choices": ["却","紹","幾","隣"],
+    "choices": ["却", "紹", "幾", "隣"],
     "correctAnswer": "紹",
-    "reading": "ショウ",
+    "reading": "しょう",
     "example": "紹介（しょうかい）",
     "version": 1
   },
@@ -13609,10 +14467,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "絡",
     "questionType": "multipleChoice",
-    "choices": ["迎","絡","監","軒"],
+    "choices": ["迎", "絡", "監", "軒"],
     "correctAnswer": "絡",
     "reading": "から（む）",
     "example": "絡む（からむ）",
+    "extraReadings": [{"reading": "らく", "example": "連絡（れんらく）"}],
     "version": 1
   },
   {
@@ -13620,10 +14479,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "継",
     "questionType": "multipleChoice",
-    "choices": ["盾","抗","況","継"],
+    "choices": ["盾", "抗", "況", "継"],
     "correctAnswer": "継",
     "reading": "つ（ぐ）",
     "example": "継ぐ（つぐ）",
+    "extraReadings": [{"reading": "けい", "example": "継続（けいぞく）"}, {"reading": "まま", "example": "継母（ままはは）"}],
     "version": 1
   },
   {
@@ -13631,9 +14491,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "維",
     "questionType": "multipleChoice",
-    "choices": ["即","維","戒","妙"],
+    "choices": ["即", "維", "戒", "妙"],
     "correctAnswer": "維",
-    "reading": "イ",
+    "reading": "い",
     "example": "維持（いじ）",
     "version": 1
   },
@@ -13642,10 +14502,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "網",
     "questionType": "multipleChoice",
-    "choices": ["盤","狩","網","雅"],
+    "choices": ["盤", "狩", "網", "雅"],
     "correctAnswer": "網",
     "reading": "あみ",
     "example": "網（あみ）",
+    "extraReadings": [{"reading": "もう", "example": "網膜（もうまく）"}],
     "version": 1
   },
   {
@@ -13653,9 +14514,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "緯",
     "questionType": "multipleChoice",
-    "choices": ["傾","端","壁","緯"],
+    "choices": ["傾", "端", "壁", "緯"],
     "correctAnswer": "緯",
-    "reading": "イ",
+    "reading": "い",
     "example": "緯度（いど）",
     "version": 1
   },
@@ -13664,7 +14525,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "縁",
     "questionType": "multipleChoice",
-    "choices": ["浮","縁","到","恵"],
+    "choices": ["浮", "縁", "到", "恵"],
     "correctAnswer": "縁",
     "reading": "ふち",
     "example": "縁（ふち）",
@@ -13675,9 +14536,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "繁",
     "questionType": "multipleChoice",
-    "choices": ["汚","繁","飾","沢"],
+    "choices": ["汚", "繁", "飾", "沢"],
     "correctAnswer": "繁",
-    "reading": "ハン",
+    "reading": "はん",
     "example": "繁栄（はんえい）",
     "version": 1
   },
@@ -13686,7 +14547,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "繰",
     "questionType": "multipleChoice",
-    "choices": ["剣","壊","繰","環"],
+    "choices": ["剣", "壊", "繰", "環"],
     "correctAnswer": "繰",
     "reading": "く（る）",
     "example": "繰る（くる）",
@@ -13697,10 +14558,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "罰",
     "questionType": "multipleChoice",
-    "choices": ["罰","摘","腐","致"],
+    "choices": ["罰", "摘", "腐", "致"],
     "correctAnswer": "罰",
-    "reading": "バツ",
-    "example": "罰（ばつ）",
+    "reading": "ばつ",
+    "example": "罰則（ばっそく）",
+    "extraReadings": [{"reading": "ばち", "example": "罰（ばち）"}],
     "version": 1
   },
   {
@@ -13708,10 +14570,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "翼",
     "questionType": "multipleChoice",
-    "choices": ["桃","召","壱","翼"],
+    "choices": ["桃", "召", "壱", "翼"],
     "correctAnswer": "翼",
     "reading": "つばさ",
     "example": "翼（つばさ）",
+    "extraReadings": [{"reading": "よく", "example": "左翼（さよく）"}],
     "version": 1
   },
   {
@@ -13719,10 +14582,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "耐",
     "questionType": "multipleChoice",
-    "choices": ["畳","占","込","耐"],
+    "choices": ["畳", "占", "込", "耐"],
     "correctAnswer": "耐",
     "reading": "た（える）",
     "example": "耐える（たえる）",
+    "extraReadings": [{"reading": "たい", "example": "忍耐（にんたい）"}],
     "version": 1
   },
   {
@@ -13730,10 +14594,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "肩",
     "questionType": "multipleChoice",
-    "choices": ["肩","即","暦","豪"],
+    "choices": ["肩", "即", "暦", "豪"],
     "correctAnswer": "肩",
     "reading": "かた",
     "example": "肩（かた）",
+    "extraReadings": [{"reading": "けん", "example": "双肩（そうけん）"}],
     "version": 1
   },
   {
@@ -13741,9 +14606,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "肪",
     "questionType": "multipleChoice",
-    "choices": ["肪","雷","朱","盤"],
+    "choices": ["肪", "雷", "朱", "盤"],
     "correctAnswer": "肪",
-    "reading": "ボウ",
+    "reading": "ぼう",
     "example": "脂肪（しぼう）",
     "version": 1
   },
@@ -13752,9 +14617,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "胴",
     "questionType": "multipleChoice",
-    "choices": ["胴","威","雅","絡"],
+    "choices": ["胴", "威", "雅", "絡"],
     "correctAnswer": "胴",
-    "reading": "ドウ",
+    "reading": "どう",
     "example": "胴体（どうたい）",
     "version": 1
   },
@@ -13763,10 +14628,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "脂",
     "questionType": "multipleChoice",
-    "choices": ["闘","旨","脂","捕"],
+    "choices": ["闘", "旨", "脂", "捕"],
     "correctAnswer": "脂",
     "reading": "あぶら",
     "example": "脂（あぶら）",
+    "extraReadings": [{"reading": "し", "example": "脂肪（しぼう）"}],
     "version": 1
   },
   {
@@ -13774,10 +14640,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "脚",
     "questionType": "multipleChoice",
-    "choices": ["蓄","欄","脚","騒"],
+    "choices": ["蓄", "欄", "脚", "騒"],
     "correctAnswer": "脚",
     "reading": "あし",
     "example": "脚（あし）",
+    "extraReadings": [{"reading": "きゃく", "example": "脚本（きゃくほん）"}],
     "version": 1
   },
   {
@@ -13785,10 +14652,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "脱",
     "questionType": "multipleChoice",
-    "choices": ["販","溶","伺","脱"],
+    "choices": ["販", "溶", "伺", "脱"],
     "correctAnswer": "脱",
     "reading": "ぬ（ぐ）",
     "example": "脱ぐ（ぬぐ）",
+    "extraReadings": [{"reading": "だつ", "example": "脱出（だっしゅつ）"}, {"reading": "ぬ（げる）", "example": "脱げる（ぬげる）"}],
     "version": 1
   },
   {
@@ -13796,10 +14664,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "腐",
     "questionType": "multipleChoice",
-    "choices": ["舗","粒","汚","腐"],
+    "choices": ["舗", "粒", "汚", "腐"],
     "correctAnswer": "腐",
     "reading": "くさ（る）",
     "example": "腐る（くさる）",
+    "extraReadings": [{"reading": "ふ", "example": "豆腐（とうふ）"}],
     "version": 1
   },
   {
@@ -13807,10 +14676,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "腕",
     "questionType": "multipleChoice",
-    "choices": ["駆","朽","溶","腕"],
+    "choices": ["駆", "朽", "溶", "腕"],
     "correctAnswer": "腕",
     "reading": "うで",
     "example": "腕（うで）",
+    "extraReadings": [{"reading": "わん", "example": "腕力（わんりょく）"}],
     "version": 1
   },
   {
@@ -13818,10 +14688,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "腰",
     "questionType": "multipleChoice",
-    "choices": ["歓","郎","塔","腰"],
+    "choices": ["歓", "郎", "塔", "腰"],
     "correctAnswer": "腰",
     "reading": "こし",
     "example": "腰（こし）",
+    "extraReadings": [{"reading": "よう", "example": "腰痛（ようつう）"}],
     "version": 1
   },
   {
@@ -13829,9 +14700,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "膚",
     "questionType": "multipleChoice",
-    "choices": ["奥","膚","怒","腰"],
+    "choices": ["奥", "膚", "怒", "腰"],
     "correctAnswer": "膚",
-    "reading": "フ",
+    "reading": "ふ",
     "example": "皮膚（ひふ）",
     "version": 1
   },
@@ -13840,10 +14711,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "致",
     "questionType": "multipleChoice",
-    "choices": ["鼓","煙","坊","致"],
+    "choices": ["鼓", "煙", "坊", "致"],
     "correctAnswer": "致",
     "reading": "いた（す）",
     "example": "致す（いたす）",
+    "extraReadings": [{"reading": "ち", "example": "一致（いっち）"}],
     "version": 1
   },
   {
@@ -13851,9 +14723,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "舗",
     "questionType": "multipleChoice",
-    "choices": ["舗","影","汗","欄"],
+    "choices": ["舗", "影", "汗", "欄"],
     "correctAnswer": "舗",
-    "reading": "ホ",
+    "reading": "ほ",
     "example": "店舗（てんぽ）",
     "version": 1
   },
@@ -13862,10 +14734,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "舞",
     "questionType": "multipleChoice",
-    "choices": ["沈","嘆","舞","麗"],
+    "choices": ["沈", "嘆", "舞", "麗"],
     "correctAnswer": "舞",
     "reading": "ま（う）",
     "example": "舞う（まう）",
+    "extraReadings": [{"reading": "ぶ", "example": "舞台（ぶたい）"}, {"reading": "まい", "example": "舞（まい）"}],
     "version": 1
   },
   {
@@ -13873,10 +14746,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "舟",
     "questionType": "multipleChoice",
-    "choices": ["朱","紹","煙","舟"],
+    "choices": ["朱", "紹", "煙", "舟"],
     "correctAnswer": "舟",
     "reading": "ふね",
-    "example": "舟（ふね）",
+    "example": "小舟（こぶね）",
+    "extraReadings": [{"reading": "しゅう", "example": "舟艇（しゅうてい）"}],
     "version": 1
   },
   {
@@ -13884,9 +14758,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "般",
     "questionType": "multipleChoice",
-    "choices": ["傍","般","爆","柔"],
+    "choices": ["傍", "般", "爆", "柔"],
     "correctAnswer": "般",
-    "reading": "ハン",
+    "reading": "はん",
     "example": "一般（いっぱん）",
     "version": 1
   },
@@ -13895,7 +14769,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "芋",
     "questionType": "multipleChoice",
-    "choices": ["淡","芋","訴","蓄"],
+    "choices": ["淡", "芋", "訴", "蓄"],
     "correctAnswer": "芋",
     "reading": "いも",
     "example": "芋（いも）",
@@ -13906,10 +14780,10 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "芝",
     "questionType": "multipleChoice",
-    "choices": ["威","震","茂","芝"],
+    "choices": ["威", "震", "茂", "芝"],
     "correctAnswer": "芝",
     "reading": "しば",
-    "example": "芝（しば）",
+    "example": "芝生（しばふ）",
     "version": 1
   },
   {
@@ -13917,10 +14791,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "茂",
     "questionType": "multipleChoice",
-    "choices": ["茂","煙","帽","違"],
+    "choices": ["茂", "煙", "帽", "違"],
     "correctAnswer": "茂",
     "reading": "しげ（る）",
     "example": "茂る（しげる）",
+    "extraReadings": [{"reading": "も", "example": "繁茂（はんも）"}],
     "version": 1
   },
   {
@@ -13928,10 +14803,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "荒",
     "questionType": "multipleChoice",
-    "choices": ["荒","慢","蓄","威"],
+    "choices": ["荒", "慢", "蓄", "威"],
     "correctAnswer": "荒",
-    "reading": "あら（い）",
-    "example": "荒い（あらい）",
+    "reading": "あ（れる）",
+    "example": "荒れる（あれる）",
+    "extraReadings": [{"reading": "あら（い）", "example": "荒い（あらい）"}, {"reading": "こう", "example": "荒廃（こうはい）"}],
     "version": 1
   },
   {
@@ -13939,9 +14815,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "菓",
     "questionType": "multipleChoice",
-    "choices": ["匹","描","菓","鼓"],
+    "choices": ["匹", "描", "菓", "鼓"],
     "correctAnswer": "菓",
-    "reading": "カ",
+    "reading": "か",
     "example": "菓子（かし）",
     "version": 1
   },
@@ -13950,10 +14826,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "蓄",
     "questionType": "multipleChoice",
-    "choices": ["蓄","床","微","浸"],
+    "choices": ["蓄", "床", "微", "浸"],
     "correctAnswer": "蓄",
     "reading": "たくわ（える）",
     "example": "蓄える（たくわえる）",
+    "extraReadings": [{"reading": "ちく", "example": "貯蓄（ちょちく）"}],
     "version": 1
   },
   {
@@ -13961,10 +14838,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "薄",
     "questionType": "multipleChoice",
-    "choices": ["薄","濁","耐","鉛"],
+    "choices": ["薄", "濁", "耐", "鉛"],
     "correctAnswer": "薄",
     "reading": "うす（い）",
     "example": "薄い（うすい）",
+    "extraReadings": [{"reading": "はく", "example": "薄氷（はくひょう）"}, {"reading": "うす（める）", "example": "薄める（うすめる）"}],
     "version": 1
   },
   {
@@ -13972,10 +14850,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "薪",
     "questionType": "multipleChoice",
-    "choices": ["誉","粒","薪","堤"],
+    "choices": ["誉", "粒", "薪", "堤"],
     "correctAnswer": "薪",
     "reading": "たきぎ",
     "example": "薪（たきぎ）",
+    "extraReadings": [{"reading": "しん", "example": "薪炭（しんたん）"}],
     "version": 1
   },
   {
@@ -13983,10 +14862,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "被",
     "questionType": "multipleChoice",
-    "choices": ["罰","被","鼓","握"],
+    "choices": ["罰", "被", "鼓", "握"],
     "correctAnswer": "被",
     "reading": "こうむ（る）",
     "example": "被る（こうむる）",
+    "extraReadings": [{"reading": "ひ", "example": "被害（ひがい）"}],
     "version": 1
   },
   {
@@ -13994,10 +14874,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "襲",
     "questionType": "multipleChoice",
-    "choices": ["襲","吐","扇","躍"],
+    "choices": ["襲", "吐", "扇", "躍"],
     "correctAnswer": "襲",
     "reading": "おそ（う）",
     "example": "襲う（おそう）",
+    "extraReadings": [{"reading": "しゅう", "example": "襲撃（しゅうげき）"}],
     "version": 1
   },
   {
@@ -14005,7 +14886,7 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "触",
     "questionType": "multipleChoice",
-    "choices": ["拍","唐","触","祈"],
+    "choices": ["拍", "唐", "触", "祈"],
     "correctAnswer": "触",
     "reading": "さわ（る）",
     "example": "触る（さわる）",
@@ -14016,10 +14897,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "訴",
     "questionType": "multipleChoice",
-    "choices": ["訴","扇","剤","沼"],
+    "choices": ["訴", "扇", "剤", "沼"],
     "correctAnswer": "訴",
     "reading": "うった（える）",
     "example": "訴える（うったえる）",
+    "extraReadings": [{"reading": "そ", "example": "訴訟（そしょう）"}],
     "version": 1
   },
   {
@@ -14027,10 +14909,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "詰",
     "questionType": "multipleChoice",
-    "choices": ["被","盤","詰","皆"],
+    "choices": ["被", "盤", "詰", "皆"],
     "correctAnswer": "詰",
     "reading": "つ（める）",
     "example": "詰める（つめる）",
+    "extraReadings": [{"reading": "きつ", "example": "詰問（きつもん）"}],
     "version": 1
   },
   {
@@ -14038,10 +14921,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "詳",
     "questionType": "multipleChoice",
-    "choices": ["丘","致","召","詳"],
+    "choices": ["丘", "致", "召", "詳"],
     "correctAnswer": "詳",
     "reading": "くわ（しい）",
     "example": "詳しい（くわしい）",
+    "extraReadings": [{"reading": "しょう", "example": "詳細（しょうさい）"}],
     "version": 1
   },
   {
@@ -14049,10 +14933,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "誇",
     "questionType": "multipleChoice",
-    "choices": ["迎","鋭","誇","丈"],
+    "choices": ["迎", "鋭", "誇", "丈"],
     "correctAnswer": "誇",
     "reading": "ほこ（る）",
     "example": "誇る（ほこる）",
+    "extraReadings": [{"reading": "こ", "example": "誇張（こちょう）"}],
     "version": 1
   },
   {
@@ -14060,10 +14945,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "誉",
     "questionType": "multipleChoice",
-    "choices": ["継","暦","誉","堤"],
+    "choices": ["継", "暦", "誉", "堤"],
     "correctAnswer": "誉",
     "reading": "ほま（れ）",
-    "example": "名誉（めいよ）",
+    "example": "誉れ（ほまれ）",
+    "extraReadings": [{"reading": "よ", "example": "名誉（めいよ）"}],
     "version": 1
   },
   {
@@ -14071,10 +14957,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "謡",
     "questionType": "multipleChoice",
-    "choices": ["依","隣","鉛","謡"],
+    "choices": ["依", "隣", "鉛", "謡"],
     "correctAnswer": "謡",
-    "reading": "うたい",
-    "example": "民謡（みんよう）",
+    "reading": "うた（う）",
+    "example": "謡う（うたう）",
+    "extraReadings": [{"reading": "よう", "example": "民謡（みんよう）"}],
     "version": 1
   },
   {
@@ -14082,9 +14969,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "豪",
     "questionType": "multipleChoice",
-    "choices": ["涙","離","荒","豪"],
+    "choices": ["涙", "離", "荒", "豪"],
     "correctAnswer": "豪",
-    "reading": "ゴウ",
+    "reading": "ごう",
     "example": "豪華（ごうか）",
     "version": 1
   },
@@ -14093,9 +14980,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "販",
     "questionType": "multipleChoice",
-    "choices": ["驚","腕","幾","販"],
+    "choices": ["驚", "腕", "幾", "販"],
     "correctAnswer": "販",
-    "reading": "ハン",
+    "reading": "はん",
     "example": "販売（はんばい）",
     "version": 1
   },
@@ -14104,9 +14991,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "賦",
     "questionType": "multipleChoice",
-    "choices": ["恵","狭","勧","賦"],
+    "choices": ["恵", "狭", "勧", "賦"],
     "correctAnswer": "賦",
-    "reading": "フ",
+    "reading": "ふ",
     "example": "天賦（てんぷ）",
     "version": 1
   },
@@ -14115,10 +15002,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "贈",
     "questionType": "multipleChoice",
-    "choices": ["贈","瞬","舗","溶"],
+    "choices": ["贈", "瞬", "舗", "溶"],
     "correctAnswer": "贈",
     "reading": "おく（る）",
     "example": "贈る（おくる）",
+    "extraReadings": [{"reading": "ぞう", "example": "贈答（ぞうとう）"}],
     "version": 1
   },
   {
@@ -14126,10 +15014,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "越",
     "questionType": "multipleChoice",
-    "choices": ["突","奇","越","捕"],
+    "choices": ["突", "奇", "越", "捕"],
     "correctAnswer": "越",
     "reading": "こ（える）",
     "example": "越える（こえる）",
+    "extraReadings": [{"reading": "こ（す）", "example": "越す（こす）"}, {"reading": "えつ", "example": "優越（ゆうえつ）"}],
     "version": 1
   },
   {
@@ -14137,10 +15026,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "趣",
     "questionType": "multipleChoice",
-    "choices": ["贈","趣","拓","坊"],
+    "choices": ["贈", "趣", "拓", "坊"],
     "correctAnswer": "趣",
     "reading": "おもむき",
-    "example": "趣味（しゅみ）",
+    "example": "趣（おもむき）",
+    "extraReadings": [{"reading": "しゅ", "example": "趣味（しゅみ）"}],
     "version": 1
   },
   {
@@ -14148,9 +15038,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "距",
     "questionType": "multipleChoice",
-    "choices": ["雅","倒","及","距"],
+    "choices": ["雅", "倒", "及", "距"],
     "correctAnswer": "距",
-    "reading": "キョ",
+    "reading": "きょ",
     "example": "距離（きょり）",
     "version": 1
   },
@@ -14159,10 +15049,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "跡",
     "questionType": "multipleChoice",
-    "choices": ["彼","狩","狂","跡"],
+    "choices": ["彼", "狩", "狂", "跡"],
     "correctAnswer": "跡",
     "reading": "あと",
     "example": "跡（あと）",
+    "extraReadings": [{"reading": "せき", "example": "遺跡（いせき）"}],
     "version": 1
   },
   {
@@ -14170,10 +15061,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "跳",
     "questionType": "multipleChoice",
-    "choices": ["跳","汚","砲","撃"],
+    "choices": ["跳", "汚", "砲", "撃"],
     "correctAnswer": "跳",
     "reading": "と（ぶ）",
     "example": "跳ぶ（とぶ）",
+    "extraReadings": [{"reading": "は（ねる）", "example": "跳ねる（はねる）"}, {"reading": "ちょう", "example": "跳躍（ちょうやく）"}],
     "version": 1
   },
   {
@@ -14181,10 +15073,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "踊",
     "questionType": "multipleChoice",
-    "choices": ["傍","隣","奥","踊"],
+    "choices": ["傍", "隣", "奥", "踊"],
     "correctAnswer": "踊",
     "reading": "おど（る）",
     "example": "踊る（おどる）",
+    "extraReadings": [{"reading": "よう", "example": "舞踊（ぶよう）"}],
     "version": 1
   },
   {
@@ -14192,10 +15085,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "踏",
     "questionType": "multipleChoice",
-    "choices": ["況","継","狂","踏"],
+    "choices": ["況", "継", "狂", "踏"],
     "correctAnswer": "踏",
     "reading": "ふ（む）",
     "example": "踏む（ふむ）",
+    "extraReadings": [{"reading": "とう", "example": "踏襲（とうしゅう）"}],
     "version": 1
   },
   {
@@ -14203,10 +15097,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "躍",
     "questionType": "multipleChoice",
-    "choices": ["枯","嘆","震","躍"],
+    "choices": ["枯", "嘆", "震", "躍"],
     "correctAnswer": "躍",
-    "reading": "ヤク",
-    "example": "活躍（かつやく）",
+    "reading": "おど（る）",
+    "example": "躍る（おどる）",
+    "extraReadings": [{"reading": "やく", "example": "活躍（かつやく）"}],
     "version": 1
   },
   {
@@ -14214,10 +15109,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "軒",
     "questionType": "multipleChoice",
-    "choices": ["軒","称","仰","曇"],
+    "choices": ["軒", "称", "仰", "曇"],
     "correctAnswer": "軒",
     "reading": "のき",
     "example": "軒（のき）",
+    "extraReadings": [{"reading": "けん", "example": "一軒（いっけん）"}],
     "version": 1
   },
   {
@@ -14225,9 +15121,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "較",
     "questionType": "multipleChoice",
-    "choices": ["較","腰","紫","縁"],
+    "choices": ["較", "腰", "紫", "縁"],
     "correctAnswer": "較",
-    "reading": "カク",
+    "reading": "かく",
     "example": "比較（ひかく）",
     "version": 1
   },
@@ -14236,10 +15132,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "載",
     "questionType": "multipleChoice",
-    "choices": ["弾","越","荒","載"],
+    "choices": ["弾", "越", "荒", "載"],
     "correctAnswer": "載",
     "reading": "の（せる）",
     "example": "載せる（のせる）",
+    "extraReadings": [{"reading": "の（る）", "example": "載る（のる）"}, {"reading": "さい", "example": "掲載（けいさい）"}],
     "version": 1
   },
   {
@@ -14247,10 +15144,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "輝",
     "questionType": "multipleChoice",
-    "choices": ["鎖","寂","輝","突"],
+    "choices": ["鎖", "寂", "輝", "突"],
     "correctAnswer": "輝",
     "reading": "かがや（く）",
     "example": "輝く（かがやく）",
+    "extraReadings": [{"reading": "き", "example": "光輝（こうき）"}],
     "version": 1
   },
   {
@@ -14258,9 +15156,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "輩",
     "questionType": "multipleChoice",
-    "choices": ["凡","輩","秀","恐"],
+    "choices": ["凡", "輩", "秀", "恐"],
     "correctAnswer": "輩",
-    "reading": "ハイ",
+    "reading": "はい",
     "example": "先輩（せんぱい）",
     "version": 1
   },
@@ -14269,10 +15167,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "込",
     "questionType": "multipleChoice",
-    "choices": ["踏","込","塔","娘"],
+    "choices": ["踏", "込", "塔", "娘"],
     "correctAnswer": "込",
     "reading": "こ（む）",
     "example": "込む（こむ）",
+    "extraReadings": [{"reading": "こ（める）", "example": "込める（こめる）"}],
     "version": 1
   },
   {
@@ -14280,10 +15179,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "迎",
     "questionType": "multipleChoice",
-    "choices": ["僧","戯","迎","盤"],
+    "choices": ["僧", "戯", "迎", "盤"],
     "correctAnswer": "迎",
     "reading": "むか（える）",
     "example": "迎える（むかえる）",
+    "extraReadings": [{"reading": "げい", "example": "歓迎（かんげい）"}],
     "version": 1
   },
   {
@@ -14291,10 +15191,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "迫",
     "questionType": "multipleChoice",
-    "choices": ["賦","唐","瞬","迫"],
+    "choices": ["賦", "唐", "瞬", "迫"],
     "correctAnswer": "迫",
     "reading": "せま（る）",
     "example": "迫る（せまる）",
+    "extraReadings": [{"reading": "はく", "example": "迫力（はくりょく）"}],
     "version": 1
   },
   {
@@ -14302,10 +15203,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "逃",
     "questionType": "multipleChoice",
-    "choices": ["戒","逃","監","描"],
+    "choices": ["戒", "逃", "監", "描"],
     "correctAnswer": "逃",
     "reading": "に（げる）",
     "example": "逃げる（にげる）",
+    "extraReadings": [{"reading": "のが（す）", "example": "逃す（のがす）"}, {"reading": "とう", "example": "逃亡（とうぼう）"}],
     "version": 1
   },
   {
@@ -14313,10 +15215,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "透",
     "questionType": "multipleChoice",
-    "choices": ["腰","沈","透","鮮"],
+    "choices": ["腰", "沈", "透", "鮮"],
     "correctAnswer": "透",
     "reading": "す（く）",
     "example": "透く（すく）",
+    "extraReadings": [{"reading": "す（かす）", "example": "透かす（すかす）"}, {"reading": "とう", "example": "透明（とうめい）"}],
     "version": 1
   },
   {
@@ -14324,9 +15227,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "途",
     "questionType": "multipleChoice",
-    "choices": ["秀","雅","堅","途"],
+    "choices": ["秀", "雅", "堅", "途"],
     "correctAnswer": "途",
-    "reading": "ト",
+    "reading": "と",
     "example": "途中（とちゅう）",
     "version": 1
   },
@@ -14335,10 +15238,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "遅",
     "questionType": "multipleChoice",
-    "choices": ["遅","旨","震","柄"],
+    "choices": ["遅", "旨", "震", "柄"],
     "correctAnswer": "遅",
     "reading": "おそ（い）",
     "example": "遅い（おそい）",
+    "extraReadings": [{"reading": "ち", "example": "遅刻（ちこく）"}, {"reading": "おく（れる）", "example": "遅れる（おくれる）"}],
     "version": 1
   },
   {
@@ -14346,10 +15250,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "違",
     "questionType": "multipleChoice",
-    "choices": ["鎖","違","溶","抵"],
+    "choices": ["鎖", "違", "溶", "抵"],
     "correctAnswer": "違",
     "reading": "ちが（う）",
     "example": "違う（ちがう）",
+    "extraReadings": [{"reading": "い", "example": "違反（いはん）"}],
     "version": 1
   },
   {
@@ -14357,10 +15262,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "遣",
     "questionType": "multipleChoice",
-    "choices": ["煙","遣","脱","威"],
+    "choices": ["煙", "遣", "脱", "威"],
     "correctAnswer": "遣",
     "reading": "つか（う）",
     "example": "遣う（つかう）",
+    "extraReadings": [{"reading": "けん", "example": "派遣（はけん）"}],
     "version": 1
   },
   {
@@ -14368,10 +15274,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "避",
     "questionType": "multipleChoice",
-    "choices": ["尾","避","隷","暦"],
+    "choices": ["尾", "避", "隷", "暦"],
     "correctAnswer": "避",
     "reading": "さ（ける）",
     "example": "避ける（さける）",
+    "extraReadings": [{"reading": "ひ", "example": "避難（ひなん）"}],
     "version": 1
   },
   {
@@ -14379,9 +15286,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "郎",
     "questionType": "multipleChoice",
-    "choices": ["違","郎","誉","浜"],
+    "choices": ["違", "郎", "誉", "浜"],
     "correctAnswer": "郎",
-    "reading": "ロウ",
+    "reading": "ろう",
     "example": "新郎（しんろう）",
     "version": 1
   },
@@ -14390,9 +15297,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "釈",
     "questionType": "multipleChoice",
-    "choices": ["鎖","紹","濁","釈"],
+    "choices": ["鎖", "紹", "濁", "釈"],
     "correctAnswer": "釈",
-    "reading": "シャク",
+    "reading": "しゃく",
     "example": "解釈（かいしゃく）",
     "version": 1
   },
@@ -14401,10 +15308,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "鈍",
     "questionType": "multipleChoice",
-    "choices": ["攻","忙","殖","鈍"],
+    "choices": ["攻", "忙", "殖", "鈍"],
     "correctAnswer": "鈍",
     "reading": "にぶ（い）",
     "example": "鈍い（にぶい）",
+    "extraReadings": [{"reading": "どん", "example": "鈍感（どんかん）"}],
     "version": 1
   },
   {
@@ -14412,10 +15320,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "鉛",
     "questionType": "multipleChoice",
-    "choices": ["鉛","腰","傍","茂"],
+    "choices": ["鉛", "腰", "傍", "茂"],
     "correctAnswer": "鉛",
     "reading": "なまり",
-    "example": "鉛筆（えんぴつ）",
+    "example": "鉛（なまり）",
+    "extraReadings": [{"reading": "えん", "example": "鉛筆（えんぴつ）"}],
     "version": 1
   },
   {
@@ -14423,10 +15332,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "鋭",
     "questionType": "multipleChoice",
-    "choices": ["旬","召","払","鋭"],
+    "choices": ["旬", "召", "払", "鋭"],
     "correctAnswer": "鋭",
     "reading": "するど（い）",
     "example": "鋭い（するどい）",
+    "extraReadings": [{"reading": "えい", "example": "鋭敏（えいびん）"}],
     "version": 1
   },
   {
@@ -14434,10 +15344,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "鎖",
     "questionType": "multipleChoice",
-    "choices": ["鎖","趣","俗","鈍"],
+    "choices": ["鎖", "趣", "俗", "鈍"],
     "correctAnswer": "鎖",
     "reading": "くさり",
     "example": "鎖（くさり）",
+    "extraReadings": [{"reading": "さ", "example": "封鎖（ふうさ）"}],
     "version": 1
   },
   {
@@ -14445,10 +15356,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "鑑",
     "questionType": "multipleChoice",
-    "choices": ["儀","奴","鑑","飾"],
+    "choices": ["儀", "奴", "鑑", "飾"],
     "correctAnswer": "鑑",
-    "reading": "カン",
+    "reading": "かん",
     "example": "鑑賞（かんしょう）",
+    "extraReadings": [{"reading": "かがみ", "example": "手鑑（てかがみ）"}],
     "version": 1
   },
   {
@@ -14456,10 +15368,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "闘",
     "questionType": "multipleChoice",
-    "choices": ["闘","影","傍","込"],
+    "choices": ["闘", "影", "傍", "込"],
     "correctAnswer": "闘",
     "reading": "たたか（う）",
     "example": "闘う（たたかう）",
+    "extraReadings": [{"reading": "とう", "example": "戦闘（せんとう）"}],
     "version": 1
   },
   {
@@ -14467,9 +15380,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "陣",
     "questionType": "multipleChoice",
-    "choices": ["違","需","摘","陣"],
+    "choices": ["違", "需", "摘", "陣"],
     "correctAnswer": "陣",
-    "reading": "ジン",
+    "reading": "じん",
     "example": "陣地（じんち）",
     "version": 1
   },
@@ -14478,10 +15391,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "陰",
     "questionType": "multipleChoice",
-    "choices": ["陰","姓","詰","凡"],
+    "choices": ["陰", "姓", "詰", "凡"],
     "correctAnswer": "陰",
     "reading": "かげ",
     "example": "陰（かげ）",
+    "extraReadings": [{"reading": "いん", "example": "陰気（いんき）"}, {"reading": "かげ（る）", "example": "陰る（かげる）"}],
     "version": 1
   },
   {
@@ -14489,10 +15403,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "隠",
     "questionType": "multipleChoice",
-    "choices": ["隠","微","暇","爆"],
+    "choices": ["隠", "微", "暇", "爆"],
     "correctAnswer": "隠",
     "reading": "かく（す）",
     "example": "隠す（かくす）",
+    "extraReadings": [{"reading": "かく（れる）", "example": "隠れる（かくれる）"}, {"reading": "いん", "example": "隠居（いんきょ）"}],
     "version": 1
   },
   {
@@ -14500,10 +15415,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "隣",
     "questionType": "multipleChoice",
-    "choices": ["継","隣","縁","澄"],
+    "choices": ["継", "隣", "縁", "澄"],
     "correctAnswer": "隣",
     "reading": "とな（り）",
     "example": "隣（となり）",
+    "extraReadings": [{"reading": "りん", "example": "隣接（りんせつ）"}, {"reading": "とな（る）", "example": "隣る（となる）"}],
     "version": 1
   },
   {
@@ -14511,9 +15427,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "隷",
     "questionType": "multipleChoice",
-    "choices": ["隷","吹","匹","屈"],
+    "choices": ["隷", "吹", "匹", "屈"],
     "correctAnswer": "隷",
-    "reading": "レイ",
+    "reading": "れい",
     "example": "奴隷（どれい）",
     "version": 1
   },
@@ -14522,10 +15438,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "雄",
     "questionType": "multipleChoice",
-    "choices": ["鋭","却","雄","旨"],
+    "choices": ["鋭", "却", "雄", "旨"],
     "correctAnswer": "雄",
-    "reading": "おす",
+    "reading": "お",
     "example": "雄（おす）",
+    "extraReadings": [{"reading": "ゆう", "example": "英雄（えいゆう）"}],
     "version": 1
   },
   {
@@ -14533,9 +15450,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "雅",
     "questionType": "multipleChoice",
-    "choices": ["輝","途","叫","雅"],
+    "choices": ["輝", "途", "叫", "雅"],
     "correctAnswer": "雅",
-    "reading": "ガ",
+    "reading": "が",
     "example": "優雅（ゆうが）",
     "version": 1
   },
@@ -14544,10 +15461,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "雌",
     "questionType": "multipleChoice",
-    "choices": ["寂","雌","抜","浜"],
+    "choices": ["寂", "雌", "抜", "浜"],
     "correctAnswer": "雌",
-    "reading": "めす",
+    "reading": "め",
     "example": "雌（めす）",
+    "extraReadings": [{"reading": "し", "example": "雌雄（しゆう）"}],
     "version": 1
   },
   {
@@ -14555,10 +15473,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "離",
     "questionType": "multipleChoice",
-    "choices": ["離","敏","恋","継"],
+    "choices": ["離", "敏", "恋", "継"],
     "correctAnswer": "離",
     "reading": "はな（れる）",
     "example": "離れる（はなれる）",
+    "extraReadings": [{"reading": "はな（す）", "example": "離す（はなす）"}, {"reading": "り", "example": "距離（きょり）"}],
     "version": 1
   },
   {
@@ -14566,10 +15485,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "雷",
     "questionType": "multipleChoice",
-    "choices": ["柔","召","婚","雷"],
+    "choices": ["柔", "召", "婚", "雷"],
     "correctAnswer": "雷",
     "reading": "かみなり",
     "example": "雷（かみなり）",
+    "extraReadings": [{"reading": "らい", "example": "雷鳴（らいめい）"}],
     "version": 1
   },
   {
@@ -14577,9 +15497,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "需",
     "questionType": "multipleChoice",
-    "choices": ["傍","継","需","甘"],
+    "choices": ["傍", "継", "需", "甘"],
     "correctAnswer": "需",
-    "reading": "ジュ",
+    "reading": "じゅ",
     "example": "需要（じゅよう）",
     "version": 1
   },
@@ -14588,10 +15508,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "震",
     "questionType": "multipleChoice",
-    "choices": ["驚","腕","震","粒"],
+    "choices": ["驚", "腕", "震", "粒"],
     "correctAnswer": "震",
     "reading": "ふる（える）",
     "example": "震える（ふるえる）",
+    "extraReadings": [{"reading": "ふる（う）", "example": "震う（ふるう）"}, {"reading": "しん", "example": "地震（じしん）"}],
     "version": 1
   },
   {
@@ -14599,10 +15520,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "霧",
     "questionType": "multipleChoice",
-    "choices": ["跡","幅","霧","嘆"],
+    "choices": ["跡", "幅", "霧", "嘆"],
     "correctAnswer": "霧",
     "reading": "きり",
     "example": "霧（きり）",
+    "extraReadings": [{"reading": "む", "example": "濃霧（のうむ）"}],
     "version": 1
   },
   {
@@ -14610,10 +15532,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "露",
     "questionType": "multipleChoice",
-    "choices": ["玄","腐","露","悩"],
+    "choices": ["玄", "腐", "露", "悩"],
     "correctAnswer": "露",
     "reading": "つゆ",
     "example": "露（つゆ）",
+    "extraReadings": [{"reading": "ろ", "example": "露出（ろしゅつ）"}],
     "version": 1
   },
   {
@@ -14621,10 +15544,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "響",
     "questionType": "multipleChoice",
-    "choices": ["闘","握","響","怒"],
+    "choices": ["闘", "握", "響", "怒"],
     "correctAnswer": "響",
     "reading": "ひび（く）",
     "example": "響く（ひびく）",
+    "extraReadings": [{"reading": "きょう", "example": "影響（えいきょう）"}],
     "version": 1
   },
   {
@@ -14632,9 +15556,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "項",
     "questionType": "multipleChoice",
-    "choices": ["項","麗","惨","茂"],
+    "choices": ["項", "麗", "惨", "茂"],
     "correctAnswer": "項",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "項目（こうもく）",
     "version": 1
   },
@@ -14643,10 +15567,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "頼",
     "questionType": "multipleChoice",
-    "choices": ["朱","称","縁","頼"],
+    "choices": ["朱", "称", "縁", "頼"],
     "correctAnswer": "頼",
     "reading": "たの（む）",
     "example": "頼む（たのむ）",
+    "extraReadings": [{"reading": "たよ（る）", "example": "頼る（たよる）"}, {"reading": "らい", "example": "信頼（しんらい）"}],
     "version": 1
   },
   {
@@ -14654,10 +15579,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "飾",
     "questionType": "multipleChoice",
-    "choices": ["罰","眠","鮮","飾"],
+    "choices": ["罰", "眠", "鮮", "飾"],
     "correctAnswer": "飾",
     "reading": "かざ（る）",
     "example": "飾る（かざる）",
+    "extraReadings": [{"reading": "しょく", "example": "装飾（そうしょく）"}],
     "version": 1
   },
   {
@@ -14665,10 +15591,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "駆",
     "questionType": "multipleChoice",
-    "choices": ["罰","駆","沢","嘆"],
+    "choices": ["罰", "駆", "沢", "嘆"],
     "correctAnswer": "駆",
     "reading": "か（ける）",
     "example": "駆ける（かける）",
+    "extraReadings": [{"reading": "か（る）", "example": "駆る（かる）"}, {"reading": "く", "example": "駆使（くし）"}],
     "version": 1
   },
   {
@@ -14676,10 +15603,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "騒",
     "questionType": "multipleChoice",
-    "choices": ["盾","跡","姓","騒"],
+    "choices": ["盾", "跡", "姓", "騒"],
     "correctAnswer": "騒",
     "reading": "さわ（ぐ）",
     "example": "騒ぐ（さわぐ）",
+    "extraReadings": [{"reading": "そう", "example": "騒音（そうおん）"}],
     "version": 1
   },
   {
@@ -14687,10 +15615,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "驚",
     "questionType": "multipleChoice",
-    "choices": ["壁","驚","杯","堤"],
+    "choices": ["壁", "驚", "杯", "堤"],
     "correctAnswer": "驚",
     "reading": "おどろ（く）",
     "example": "驚く（おどろく）",
+    "extraReadings": [{"reading": "きょう", "example": "驚異（きょうい）"}],
     "version": 1
   },
   {
@@ -14698,10 +15627,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "髪",
     "questionType": "multipleChoice",
-    "choices": ["繁","髪","猛","介"],
+    "choices": ["繁", "髪", "猛", "介"],
     "correctAnswer": "髪",
     "reading": "かみ",
     "example": "髪（かみ）",
+    "extraReadings": [{"reading": "はつ", "example": "毛髪（もうはつ）"}],
     "version": 1
   },
   {
@@ -14709,10 +15639,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "鬼",
     "questionType": "multipleChoice",
-    "choices": ["鬼","噴","咲","弐"],
+    "choices": ["鬼", "噴", "咲", "弐"],
     "correctAnswer": "鬼",
     "reading": "おに",
     "example": "鬼（おに）",
+    "extraReadings": [{"reading": "き", "example": "鬼神（きしん）"}],
     "version": 1
   },
   {
@@ -14720,10 +15651,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "鮮",
     "questionType": "multipleChoice",
-    "choices": ["鮮","雅","箇","露"],
+    "choices": ["鮮", "雅", "箇", "露"],
     "correctAnswer": "鮮",
     "reading": "あざ（やか）",
     "example": "鮮やか（あざやか）",
+    "extraReadings": [{"reading": "せん", "example": "新鮮（しんせん）"}],
     "version": 1
   },
   {
@@ -14731,10 +15663,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "麗",
     "questionType": "multipleChoice",
-    "choices": ["麗","丹","狂","床"],
+    "choices": ["麗", "丹", "狂", "床"],
     "correctAnswer": "麗",
-    "reading": "レイ",
-    "example": "美麗（びれい）",
+    "reading": "うるわ（しい）",
+    "example": "麗しい（うるわしい）",
+    "extraReadings": [{"reading": "れい", "example": "華麗（かれい）"}],
     "version": 1
   },
   {
@@ -14742,10 +15675,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "黙",
     "questionType": "multipleChoice",
-    "choices": ["秀","偉","黙","項"],
+    "choices": ["秀", "偉", "黙", "項"],
     "correctAnswer": "黙",
     "reading": "だま（る）",
     "example": "黙る（だまる）",
+    "extraReadings": [{"reading": "もく", "example": "沈黙（ちんもく）"}],
     "version": 1
   },
   {
@@ -14753,10 +15687,11 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "鼓",
     "questionType": "multipleChoice",
-    "choices": ["鼓","即","狩","与"],
+    "choices": ["鼓", "即", "狩", "与"],
     "correctAnswer": "鼓",
-    "reading": "つづみ",
-    "example": "太鼓（たいこ）",
+    "reading": "こ",
+    "example": "鼓動（こどう）",
+    "extraReadings": [{"reading": "つづみ", "example": "鼓（つづみ）"}],
     "version": 1
   },
   {
@@ -14764,9 +15699,9 @@ const questions = [
     "level": "LEVEL_4",
     "kanji": "齢",
     "questionType": "multipleChoice",
-    "choices": ["齢","騒","頼","茂"],
+    "choices": ["齢", "騒", "頼", "茂"],
     "correctAnswer": "齢",
-    "reading": "レイ",
+    "reading": "れい",
     "example": "年齢（ねんれい）",
     "version": 1
   },
@@ -14775,10 +15710,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "乏",
     "questionType": "multipleChoice",
-    "choices": ["債","祉","乏","企"],
+    "choices": ["債", "祉", "乏", "企"],
     "correctAnswer": "乏",
     "reading": "とぼ（しい）",
-    "example": "貧乏（びんぼう）",
+    "example": "乏しい（とぼしい）",
+    "extraReadings": [{"reading": "ぼう", "example": "欠乏（けつぼう）"}],
     "version": 1
   },
   {
@@ -14786,10 +15722,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "乙",
     "questionType": "multipleChoice",
-    "choices": ["如","乙","隔","聴"],
+    "choices": ["如", "乙", "隔", "聴"],
     "correctAnswer": "乙",
-    "reading": "オツ",
-    "example": "甲乙（こうおつ）",
+    "reading": "おつ",
+    "example": "乙な味（おつなあじ）",
     "version": 1
   },
   {
@@ -14797,10 +15733,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "了",
     "questionType": "multipleChoice",
-    "choices": ["了","遂","孤","締"],
+    "choices": ["了", "遂", "孤", "締"],
     "correctAnswer": "了",
-    "reading": "リョウ",
-    "example": "了解（りょうかい）",
+    "reading": "りょう",
+    "example": "完了（かんりょう）",
     "version": 1
   },
   {
@@ -14808,10 +15744,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "企",
     "questionType": "multipleChoice",
-    "choices": ["携","巧","企","酔"],
+    "choices": ["携", "巧", "企", "酔"],
     "correctAnswer": "企",
-    "reading": "キ",
-    "example": "企業（きぎょう）",
+    "reading": "くわだ（てる）",
+    "example": "企てる（くわだてる）",
+    "extraReadings": [{"reading": "き", "example": "企業（きぎょう）"}],
     "version": 1
   },
   {
@@ -14819,10 +15756,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "伏",
     "questionType": "multipleChoice",
-    "choices": ["伏","硬","暫","冠"],
+    "choices": ["伏", "硬", "暫", "冠"],
     "correctAnswer": "伏",
     "reading": "ふ（せる）",
     "example": "伏せる（ふせる）",
+    "extraReadings": [{"reading": "ふく", "example": "降伏（こうふく）"}],
     "version": 1
   },
   {
@@ -14830,10 +15768,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "伐",
     "questionType": "multipleChoice",
-    "choices": ["豚","粗","伐","獄"],
+    "choices": ["豚", "粗", "伐", "獄"],
     "correctAnswer": "伐",
-    "reading": "バツ",
-    "example": "伐採（ばっさい）",
+    "reading": "ばつ",
+    "example": "討伐（とうばつ）",
     "version": 1
   },
   {
@@ -14841,10 +15779,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "伴",
     "questionType": "multipleChoice",
-    "choices": ["滝","濫","畔","伴"],
+    "choices": ["滝", "濫", "畔", "伴"],
     "correctAnswer": "伴",
     "reading": "ともな（う）",
     "example": "伴う（ともなう）",
+    "extraReadings": [{"reading": "ばん", "example": "伴奏（ばんそう）"}, {"reading": "はん", "example": "同伴（どうはん）"}],
     "version": 1
   },
   {
@@ -14852,10 +15791,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "伸",
     "questionType": "multipleChoice",
-    "choices": ["苗","陶","伸","牲"],
+    "choices": ["苗", "陶", "伸", "牲"],
     "correctAnswer": "伸",
     "reading": "の（びる）",
     "example": "伸びる（のびる）",
+    "extraReadings": [{"reading": "しん", "example": "伸縮（しんしゅく）"}, {"reading": "の（ばす）", "example": "伸ばす（のばす）"}],
     "version": 1
   },
   {
@@ -14863,9 +15803,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "佳",
     "questionType": "multipleChoice",
-    "choices": ["昇","佳","慌","焦"],
+    "choices": ["昇", "佳", "慌", "焦"],
     "correctAnswer": "佳",
-    "reading": "カ",
+    "reading": "か",
     "example": "佳作（かさく）",
     "version": 1
   },
@@ -14874,10 +15814,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "侍",
     "questionType": "multipleChoice",
-    "choices": ["陪","魅","侍","喫"],
+    "choices": ["陪", "魅", "侍", "喫"],
     "correctAnswer": "侍",
     "reading": "さむらい",
     "example": "侍（さむらい）",
+    "extraReadings": [{"reading": "じ", "example": "侍従（じじゅう）"}],
     "version": 1
   },
   {
@@ -14885,10 +15826,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "促",
     "questionType": "multipleChoice",
-    "choices": ["促","炊","携","克"],
+    "choices": ["促", "炊", "携", "克"],
     "correctAnswer": "促",
     "reading": "うなが（す）",
     "example": "促す（うながす）",
+    "extraReadings": [{"reading": "そく", "example": "催促（さいそく）"}],
     "version": 1
   },
   {
@@ -14896,10 +15838,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "倣",
     "questionType": "multipleChoice",
-    "choices": ["刑","錬","葬","倣"],
+    "choices": ["刑", "錬", "葬", "倣"],
     "correctAnswer": "倣",
     "reading": "なら（う）",
     "example": "倣う（ならう）",
+    "extraReadings": [{"reading": "ほう", "example": "模倣（もほう）"}],
     "version": 1
   },
   {
@@ -14907,9 +15850,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "倹",
     "questionType": "multipleChoice",
-    "choices": ["癖","雇","倹","衝"],
+    "choices": ["癖", "雇", "倹", "衝"],
     "correctAnswer": "倹",
-    "reading": "ケン",
+    "reading": "けん",
     "example": "倹約（けんやく）",
     "version": 1
   },
@@ -14918,9 +15861,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "偶",
     "questionType": "multipleChoice",
-    "choices": ["佳","偶","畜","悔"],
+    "choices": ["佳", "偶", "畜", "悔"],
     "correctAnswer": "偶",
-    "reading": "グウ",
+    "reading": "ぐう",
     "example": "偶然（ぐうぜん）",
     "version": 1
   },
@@ -14929,10 +15872,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "催",
     "questionType": "multipleChoice",
-    "choices": ["虚","催","錬","抽"],
+    "choices": ["虚", "催", "錬", "抽"],
     "correctAnswer": "催",
     "reading": "もよお（す）",
     "example": "催す（もよおす）",
+    "extraReadings": [{"reading": "さい", "example": "開催（かいさい）"}],
     "version": 1
   },
   {
@@ -14940,10 +15884,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "債",
     "questionType": "multipleChoice",
-    "choices": ["棄","債","奪","酔"],
+    "choices": ["棄", "債", "奪", "酔"],
     "correctAnswer": "債",
-    "reading": "サイ",
-    "example": "負債（ふさい）",
+    "reading": "さい",
+    "example": "債券（さいけん）",
     "version": 1
   },
   {
@@ -14951,9 +15895,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "克",
     "questionType": "multipleChoice",
-    "choices": ["埋","寿","慨","克"],
+    "choices": ["埋", "寿", "慨", "克"],
     "correctAnswer": "克",
-    "reading": "コク",
+    "reading": "こく",
     "example": "克服（こくふく）",
     "version": 1
   },
@@ -14962,10 +15906,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "免",
     "questionType": "multipleChoice",
-    "choices": ["斥","免","卑","癖"],
+    "choices": ["斥", "免", "卑", "癖"],
     "correctAnswer": "免",
-    "reading": "メン",
-    "example": "免許（めんきょ）",
+    "reading": "まぬか（れる）",
+    "example": "免れる（まぬかれる）",
+    "extraReadings": [{"reading": "めん", "example": "免許（めんきょ）"}],
     "version": 1
   },
   {
@@ -14973,9 +15918,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "冗",
     "questionType": "multipleChoice",
-    "choices": ["湿","慕","冗","畔"],
+    "choices": ["湿", "慕", "冗", "畔"],
     "correctAnswer": "冗",
-    "reading": "ジョウ",
+    "reading": "じょう",
     "example": "冗談（じょうだん）",
     "version": 1
   },
@@ -14984,10 +15929,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "冠",
     "questionType": "multipleChoice",
-    "choices": ["鋳","冠","墨","倹"],
+    "choices": ["鋳", "冠", "墨", "倹"],
     "correctAnswer": "冠",
-    "reading": "カン",
-    "example": "王冠（おうかん）",
+    "reading": "かんむり",
+    "example": "冠（かんむり）",
+    "extraReadings": [{"reading": "かん", "example": "王冠（おうかん）"}],
     "version": 1
   },
   {
@@ -14995,10 +15941,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "凍",
     "questionType": "multipleChoice",
-    "choices": ["債","掛","猟","凍"],
+    "choices": ["債", "掛", "猟", "凍"],
     "correctAnswer": "凍",
     "reading": "こお（る）",
     "example": "凍る（こおる）",
+    "extraReadings": [{"reading": "とう", "example": "冷凍（れいとう）"}, {"reading": "こご（える）", "example": "凍える（こごえる）"}],
     "version": 1
   },
   {
@@ -15006,10 +15953,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "凝",
     "questionType": "multipleChoice",
-    "choices": ["凝","搾","嘱","炉"],
+    "choices": ["凝", "搾", "嘱", "炉"],
     "correctAnswer": "凝",
     "reading": "こ（る）",
     "example": "凝る（こる）",
+    "extraReadings": [{"reading": "ぎょう", "example": "凝固（ぎょうこ）"}],
     "version": 1
   },
   {
@@ -15017,9 +15965,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "刑",
     "questionType": "multipleChoice",
-    "choices": ["魂","謀","刑","縫"],
+    "choices": ["魂", "謀", "刑", "縫"],
     "correctAnswer": "刑",
-    "reading": "ケイ",
+    "reading": "けい",
     "example": "刑罰（けいばつ）",
     "version": 1
   },
@@ -15028,10 +15976,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "削",
     "questionType": "multipleChoice",
-    "choices": ["揚","削","緊","鋳"],
+    "choices": ["揚", "削", "緊", "鋳"],
     "correctAnswer": "削",
     "reading": "けず（る）",
     "example": "削る（けずる）",
+    "extraReadings": [{"reading": "さく", "example": "削除（さくじょ）"}],
     "version": 1
   },
   {
@@ -15039,10 +15988,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "励",
     "questionType": "multipleChoice",
-    "choices": ["邪","胞","糧","励"],
+    "choices": ["邪", "胞", "糧", "励"],
     "correctAnswer": "励",
     "reading": "はげ（む）",
     "example": "励む（はげむ）",
+    "extraReadings": [{"reading": "はげ（ます）", "example": "励ます（はげます）"}, {"reading": "れい", "example": "激励（げきれい）"}],
     "version": 1
   },
   {
@@ -15050,10 +16000,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "勘",
     "questionType": "multipleChoice",
-    "choices": ["勘","絞","欺","蛮"],
+    "choices": ["勘", "絞", "欺", "蛮"],
     "correctAnswer": "勘",
-    "reading": "カン",
-    "example": "勘違い（かんちがい）",
+    "reading": "かん",
+    "example": "勘定（かんじょう）",
     "version": 1
   },
   {
@@ -15061,10 +16011,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "募",
     "questionType": "multipleChoice",
-    "choices": ["聴","詠","募","炊"],
+    "choices": ["聴", "詠", "募", "炊"],
     "correctAnswer": "募",
-    "reading": "ボ",
-    "example": "募集（ぼしゅう）",
+    "reading": "つの（る）",
+    "example": "募る（つのる）",
+    "extraReadings": [{"reading": "ぼ", "example": "募集（ぼしゅう）"}],
     "version": 1
   },
   {
@@ -15072,10 +16023,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "匠",
     "questionType": "multipleChoice",
-    "choices": ["厘","詠","匠","誘"],
+    "choices": ["厘", "詠", "匠", "誘"],
     "correctAnswer": "匠",
-    "reading": "ショウ",
-    "example": "名匠（めいしょう）",
+    "reading": "しょう",
+    "example": "巨匠（きょしょう）",
     "version": 1
   },
   {
@@ -15083,9 +16034,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "匿",
     "questionType": "multipleChoice",
-    "choices": ["控","匿","痘","魂"],
+    "choices": ["控", "匿", "痘", "魂"],
     "correctAnswer": "匿",
-    "reading": "トク",
+    "reading": "とく",
     "example": "匿名（とくめい）",
     "version": 1
   },
@@ -15094,10 +16045,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "卑",
     "questionType": "multipleChoice",
-    "choices": ["陪","揺","卑","揚"],
+    "choices": ["陪", "揺", "卑", "揚"],
     "correctAnswer": "卑",
     "reading": "いや（しい）",
     "example": "卑しい（いやしい）",
+    "extraReadings": [{"reading": "ひ", "example": "卑怯（ひきょう）"}],
     "version": 1
   },
   {
@@ -15105,10 +16057,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "卓",
     "questionType": "multipleChoice",
-    "choices": ["卓","魂","酔","娯"],
+    "choices": ["卓", "魂", "酔", "娯"],
     "correctAnswer": "卓",
-    "reading": "タク",
-    "example": "卓球（たっきゅう）",
+    "reading": "たく",
+    "example": "食卓（しょくたく）",
     "version": 1
   },
   {
@@ -15116,10 +16068,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "卸",
     "questionType": "multipleChoice",
-    "choices": ["泌","侍","哲","卸"],
+    "choices": ["泌", "侍", "哲", "卸"],
     "correctAnswer": "卸",
     "reading": "おろ（す）",
     "example": "卸す（おろす）",
+    "extraReadings": [{"reading": "おろし", "example": "卸売り（おろしうり）"}],
     "version": 1
   },
   {
@@ -15127,9 +16080,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "厘",
     "questionType": "multipleChoice",
-    "choices": ["没","佳","厘","撮"],
+    "choices": ["没", "佳", "厘", "撮"],
     "correctAnswer": "厘",
-    "reading": "リン",
+    "reading": "りん",
     "example": "一厘（いちりん）",
     "version": 1
   },
@@ -15138,10 +16091,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "又",
     "questionType": "multipleChoice",
-    "choices": ["又","巧","郊","遭"],
+    "choices": ["又", "巧", "郊", "遭"],
     "correctAnswer": "又",
     "reading": "また",
-    "example": "又は（または）",
+    "example": "又の機会（またのきかい）",
     "version": 1
   },
   {
@@ -15149,10 +16102,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "双",
     "questionType": "multipleChoice",
-    "choices": ["審","双","潤","辱"],
+    "choices": ["審", "双", "潤", "辱"],
     "correctAnswer": "双",
-    "reading": "ソウ",
-    "example": "双方（そうほう）",
+    "reading": "ふた",
+    "example": "双子（ふたご）",
+    "extraReadings": [{"reading": "そう", "example": "双方（そうほう）"}],
     "version": 1
   },
   {
@@ -15160,10 +16114,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "吉",
     "questionType": "multipleChoice",
-    "choices": ["甲","了","吉","怠"],
+    "choices": ["甲", "了", "吉", "怠"],
     "correctAnswer": "吉",
-    "reading": "キチ",
+    "reading": "きち",
     "example": "吉日（きちじつ）",
+    "extraReadings": [{"reading": "きつ", "example": "不吉（ふきつ）"}],
     "version": 1
   },
   {
@@ -15171,9 +16126,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "吏",
     "questionType": "multipleChoice",
-    "choices": ["匠","控","吏","怪"],
+    "choices": ["匠", "控", "吏", "怪"],
     "correctAnswer": "吏",
-    "reading": "リ",
+    "reading": "り",
     "example": "官吏（かんり）",
     "version": 1
   },
@@ -15182,10 +16137,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "哀",
     "questionType": "multipleChoice",
-    "choices": ["粗","犠","哀","没"],
+    "choices": ["粗", "犠", "哀", "没"],
     "correctAnswer": "哀",
     "reading": "あわ（れ）",
     "example": "哀れ（あわれ）",
+    "extraReadings": [{"reading": "あい", "example": "哀愁（あいしゅう）"}, {"reading": "あわ（れむ）", "example": "哀れむ（あわれむ）"}],
     "version": 1
   },
   {
@@ -15193,9 +16149,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "哲",
     "questionType": "multipleChoice",
-    "choices": ["哲","姫","鶏","没"],
+    "choices": ["哲", "姫", "鶏", "没"],
     "correctAnswer": "哲",
-    "reading": "テツ",
+    "reading": "てつ",
     "example": "哲学（てつがく）",
     "version": 1
   },
@@ -15204,9 +16160,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "啓",
     "questionType": "multipleChoice",
-    "choices": ["削","啓","免","猟"],
+    "choices": ["削", "啓", "免", "猟"],
     "correctAnswer": "啓",
-    "reading": "ケイ",
+    "reading": "けい",
     "example": "啓発（けいはつ）",
     "version": 1
   },
@@ -15215,9 +16171,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "喚",
     "questionType": "multipleChoice",
-    "choices": ["徐","喚","拘","遵"],
+    "choices": ["徐", "喚", "拘", "遵"],
     "correctAnswer": "喚",
-    "reading": "カン",
+    "reading": "かん",
     "example": "喚起（かんき）",
     "version": 1
   },
@@ -15226,10 +16182,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "喫",
     "questionType": "multipleChoice",
-    "choices": ["怠","嫁","喫","婿"],
+    "choices": ["怠", "嫁", "喫", "婿"],
     "correctAnswer": "喫",
-    "reading": "キツ",
-    "example": "喫茶店（きっさてん）",
+    "reading": "きつ",
+    "example": "満喫（まんきつ）",
     "version": 1
   },
   {
@@ -15237,10 +16193,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "嘱",
     "questionType": "multipleChoice",
-    "choices": ["縫","嘱","憂","厘"],
+    "choices": ["縫", "嘱", "憂", "厘"],
     "correctAnswer": "嘱",
-    "reading": "ショク",
-    "example": "委嘱（いしょく）",
+    "reading": "しょく",
+    "example": "嘱託（しょくたく）",
     "version": 1
   },
   {
@@ -15248,9 +16204,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "坑",
     "questionType": "multipleChoice",
-    "choices": ["墳","鶏","掌","坑"],
+    "choices": ["墳", "鶏", "掌", "坑"],
     "correctAnswer": "坑",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "炭坑（たんこう）",
     "version": 1
   },
@@ -15259,10 +16215,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "埋",
     "questionType": "multipleChoice",
-    "choices": ["郊","遂","粋","埋"],
+    "choices": ["郊", "遂", "粋", "埋"],
     "correctAnswer": "埋",
     "reading": "う（める）",
     "example": "埋める（うめる）",
+    "extraReadings": [{"reading": "う（まる）", "example": "埋まる（うまる）"}, {"reading": "う（もれる）", "example": "埋もれる（うもれる）"}, {"reading": "まい", "example": "埋蔵（まいぞう）"}],
     "version": 1
   },
   {
@@ -15270,10 +16227,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "塊",
     "questionType": "multipleChoice",
-    "choices": ["揺","幻","塊","甲"],
+    "choices": ["揺", "幻", "塊", "甲"],
     "correctAnswer": "塊",
     "reading": "かたまり",
     "example": "塊（かたまり）",
+    "extraReadings": [{"reading": "かい", "example": "金塊（きんかい）"}],
     "version": 1
   },
   {
@@ -15281,10 +16239,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "塗",
     "questionType": "multipleChoice",
-    "choices": ["塗","膜","遂","奪"],
+    "choices": ["塗", "膜", "遂", "奪"],
     "correctAnswer": "塗",
     "reading": "ぬ（る）",
     "example": "塗る（ぬる）",
+    "extraReadings": [{"reading": "と", "example": "塗装（とそう）"}],
     "version": 1
   },
   {
@@ -15292,9 +16251,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "墜",
     "questionType": "multipleChoice",
-    "choices": ["哲","墜","簿","殴"],
+    "choices": ["哲", "墜", "簿", "殴"],
     "correctAnswer": "墜",
-    "reading": "ツイ",
+    "reading": "つい",
     "example": "墜落（ついらく）",
     "version": 1
   },
@@ -15303,10 +16262,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "墨",
     "questionType": "multipleChoice",
-    "choices": ["巧","卑","滝","墨"],
+    "choices": ["巧", "卑", "滝", "墨"],
     "correctAnswer": "墨",
     "reading": "すみ",
     "example": "墨（すみ）",
+    "extraReadings": [{"reading": "ぼく", "example": "墨汁（ぼくじゅう）"}],
     "version": 1
   },
   {
@@ -15314,9 +16274,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "墳",
     "questionType": "multipleChoice",
-    "choices": ["硬","悦","墳","稚"],
+    "choices": ["硬", "悦", "墳", "稚"],
     "correctAnswer": "墳",
-    "reading": "フン",
+    "reading": "ふん",
     "example": "古墳（こふん）",
     "version": 1
   },
@@ -15325,9 +16285,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "墾",
     "questionType": "multipleChoice",
-    "choices": ["藩","畔","墾","膜"],
+    "choices": ["藩", "畔", "墾", "膜"],
     "correctAnswer": "墾",
-    "reading": "コン",
+    "reading": "こん",
     "example": "開墾（かいこん）",
     "version": 1
   },
@@ -15336,9 +16296,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "壇",
     "questionType": "multipleChoice",
-    "choices": ["閲","壇","膜","擁"],
+    "choices": ["閲", "壇", "膜", "擁"],
     "correctAnswer": "壇",
-    "reading": "ダン",
+    "reading": "だん",
     "example": "花壇（かだん）",
     "version": 1
   },
@@ -15347,10 +16307,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "奉",
     "questionType": "multipleChoice",
-    "choices": ["促","奪","奉","締"],
+    "choices": ["促", "奪", "奉", "締"],
     "correctAnswer": "奉",
-    "reading": "ホウ",
-    "example": "奉仕（ほうし）",
+    "reading": "たてまつ（る）",
+    "example": "奉る（たてまつる）",
+    "extraReadings": [{"reading": "ほう", "example": "奉仕（ほうし）"}],
     "version": 1
   },
   {
@@ -15358,10 +16319,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "契",
     "questionType": "multipleChoice",
-    "choices": ["邦","契","畔","墜"],
+    "choices": ["邦", "契", "畔", "墜"],
     "correctAnswer": "契",
-    "reading": "ケイ",
-    "example": "契約（けいやく）",
+    "reading": "ちぎ（る）",
+    "example": "契る（ちぎる）",
+    "extraReadings": [{"reading": "けい", "example": "契約（けいやく）"}],
     "version": 1
   },
   {
@@ -15369,10 +16331,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "奪",
     "questionType": "multipleChoice",
-    "choices": ["奪","滅","嘱","漂"],
+    "choices": ["奪", "滅", "嘱", "漂"],
     "correctAnswer": "奪",
     "reading": "うば（う）",
     "example": "奪う（うばう）",
+    "extraReadings": [{"reading": "だつ", "example": "奪回（だっかい）"}],
     "version": 1
   },
   {
@@ -15380,10 +16343,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "如",
     "questionType": "multipleChoice",
-    "choices": ["婆","絞","如","摂"],
+    "choices": ["婆", "絞", "如", "摂"],
     "correctAnswer": "如",
-    "reading": "ジョ",
+    "reading": "じょ",
     "example": "突如（とつじょ）",
+    "extraReadings": [{"reading": "にょ", "example": "如来（にょらい）"}],
     "version": 1
   },
   {
@@ -15391,10 +16355,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "妨",
     "questionType": "multipleChoice",
-    "choices": ["縫","峡","妨","胆"],
+    "choices": ["縫", "峡", "妨", "胆"],
     "correctAnswer": "妨",
     "reading": "さまた（げる）",
     "example": "妨げる（さまたげる）",
+    "extraReadings": [{"reading": "ぼう", "example": "妨害（ぼうがい）"}],
     "version": 1
   },
   {
@@ -15402,7 +16367,7 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "姫",
     "questionType": "multipleChoice",
-    "choices": ["賢","択","稚","姫"],
+    "choices": ["賢", "択", "稚", "姫"],
     "correctAnswer": "姫",
     "reading": "ひめ",
     "example": "姫（ひめ）",
@@ -15413,9 +16378,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "娯",
     "questionType": "multipleChoice",
-    "choices": ["概","硬","遭","娯"],
+    "choices": ["概", "硬", "遭", "娯"],
     "correctAnswer": "娯",
-    "reading": "ゴ",
+    "reading": "ご",
     "example": "娯楽（ごらく）",
     "version": 1
   },
@@ -15424,9 +16389,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "婆",
     "questionType": "multipleChoice",
-    "choices": ["斤","遂","壇","婆"],
+    "choices": ["斤", "遂", "壇", "婆"],
     "correctAnswer": "婆",
-    "reading": "バ",
+    "reading": "ば",
     "example": "老婆（ろうば）",
     "version": 1
   },
@@ -15435,7 +16400,7 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "婿",
     "questionType": "multipleChoice",
-    "choices": ["婿","揺","奉","脅"],
+    "choices": ["婿", "揺", "奉", "脅"],
     "correctAnswer": "婿",
     "reading": "むこ",
     "example": "婿（むこ）",
@@ -15446,10 +16411,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "嫁",
     "questionType": "multipleChoice",
-    "choices": ["欧","慕","湾","嫁"],
+    "choices": ["欧", "慕", "湾", "嫁"],
     "correctAnswer": "嫁",
     "reading": "よめ",
     "example": "嫁（よめ）",
+    "extraReadings": [{"reading": "とつ（ぐ）", "example": "嫁ぐ（とつぐ）"}, {"reading": "か", "example": "転嫁（てんか）"}],
     "version": 1
   },
   {
@@ -15457,9 +16423,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "嬢",
     "questionType": "multipleChoice",
-    "choices": ["獄","嬢","潜","架"],
+    "choices": ["獄", "嬢", "潜", "架"],
     "correctAnswer": "嬢",
-    "reading": "ジョウ",
+    "reading": "じょう",
     "example": "令嬢（れいじょう）",
     "version": 1
   },
@@ -15468,10 +16434,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "孔",
     "questionType": "multipleChoice",
-    "choices": ["又","怪","孔","縫"],
+    "choices": ["又", "怪", "孔", "縫"],
     "correctAnswer": "孔",
-    "reading": "コウ",
-    "example": "気孔（きこう）",
+    "reading": "こう",
+    "example": "瞳孔（どうこう）",
     "version": 1
   },
   {
@@ -15479,9 +16445,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "孤",
     "questionType": "multipleChoice",
-    "choices": ["嬢","瀬","孤","緊"],
+    "choices": ["嬢", "瀬", "孤", "緊"],
     "correctAnswer": "孤",
-    "reading": "コ",
+    "reading": "こ",
     "example": "孤独（こどく）",
     "version": 1
   },
@@ -15490,10 +16456,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "宴",
     "questionType": "multipleChoice",
-    "choices": ["慨","甲","宴","敢"],
+    "choices": ["慨", "甲", "宴", "敢"],
     "correctAnswer": "宴",
-    "reading": "エン",
+    "reading": "えん",
     "example": "宴会（えんかい）",
+    "extraReadings": [{"reading": "うたげ", "example": "宴（うたげ）"}],
     "version": 1
   },
   {
@@ -15501,9 +16468,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "審",
     "questionType": "multipleChoice",
-    "choices": ["審","孔","裸","滅"],
+    "choices": ["審", "孔", "裸", "滅"],
     "correctAnswer": "審",
-    "reading": "シン",
+    "reading": "しん",
     "example": "審査（しんさ）",
     "version": 1
   },
@@ -15512,10 +16479,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "寿",
     "questionType": "multipleChoice",
-    "choices": ["催","帆","魔","寿"],
+    "choices": ["催", "帆", "魔", "寿"],
     "correctAnswer": "寿",
-    "reading": "ジュ",
-    "example": "長寿（ちょうじゅ）",
+    "reading": "ことぶき",
+    "example": "寿（ことぶき）",
+    "extraReadings": [{"reading": "じゅ", "example": "寿命（じゅみょう）"}],
     "version": 1
   },
   {
@@ -15523,10 +16491,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "封",
     "questionType": "multipleChoice",
-    "choices": ["房","掃","削","封"],
+    "choices": ["房", "掃", "削", "封"],
     "correctAnswer": "封",
-    "reading": "フウ",
+    "reading": "ふう",
     "example": "封筒（ふうとう）",
+    "extraReadings": [{"reading": "ほう", "example": "封建（ほうけん）"}],
     "version": 1
   },
   {
@@ -15534,10 +16503,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "尿",
     "questionType": "multipleChoice",
-    "choices": ["蛮","尿","募","刑"],
+    "choices": ["蛮", "尿", "募", "刑"],
     "correctAnswer": "尿",
-    "reading": "ニョウ",
-    "example": "尿（にょう）",
+    "reading": "にょう",
+    "example": "排尿（はいにょう）",
     "version": 1
   },
   {
@@ -15545,10 +16514,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "岳",
     "questionType": "multipleChoice",
-    "choices": ["衰","鋳","泌","岳"],
+    "choices": ["衰", "鋳", "泌", "岳"],
     "correctAnswer": "岳",
-    "reading": "ガク",
+    "reading": "がく",
     "example": "山岳（さんがく）",
+    "extraReadings": [{"reading": "たけ", "example": "岳（たけ）"}],
     "version": 1
   },
   {
@@ -15556,10 +16526,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "峡",
     "questionType": "multipleChoice",
-    "choices": ["窒","峡","帝","飽"],
+    "choices": ["窒", "峡", "帝", "飽"],
     "correctAnswer": "峡",
-    "reading": "キョウ",
-    "example": "海峡（かいきょう）",
+    "reading": "きょう",
+    "example": "峡谷（きょうこく）",
     "version": 1
   },
   {
@@ -15567,10 +16537,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "崩",
     "questionType": "multipleChoice",
-    "choices": ["魂","巧","猟","崩"],
+    "choices": ["魂", "巧", "猟", "崩"],
     "correctAnswer": "崩",
     "reading": "くず（れる）",
     "example": "崩れる（くずれる）",
+    "extraReadings": [{"reading": "くず（す）", "example": "崩す（くずす）"}, {"reading": "ほう", "example": "崩壊（ほうかい）"}],
     "version": 1
   },
   {
@@ -15578,10 +16549,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "巧",
     "questionType": "multipleChoice",
-    "choices": ["孔","巧","娯","赦"],
+    "choices": ["孔", "巧", "娯", "赦"],
     "correctAnswer": "巧",
     "reading": "たく（み）",
     "example": "巧み（たくみ）",
+    "extraReadings": [{"reading": "こう", "example": "巧妙（こうみょう）"}],
     "version": 1
   },
   {
@@ -15589,10 +16561,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "帆",
     "questionType": "multipleChoice",
-    "choices": ["姫","帆","緩","豚"],
+    "choices": ["姫", "帆", "緩", "豚"],
     "correctAnswer": "帆",
     "reading": "ほ",
-    "example": "帆（ほ）",
+    "example": "帆を張る（ほをはる）",
+    "extraReadings": [{"reading": "はん", "example": "帆船（はんせん）"}],
     "version": 1
   },
   {
@@ -15600,9 +16573,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "帝",
     "questionType": "multipleChoice",
-    "choices": ["婿","帝","滝","凍"],
+    "choices": ["婿", "帝", "滝", "凍"],
     "correctAnswer": "帝",
-    "reading": "テイ",
+    "reading": "てい",
     "example": "皇帝（こうてい）",
     "version": 1
   },
@@ -15611,10 +16584,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "幻",
     "questionType": "multipleChoice",
-    "choices": ["棄","託","幻","絞"],
+    "choices": ["棄", "託", "幻", "絞"],
     "correctAnswer": "幻",
     "reading": "まぼろし",
     "example": "幻（まぼろし）",
+    "extraReadings": [{"reading": "げん", "example": "幻想（げんそう）"}],
     "version": 1
   },
   {
@@ -15622,9 +16596,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "幽",
     "questionType": "multipleChoice",
-    "choices": ["幽","哲","軸","衝"],
+    "choices": ["幽", "哲", "軸", "衝"],
     "correctAnswer": "幽",
-    "reading": "ユウ",
+    "reading": "ゆう",
     "example": "幽霊（ゆうれい）",
     "version": 1
   },
@@ -15633,9 +16607,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "廉",
     "questionType": "multipleChoice",
-    "choices": ["概","廉","畜","撮"],
+    "choices": ["概", "廉", "畜", "撮"],
     "correctAnswer": "廉",
-    "reading": "レン",
+    "reading": "れん",
     "example": "廉価（れんか）",
     "version": 1
   },
@@ -15644,9 +16618,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "廊",
     "questionType": "multipleChoice",
-    "choices": ["菊","廊","弧","糧"],
+    "choices": ["菊", "廊", "弧", "糧"],
     "correctAnswer": "廊",
-    "reading": "ロウ",
+    "reading": "ろう",
     "example": "廊下（ろうか）",
     "version": 1
   },
@@ -15655,10 +16629,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "弧",
     "questionType": "multipleChoice",
-    "choices": ["喫","励","弧","寿"],
+    "choices": ["喫", "励", "弧", "寿"],
     "correctAnswer": "弧",
-    "reading": "コ",
-    "example": "弧（こ）",
+    "reading": "こ",
+    "example": "括弧（かっこ）",
     "version": 1
   },
   {
@@ -15666,10 +16640,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "彫",
     "questionType": "multipleChoice",
-    "choices": ["陶","彫","陳","掌"],
+    "choices": ["陶", "彫", "陳", "掌"],
     "correctAnswer": "彫",
     "reading": "ほ（る）",
     "example": "彫る（ほる）",
+    "extraReadings": [{"reading": "ちょう", "example": "彫刻（ちょうこく）"}],
     "version": 1
   },
   {
@@ -15677,10 +16652,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "徐",
     "questionType": "multipleChoice",
-    "choices": ["択","徐","催","慕"],
+    "choices": ["択", "徐", "催", "慕"],
     "correctAnswer": "徐",
-    "reading": "ジョ",
-    "example": "徐々に（じょじょに）",
+    "reading": "じょ",
+    "example": "徐行（じょこう）",
     "version": 1
   },
   {
@@ -15688,10 +16663,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "忌",
     "questionType": "multipleChoice",
-    "choices": ["控","魅","忌","免"],
+    "choices": ["控", "魅", "忌", "免"],
     "correctAnswer": "忌",
-    "reading": "キ",
-    "example": "忌日（きじつ）",
+    "reading": "い（む）",
+    "example": "忌む（いむ）",
+    "extraReadings": [{"reading": "き", "example": "忌中（きちゅう）"}],
     "version": 1
   },
   {
@@ -15699,10 +16675,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "怠",
     "questionType": "multipleChoice",
-    "choices": ["廊","怠","慨","又"],
+    "choices": ["廊", "怠", "慨", "又"],
     "correctAnswer": "怠",
-    "reading": "なま（ける）",
-    "example": "怠ける（なまける）",
+    "reading": "おこた（る）",
+    "example": "怠る（おこたる）",
+    "extraReadings": [{"reading": "なま（ける）", "example": "怠ける（なまける）"}, {"reading": "たい", "example": "怠慢（たいまん）"}],
     "version": 1
   },
   {
@@ -15710,10 +16687,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "怪",
     "questionType": "multipleChoice",
-    "choices": ["幽","辛","魅","怪"],
+    "choices": ["幽", "辛", "魅", "怪"],
     "correctAnswer": "怪",
     "reading": "あや（しい）",
     "example": "怪しい（あやしい）",
+    "extraReadings": [{"reading": "け", "example": "怪我（けが）"}],
     "version": 1
   },
   {
@@ -15721,10 +16699,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "恨",
     "questionType": "multipleChoice",
-    "choices": ["擁","恨","免","炉"],
+    "choices": ["擁", "恨", "免", "炉"],
     "correctAnswer": "恨",
     "reading": "うら（む）",
     "example": "恨む（うらむ）",
+    "extraReadings": [{"reading": "こん", "example": "痛恨（つうこん）"}],
     "version": 1
   },
   {
@@ -15732,10 +16711,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "悔",
     "questionType": "multipleChoice",
-    "choices": ["催","郊","匠","悔"],
+    "choices": ["催", "郊", "匠", "悔"],
     "correctAnswer": "悔",
     "reading": "く（いる）",
-    "example": "後悔（こうかい）",
+    "example": "悔いる（くいる）",
+    "extraReadings": [{"reading": "くや（しい）", "example": "悔しい（くやしい）"}, {"reading": "かい", "example": "後悔（こうかい）"}],
     "version": 1
   },
   {
@@ -15743,10 +16723,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "悟",
     "questionType": "multipleChoice",
-    "choices": ["悟","伐","凝","紛"],
+    "choices": ["悟", "伐", "凝", "紛"],
     "correctAnswer": "悟",
     "reading": "さと（る）",
     "example": "悟る（さとる）",
+    "extraReadings": [{"reading": "ご", "example": "覚悟（かくご）"}],
     "version": 1
   },
   {
@@ -15754,10 +16735,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "悦",
     "questionType": "multipleChoice",
-    "choices": ["硬","悦","嘱","滝"],
+    "choices": ["硬", "悦", "嘱", "滝"],
     "correctAnswer": "悦",
-    "reading": "エツ",
-    "example": "喜悦（きえつ）",
+    "reading": "えつ",
+    "example": "満悦（まんえつ）",
     "version": 1
   },
   {
@@ -15765,10 +16746,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "惜",
     "questionType": "multipleChoice",
-    "choices": ["惜","擁","房","殊"],
+    "choices": ["惜", "擁", "房", "殊"],
     "correctAnswer": "惜",
     "reading": "お（しい）",
     "example": "惜しい（おしい）",
+    "extraReadings": [{"reading": "せき", "example": "惜別（せきべつ）"}],
     "version": 1
   },
   {
@@ -15776,10 +16758,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "愚",
     "questionType": "multipleChoice",
-    "choices": ["愚","魔","廉","凍"],
+    "choices": ["愚", "魔", "廉", "凍"],
     "correctAnswer": "愚",
     "reading": "おろ（か）",
     "example": "愚か（おろか）",
+    "extraReadings": [{"reading": "ぐ", "example": "愚問（ぐもん）"}],
     "version": 1
   },
   {
@@ -15787,10 +16770,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "慈",
     "questionType": "multipleChoice",
-    "choices": ["膨","昇","遵","慈"],
+    "choices": ["膨", "昇", "遵", "慈"],
     "correctAnswer": "慈",
-    "reading": "ジ",
-    "example": "慈悲（じひ）",
+    "reading": "いつく（しむ）",
+    "example": "慈しむ（いつくしむ）",
+    "extraReadings": [{"reading": "じ", "example": "慈愛（じあい）"}],
     "version": 1
   },
   {
@@ -15798,10 +16782,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "慌",
     "questionType": "multipleChoice",
-    "choices": ["抽","慌","斗","憂"],
+    "choices": ["抽", "慌", "斗", "憂"],
     "correctAnswer": "慌",
     "reading": "あわ（てる）",
     "example": "慌てる（あわてる）",
+    "extraReadings": [{"reading": "こう", "example": "恐慌（きょうこう）"}],
     "version": 1
   },
   {
@@ -15809,10 +16794,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "慕",
     "questionType": "multipleChoice",
-    "choices": ["炊","遭","礎","慕"],
+    "choices": ["炊", "遭", "礎", "慕"],
     "correctAnswer": "慕",
     "reading": "した（う）",
     "example": "慕う（したう）",
+    "extraReadings": [{"reading": "ぼ", "example": "慕情（ぼじょう）"}],
     "version": 1
   },
   {
@@ -15820,10 +16806,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "慨",
     "questionType": "multipleChoice",
-    "choices": ["誘","魔","遭","慨"],
+    "choices": ["誘", "魔", "遭", "慨"],
     "correctAnswer": "慨",
-    "reading": "ガイ",
-    "example": "感慨（かんがい）",
+    "reading": "がい",
+    "example": "慨嘆（がいたん）",
     "version": 1
   },
   {
@@ -15831,10 +16817,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "慰",
     "questionType": "multipleChoice",
-    "choices": ["覆","穂","慰","擁"],
+    "choices": ["覆", "穂", "慰", "擁"],
     "correctAnswer": "慰",
     "reading": "なぐさ（める）",
     "example": "慰める（なぐさめる）",
+    "extraReadings": [{"reading": "い", "example": "慰安（いあん）"}],
     "version": 1
   },
   {
@@ -15842,10 +16829,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "憂",
     "questionType": "multipleChoice",
-    "choices": ["憂","隻","湿","衰"],
+    "choices": ["憂", "隻", "湿", "衰"],
     "correctAnswer": "憂",
     "reading": "うれ（える）",
     "example": "憂える（うれえる）",
+    "extraReadings": [{"reading": "ゆう", "example": "憂鬱（ゆううつ）"}],
     "version": 1
   },
   {
@@ -15853,10 +16841,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "憎",
     "questionType": "multipleChoice",
-    "choices": ["憎","廊","癖","符"],
+    "choices": ["憎", "廊", "癖", "符"],
     "correctAnswer": "憎",
     "reading": "にく（む）",
     "example": "憎む（にくむ）",
+    "extraReadings": [{"reading": "にく（い）", "example": "憎い（にくい）"}, {"reading": "ぞう", "example": "憎悪（ぞうお）"}],
     "version": 1
   },
   {
@@ -15864,10 +16853,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "憩",
     "questionType": "multipleChoice",
-    "choices": ["憩","搾","房","鎮"],
+    "choices": ["憩", "搾", "房", "鎮"],
     "correctAnswer": "憩",
-    "reading": "ケイ",
-    "example": "休憩（きゅうけい）",
+    "reading": "いこ（う）",
+    "example": "憩う（いこう）",
+    "extraReadings": [{"reading": "けい", "example": "休憩（きゅうけい）"}],
     "version": 1
   },
   {
@@ -15875,10 +16865,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "房",
     "questionType": "multipleChoice",
-    "choices": ["紺","房","寿","滝"],
+    "choices": ["紺", "房", "寿", "滝"],
     "correctAnswer": "房",
-    "reading": "ボウ",
-    "example": "冷房（れいぼう）",
+    "reading": "ふさ",
+    "example": "房（ふさ）",
+    "extraReadings": [{"reading": "ぼう", "example": "暖房（だんぼう）"}],
     "version": 1
   },
   {
@@ -15886,10 +16877,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "抑",
     "questionType": "multipleChoice",
-    "choices": ["衰","抑","掛","焦"],
+    "choices": ["衰", "抑", "掛", "焦"],
     "correctAnswer": "抑",
     "reading": "おさ（える）",
     "example": "抑える（おさえる）",
+    "extraReadings": [{"reading": "よく", "example": "抑制（よくせい）"}],
     "version": 1
   },
   {
@@ -15897,9 +16889,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "択",
     "questionType": "multipleChoice",
-    "choices": ["択","郭","換","雇"],
+    "choices": ["択", "郭", "換", "雇"],
     "correctAnswer": "択",
-    "reading": "タク",
+    "reading": "たく",
     "example": "選択（せんたく）",
     "version": 1
   },
@@ -15908,9 +16900,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "抽",
     "questionType": "multipleChoice",
-    "choices": ["抽","如","鎮","欺"],
+    "choices": ["抽", "如", "鎮", "欺"],
     "correctAnswer": "抽",
-    "reading": "チュウ",
+    "reading": "ちゅう",
     "example": "抽選（ちゅうせん）",
     "version": 1
   },
@@ -15919,10 +16911,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "拘",
     "questionType": "multipleChoice",
-    "choices": ["拘","塊","魅","錬"],
+    "choices": ["拘", "塊", "魅", "錬"],
     "correctAnswer": "拘",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "拘束（こうそく）",
+    "extraReadings": [{"reading": "こだわ（る）", "example": "拘る（こだわる）"}],
     "version": 1
   },
   {
@@ -15930,9 +16923,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "掃",
     "questionType": "multipleChoice",
-    "choices": ["免","掃","胞","覆"],
+    "choices": ["免", "掃", "胞", "覆"],
     "correctAnswer": "掃",
-    "reading": "ソウ",
+    "reading": "そう",
     "example": "掃除（そうじ）",
     "version": 1
   },
@@ -15941,10 +16934,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "掌",
     "questionType": "multipleChoice",
-    "choices": ["浪","穫","掌","架"],
+    "choices": ["浪", "穫", "掌", "架"],
     "correctAnswer": "掌",
-    "reading": "ショウ",
-    "example": "車掌（しゃしょう）",
+    "reading": "しょう",
+    "example": "掌握（しょうあく）",
+    "extraReadings": [{"reading": "てのひら", "example": "掌（てのひら）"}],
     "version": 1
   },
   {
@@ -15952,9 +16946,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "排",
     "questionType": "multipleChoice",
-    "choices": ["慈","排","篤","刑"],
+    "choices": ["慈", "排", "篤", "刑"],
     "correctAnswer": "排",
-    "reading": "ハイ",
+    "reading": "はい",
     "example": "排除（はいじょ）",
     "version": 1
   },
@@ -15963,10 +16957,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "掛",
     "questionType": "multipleChoice",
-    "choices": ["辱","霊","掛","桑"],
+    "choices": ["辱", "霊", "掛", "桑"],
     "correctAnswer": "掛",
     "reading": "か（ける）",
     "example": "掛ける（かける）",
+    "extraReadings": [{"reading": "か（かる）", "example": "掛かる（かかる）"}],
     "version": 1
   },
   {
@@ -15974,10 +16969,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "控",
     "questionType": "multipleChoice",
-    "choices": ["隆","控","畔","斤"],
+    "choices": ["隆", "控", "畔", "斤"],
     "correctAnswer": "控",
     "reading": "ひか（える）",
     "example": "控える（ひかえる）",
+    "extraReadings": [{"reading": "こう", "example": "控除（こうじょ）"}],
     "version": 1
   },
   {
@@ -15985,9 +16981,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "措",
     "questionType": "multipleChoice",
-    "choices": ["壇","措","飽","施"],
+    "choices": ["壇", "措", "飽", "施"],
     "correctAnswer": "措",
-    "reading": "ソ",
+    "reading": "そ",
     "example": "措置（そち）",
     "version": 1
   },
@@ -15996,10 +16992,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "掲",
     "questionType": "multipleChoice",
-    "choices": ["掲","慕","縫","痘"],
+    "choices": ["掲", "慕", "縫", "痘"],
     "correctAnswer": "掲",
     "reading": "かか（げる）",
     "example": "掲げる（かかげる）",
+    "extraReadings": [{"reading": "けい", "example": "掲示（けいじ）"}],
     "version": 1
   },
   {
@@ -16007,10 +17004,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "揚",
     "questionType": "multipleChoice",
-    "choices": ["侍","忌","漂","揚"],
+    "choices": ["侍", "忌", "漂", "揚"],
     "correctAnswer": "揚",
     "reading": "あ（げる）",
     "example": "揚げる（あげる）",
+    "extraReadings": [{"reading": "あ（がる）", "example": "揚がる（あがる）"}, {"reading": "よう", "example": "高揚（こうよう）"}],
     "version": 1
   },
   {
@@ -16018,10 +17016,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "換",
     "questionType": "multipleChoice",
-    "choices": ["婿","厘","換","雇"],
+    "choices": ["婿", "厘", "換", "雇"],
     "correctAnswer": "換",
-    "reading": "カン",
-    "example": "交換（こうかん）",
+    "reading": "か（える）",
+    "example": "換える（かえる）",
+    "extraReadings": [{"reading": "か（わる）", "example": "換わる（かわる）"}, {"reading": "かん", "example": "交換（こうかん）"}],
     "version": 1
   },
   {
@@ -16029,10 +17028,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "揺",
     "questionType": "multipleChoice",
-    "choices": ["慰","鶏","揺","緩"],
+    "choices": ["慰", "鶏", "揺", "緩"],
     "correctAnswer": "揺",
     "reading": "ゆ（れる）",
     "example": "揺れる（ゆれる）",
+    "extraReadings": [{"reading": "よう", "example": "動揺（どうよう）"}, {"reading": "ゆ（らぐ）", "example": "揺らぐ（ゆらぐ）"}],
     "version": 1
   },
   {
@@ -16040,10 +17040,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "携",
     "questionType": "multipleChoice",
-    "choices": ["謀","搾","啓","携"],
+    "choices": ["謀", "搾", "啓", "携"],
     "correctAnswer": "携",
-    "reading": "ケイ",
-    "example": "携帯（けいたい）",
+    "reading": "たずさ（える）",
+    "example": "携える（たずさえる）",
+    "extraReadings": [{"reading": "たずさ（わる）", "example": "携わる（たずさわる）"}, {"reading": "けい", "example": "携帯（けいたい）"}],
     "version": 1
   },
   {
@@ -16051,10 +17052,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "搾",
     "questionType": "multipleChoice",
-    "choices": ["搾","匿","潜","斥"],
+    "choices": ["搾", "匿", "潜", "斥"],
     "correctAnswer": "搾",
     "reading": "しぼ（る）",
     "example": "搾る（しぼる）",
+    "extraReadings": [{"reading": "さく", "example": "搾取（さくしゅ）"}],
     "version": 1
   },
   {
@@ -16062,10 +17064,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "摂",
     "questionType": "multipleChoice",
-    "choices": ["猟","催","摂","敢"],
+    "choices": ["猟", "催", "摂", "敢"],
     "correctAnswer": "摂",
-    "reading": "セツ",
+    "reading": "せつ",
     "example": "摂取（せっしゅ）",
+    "extraReadings": [{"reading": "しょう", "example": "摂政（せっしょう）"}],
     "version": 1
   },
   {
@@ -16073,10 +17076,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "撮",
     "questionType": "multipleChoice",
-    "choices": ["啓","封","鎮","撮"],
+    "choices": ["啓", "封", "鎮", "撮"],
     "correctAnswer": "撮",
-    "reading": "サツ",
-    "example": "撮影（さつえい）",
+    "reading": "と（る）",
+    "example": "撮る（とる）",
+    "extraReadings": [{"reading": "さつ", "example": "撮影（さつえい）"}],
     "version": 1
   },
   {
@@ -16084,9 +17088,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "擁",
     "questionType": "multipleChoice",
-    "choices": ["妨","擁","慰","敢"],
+    "choices": ["妨", "擁", "慰", "敢"],
     "correctAnswer": "擁",
-    "reading": "ヨウ",
+    "reading": "よう",
     "example": "擁護（ようご）",
     "version": 1
   },
@@ -16095,10 +17099,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "擦",
     "questionType": "multipleChoice",
-    "choices": ["擦","泌","乏","貫"],
+    "choices": ["擦", "泌", "乏", "貫"],
     "correctAnswer": "擦",
-    "reading": "す（れる）",
-    "example": "擦れる（すれる）",
+    "reading": "こす（る）",
+    "example": "擦る（こする）",
+    "extraReadings": [{"reading": "す（れる）", "example": "擦れる（すれる）"}, {"reading": "さつ", "example": "摩擦（まさつ）"}],
     "version": 1
   },
   {
@@ -16106,10 +17111,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "敢",
     "questionType": "multipleChoice",
-    "choices": ["敢","暫","凝","滝"],
+    "choices": ["敢", "暫", "凝", "滝"],
     "correctAnswer": "敢",
-    "reading": "カン",
+    "reading": "かん",
     "example": "勇敢（ゆうかん）",
+    "extraReadings": [{"reading": "あ（えて）", "example": "敢えて（あえて）"}],
     "version": 1
   },
   {
@@ -16117,9 +17123,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "斗",
     "questionType": "multipleChoice",
-    "choices": ["斗","削","遂","偶"],
+    "choices": ["斗", "削", "遂", "偶"],
     "correctAnswer": "斗",
-    "reading": "ト",
+    "reading": "と",
     "example": "北斗七星（ほくとしちせい）",
     "version": 1
   },
@@ -16128,9 +17134,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "斤",
     "questionType": "multipleChoice",
-    "choices": ["債","斤","邪","粘"],
+    "choices": ["債", "斤", "邪", "粘"],
     "correctAnswer": "斤",
-    "reading": "キン",
+    "reading": "きん",
     "example": "一斤（いっきん）",
     "version": 1
   },
@@ -16139,9 +17145,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "斥",
     "questionType": "multipleChoice",
-    "choices": ["廊","措","楼","斥"],
+    "choices": ["廊", "措", "楼", "斥"],
     "correctAnswer": "斥",
-    "reading": "セキ",
+    "reading": "せき",
     "example": "排斥（はいせき）",
     "version": 1
   },
@@ -16150,10 +17156,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "施",
     "questionType": "multipleChoice",
-    "choices": ["施","誘","縛","鍛"],
+    "choices": ["施", "誘", "縛", "鍛"],
     "correctAnswer": "施",
-    "reading": "シ",
-    "example": "施設（しせつ）",
+    "reading": "ほどこ（す）",
+    "example": "施す（ほどこす）",
+    "extraReadings": [{"reading": "し", "example": "施設（しせつ）"}, {"reading": "せ", "example": "施主（せしゅ）"}],
     "version": 1
   },
   {
@@ -16161,10 +17168,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "既",
     "questionType": "multipleChoice",
-    "choices": ["既","碑","峡","訂"],
+    "choices": ["既", "碑", "峡", "訂"],
     "correctAnswer": "既",
     "reading": "すで（に）",
     "example": "既に（すでに）",
+    "extraReadings": [{"reading": "き", "example": "既存（きぞん）"}],
     "version": 1
   },
   {
@@ -16172,10 +17180,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "昇",
     "questionType": "multipleChoice",
-    "choices": ["穫","昇","顧","衝"],
+    "choices": ["穫", "昇", "顧", "衝"],
     "correctAnswer": "昇",
     "reading": "のぼ（る）",
     "example": "昇る（のぼる）",
+    "extraReadings": [{"reading": "しょう", "example": "昇進（しょうしん）"}],
     "version": 1
   },
   {
@@ -16183,9 +17192,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "晶",
     "questionType": "multipleChoice",
-    "choices": ["晶","匠","拘","排"],
+    "choices": ["晶", "匠", "拘", "排"],
     "correctAnswer": "晶",
-    "reading": "ショウ",
+    "reading": "しょう",
     "example": "結晶（けっしょう）",
     "version": 1
   },
@@ -16194,9 +17203,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "暫",
     "questionType": "multipleChoice",
-    "choices": ["紺","暫","辛","陪"],
+    "choices": ["紺", "暫", "辛", "陪"],
     "correctAnswer": "暫",
-    "reading": "ザン",
+    "reading": "ざん",
     "example": "暫定（ざんてい）",
     "version": 1
   },
@@ -16205,10 +17214,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "架",
     "questionType": "multipleChoice",
-    "choices": ["撮","嫁","糧","架"],
+    "choices": ["撮", "嫁", "糧", "架"],
     "correctAnswer": "架",
-    "reading": "カ",
-    "example": "架空（かくう）",
+    "reading": "か（ける）",
+    "example": "架ける（かける）",
+    "extraReadings": [{"reading": "か（かる）", "example": "架かる（かかる）"}, {"reading": "か", "example": "架空（かくう）"}],
     "version": 1
   },
   {
@@ -16216,9 +17226,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "某",
     "questionType": "multipleChoice",
-    "choices": ["某","酔","憎","帆"],
+    "choices": ["某", "酔", "憎", "帆"],
     "correctAnswer": "某",
-    "reading": "ボウ",
+    "reading": "ぼう",
     "example": "某氏（ぼうし）",
     "version": 1
   },
@@ -16227,10 +17237,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "桑",
     "questionType": "multipleChoice",
-    "choices": ["軌","桑","飽","邪"],
+    "choices": ["軌", "桑", "飽", "邪"],
     "correctAnswer": "桑",
     "reading": "くわ",
     "example": "桑（くわ）",
+    "extraReadings": [{"reading": "そう", "example": "桑園（そうえん）"}],
     "version": 1
   },
   {
@@ -16238,9 +17249,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "棄",
     "questionType": "multipleChoice",
-    "choices": ["菊","礎","棄","泌"],
+    "choices": ["菊", "礎", "棄", "泌"],
     "correctAnswer": "棄",
-    "reading": "キ",
+    "reading": "き",
     "example": "放棄（ほうき）",
     "version": 1
   },
@@ -16249,9 +17260,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "棋",
     "questionType": "multipleChoice",
-    "choices": ["犠","棋","獄","礎"],
+    "choices": ["犠", "棋", "獄", "礎"],
     "correctAnswer": "棋",
-    "reading": "キ",
+    "reading": "き",
     "example": "棋士（きし）",
     "version": 1
   },
@@ -16260,10 +17271,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "楼",
     "questionType": "multipleChoice",
-    "choices": ["苗","楼","乏","施"],
+    "choices": ["苗", "楼", "乏", "施"],
     "correctAnswer": "楼",
-    "reading": "ロウ",
-    "example": "摩天楼（まてんろう）",
+    "reading": "ろう",
+    "example": "楼閣（ろうかく）",
     "version": 1
   },
   {
@@ -16271,9 +17282,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "概",
     "questionType": "multipleChoice",
-    "choices": ["藩","肝","遇","概"],
+    "choices": ["藩", "肝", "遇", "概"],
     "correctAnswer": "概",
-    "reading": "ガイ",
+    "reading": "がい",
     "example": "概要（がいよう）",
     "version": 1
   },
@@ -16282,9 +17293,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "欧",
     "questionType": "multipleChoice",
-    "choices": ["抑","厘","欧","摂"],
+    "choices": ["抑", "厘", "欧", "摂"],
     "correctAnswer": "欧",
-    "reading": "オウ",
+    "reading": "おう",
     "example": "欧州（おうしゅう）",
     "version": 1
   },
@@ -16293,10 +17304,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "欺",
     "questionType": "multipleChoice",
-    "choices": ["鐘","奪","飽","欺"],
+    "choices": ["鐘", "奪", "飽", "欺"],
     "correctAnswer": "欺",
     "reading": "あざむ（く）",
     "example": "欺く（あざむく）",
+    "extraReadings": [{"reading": "ぎ", "example": "詐欺（さぎ）"}],
     "version": 1
   },
   {
@@ -16304,10 +17316,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "殊",
     "questionType": "multipleChoice",
-    "choices": ["殊","衝","卸","魂"],
+    "choices": ["殊", "衝", "卸", "魂"],
     "correctAnswer": "殊",
-    "reading": "シュ",
+    "reading": "しゅ",
     "example": "特殊（とくしゅ）",
+    "extraReadings": [{"reading": "こと", "example": "殊に（ことに）"}],
     "version": 1
   },
   {
@@ -16315,10 +17328,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "殴",
     "questionType": "multipleChoice",
-    "choices": ["殴","託","獄","縫"],
+    "choices": ["殴", "託", "獄", "縫"],
     "correctAnswer": "殴",
     "reading": "なぐ（る）",
     "example": "殴る（なぐる）",
+    "extraReadings": [{"reading": "おう", "example": "殴打（おうだ）"}],
     "version": 1
   },
   {
@@ -16326,9 +17340,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "没",
     "questionType": "multipleChoice",
-    "choices": ["幻","脅","撮","没"],
+    "choices": ["幻", "脅", "撮", "没"],
     "correctAnswer": "没",
-    "reading": "ボツ",
+    "reading": "ぼつ",
     "example": "没収（ぼっしゅう）",
     "version": 1
   },
@@ -16337,10 +17351,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "泌",
     "questionType": "multipleChoice",
-    "choices": ["泌","酔","膜","逮"],
+    "choices": ["泌", "酔", "膜", "逮"],
     "correctAnswer": "泌",
-    "reading": "ヒツ",
+    "reading": "ひつ",
     "example": "分泌（ぶんぴつ）",
+    "extraReadings": [{"reading": "ひ", "example": "泌尿器（ひにょうき）"}],
     "version": 1
   },
   {
@@ -16348,10 +17363,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "浪",
     "questionType": "multipleChoice",
-    "choices": ["浪","峡","施","霊"],
+    "choices": ["浪", "峡", "施", "霊"],
     "correctAnswer": "浪",
-    "reading": "ロウ",
-    "example": "浪人（ろうにん）",
+    "reading": "ろう",
+    "example": "浪費（ろうひ）",
     "version": 1
   },
   {
@@ -16359,9 +17374,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "湾",
     "questionType": "multipleChoice",
-    "choices": ["衝","駐","湾","卸"],
+    "choices": ["衝", "駐", "湾", "卸"],
     "correctAnswer": "湾",
-    "reading": "ワン",
+    "reading": "わん",
     "example": "湾岸（わんがん）",
     "version": 1
   },
@@ -16370,10 +17385,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "湿",
     "questionType": "multipleChoice",
-    "choices": ["悔","伴","湿","鯨"],
+    "choices": ["悔", "伴", "湿", "鯨"],
     "correctAnswer": "湿",
     "reading": "しめ（る）",
     "example": "湿る（しめる）",
+    "extraReadings": [{"reading": "しつ", "example": "湿度（しつど）"}],
     "version": 1
   },
   {
@@ -16381,10 +17397,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "滅",
     "questionType": "multipleChoice",
-    "choices": ["逮","滅","卸","倣"],
+    "choices": ["逮", "滅", "卸", "倣"],
     "correctAnswer": "滅",
     "reading": "ほろ（びる）",
     "example": "滅びる（ほろびる）",
+    "extraReadings": [{"reading": "ほろ（ぼす）", "example": "滅ぼす（ほろぼす）"}, {"reading": "めつ", "example": "滅亡（めつぼう）"}],
     "version": 1
   },
   {
@@ -16392,10 +17409,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "滑",
     "questionType": "multipleChoice",
-    "choices": ["鎮","陵","錯","滑"],
+    "choices": ["鎮", "陵", "錯", "滑"],
     "correctAnswer": "滑",
     "reading": "すべ（る）",
     "example": "滑る（すべる）",
+    "extraReadings": [{"reading": "かつ", "example": "滑走（かっそう）"}, {"reading": "なめ（らか）", "example": "滑らか（なめらか）"}],
     "version": 1
   },
   {
@@ -16403,7 +17421,7 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "滝",
     "questionType": "multipleChoice",
-    "choices": ["妨","鐘","桑","滝"],
+    "choices": ["妨", "鐘", "桑", "滝"],
     "correctAnswer": "滝",
     "reading": "たき",
     "example": "滝（たき）",
@@ -16414,10 +17432,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "滞",
     "questionType": "multipleChoice",
-    "choices": ["塊","湿","隔","滞"],
+    "choices": ["塊", "湿", "隔", "滞"],
     "correctAnswer": "滞",
     "reading": "とどこお（る）",
     "example": "滞る（とどこおる）",
+    "extraReadings": [{"reading": "たい", "example": "滞在（たいざい）"}],
     "version": 1
   },
   {
@@ -16425,10 +17444,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "漂",
     "questionType": "multipleChoice",
-    "choices": ["漂","炎","慌","廊"],
+    "choices": ["漂", "炎", "慌", "廊"],
     "correctAnswer": "漂",
     "reading": "ただよ（う）",
     "example": "漂う（ただよう）",
+    "extraReadings": [{"reading": "ひょう", "example": "漂流（ひょうりゅう）"}],
     "version": 1
   },
   {
@@ -16436,10 +17456,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "漏",
     "questionType": "multipleChoice",
-    "choices": ["撮","斗","賊","漏"],
+    "choices": ["撮", "斗", "賊", "漏"],
     "correctAnswer": "漏",
     "reading": "も（れる）",
     "example": "漏れる（もれる）",
+    "extraReadings": [{"reading": "も（らす）", "example": "漏らす（もらす）"}, {"reading": "ろう", "example": "漏電（ろうでん）"}],
     "version": 1
   },
   {
@@ -16447,10 +17468,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "潜",
     "questionType": "multipleChoice",
-    "choices": ["邪","潜","聴","鋳"],
+    "choices": ["邪", "潜", "聴", "鋳"],
     "correctAnswer": "潜",
-    "reading": "ひそ（む）",
-    "example": "潜む（ひそむ）",
+    "reading": "もぐ（る）",
+    "example": "潜る（もぐる）",
+    "extraReadings": [{"reading": "ひそ（む）", "example": "潜む（ひそむ）"}, {"reading": "せん", "example": "潜水（せんすい）"}],
     "version": 1
   },
   {
@@ -16458,10 +17480,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "潤",
     "questionType": "multipleChoice",
-    "choices": ["陵","潤","搾","虚"],
+    "choices": ["陵", "潤", "搾", "虚"],
     "correctAnswer": "潤",
     "reading": "うるお（う）",
     "example": "潤う（うるおう）",
+    "extraReadings": [{"reading": "うるお（す）", "example": "潤す（うるおす）"}, {"reading": "じゅん", "example": "潤滑（じゅんかつ）"}],
     "version": 1
   },
   {
@@ -16469,9 +17492,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "濫",
     "questionType": "multipleChoice",
-    "choices": ["濫","陳","牲","拘"],
+    "choices": ["濫", "陳", "牲", "拘"],
     "correctAnswer": "濫",
-    "reading": "ラン",
+    "reading": "らん",
     "example": "濫用（らんよう）",
     "version": 1
   },
@@ -16480,10 +17503,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "瀬",
     "questionType": "multipleChoice",
-    "choices": ["抽","虐","袋","瀬"],
+    "choices": ["抽", "虐", "袋", "瀬"],
     "correctAnswer": "瀬",
     "reading": "せ",
-    "example": "瀬（せ）",
+    "example": "浅瀬（あさせ）",
     "version": 1
   },
   {
@@ -16491,9 +17514,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "炉",
     "questionType": "multipleChoice",
-    "choices": ["瀬","粋","炉","墾"],
+    "choices": ["瀬", "粋", "炉", "墾"],
     "correctAnswer": "炉",
-    "reading": "ロ",
+    "reading": "ろ",
     "example": "暖炉（だんろ）",
     "version": 1
   },
@@ -16502,10 +17525,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "炊",
     "questionType": "multipleChoice",
-    "choices": ["摂","飽","哀","炊"],
+    "choices": ["摂", "飽", "哀", "炊"],
     "correctAnswer": "炊",
     "reading": "た（く）",
     "example": "炊く（たく）",
+    "extraReadings": [{"reading": "すい", "example": "炊事（すいじ）"}],
     "version": 1
   },
   {
@@ -16513,10 +17537,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "炎",
     "questionType": "multipleChoice",
-    "choices": ["愚","炎","酵","蛮"],
+    "choices": ["愚", "炎", "酵", "蛮"],
     "correctAnswer": "炎",
     "reading": "ほのお",
     "example": "炎（ほのお）",
+    "extraReadings": [{"reading": "えん", "example": "炎症（えんしょう）"}],
     "version": 1
   },
   {
@@ -16524,10 +17549,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "焦",
     "questionType": "multipleChoice",
-    "choices": ["佳","搾","棄","焦"],
+    "choices": ["佳", "搾", "棄", "焦"],
     "correctAnswer": "焦",
     "reading": "こ（げる）",
     "example": "焦げる（こげる）",
+    "extraReadings": [{"reading": "こ（がす）", "example": "焦がす（こがす）"}, {"reading": "あせ（る）", "example": "焦る（あせる）"}, {"reading": "しょう", "example": "焦点（しょうてん）"}],
     "version": 1
   },
   {
@@ -16535,9 +17561,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "牲",
     "questionType": "multipleChoice",
-    "choices": ["牲","虚","伐","企"],
+    "choices": ["牲", "虚", "伐", "企"],
     "correctAnswer": "牲",
-    "reading": "セイ",
+    "reading": "せい",
     "example": "犠牲（ぎせい）",
     "version": 1
   },
@@ -16546,9 +17572,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "犠",
     "questionType": "multipleChoice",
-    "choices": ["既","哀","犠","募"],
+    "choices": ["既", "哀", "犠", "募"],
     "correctAnswer": "犠",
-    "reading": "ギ",
+    "reading": "ぎ",
     "example": "犠牲（ぎせい）",
     "version": 1
   },
@@ -16557,10 +17583,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "猟",
     "questionType": "multipleChoice",
-    "choices": ["募","猟","昇","姫"],
+    "choices": ["募", "猟", "昇", "姫"],
     "correctAnswer": "猟",
-    "reading": "リョウ",
-    "example": "狩猟（しゅりょう）",
+    "reading": "りょう",
+    "example": "猟師（りょうし）",
     "version": 1
   },
   {
@@ -16568,9 +17594,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "獄",
     "questionType": "multipleChoice",
-    "choices": ["伏","獄","徐","掲"],
+    "choices": ["伏", "獄", "徐", "掲"],
     "correctAnswer": "獄",
-    "reading": "ゴク",
+    "reading": "ごく",
     "example": "地獄（じごく）",
     "version": 1
   },
@@ -16579,10 +17605,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "甲",
     "questionType": "multipleChoice",
-    "choices": ["甲","超","湿","塊"],
+    "choices": ["甲", "超", "湿", "塊"],
     "correctAnswer": "甲",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "甲乙（こうおつ）",
+    "extraReadings": [{"reading": "かん", "example": "甲高い（かんだかい）"}],
     "version": 1
   },
   {
@@ -16590,9 +17617,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "畔",
     "questionType": "multipleChoice",
-    "choices": ["吉","穂","畔","携"],
+    "choices": ["吉", "穂", "畔", "携"],
     "correctAnswer": "畔",
-    "reading": "ハン",
+    "reading": "はん",
     "example": "湖畔（こはん）",
     "version": 1
   },
@@ -16601,9 +17628,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "畜",
     "questionType": "multipleChoice",
-    "choices": ["悟","乏","畜","穫"],
+    "choices": ["悟", "乏", "畜", "穫"],
     "correctAnswer": "畜",
-    "reading": "チク",
+    "reading": "ちく",
     "example": "家畜（かちく）",
     "version": 1
   },
@@ -16612,10 +17639,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "疾",
     "questionType": "multipleChoice",
-    "choices": ["疾","獄","祉","魂"],
+    "choices": ["疾", "獄", "祉", "魂"],
     "correctAnswer": "疾",
-    "reading": "シツ",
+    "reading": "しつ",
     "example": "疾病（しっぺい）",
+    "extraReadings": [{"reading": "しっ", "example": "疾走（しっそう）"}],
     "version": 1
   },
   {
@@ -16623,9 +17651,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "痘",
     "questionType": "multipleChoice",
-    "choices": ["痘","悔","虚","伸"],
+    "choices": ["痘", "悔", "虚", "伸"],
     "correctAnswer": "痘",
-    "reading": "トウ",
+    "reading": "とう",
     "example": "天然痘（てんねんとう）",
     "version": 1
   },
@@ -16634,10 +17662,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "癖",
     "questionType": "multipleChoice",
-    "choices": ["閲","癖","籍","痘"],
+    "choices": ["閲", "癖", "籍", "痘"],
     "correctAnswer": "癖",
     "reading": "くせ",
     "example": "癖（くせ）",
+    "extraReadings": [{"reading": "へき", "example": "潔癖（けっぺき）"}],
     "version": 1
   },
   {
@@ -16645,10 +17674,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "硬",
     "questionType": "multipleChoice",
-    "choices": ["霊","壇","掛","硬"],
+    "choices": ["霊", "壇", "掛", "硬"],
     "correctAnswer": "硬",
     "reading": "かた（い）",
     "example": "硬い（かたい）",
+    "extraReadings": [{"reading": "こう", "example": "硬貨（こうか）"}],
     "version": 1
   },
   {
@@ -16656,9 +17686,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "碑",
     "questionType": "multipleChoice",
-    "choices": ["欧","碑","侍","佳"],
+    "choices": ["欧", "碑", "侍", "佳"],
     "correctAnswer": "碑",
-    "reading": "ヒ",
+    "reading": "ひ",
     "example": "石碑（せきひ）",
     "version": 1
   },
@@ -16667,7 +17697,7 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "礎",
     "questionType": "multipleChoice",
-    "choices": ["覆","礎","緩","岳"],
+    "choices": ["覆", "礎", "緩", "岳"],
     "correctAnswer": "礎",
     "reading": "いしずえ",
     "example": "礎（いしずえ）",
@@ -16678,9 +17708,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "祉",
     "questionType": "multipleChoice",
-    "choices": ["祉","癖","婿","炎"],
+    "choices": ["祉", "癖", "婿", "炎"],
     "correctAnswer": "祉",
-    "reading": "シ",
+    "reading": "し",
     "example": "福祉（ふくし）",
     "version": 1
   },
@@ -16689,9 +17719,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "稚",
     "questionType": "multipleChoice",
-    "choices": ["倣","糧","稚","簿"],
+    "choices": ["倣", "糧", "稚", "簿"],
     "correctAnswer": "稚",
-    "reading": "チ",
+    "reading": "ち",
     "example": "幼稚（ようち）",
     "version": 1
   },
@@ -16700,10 +17730,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "穂",
     "questionType": "multipleChoice",
-    "choices": ["弧","抑","穂","桑"],
+    "choices": ["弧", "抑", "穂", "桑"],
     "correctAnswer": "穂",
     "reading": "ほ",
-    "example": "稲穂（いなほ）",
+    "example": "穂（ほ）",
     "version": 1
   },
   {
@@ -16711,10 +17741,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "穏",
     "questionType": "multipleChoice",
-    "choices": ["陵","畔","促","穏"],
+    "choices": ["陵", "畔", "促", "穏"],
     "correctAnswer": "穏",
     "reading": "おだ（やか）",
     "example": "穏やか（おだやか）",
+    "extraReadings": [{"reading": "おん", "example": "平穏（へいおん）"}],
     "version": 1
   },
   {
@@ -16722,9 +17753,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "穫",
     "questionType": "multipleChoice",
-    "choices": ["魂","穫","択","掌"],
+    "choices": ["魂", "穫", "択", "掌"],
     "correctAnswer": "穫",
-    "reading": "カク",
+    "reading": "かく",
     "example": "収穫（しゅうかく）",
     "version": 1
   },
@@ -16733,9 +17764,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "窒",
     "questionType": "multipleChoice",
-    "choices": ["粋","凝","覆","窒"],
+    "choices": ["粋", "凝", "覆", "窒"],
     "correctAnswer": "窒",
-    "reading": "チツ",
+    "reading": "ちつ",
     "example": "窒息（ちっそく）",
     "version": 1
   },
@@ -16744,10 +17775,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "符",
     "questionType": "multipleChoice",
-    "choices": ["殴","符","慨","聴"],
+    "choices": ["殴", "符", "慨", "聴"],
     "correctAnswer": "符",
-    "reading": "フ",
-    "example": "切符（きっぷ）",
+    "reading": "ふ",
+    "example": "符号（ふごう）",
     "version": 1
   },
   {
@@ -16755,9 +17786,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "篤",
     "questionType": "multipleChoice",
-    "choices": ["篤","滑","啓","聴"],
+    "choices": ["篤", "滑", "啓", "聴"],
     "correctAnswer": "篤",
-    "reading": "トク",
+    "reading": "とく",
     "example": "篤志（とくし）",
     "version": 1
   },
@@ -16766,9 +17797,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "簿",
     "questionType": "multipleChoice",
-    "choices": ["簿","潜","匠","憎"],
+    "choices": ["簿", "潜", "匠", "憎"],
     "correctAnswer": "簿",
-    "reading": "ボ",
+    "reading": "ぼ",
     "example": "帳簿（ちょうぼ）",
     "version": 1
   },
@@ -16777,10 +17808,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "籍",
     "questionType": "multipleChoice",
-    "choices": ["碑","籍","騎","聴"],
+    "choices": ["碑", "籍", "騎", "聴"],
     "correctAnswer": "籍",
-    "reading": "セキ",
-    "example": "国籍（こくせき）",
+    "reading": "せき",
+    "example": "本籍（ほんせき）",
     "version": 1
   },
   {
@@ -16788,10 +17819,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "粋",
     "questionType": "multipleChoice",
-    "choices": ["縛","霊","粋","哲"],
+    "choices": ["縛", "霊", "粋", "哲"],
     "correctAnswer": "粋",
-    "reading": "スイ",
+    "reading": "すい",
     "example": "純粋（じゅんすい）",
+    "extraReadings": [{"reading": "いき", "example": "粋（いき）"}],
     "version": 1
   },
   {
@@ -16799,10 +17831,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "粗",
     "questionType": "multipleChoice",
-    "choices": ["郊","礎","裂","粗"],
+    "choices": ["郊", "礎", "裂", "粗"],
     "correctAnswer": "粗",
     "reading": "あら（い）",
     "example": "粗い（あらい）",
+    "extraReadings": [{"reading": "そ", "example": "粗末（そまつ）"}],
     "version": 1
   },
   {
@@ -16810,10 +17843,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "粘",
     "questionType": "multipleChoice",
-    "choices": ["縛","粘","遂","孔"],
+    "choices": ["縛", "粘", "遂", "孔"],
     "correctAnswer": "粘",
     "reading": "ねば（る）",
     "example": "粘る（ねばる）",
+    "extraReadings": [{"reading": "ねん", "example": "粘土（ねんど）"}],
     "version": 1
   },
   {
@@ -16821,10 +17855,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "糧",
     "questionType": "multipleChoice",
-    "choices": ["糧","搾","楼","鐘"],
+    "choices": ["糧", "搾", "楼", "鐘"],
     "correctAnswer": "糧",
-    "reading": "リョウ",
-    "example": "食糧（しょくりょう）",
+    "reading": "かて",
+    "example": "糧（かて）",
+    "extraReadings": [{"reading": "りょう", "example": "食糧（しょくりょう）"}, {"reading": "ろう", "example": "兵糧（ひょうろう）"}],
     "version": 1
   },
   {
@@ -16832,10 +17867,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "紛",
     "questionType": "multipleChoice",
-    "choices": ["鐘","紛","繕","施"],
+    "choices": ["鐘", "紛", "繕", "施"],
     "correctAnswer": "紛",
     "reading": "まぎ（れる）",
     "example": "紛れる（まぎれる）",
+    "extraReadings": [{"reading": "まぎ（らす）", "example": "紛らす（まぎらす）"}, {"reading": "ふん", "example": "紛争（ふんそう）"}],
     "version": 1
   },
   {
@@ -16843,9 +17879,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "紺",
     "questionType": "multipleChoice",
-    "choices": ["犠","詠","紺","陳"],
+    "choices": ["犠", "詠", "紺", "陳"],
     "correctAnswer": "紺",
-    "reading": "コン",
+    "reading": "こん",
     "example": "紺色（こんいろ）",
     "version": 1
   },
@@ -16854,10 +17890,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "絞",
     "questionType": "multipleChoice",
-    "choices": ["綱","訂","絞","諮"],
+    "choices": ["綱", "訂", "絞", "諮"],
     "correctAnswer": "絞",
     "reading": "しぼ（る）",
     "example": "絞る（しぼる）",
+    "extraReadings": [{"reading": "こう", "example": "絞殺（こうさつ）"}, {"reading": "し（める）", "example": "絞める（しめる）"}],
     "version": 1
   },
   {
@@ -16865,10 +17902,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "綱",
     "questionType": "multipleChoice",
-    "choices": ["没","怠","綱","縛"],
+    "choices": ["没", "怠", "綱", "縛"],
     "correctAnswer": "綱",
     "reading": "つな",
     "example": "綱（つな）",
+    "extraReadings": [{"reading": "こう", "example": "綱領（こうりょう）"}],
     "version": 1
   },
   {
@@ -16876,9 +17914,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "緊",
     "questionType": "multipleChoice",
-    "choices": ["緊","徐","携","哀"],
+    "choices": ["緊", "徐", "携", "哀"],
     "correctAnswer": "緊",
-    "reading": "キン",
+    "reading": "きん",
     "example": "緊張（きんちょう）",
     "version": 1
   },
@@ -16887,10 +17925,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "締",
     "questionType": "multipleChoice",
-    "choices": ["超","鯨","帝","締"],
+    "choices": ["超", "鯨", "帝", "締"],
     "correctAnswer": "締",
     "reading": "し（める）",
     "example": "締める（しめる）",
+    "extraReadings": [{"reading": "てい", "example": "締結（ていけつ）"}, {"reading": "し（まる）", "example": "締まる（しまる）"}],
     "version": 1
   },
   {
@@ -16898,10 +17937,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "緩",
     "questionType": "multipleChoice",
-    "choices": ["緩","封","廉","憎"],
+    "choices": ["緩", "封", "廉", "憎"],
     "correctAnswer": "緩",
     "reading": "ゆる（い）",
     "example": "緩い（ゆるい）",
+    "extraReadings": [{"reading": "かん", "example": "緩和（かんわ）"}, {"reading": "ゆる（む）", "example": "緩む（ゆるむ）"}, {"reading": "ゆる（める）", "example": "緩める（ゆるめる）"}],
     "version": 1
   },
   {
@@ -16909,10 +17949,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "縛",
     "questionType": "multipleChoice",
-    "choices": ["某","憎","縛","犠"],
+    "choices": ["某", "憎", "縛", "犠"],
     "correctAnswer": "縛",
     "reading": "しば（る）",
     "example": "縛る（しばる）",
+    "extraReadings": [{"reading": "ばく", "example": "束縛（そくばく）"}],
     "version": 1
   },
   {
@@ -16920,10 +17961,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "縫",
     "questionType": "multipleChoice",
-    "choices": ["魂","削","縫","憂"],
+    "choices": ["魂", "削", "縫", "憂"],
     "correctAnswer": "縫",
     "reading": "ぬ（う）",
     "example": "縫う（ぬう）",
+    "extraReadings": [{"reading": "ほう", "example": "裁縫（さいほう）"}],
     "version": 1
   },
   {
@@ -16931,10 +17973,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "繕",
     "questionType": "multipleChoice",
-    "choices": ["痘","瀬","脅","繕"],
+    "choices": ["痘", "瀬", "脅", "繕"],
     "correctAnswer": "繕",
     "reading": "つくろ（う）",
     "example": "繕う（つくろう）",
+    "extraReadings": [{"reading": "ぜん", "example": "修繕（しゅうぜん）"}],
     "version": 1
   },
   {
@@ -16942,10 +17985,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "翻",
     "questionType": "multipleChoice",
-    "choices": ["簿","粗","翻","胎"],
+    "choices": ["簿", "粗", "翻", "胎"],
     "correctAnswer": "翻",
-    "reading": "ホン",
-    "example": "翻訳（ほんやく）",
+    "reading": "ひるがえ（す）",
+    "example": "翻す（ひるがえす）",
+    "extraReadings": [{"reading": "ほん", "example": "翻訳（ほんやく）"}, {"reading": "ひるがえ（る）", "example": "翻る（ひるがえる）"}],
     "version": 1
   },
   {
@@ -16953,10 +17997,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "聴",
     "questionType": "multipleChoice",
-    "choices": ["袋","揺","聴","訂"],
+    "choices": ["袋", "揺", "聴", "訂"],
     "correctAnswer": "聴",
-    "reading": "チョウ",
+    "reading": "ちょう",
     "example": "視聴（しちょう）",
+    "extraReadings": [{"reading": "き（く）", "example": "聴く（きく）"}],
     "version": 1
   },
   {
@@ -16964,7 +18009,7 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "肝",
     "questionType": "multipleChoice",
-    "choices": ["紺","穏","肝","桑"],
+    "choices": ["紺", "穏", "肝", "桑"],
     "correctAnswer": "肝",
     "reading": "きも",
     "example": "肝（きも）",
@@ -16975,9 +18020,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "胆",
     "questionType": "multipleChoice",
-    "choices": ["賊","厘","胆","潤"],
+    "choices": ["賊", "厘", "胆", "潤"],
     "correctAnswer": "胆",
-    "reading": "タン",
+    "reading": "たん",
     "example": "大胆（だいたん）",
     "version": 1
   },
@@ -16986,9 +18031,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "胎",
     "questionType": "multipleChoice",
-    "choices": ["胎","欧","粘","棋"],
+    "choices": ["胎", "欧", "粘", "棋"],
     "correctAnswer": "胎",
-    "reading": "タイ",
+    "reading": "たい",
     "example": "胎児（たいじ）",
     "version": 1
   },
@@ -16997,9 +18042,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "胞",
     "questionType": "multipleChoice",
-    "choices": ["滅","紛","胞","碑"],
+    "choices": ["滅", "紛", "胞", "碑"],
     "correctAnswer": "胞",
-    "reading": "ホウ",
+    "reading": "ほう",
     "example": "細胞（さいぼう）",
     "version": 1
   },
@@ -17008,10 +18053,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "脅",
     "questionType": "multipleChoice",
-    "choices": ["託","潜","隻","脅"],
+    "choices": ["託", "潜", "隻", "脅"],
     "correctAnswer": "脅",
-    "reading": "おびや（かす）",
-    "example": "脅かす（おびやかす）",
+    "reading": "おど（す）",
+    "example": "脅す（おどす）",
+    "extraReadings": [{"reading": "きょう", "example": "脅威（きょうい）"}, {"reading": "おびや（かす）", "example": "脅かす（おびやかす）"}],
     "version": 1
   },
   {
@@ -17019,10 +18065,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "膜",
     "questionType": "multipleChoice",
-    "choices": ["膜","架","膨","卑"],
+    "choices": ["膜", "架", "膨", "卑"],
     "correctAnswer": "膜",
-    "reading": "マク",
-    "example": "膜（まく）",
+    "reading": "まく",
+    "example": "粘膜（ねんまく）",
     "version": 1
   },
   {
@@ -17030,10 +18076,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "膨",
     "questionType": "multipleChoice",
-    "choices": ["慕","膨","催","藩"],
+    "choices": ["慕", "膨", "催", "藩"],
     "correctAnswer": "膨",
     "reading": "ふく（らむ）",
     "example": "膨らむ（ふくらむ）",
+    "extraReadings": [{"reading": "ぼう", "example": "膨大（ぼうだい）"}],
     "version": 1
   },
   {
@@ -17041,10 +18088,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "芳",
     "questionType": "multipleChoice",
-    "choices": ["裸","芳","憎","寿"],
+    "choices": ["裸", "芳", "憎", "寿"],
     "correctAnswer": "芳",
-    "reading": "ホウ",
-    "example": "芳香（ほうこう）",
+    "reading": "かんば（しい）",
+    "example": "芳しい（かんばしい）",
+    "extraReadings": [{"reading": "ほう", "example": "芳香（ほうこう）"}],
     "version": 1
   },
   {
@@ -17052,10 +18100,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "苗",
     "questionType": "multipleChoice",
-    "choices": ["了","陪","厘","苗"],
+    "choices": ["了", "陪", "厘", "苗"],
     "correctAnswer": "苗",
     "reading": "なえ",
     "example": "苗（なえ）",
+    "extraReadings": [{"reading": "びょう", "example": "種苗（しゅびょう）"}],
     "version": 1
   },
   {
@@ -17063,9 +18112,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "菊",
     "questionType": "multipleChoice",
-    "choices": ["婆","衝","菊","伸"],
+    "choices": ["婆", "衝", "菊", "伸"],
     "correctAnswer": "菊",
-    "reading": "キク",
+    "reading": "きく",
     "example": "菊（きく）",
     "version": 1
   },
@@ -17074,10 +18123,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "華",
     "questionType": "multipleChoice",
-    "choices": ["崩","華","葬","殴"],
+    "choices": ["崩", "華", "葬", "殴"],
     "correctAnswer": "華",
-    "reading": "カ",
-    "example": "豪華（ごうか）",
+    "reading": "はな",
+    "example": "華やか（はなやか）",
+    "extraReadings": [{"reading": "か", "example": "華麗（かれい）"}],
     "version": 1
   },
   {
@@ -17085,10 +18135,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "葬",
     "questionType": "multipleChoice",
-    "choices": ["華","牲","郊","葬"],
+    "choices": ["華", "牲", "郊", "葬"],
     "correctAnswer": "葬",
-    "reading": "ソウ",
-    "example": "葬式（そうしき）",
+    "reading": "ほうむ（る）",
+    "example": "葬る（ほうむる）",
+    "extraReadings": [{"reading": "そう", "example": "葬式（そうしき）"}],
     "version": 1
   },
   {
@@ -17096,9 +18147,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "藩",
     "questionType": "multipleChoice",
-    "choices": ["峡","伐","該","藩"],
+    "choices": ["峡", "伐", "該", "藩"],
     "correctAnswer": "藩",
-    "reading": "ハン",
+    "reading": "はん",
     "example": "藩（はん）",
     "version": 1
   },
@@ -17107,10 +18158,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "虐",
     "questionType": "multipleChoice",
-    "choices": ["虐","欺","祉","濫"],
+    "choices": ["虐", "欺", "祉", "濫"],
     "correctAnswer": "虐",
     "reading": "しいた（げる）",
     "example": "虐げる（しいたげる）",
+    "extraReadings": [{"reading": "ぎゃく", "example": "虐待（ぎゃくたい）"}],
     "version": 1
   },
   {
@@ -17118,10 +18170,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "虚",
     "questionType": "multipleChoice",
-    "choices": ["架","滅","虚","痘"],
+    "choices": ["架", "滅", "虚", "痘"],
     "correctAnswer": "虚",
-    "reading": "キョ",
-    "example": "虚無（きょむ）",
+    "reading": "きょ",
+    "example": "虚偽（きょぎ）",
+    "extraReadings": [{"reading": "こ", "example": "虚空（こくう）"}],
     "version": 1
   },
   {
@@ -17129,9 +18182,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "蛮",
     "questionType": "multipleChoice",
-    "choices": ["謀","伸","錠","蛮"],
+    "choices": ["謀", "伸", "錠", "蛮"],
     "correctAnswer": "蛮",
-    "reading": "バン",
+    "reading": "ばん",
     "example": "野蛮（やばん）",
     "version": 1
   },
@@ -17140,9 +18193,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "衝",
     "questionType": "multipleChoice",
-    "choices": ["衝","謀","揺","墳"],
+    "choices": ["衝", "謀", "揺", "墳"],
     "correctAnswer": "衝",
-    "reading": "ショウ",
+    "reading": "しょう",
     "example": "衝突（しょうとつ）",
     "version": 1
   },
@@ -17151,10 +18204,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "衰",
     "questionType": "multipleChoice",
-    "choices": ["焦","揺","衰","邦"],
+    "choices": ["焦", "揺", "衰", "邦"],
     "correctAnswer": "衰",
     "reading": "おとろ（える）",
     "example": "衰える（おとろえる）",
+    "extraReadings": [{"reading": "すい", "example": "衰弱（すいじゃく）"}],
     "version": 1
   },
   {
@@ -17162,10 +18216,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "袋",
     "questionType": "multipleChoice",
-    "choices": ["畜","訂","袋","彫"],
+    "choices": ["畜", "訂", "袋", "彫"],
     "correctAnswer": "袋",
     "reading": "ふくろ",
     "example": "袋（ふくろ）",
+    "extraReadings": [{"reading": "たい", "example": "風袋（ふうたい）"}],
     "version": 1
   },
   {
@@ -17173,10 +18228,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "裂",
     "questionType": "multipleChoice",
-    "choices": ["滑","遵","刑","裂"],
+    "choices": ["滑", "遵", "刑", "裂"],
     "correctAnswer": "裂",
     "reading": "さ（ける）",
     "example": "裂ける（さける）",
+    "extraReadings": [{"reading": "れつ", "example": "分裂（ぶんれつ）"}, {"reading": "さ（く）", "example": "裂く（さく）"}],
     "version": 1
   },
   {
@@ -17184,10 +18240,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "裸",
     "questionType": "multipleChoice",
-    "choices": ["搾","随","裸","鯨"],
+    "choices": ["搾", "随", "裸", "鯨"],
     "correctAnswer": "裸",
     "reading": "はだか",
     "example": "裸（はだか）",
+    "extraReadings": [{"reading": "ら", "example": "裸体（らたい）"}],
     "version": 1
   },
   {
@@ -17195,10 +18252,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "覆",
     "questionType": "multipleChoice",
-    "choices": ["覆","嫁","辛","鶏"],
+    "choices": ["覆", "嫁", "辛", "鶏"],
     "correctAnswer": "覆",
     "reading": "おお（う）",
     "example": "覆う（おおう）",
+    "extraReadings": [{"reading": "ふく", "example": "覆面（ふくめん）"}, {"reading": "くつがえ（す）", "example": "覆す（くつがえす）"}, {"reading": "くつがえ（る）", "example": "覆る（くつがえる）"}],
     "version": 1
   },
   {
@@ -17206,9 +18264,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "訂",
     "questionType": "multipleChoice",
-    "choices": ["慈","礎","訂","憩"],
+    "choices": ["慈", "礎", "訂", "憩"],
     "correctAnswer": "訂",
-    "reading": "テイ",
+    "reading": "てい",
     "example": "訂正（ていせい）",
     "version": 1
   },
@@ -17217,9 +18275,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "託",
     "questionType": "multipleChoice",
-    "choices": ["悟","滝","託","籍"],
+    "choices": ["悟", "滝", "託", "籍"],
     "correctAnswer": "託",
-    "reading": "タク",
+    "reading": "たく",
     "example": "委託（いたく）",
     "version": 1
   },
@@ -17228,10 +18286,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "詠",
     "questionType": "multipleChoice",
-    "choices": ["紛","詠","畔","伸"],
+    "choices": ["紛", "詠", "畔", "伸"],
     "correctAnswer": "詠",
     "reading": "よ（む）",
     "example": "詠む（よむ）",
+    "extraReadings": [{"reading": "えい", "example": "詠唱（えいしょう）"}],
     "version": 1
   },
   {
@@ -17239,9 +18298,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "該",
     "questionType": "multipleChoice",
-    "choices": ["怠","該","愚","喚"],
+    "choices": ["怠", "該", "愚", "喚"],
     "correctAnswer": "該",
-    "reading": "ガイ",
+    "reading": "がい",
     "example": "該当（がいとう）",
     "version": 1
   },
@@ -17250,10 +18309,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "誘",
     "questionType": "multipleChoice",
-    "choices": ["肝","誘","喫","契"],
+    "choices": ["肝", "誘", "喫", "契"],
     "correctAnswer": "誘",
     "reading": "さそ（う）",
     "example": "誘う（さそう）",
+    "extraReadings": [{"reading": "ゆう", "example": "誘惑（ゆうわく）"}],
     "version": 1
   },
   {
@@ -17261,10 +18321,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "請",
     "questionType": "multipleChoice",
-    "choices": ["魔","嬢","請","啓"],
+    "choices": ["魔", "嬢", "請", "啓"],
     "correctAnswer": "請",
-    "reading": "セイ",
-    "example": "要請（ようせい）",
+    "reading": "こ（う）",
+    "example": "請う（こう）",
+    "extraReadings": [{"reading": "せい", "example": "請求（せいきゅう）"}, {"reading": "う（ける）", "example": "請け負う（うけおう）"}],
     "version": 1
   },
   {
@@ -17272,10 +18333,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "諮",
     "questionType": "multipleChoice",
-    "choices": ["痘","慈","諮","姫"],
+    "choices": ["痘", "慈", "諮", "姫"],
     "correctAnswer": "諮",
     "reading": "はか（る）",
     "example": "諮る（はかる）",
+    "extraReadings": [{"reading": "し", "example": "諮問（しもん）"}],
     "version": 1
   },
   {
@@ -17283,9 +18345,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "諾",
     "questionType": "multipleChoice",
-    "choices": ["孔","択","葬","諾"],
+    "choices": ["孔", "択", "葬", "諾"],
     "correctAnswer": "諾",
-    "reading": "ダク",
+    "reading": "だく",
     "example": "承諾（しょうだく）",
     "version": 1
   },
@@ -17294,10 +18356,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "謀",
     "questionType": "multipleChoice",
-    "choices": ["壇","卑","謀","炉"],
+    "choices": ["壇", "卑", "謀", "炉"],
     "correctAnswer": "謀",
-    "reading": "ボウ",
-    "example": "陰謀（いんぼう）",
+    "reading": "はか（る）",
+    "example": "謀る（はかる）",
+    "extraReadings": [{"reading": "ぼう", "example": "陰謀（いんぼう）"}, {"reading": "む", "example": "謀反（むほん）"}],
     "version": 1
   },
   {
@@ -17305,10 +18368,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "譲",
     "questionType": "multipleChoice",
-    "choices": ["徐","譲","畔","桑"],
+    "choices": ["徐", "譲", "畔", "桑"],
     "correctAnswer": "譲",
     "reading": "ゆず（る）",
     "example": "譲る（ゆずる）",
+    "extraReadings": [{"reading": "じょう", "example": "譲歩（じょうほ）"}],
     "version": 1
   },
   {
@@ -17316,10 +18380,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "豚",
     "questionType": "multipleChoice",
-    "choices": ["隔","豚","穂","葬"],
+    "choices": ["隔", "豚", "穂", "葬"],
     "correctAnswer": "豚",
     "reading": "ぶた",
     "example": "豚（ぶた）",
+    "extraReadings": [{"reading": "とん", "example": "豚肉（とんにく）"}],
     "version": 1
   },
   {
@@ -17327,10 +18392,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "貫",
     "questionType": "multipleChoice",
-    "choices": ["騎","募","奉","貫"],
+    "choices": ["騎", "募", "奉", "貫"],
     "correctAnswer": "貫",
     "reading": "つらぬ（く）",
     "example": "貫く（つらぬく）",
+    "extraReadings": [{"reading": "かん", "example": "貫通（かんつう）"}],
     "version": 1
   },
   {
@@ -17338,9 +18404,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "賊",
     "questionType": "multipleChoice",
-    "choices": ["滑","賊","嫁","鋳"],
+    "choices": ["滑", "賊", "嫁", "鋳"],
     "correctAnswer": "賊",
-    "reading": "ゾク",
+    "reading": "ぞく",
     "example": "海賊（かいぞく）",
     "version": 1
   },
@@ -17349,10 +18415,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "賢",
     "questionType": "multipleChoice",
-    "choices": ["厘","虐","魅","賢"],
+    "choices": ["厘", "虐", "魅", "賢"],
     "correctAnswer": "賢",
     "reading": "かしこ（い）",
     "example": "賢い（かしこい）",
+    "extraReadings": [{"reading": "けん", "example": "賢明（けんめい）"}],
     "version": 1
   },
   {
@@ -17360,9 +18427,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "赦",
     "questionType": "multipleChoice",
-    "choices": ["陳","赦","崩","胞"],
+    "choices": ["陳", "赦", "崩", "胞"],
     "correctAnswer": "赦",
-    "reading": "シャ",
+    "reading": "しゃ",
     "example": "容赦（ようしゃ）",
     "version": 1
   },
@@ -17371,10 +18438,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "赴",
     "questionType": "multipleChoice",
-    "choices": ["措","房","詠","赴"],
+    "choices": ["措", "房", "詠", "赴"],
     "correctAnswer": "赴",
     "reading": "おもむ（く）",
     "example": "赴く（おもむく）",
+    "extraReadings": [{"reading": "ふ", "example": "赴任（ふにん）"}],
     "version": 1
   },
   {
@@ -17382,10 +18450,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "超",
     "questionType": "multipleChoice",
-    "choices": ["超","鐘","控","穏"],
+    "choices": ["超", "鐘", "控", "穏"],
     "correctAnswer": "超",
     "reading": "こ（える）",
     "example": "超える（こえる）",
+    "extraReadings": [{"reading": "ちょう", "example": "超過（ちょうか）"}, {"reading": "こ（す）", "example": "超す（こす）"}],
     "version": 1
   },
   {
@@ -17393,9 +18462,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "軌",
     "questionType": "multipleChoice",
-    "choices": ["哲","軌","脅","欧"],
+    "choices": ["哲", "軌", "脅", "欧"],
     "correctAnswer": "軌",
-    "reading": "キ",
+    "reading": "き",
     "example": "軌道（きどう）",
     "version": 1
   },
@@ -17404,10 +18473,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "軸",
     "questionType": "multipleChoice",
-    "choices": ["軸","慰","抽","糧"],
+    "choices": ["軸", "慰", "抽", "糧"],
     "correctAnswer": "軸",
-    "reading": "ジク",
-    "example": "地軸（ちじく）",
+    "reading": "じく",
+    "example": "軸（じく）",
     "version": 1
   },
   {
@@ -17415,10 +18484,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "辛",
     "questionType": "multipleChoice",
-    "choices": ["弧","辛","穏","鎮"],
+    "choices": ["弧", "辛", "穏", "鎮"],
     "correctAnswer": "辛",
     "reading": "から（い）",
     "example": "辛い（からい）",
+    "extraReadings": [{"reading": "しん", "example": "辛酸（しんさん）"}, {"reading": "つら（い）", "example": "辛い（つらい）"}],
     "version": 1
   },
   {
@@ -17426,10 +18496,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "辱",
     "questionType": "multipleChoice",
-    "choices": ["穏","畜","既","辱"],
+    "choices": ["穏", "畜", "既", "辱"],
     "correctAnswer": "辱",
-    "reading": "ジョク",
-    "example": "屈辱（くつじょく）",
+    "reading": "はずかし（める）",
+    "example": "辱める（はずかしめる）",
+    "extraReadings": [{"reading": "じょく", "example": "屈辱（くつじょく）"}],
     "version": 1
   },
   {
@@ -17437,9 +18508,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "逮",
     "questionType": "multipleChoice",
-    "choices": ["掛","逮","肝","伐"],
+    "choices": ["掛", "逮", "肝", "伐"],
     "correctAnswer": "逮",
-    "reading": "タイ",
+    "reading": "たい",
     "example": "逮捕（たいほ）",
     "version": 1
   },
@@ -17448,10 +18519,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "遂",
     "questionType": "multipleChoice",
-    "choices": ["遂","獄","超","某"],
+    "choices": ["遂", "獄", "超", "某"],
     "correctAnswer": "遂",
     "reading": "と（げる）",
     "example": "遂げる（とげる）",
+    "extraReadings": [{"reading": "すい", "example": "完遂（かんすい）"}],
     "version": 1
   },
   {
@@ -17459,9 +18531,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "遇",
     "questionType": "multipleChoice",
-    "choices": ["漏","悟","誘","遇"],
+    "choices": ["漏", "悟", "誘", "遇"],
     "correctAnswer": "遇",
-    "reading": "グウ",
+    "reading": "ぐう",
     "example": "待遇（たいぐう）",
     "version": 1
   },
@@ -17470,10 +18542,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "遭",
     "questionType": "multipleChoice",
-    "choices": ["駐","敢","岳","遭"],
+    "choices": ["駐", "敢", "岳", "遭"],
     "correctAnswer": "遭",
-    "reading": "ソウ",
-    "example": "遭難（そうなん）",
+    "reading": "あ（う）",
+    "example": "遭う（あう）",
+    "extraReadings": [{"reading": "そう", "example": "遭遇（そうぐう）"}],
     "version": 1
   },
   {
@@ -17481,9 +18554,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "遵",
     "questionType": "multipleChoice",
-    "choices": ["孤","遵","励","如"],
+    "choices": ["孤", "遵", "励", "如"],
     "correctAnswer": "遵",
-    "reading": "ジュン",
+    "reading": "じゅん",
     "example": "遵守（じゅんしゅ）",
     "version": 1
   },
@@ -17492,10 +18565,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "邦",
     "questionType": "multipleChoice",
-    "choices": ["篤","殴","邦","凍"],
+    "choices": ["篤", "殴", "邦", "凍"],
     "correctAnswer": "邦",
-    "reading": "ホウ",
-    "example": "邦画（ほうが）",
+    "reading": "ほう",
+    "example": "連邦（れんぽう）",
     "version": 1
   },
   {
@@ -17503,9 +18576,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "邪",
     "questionType": "multipleChoice",
-    "choices": ["貫","詠","尿","邪"],
+    "choices": ["貫", "詠", "尿", "邪"],
     "correctAnswer": "邪",
-    "reading": "ジャ",
+    "reading": "じゃ",
     "example": "邪魔（じゃま）",
     "version": 1
   },
@@ -17514,9 +18587,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "郊",
     "questionType": "multipleChoice",
-    "choices": ["郊","憎","衰","魔"],
+    "choices": ["郊", "憎", "衰", "魔"],
     "correctAnswer": "郊",
-    "reading": "コウ",
+    "reading": "こう",
     "example": "郊外（こうがい）",
     "version": 1
   },
@@ -17525,9 +18598,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "郭",
     "questionType": "multipleChoice",
-    "choices": ["鋳","郭","緊","墜"],
+    "choices": ["鋳", "郭", "緊", "墜"],
     "correctAnswer": "郭",
-    "reading": "カク",
+    "reading": "かく",
     "example": "輪郭（りんかく）",
     "version": 1
   },
@@ -17536,10 +18609,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "酔",
     "questionType": "multipleChoice",
-    "choices": ["壇","酔","伴","雇"],
+    "choices": ["壇", "酔", "伴", "雇"],
     "correctAnswer": "酔",
     "reading": "よ（う）",
     "example": "酔う（よう）",
+    "extraReadings": [{"reading": "すい", "example": "麻酔（ますい）"}],
     "version": 1
   },
   {
@@ -17547,10 +18621,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "酵",
     "questionType": "multipleChoice",
-    "choices": ["超","匿","酵","穂"],
+    "choices": ["超", "匿", "酵", "穂"],
     "correctAnswer": "酵",
-    "reading": "コウ",
-    "example": "酵素（こうそ）",
+    "reading": "こう",
+    "example": "発酵（はっこう）",
     "version": 1
   },
   {
@@ -17558,10 +18632,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "鋳",
     "questionType": "multipleChoice",
-    "choices": ["啓","鋳","殊","牲"],
+    "choices": ["啓", "鋳", "殊", "牲"],
     "correctAnswer": "鋳",
-    "reading": "チュウ",
-    "example": "鋳造（ちゅうぞう）",
+    "reading": "い（る）",
+    "example": "鋳る（いる）",
+    "extraReadings": [{"reading": "ちゅう", "example": "鋳造（ちゅうぞう）"}],
     "version": 1
   },
   {
@@ -17569,10 +18644,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "錠",
     "questionType": "multipleChoice",
-    "choices": ["鐘","幽","錠","陵"],
+    "choices": ["鐘", "幽", "錠", "陵"],
     "correctAnswer": "錠",
-    "reading": "ジョウ",
-    "example": "錠前（じょうまえ）",
+    "reading": "じょう",
+    "example": "錠剤（じょうざい）",
     "version": 1
   },
   {
@@ -17580,9 +18655,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "錬",
     "questionType": "multipleChoice",
-    "choices": ["錬","零","掛","虚"],
+    "choices": ["錬", "零", "掛", "虚"],
     "correctAnswer": "錬",
-    "reading": "レン",
+    "reading": "れん",
     "example": "鍛錬（たんれん）",
     "version": 1
   },
@@ -17591,9 +18666,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "錯",
     "questionType": "multipleChoice",
-    "choices": ["抽","翻","憂","錯"],
+    "choices": ["抽", "翻", "憂", "錯"],
     "correctAnswer": "錯",
-    "reading": "サク",
+    "reading": "さく",
     "example": "錯覚（さっかく）",
     "version": 1
   },
@@ -17602,10 +18677,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "鍛",
     "questionType": "multipleChoice",
-    "choices": ["冗","胆","鍛","陶"],
+    "choices": ["冗", "胆", "鍛", "陶"],
     "correctAnswer": "鍛",
     "reading": "きた（える）",
     "example": "鍛える（きたえる）",
+    "extraReadings": [{"reading": "たん", "example": "鍛錬（たんれん）"}],
     "version": 1
   },
   {
@@ -17613,10 +18689,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "鎮",
     "questionType": "multipleChoice",
-    "choices": ["請","欺","鎮","敢"],
+    "choices": ["請", "欺", "鎮", "敢"],
     "correctAnswer": "鎮",
     "reading": "しず（める）",
     "example": "鎮める（しずめる）",
+    "extraReadings": [{"reading": "ちん", "example": "鎮圧（ちんあつ）"}, {"reading": "しず（まる）", "example": "鎮まる（しずまる）"}],
     "version": 1
   },
   {
@@ -17624,10 +18701,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "鐘",
     "questionType": "multipleChoice",
-    "choices": ["鐘","姫","凍","飽"],
+    "choices": ["鐘", "姫", "凍", "飽"],
     "correctAnswer": "鐘",
     "reading": "かね",
     "example": "鐘（かね）",
+    "extraReadings": [{"reading": "しょう", "example": "警鐘（けいしょう）"}],
     "version": 1
   },
   {
@@ -17635,9 +18713,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "閲",
     "questionType": "multipleChoice",
-    "choices": ["稚","閲","魔","佳"],
+    "choices": ["稚", "閲", "魔", "佳"],
     "correctAnswer": "閲",
-    "reading": "エツ",
+    "reading": "えつ",
     "example": "閲覧（えつらん）",
     "version": 1
   },
@@ -17646,10 +18724,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "阻",
     "questionType": "multipleChoice",
-    "choices": ["婆","慕","阻","肝"],
+    "choices": ["婆", "慕", "阻", "肝"],
     "correctAnswer": "阻",
     "reading": "はば（む）",
     "example": "阻む（はばむ）",
+    "extraReadings": [{"reading": "そ", "example": "阻止（そし）"}],
     "version": 1
   },
   {
@@ -17657,9 +18736,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "陪",
     "questionType": "multipleChoice",
-    "choices": ["託","陪","抽","縫"],
+    "choices": ["託", "陪", "抽", "縫"],
     "correctAnswer": "陪",
-    "reading": "バイ",
+    "reading": "ばい",
     "example": "陪審（ばいしん）",
     "version": 1
   },
@@ -17668,9 +18747,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "陳",
     "questionType": "multipleChoice",
-    "choices": ["陳","遵","促","鋳"],
+    "choices": ["陳", "遵", "促", "鋳"],
     "correctAnswer": "陳",
-    "reading": "チン",
+    "reading": "ちん",
     "example": "陳列（ちんれつ）",
     "version": 1
   },
@@ -17679,9 +18758,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "陵",
     "questionType": "multipleChoice",
-    "choices": ["伏","吉","陵","刑"],
+    "choices": ["伏", "吉", "陵", "刑"],
     "correctAnswer": "陵",
-    "reading": "リョウ",
+    "reading": "りょう",
     "example": "丘陵（きゅうりょう）",
     "version": 1
   },
@@ -17690,9 +18769,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "陶",
     "questionType": "multipleChoice",
-    "choices": ["喚","卸","侍","陶"],
+    "choices": ["喚", "卸", "侍", "陶"],
     "correctAnswer": "陶",
-    "reading": "トウ",
+    "reading": "とう",
     "example": "陶器（とうき）",
     "version": 1
   },
@@ -17701,10 +18780,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "隆",
     "questionType": "multipleChoice",
-    "choices": ["遵","獄","隆","漂"],
+    "choices": ["遵", "獄", "隆", "漂"],
     "correctAnswer": "隆",
-    "reading": "リュウ",
-    "example": "隆起（りゅうき）",
+    "reading": "りゅう",
+    "example": "隆盛（りゅうせい）",
     "version": 1
   },
   {
@@ -17712,9 +18791,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "随",
     "questionType": "multipleChoice",
-    "choices": ["飽","随","促","侍"],
+    "choices": ["飽", "随", "促", "侍"],
     "correctAnswer": "随",
-    "reading": "ズイ",
+    "reading": "ずい",
     "example": "随筆（ずいひつ）",
     "version": 1
   },
@@ -17723,10 +18802,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "隔",
     "questionType": "multipleChoice",
-    "choices": ["隔","詠","翻","甲"],
+    "choices": ["隔", "詠", "翻", "甲"],
     "correctAnswer": "隔",
     "reading": "へだ（てる）",
     "example": "隔てる（へだてる）",
+    "extraReadings": [{"reading": "かく", "example": "間隔（かんかく）"}, {"reading": "へだ（たる）", "example": "隔たる（へだたる）"}],
     "version": 1
   },
   {
@@ -17734,9 +18814,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "隻",
     "questionType": "multipleChoice",
-    "choices": ["乏","隻","姫","勘"],
+    "choices": ["乏", "隻", "姫", "勘"],
     "correctAnswer": "隻",
-    "reading": "セキ",
+    "reading": "せき",
     "example": "一隻（いっせき）",
     "version": 1
   },
@@ -17745,10 +18825,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "雇",
     "questionType": "multipleChoice",
-    "choices": ["暫","粋","菊","雇"],
+    "choices": ["暫", "粋", "菊", "雇"],
     "correctAnswer": "雇",
     "reading": "やと（う）",
     "example": "雇う（やとう）",
+    "extraReadings": [{"reading": "こ", "example": "解雇（かいこ）"}],
     "version": 1
   },
   {
@@ -17756,10 +18837,10 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "零",
     "questionType": "multipleChoice",
-    "choices": ["哲","零","騎","胞"],
+    "choices": ["哲", "零", "騎", "胞"],
     "correctAnswer": "零",
-    "reading": "レイ",
-    "example": "零点（れいてん）",
+    "reading": "れい",
+    "example": "零下（れいか）",
     "version": 1
   },
   {
@@ -17767,10 +18848,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "霊",
     "questionType": "multipleChoice",
-    "choices": ["彫","憩","霊","漂"],
+    "choices": ["彫", "憩", "霊", "漂"],
     "correctAnswer": "霊",
-    "reading": "レイ",
-    "example": "幽霊（ゆうれい）",
+    "reading": "れい",
+    "example": "霊魂（れいこん）",
+    "extraReadings": [{"reading": "りょう", "example": "悪霊（あくりょう）"}],
     "version": 1
   },
   {
@@ -17778,10 +18860,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "顧",
     "questionType": "multipleChoice",
-    "choices": ["随","鎮","顧","又"],
+    "choices": ["随", "鎮", "顧", "又"],
     "correctAnswer": "顧",
     "reading": "かえり（みる）",
     "example": "顧みる（かえりみる）",
+    "extraReadings": [{"reading": "こ", "example": "顧問（こもん）"}],
     "version": 1
   },
   {
@@ -17789,10 +18872,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "飽",
     "questionType": "multipleChoice",
-    "choices": ["超","陳","飽","桑"],
+    "choices": ["超", "陳", "飽", "桑"],
     "correctAnswer": "飽",
     "reading": "あ（きる）",
     "example": "飽きる（あきる）",
+    "extraReadings": [{"reading": "ほう", "example": "飽和（ほうわ）"}],
     "version": 1
   },
   {
@@ -17800,9 +18884,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "餓",
     "questionType": "multipleChoice",
-    "choices": ["餓","削","控","卓"],
+    "choices": ["餓", "削", "控", "卓"],
     "correctAnswer": "餓",
-    "reading": "ガ",
+    "reading": "が",
     "example": "飢餓（きが）",
     "version": 1
   },
@@ -17811,9 +18895,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "駐",
     "questionType": "multipleChoice",
-    "choices": ["膨","駐","陶","墳"],
+    "choices": ["膨", "駐", "陶", "墳"],
     "correctAnswer": "駐",
-    "reading": "チュウ",
+    "reading": "ちゅう",
     "example": "駐車（ちゅうしゃ）",
     "version": 1
   },
@@ -17822,9 +18906,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "騎",
     "questionType": "multipleChoice",
-    "choices": ["騎","碑","鎮","零"],
+    "choices": ["騎", "碑", "鎮", "零"],
     "correctAnswer": "騎",
-    "reading": "キ",
+    "reading": "き",
     "example": "騎士（きし）",
     "version": 1
   },
@@ -17833,9 +18917,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "髄",
     "questionType": "multipleChoice",
-    "choices": ["閲","又","髄","孔"],
+    "choices": ["閲", "又", "髄", "孔"],
     "correctAnswer": "髄",
-    "reading": "ズイ",
+    "reading": "ずい",
     "example": "骨髄（こつずい）",
     "version": 1
   },
@@ -17844,10 +18928,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "魂",
     "questionType": "multipleChoice",
-    "choices": ["換","胎","魂","惜"],
+    "choices": ["換", "胎", "魂", "惜"],
     "correctAnswer": "魂",
     "reading": "たましい",
     "example": "魂（たましい）",
+    "extraReadings": [{"reading": "こん", "example": "魂胆（こんたん）"}],
     "version": 1
   },
   {
@@ -17855,9 +18940,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "魅",
     "questionType": "multipleChoice",
-    "choices": ["巧","魅","崩","騎"],
+    "choices": ["巧", "魅", "崩", "騎"],
     "correctAnswer": "魅",
-    "reading": "ミ",
+    "reading": "み",
     "example": "魅力（みりょく）",
     "version": 1
   },
@@ -17866,9 +18951,9 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "魔",
     "questionType": "multipleChoice",
-    "choices": ["喚","啓","魔","墨"],
+    "choices": ["喚", "啓", "魔", "墨"],
     "correctAnswer": "魔",
-    "reading": "マ",
+    "reading": "ま",
     "example": "魔法（まほう）",
     "version": 1
   },
@@ -17877,10 +18962,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "鯨",
     "questionType": "multipleChoice",
-    "choices": ["鯨","霊","択","欺"],
+    "choices": ["鯨", "霊", "択", "欺"],
     "correctAnswer": "鯨",
     "reading": "くじら",
     "example": "鯨（くじら）",
+    "extraReadings": [{"reading": "げい", "example": "鯨飲（げいいん）"}],
     "version": 1
   },
   {
@@ -17888,10 +18974,11 @@ const questions = [
     "level": "LEVEL_3",
     "kanji": "鶏",
     "questionType": "multipleChoice",
-    "choices": ["該","棋","鶏","斤"],
+    "choices": ["該", "棋", "鶏", "斤"],
     "correctAnswer": "鶏",
     "reading": "にわとり",
     "example": "鶏（にわとり）",
+    "extraReadings": [{"reading": "けい", "example": "鶏卵（けいらん）"}],
     "version": 1
   },
 ];
