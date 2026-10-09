@@ -6,17 +6,47 @@ void main() {
     test('Standard exam configuration', () {
       final config = ExamConfig.standard();
 
-      expect(config.questionCount, equals(50));
-      expect(config.timeLimit, equals(120));
+      // 既定は3級: 公式の検定時間60分・合格の目安70%
+      expect(config.questionCount, equals(20));
+      expect(config.timeLimit, equals(60));
       expect(config.mode, equals(ExamMode.standardExam));
       expect(config.difficulty, equals(ExamDifficulty.medium));
-      expect(config.passThreshold, equals(60));
+      expect(config.passThreshold, equals(70));
+    });
+
+    test('Official time limit and pass percent depend on level', () {
+      // 8級以下(8・9・10級)は40分、7級以上は60分
+      expect(ExamConfig.officialMinutes(10), equals(40));
+      expect(ExamConfig.officialMinutes(8), equals(40));
+      expect(ExamConfig.officialMinutes(7), equals(60));
+      expect(ExamConfig.officialMinutes(1), equals(60));
+
+      // 1・2級と8〜10級は80%、3〜7級は70%
+      for (final level in [1, 2, 8, 9, 10]) {
+        expect(ExamConfig.officialPassPercent(level), equals(80));
+      }
+      for (final level in [3, 4, 5, 6, 7]) {
+        expect(ExamConfig.officialPassPercent(level), equals(70));
+      }
+
+      final kyu10 = ExamConfig.standard(level: 10);
+      expect(kyu10.timeLimit, equals(40));
+      expect(kyu10.passThreshold, equals(80));
+      expect(ExamConfig.speed(level: 2).passThreshold, equals(80));
+    });
+
+    test('isPass compares integers and accepts the exact boundary', () {
+      final config = ExamConfig.standard(level: 3); // 70%
+
+      expect(config.isPass(14, 20), isTrue); // ちょうど70%
+      expect(config.isPass(13, 20), isFalse);
+      expect(config.isPass(0, 0), isFalse);
     });
 
     test('Speed exam configuration', () {
       final config = ExamConfig.speed();
 
-      expect(config.questionCount, equals(30));
+      expect(config.questionCount, equals(20));
       expect(config.timeLimit, equals(60));
       expect(config.mode, equals(ExamMode.speedExam));
     });
@@ -24,7 +54,8 @@ void main() {
     test('Focused exam configuration', () {
       final config = ExamConfig.focused(category: ExamCategory.reading);
 
-      expect(config.questionCount, equals(20));
+      // 1級・1カテゴリあたり用意できる問題は5問のみ
+      expect(config.questionCount, equals(5));
       expect(config.timeLimit, equals(45));
       expect(config.mode, equals(ExamMode.focusedExam));
       expect(config.categories.length, equals(1));
@@ -34,15 +65,15 @@ void main() {
     test('Weak areas exam configuration', () {
       final config = ExamConfig.weakAreas();
 
-      expect(config.questionCount, equals(30));
+      expect(config.questionCount, equals(20));
       expect(config.mode, equals(ExamMode.weakAreasExam));
-      expect(config.difficulty, equals(ExamDifficulty.hard));
+      expect(config.difficulty, equals(ExamDifficulty.medium));
     });
 
     test('Random exam configuration', () {
       final config = ExamConfig.random();
 
-      expect(config.questionCount, equals(40));
+      expect(config.questionCount, equals(20));
       expect(config.mode, equals(ExamMode.randomExam));
       expect(config.randomizeOrder, isTrue);
     });
@@ -50,7 +81,7 @@ void main() {
     test('Progressive exam configuration', () {
       final config = ExamConfig.progressive();
 
-      expect(config.questionCount, equals(60));
+      expect(config.questionCount, equals(20));
       expect(config.mode, equals(ExamMode.progressiveExam));
       expect(config.timeLimit, equals(150));
     });
@@ -59,8 +90,10 @@ void main() {
       final config = ExamConfig.standard(level: 2);
       final json = config.toJson();
 
-      expect(json['questionCount'], equals(50));
+      expect(json['questionCount'], equals(20));
       expect(json['targetLevel'], equals(2));
+      expect(json['timeLimit'], equals(60));
+      expect(json['passThreshold'], equals(80));
       expect(json['mode'], contains('standardExam'));
     });
 
@@ -119,9 +152,11 @@ void main() {
       final speedConfig = ExamConfig.speed();
       final progressiveConfig = ExamConfig.progressive();
 
-      expect(standardConfig.timeLimit, greaterThan(speedConfig.timeLimit));
-      expect(progressiveConfig.questionCount,
-        greaterThan(speedConfig.questionCount));
+      // 標準は公式時間(3級は60分)でスピードと同じ、段階式は一番長い
+      expect(standardConfig.timeLimit, greaterThanOrEqualTo(speedConfig.timeLimit));
+      expect(progressiveConfig.timeLimit, greaterThan(speedConfig.timeLimit));
+      expect(ExamConfig.focused(category: ExamCategory.reading).questionCount,
+        lessThan(standardConfig.questionCount));
     });
   });
 

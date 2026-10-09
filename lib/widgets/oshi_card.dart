@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../providers/oshi_provider.dart';
+import '../screens/oshi_room_screen.dart';
 import '../viewmodels/user_viewmodel.dart';
 
 /// 画像（共有カード）をOSの共有シートで共有する。
@@ -27,13 +28,30 @@ class OshiCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final stage = ref.watch(oshiStageProvider).valueOrNull ?? MascotStage.lv1;
     final user = ref.watch(currentUserProvider).valueOrNull;
-    return UkalabOshiCard(
-      cert: UkalabCert.kanjiKentei,
-      stage: stage,
-      appId: 'kanken',
-      examDate: user?.examDate,
-      streakDays: user?.streakCount ?? 0,
-      onShare: shareCardImage,
+    // 共通キットのカードのメニュー(推しを選ぶ／着替え・ショップ)には項目を足せない(v0.4.11)ため、
+    // 推しの部屋への入口は、カードのすぐ下に置く。
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        UkalabOshiCard(
+          cert: UkalabCert.kanjiKentei,
+          stage: stage,
+          appId: 'kanken',
+          examDate: user?.examDate,
+          streakDays: user?.streakCount ?? 0,
+          onShare: shareCardImage,
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            icon: const Icon(Icons.meeting_room_outlined),
+            label: const Text('推しの部屋'),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const OshiRoomScreen()),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

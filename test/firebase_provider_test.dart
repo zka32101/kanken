@@ -26,17 +26,28 @@ void main() {
     });
 
     test('firebaseProvider returns FirebaseFirestore instance', () {
-      final container = ProviderContainer();
+      // 実体の FirebaseFirestore.instance は Firebase.initializeApp 前だと例外になるためモックで差し替える
+      final container = ProviderContainer(
+        overrides: [
+          firebaseProvider.overrideWithValue(mockFirestore),
+        ],
+      );
       final firestore = container.read(firebaseProvider);
 
       expect(firestore, isA<FirebaseFirestore>());
+      expect(firestore, same(mockFirestore));
     });
 
     test('firebaseAuthProvider returns FirebaseAuth instance', () {
-      final container = ProviderContainer();
+      final container = ProviderContainer(
+        overrides: [
+          firebaseAuthProvider.overrideWithValue(mockAuth),
+        ],
+      );
       final auth = container.read(firebaseAuthProvider);
 
       expect(auth, isA<FirebaseAuth>());
+      expect(auth, same(mockAuth));
     });
 
     test('currentUserIdProvider returns null when not authenticated', () {

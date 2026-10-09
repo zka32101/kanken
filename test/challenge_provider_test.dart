@@ -1,144 +1,118 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kanken/models/challenge_invitation.dart';
+import 'package:kanken/models/friend_challenge.dart';
+
+FriendChallenge _make({
+  required String id,
+  String challenger = 'user-1',
+  String challengee = 'user-2',
+  ChallengeStatus status = ChallengeStatus.pending,
+  DateTime? dueAt,
+}) {
+  final now = DateTime.now();
+  return FriendChallenge(
+    challengeId: id,
+    challengerUserId: challenger,
+    challengerName: 'Alice',
+    challengeeUserId: challengee,
+    changetesName: 'Bob',
+    status: status,
+    targetScore: 80,
+    description: 'Want to compete?',
+    createdAt: now,
+    dueAt: dueAt ?? now.add(const Duration(days: 7)),
+  );
+}
 
 void main() {
-  group('ChallengeInvitation Tests', () {
-    test('ChallengeInvitation creates with pending status', () {
-      final now = DateTime.now();
-      final challenge = ChallengeInvitation(
-        id: 'challenge-1',
-        senderId: 'user-1',
-        recipientId: 'user-2',
-        message: 'Want to compete?',
-        status: 'pending',
-        createdAt: now,
-        expiresAt: now.add(Duration(days: 7)),
-      );
+  group('FriendChallenge Tests', () {
+    test('FriendChallenge creates with pending status', () {
+      final challenge = _make(id: 'challenge-1');
 
-      expect(challenge.id, equals('challenge-1'));
-      expect(challenge.status, equals('pending'));
-      expect(challenge.senderId, equals('user-1'));
+      expect(challenge.challengeId, equals('challenge-1'));
+      expect(challenge.status, equals(ChallengeStatus.pending));
+      expect(challenge.challengerUserId, equals('user-1'));
     });
 
-    test('ChallengeInvitation status transitions', () {
-      final now = DateTime.now();
-      final challenge = ChallengeInvitation(
-        id: 'challenge-2',
-        senderId: 'user-1',
-        recipientId: 'user-2',
-        message: 'Challenge me!',
-        status: 'pending',
-        createdAt: now,
-        expiresAt: now.add(Duration(days: 7)),
-      );
+    test('FriendChallenge status transitions', () {
+      // pending -> accepted -> completed の順に状態を持ち替えられる
+      final statuses = [
+        ChallengeStatus.pending,
+        ChallengeStatus.accepted,
+        ChallengeStatus.completed,
+      ];
+      final challenges = [
+        for (final s in statuses) _make(id: 'challenge-2', status: s),
+      ];
 
-      expect(challenge.status, equals('pending'));
-      // Status should be able to transition: pending -> accepted -> completed
+      expect(challenges.map((c) => c.status).toList(), equals(statuses));
+      expect(challenges.map((c) => c.isFinished).toList(),
+          equals([false, false, true]));
     });
 
-    test('ChallengeInvitation expiration validation', () {
-      final now = DateTime.now();
-      final expiredChallenge = ChallengeInvitation(
+    test('FriendChallenge expiration validation', () {
+      final expired = _make(
         id: 'challenge-3',
-        senderId: 'user-1',
-        recipientId: 'user-2',
-        message: 'Expired challenge',
-        status: 'pending',
-        createdAt: now.subtract(Duration(days: 8)),
-        expiresAt: now.subtract(Duration(days: 1)),
+        dueAt: DateTime.now().subtract(const Duration(days: 1)),
       );
 
-      final isExpired = now.isAfter(expiredChallenge.expiresAt);
-      expect(isExpired, isTrue);
+      expect(expired.isExpired, isTrue);
     });
 
-    test('ChallengeInvitation fromJson creates instance', () {
+    test('FriendChallenge fromJson creates instance', () {
       final jsonData = {
-        'id': 'challenge-4',
-        'senderId': 'user-3',
-        'recipientId': 'user-4',
-        'message': 'Test challenge',
+        'challengeId': 'challenge-4',
+        'challengerUserId': 'user-3',
+        'challengeeUserId': 'user-4',
+        'description': 'Test challenge',
         'status': 'accepted',
-        'createdAt': DateTime.now().toIso8601String(),
-        'expiresAt': DateTime.now().add(Duration(days: 7)).toIso8601String(),
       };
 
-      final challenge = ChallengeInvitation.fromJson(jsonData);
+      final challenge = FriendChallenge.fromJson(jsonData);
 
-      expect(challenge.id, equals('challenge-4'));
-      expect(challenge.senderId, equals('user-3'));
-      expect(challenge.status, equals('accepted'));
+      expect(challenge.challengeId, equals('challenge-4'));
+      expect(challenge.challengerUserId, equals('user-3'));
+      expect(challenge.status, equals(ChallengeStatus.accepted));
     });
 
-    test('Challenge invitation validates recipient', () {
-      final now = DateTime.now();
-      final challenge = ChallengeInvitation(
-        id: 'challenge-5',
-        senderId: 'user-1',
-        recipientId: 'user-2',
-        message: 'Compete with me',
-        status: 'pending',
-        createdAt: now,
-        expiresAt: now.add(Duration(days: 7)),
+    test('Challenge validates challengee', () {
+      final challenge = _make(id: 'challenge-5');
+
+      expect(challenge.challengeeUserId, isNotEmpty);
+      expect(challenge.challengerUserId, isNot(challenge.challengeeUserId));
+    });
+
+    test('Challenge detects self-challenge', () {
+      // 自分自身への挑戦はモデル上は作れるので、呼び出し側で弾く必要がある
+      final self = _make(
+          id: 'challenge-6', challenger: 'user-1', challengee: 'user-1');
+
+      expect(self.challengerUserId == self.challengeeUserId, isTrue);
+    });
+
+    test('Challenge description is preserved', () {
+      final challenge = _make(id: 'challenge-7');
+
+      expect(challenge.description, isNotEmpty);
+      expect(challenge.description.length, lessThanOrEqualTo(500));
+    });
+
+    test('Challenge batch operations', () {
+      final challenges = List.generate(
+        5,
+        (i) => _make(id: 'challenge-$i', challengee: 'user-${i + 2}'),
       );
-
-      expect(challenge.recipientId, isNotEmpty);
-      expect(challenge.recipientId, isNotNull);
-      expect(challenge.senderId, isNot(challenge.recipientId));
-    });
-
-    test('Challenge invitation prevents self-challenge', () {
-      final now = DateTime.now();
-      final selfChallenge = ChallengeInvitation(
-        id: 'challenge-6',
-        senderId: 'user-1',
-        recipientId: 'user-1', // Same user
-        message: 'Self challenge',
-        status: 'pending',
-        createdAt: now,
-        expiresAt: now.add(Duration(days: 7)),
-      );
-
-      // Should validate that sender != recipient
-      final isSelfChallenge = selfChallenge.senderId == selfChallenge.recipientId;
-      expect(isSelfChallenge, isTrue);
-    });
-
-    test('Challenge invitation message requirements', () {
-      final now = DateTime.now();
-      final challenge = ChallengeInvitation(
-        id: 'challenge-7',
-        senderId: 'user-1',
-        recipientId: 'user-2',
-        message: 'Test message',
-        status: 'pending',
-        createdAt: now,
-        expiresAt: now.add(Duration(days: 7)),
-      );
-
-      expect(challenge.message, isNotEmpty);
-      expect(challenge.message.length, lessThanOrEqualTo(500));
-    });
-
-    test('Challenge invitation batch operations', () {
-      final now = DateTime.now();
-      final challenges = List.generate(5, (i) {
-        return ChallengeInvitation(
-          id: 'challenge-$i',
-          senderId: 'user-1',
-          recipientId: 'user-${i + 2}',
-          message: 'Challenge $i',
-          status: 'pending',
-          createdAt: now,
-          expiresAt: now.add(Duration(days: 7)),
-        );
-      });
 
       expect(challenges.length, equals(5));
-      expect(challenges.every((c) => c.senderId == 'user-1'), isTrue);
-      expect(challenges.map((c) => c.id).toList(),
-          equals(['challenge-0', 'challenge-1', 'challenge-2', 'challenge-3', 'challenge-4']));
+      expect(challenges.every((c) => c.challengerUserId == 'user-1'), isTrue);
+      expect(
+          challenges.map((c) => c.challengeId).toList(),
+          equals([
+            'challenge-0',
+            'challenge-1',
+            'challenge-2',
+            'challenge-3',
+            'challenge-4'
+          ]));
     });
   });
 }

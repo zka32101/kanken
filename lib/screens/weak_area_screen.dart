@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/category_label.dart';
 import '../models/weak_area.dart';
 import '../providers/weak_area_provider.dart';
 import 'package:kanken/widgets/ukalab_emoji.dart';
@@ -188,7 +189,7 @@ class WeakAreaScreen extends ConsumerWidget {
             const SizedBox(height: 12),
 
             Text(
-              worstArea.categoryName,
+              categoryLabel(worstArea.categoryName),
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -314,7 +315,7 @@ class WeakAreaScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        area.categoryName,
+                        categoryLabel(area.categoryName),
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

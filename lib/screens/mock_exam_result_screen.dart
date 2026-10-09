@@ -10,6 +10,7 @@ import 'package:app_common_kit/app_common_kit.dart'
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/category_label.dart';
 import '../models/mock_exam_modes.dart';
 import '../models/achievement.dart';
 import '../providers/exam_session_provider.dart';
@@ -68,7 +69,8 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
       coin.takeRecent(); // 結果画面の内訳に、この試験の分だけが出るように
       await coin.grant(CoinEvent.mockDone());
       final accuracy = session.getAccuracyRate();
-      final isPassed = (accuracy * 100) >= session.config.passThreshold;
+      final isPassed = session.config.isPass(
+          session.getCorrectAnswerCount(), session.questions.length);
       if (!isPassed) return;
       await coin.grant(CoinEvent.mockPass('kanken_level_${session.config.targetLevel}'));
       // 習得度が最高段階（Lv5＝0.8以上）なら、準備完了の装いを解放する。
@@ -121,7 +123,8 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
   /// 合格ラインを超えていれば、その級の合格バッジを付与する
   Future<void> _awardBadgeIfPassed() async {
     final accuracy = session.getAccuracyRate();
-    final isPassed = (accuracy * 100) >= session.config.passThreshold;
+    final isPassed = session.config.isPass(
+          session.getCorrectAnswerCount(), session.questions.length);
     if (!isPassed) return;
 
     try {
@@ -375,7 +378,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
     const categoryMasterInfo = {
       'reading': ('category_reading_master', '読み方マスター', '「読み」で90%以上の正答率を達成', '📖', 75),
       'meaning': ('category_meaning_master', '意味マスター', '「意味」で90%以上の正答率を達成', '📚', 75),
-      'stroke': ('category_stroke_master', '筆順マスター', '「筆順」で90%以上の正答率を達成', '✍️', 75),
+      'stroke': ('category_stroke_master', '画数マスター', '「画数」で90%以上の正答率を達成', '✍️', 75),
       'writing': ('category_writing_master', '書き取りマスター', '「書き取り」で90%以上の正答率を達成', '📝', 75),
       'usage': ('category_usage_master', '使い方マスター', '「使い方」で90%以上の正答率を達成', '🈶', 75),
     };
@@ -490,7 +493,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
           WeakPointRecommendation(
             category: category,
             accuracy: perf.accuracy,
-            recommendation: '「$category」は正答率${(perf.accuracy * 100).toStringAsFixed(1)}%です。重点的な復習が必要です。',
+            recommendation: '「${categoryLabel(category)}」は正答率${(perf.accuracy * 100).toStringAsFixed(1)}%です。重点的な復習が必要です。',
             priority: 1,
           ),
         );
@@ -499,7 +502,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
           WeakPointRecommendation(
             category: category,
             accuracy: perf.accuracy,
-            recommendation: '「$category」をさらに強化できます。追加練習をお勧めします。',
+            recommendation: '「${categoryLabel(category)}」をさらに強化できます。追加練習をお勧めします。',
             priority: 2,
           ),
         );
@@ -527,7 +530,8 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
   @override
   Widget build(BuildContext context) {
     final accuracy = session.getAccuracyRate();
-    final isPassed = (accuracy * 100) >= session.config.passThreshold;
+    final isPassed = session.config.isPass(
+          session.getCorrectAnswerCount(), session.questions.length);
 
     return Scaffold(
       appBar: AppBar(
@@ -701,7 +705,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
             const Divider(),
             _buildStatRow(
               '合否ライン',
-              '${session.config.passThreshold}%以上',
+              '${session.config.passThreshold}%以上（公式の目安）',
             ),
           ],
         ),
@@ -760,7 +764,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          category,
+                          categoryLabel(category),
                           style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
                         Text(
@@ -866,7 +870,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            point['category'] ?? '',
+                            categoryLabel(point['category'] ?? ''),
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.red,
@@ -968,7 +972,7 @@ class _MockExamResultScreenState extends ConsumerState<MockExamResultScreen> {
 
   String _getRecommendation(String category, double accuracy) {
     final percentage = (accuracy * 100).toStringAsFixed(1);
-    return '「$category」の正答率は$percentage%です。このカテゴリを重点的に復習することをお勧めします。';
+    return '「${categoryLabel(category)}」の正答率は$percentage%です。このカテゴリを重点的に復習することをお勧めします。';
   }
 
   String _formatTime(int seconds) {

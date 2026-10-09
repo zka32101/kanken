@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/category_label.dart';
 import '../models/analytics.dart';
 import '../providers/analytics_provider.dart';
 import '../router/app_router.dart';
@@ -410,7 +411,7 @@ class _AnalyticsDashboardScreenState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      trend.category,
+                      categoryLabel(trend.category),
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     Container(

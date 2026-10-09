@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/category_label.dart';
 import '../models/parent_dashboard.dart';
 import '../providers/parent_dashboard_provider.dart';
 import 'package:kanken/widgets/ukalab_emoji.dart';
@@ -513,7 +514,7 @@ class _ParentDashboardScreenState extends ConsumerState<ParentDashboardScreen> {
                               MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              area.categoryName,
+                              categoryLabel(area.categoryName),
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,

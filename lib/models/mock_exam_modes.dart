@@ -61,6 +61,16 @@ class ExamConfig {
   /// 7級以上は60分（日本漢字能力検定協会の公表値）。
   static int officialMinutes(int level) => level >= 8 ? 40 : 60;
 
+  /// 日本漢字能力検定の公式の合格基準（満点に対する得点率の目安・%）。
+  /// 1・2級と8〜10級は80％程度、3〜7級は70％程度（協会の各級の概要ページ。準1級・準2級はアプリに無い）。
+  /// 公式の表記が「程度」のため、本番の合否ではなく模擬試験の目安として使う。
+  static int officialPassPercent(int level) =>
+      (level <= 2 || level >= 8) ? 80 : 70;
+
+  /// 合格ライン以上か。小数の誤差が出ないよう整数で比べる（境界ちょうどは合格）。
+  bool isPass(int correct, int total) =>
+      total > 0 && correct * 100 >= passThreshold * total;
+
   /// Standard exam (official format)
   factory ExamConfig.standard({int level = 3}) => ExamConfig(
     questionCount: 20,
@@ -69,6 +79,7 @@ class ExamConfig {
     difficulty: ExamDifficulty.medium,
     categories: ExamCategory.values,
     targetLevel: level,
+    passThreshold: officialPassPercent(level),
   );
 
   /// Speed exam: time-limited
@@ -79,6 +90,7 @@ class ExamConfig {
     difficulty: ExamDifficulty.medium,
     categories: ExamCategory.values,
     targetLevel: level,
+    passThreshold: officialPassPercent(level),
   );
 
   /// Focused exam: questions on a specific category（1級・1カテゴリあたり5問のみ）
@@ -92,6 +104,7 @@ class ExamConfig {
     difficulty: ExamDifficulty.medium,
     categories: [category],
     targetLevel: level,
+    passThreshold: officialPassPercent(level),
   );
 
   /// Weak areas exam: Adaptive based on user performance
@@ -102,6 +115,7 @@ class ExamConfig {
     difficulty: ExamDifficulty.medium,
     categories: ExamCategory.values,
     targetLevel: level,
+    passThreshold: officialPassPercent(level),
   );
 
   /// Random exam: Mix of all question types
@@ -112,6 +126,7 @@ class ExamConfig {
     difficulty: ExamDifficulty.medium,
     categories: ExamCategory.values,
     targetLevel: level,
+    passThreshold: officialPassPercent(level),
   );
 
   /// Progressive exam: Difficulty increases with correct answers
@@ -122,6 +137,7 @@ class ExamConfig {
     difficulty: ExamDifficulty.medium,
     categories: ExamCategory.values,
     targetLevel: level,
+    passThreshold: officialPassPercent(level),
   );
 
   Map<String, dynamic> toJson() => {
