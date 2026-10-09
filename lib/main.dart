@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,7 @@ import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 import 'widgets/startup_splash.dart';
 import 'services/ad_service.dart';
+import 'services/coin_sync_service.dart';
 import 'services/purchases_service.dart';
 
 void main() async {
@@ -68,6 +70,11 @@ void main() async {
         .doc(report.id)
         .set(report.toJson());
   });
+  // 学習コインを共通アカウントと同期する（サインイン時・アプリに戻ったとき）
+  CoinSyncService(
+    container: container,
+    userChanges: FirebaseAuth.instance.authStateChanges().map((u) => u?.uid),
+  ).start();
   // 未送信分の再送信を試みる(オフライン等で失敗した報告のリトライ)
   unawaited(container.read(feedbackProvider.notifier).retryPendingReports());
 
