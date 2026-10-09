@@ -6,6 +6,7 @@ import '../models/user_ranking.dart';
 import '../providers/event_provider.dart';
 import '../providers/ranking_provider.dart';
 import 'package:kanken/widgets/ukalab_emoji.dart';
+import '../theme/app_theme.dart';
 
 class GlobalRankingScreen extends ConsumerStatefulWidget {
   const GlobalRankingScreen({Key? key}) : super(key: key);
@@ -42,14 +43,14 @@ class _GlobalRankingScreenState extends ConsumerState<GlobalRankingScreen>
       appBar: AppBar(
         title: const Text('🌍 グローバルランキング'),
         centerTitle: true,
-        backgroundColor: Colors.purple.shade50,
+        backgroundColor: AppColors.primarySoft,
         elevation: 0,
         foregroundColor: Colors.black87,
         bottom: TabBar(
           controller: _tabController,
-          labelColor: Colors.purple.shade700,
+          labelColor: AppColors.primaryDark,
           unselectedLabelColor: Colors.grey,
-          indicatorColor: Colors.purple.shade700,
+          indicatorColor: AppColors.primaryDark,
           tabs: const [
             Tab(child: Text('イベント別')),
             Tab(child: Text('全体')),
@@ -107,7 +108,7 @@ class _GlobalRankingScreenState extends ConsumerState<GlobalRankingScreen>
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.purple.shade50, Colors.pink.shade50],
+          colors: [AppColors.primarySoft, AppColors.surfaceMuted],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -224,7 +225,7 @@ class _GlobalRankingScreenState extends ConsumerState<GlobalRankingScreen>
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.purple.shade400, Colors.pink.shade400],
+          colors: [AppColors.primary, AppColors.primaryDark],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -294,13 +295,13 @@ class _GlobalRankingScreenState extends ConsumerState<GlobalRankingScreen>
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isCurrentUser
-            ? Colors.purple.shade50
+            ? AppColors.primarySoft
             : isMedal
                 ? medalColor.withOpacity(0.1)
                 : Colors.grey.shade50,
         borderRadius: BorderRadius.circular(12),
         border: isCurrentUser
-            ? Border.all(color: Colors.purple, width: 2)
+            ? Border.all(color: AppColors.primary, width: 2)
             : isMedal
                 ? Border.all(color: medalColor.withOpacity(0.3), width: 2)
                 : null,
@@ -341,7 +342,7 @@ class _GlobalRankingScreenState extends ConsumerState<GlobalRankingScreen>
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.purple,
+                          color: AppColors.primary,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Text(
@@ -520,13 +521,13 @@ class _GlobalRankingScreenState extends ConsumerState<GlobalRankingScreen>
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isCurrentUser
-            ? Colors.purple.shade50
+            ? AppColors.primarySoft
             : isMedal
                 ? medalColor.withOpacity(0.1)
                 : Colors.grey.shade50,
         borderRadius: BorderRadius.circular(12),
         border: isCurrentUser
-            ? Border.all(color: Colors.purple, width: 2)
+            ? Border.all(color: AppColors.primary, width: 2)
             : isMedal
                 ? Border.all(color: medalColor.withOpacity(0.3), width: 2)
                 : null,
@@ -567,7 +568,7 @@ class _GlobalRankingScreenState extends ConsumerState<GlobalRankingScreen>
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.purple,
+                          color: AppColors.primary,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Text(
@@ -671,7 +672,7 @@ class _GlobalRankingScreenState extends ConsumerState<GlobalRankingScreen>
         }
       },
       backgroundColor: Colors.grey.shade200,
-      selectedColor: Colors.purple.shade300,
+      selectedColor: AppColors.primary,
       labelStyle: TextStyle(
         color: isSelected ? Colors.white : Colors.black87,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
