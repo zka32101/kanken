@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:app_common_kit/app_common_kit.dart' show CoinEvent, coinProvider;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/compound_structure_data.dart';
+import '../data/level_kanji_data.dart';
 import '../data/kanji_radical_data.dart';
 import '../models/index.dart';
 import '../providers/learning_goal_provider.dart';
@@ -195,8 +196,14 @@ final practiceQuestionsProvider =
     profileId: user?.profileId ?? 'default',
     masteryThreshold: user?.masteryThreshold ?? 3,
   );
-  all.shuffle();
-  final selected = all.take(practiceSessionSize).toList();
+  // その級で新しく習う漢字（公式級別漢字表の配当漢字）の問題だけに絞る。
+  // 下の級の漢字が混ざらないようにするため。配当表が無い級は絞り込まない。
+  final levelKanji = LevelKanjiData.forLevel(level).toSet();
+  final inLevel = levelKanji.isEmpty
+      ? all
+      : all.where((q) => levelKanji.contains(q.kanji)).toList();
+  inLevel.shuffle();
+  final selected = inLevel.take(practiceSessionSize).toList();
   return _buildPracticeQuestions(selected, mode, level);
 });
 
