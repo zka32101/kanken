@@ -88,7 +88,7 @@ class AnalyticsService {
   }) async {
     await _analytics.logEvent(
       name: eventName,
-      parameters: parameters,
+      parameters: parameters.map((k, v) => MapEntry(k, v as Object)),
     );
   }
 
