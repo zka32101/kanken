@@ -17,14 +17,14 @@ dependencies:
   riverpod_generator: ^2.3.0
 
   # Firebase
-  firebase_core: ^2.24.0
-  firebase_auth: ^4.15.0
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
   google_sign_in: ^6.1.6
-  firebase_analytics: ^10.7.0
-  firebase_crashlytics: ^3.4.0
-  firebase_remote_config: ^4.3.0
-  cloud_firestore: ^4.14.0
-  cloud_functions: ^4.5.0
+  firebase_analytics: ^11.3.3
+  firebase_crashlytics: ^4.1.3
+  firebase_remote_config: ^5.1.3
+  cloud_firestore: ^5.4.4
+  cloud_functions: ^5.1.3
 
   # 端末内の学習記録（推しの成長）。app_common_kit も使う
   shared_preferences: ^2.3.0
@@ -38,6 +38,9 @@ dependencies:
 
   # Audio & Haptics
   audioplayers: ^5.0.0
+
+  # 読み上げ（ながら学習モード。端末標準の音声合成）
+  flutter_tts: ^4.0.2
 
   # Charts
   fl_chart: ^1.0.0
@@ -59,7 +62,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: v0.4.11
+      ref: v0.21.0
   cross_promo_kit:
     git:
       url: https://github.com/zka32101/cross_promo_kit
