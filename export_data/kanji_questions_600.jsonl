@@ -214,7 +214,7 @@
 {"level": "LEVEL_8", "kanji": "冷", "questionType": "multipleChoice", "meaning": "つめたい", "choices": ["入", "柔", "冷", "味"], "correctAnswer": "冷", "reading": "つめたい", "example": "冷淡", "version": 1}
 {"level": "LEVEL_8", "kanji": "熱", "questionType": "fillInTheBlank", "meaning": "あつい", "choices": ["熱", "上", "左", "低"], "correctAnswer": "熱", "reading": "あつい", "example": "熱気", "version": 1}
 {"level": "LEVEL_8", "kanji": "冬", "questionType": "handwriting", "meaning": "ふゆ", "choices": ["上", "昼", "冬", "甘"], "correctAnswer": "冬", "reading": "ふゆ", "example": "冬季", "version": 1}
-{"level": "LEVEL_8", "kanji": "春", "questionType": "multipleChoice", "meaning": "はる", "choices": ["粗", "春", "冷", "粗"], "correctAnswer": "春", "reading": "はる", "example": "春季", "version": 1}
+{"level": "LEVEL_8", "kanji": "春", "questionType": "multipleChoice", "meaning": "はる", "choices": ["粗", "春", "冷", "強"], "correctAnswer": "春", "reading": "はる", "example": "春季", "version": 1}
 {"level": "LEVEL_8", "kanji": "夏", "questionType": "fillInTheBlank", "meaning": "なつ", "choices": ["広", "浅", "後", "夏"], "correctAnswer": "夏", "reading": "なつ", "example": "夏季", "version": 1}
 {"level": "LEVEL_8", "kanji": "秋", "questionType": "handwriting", "meaning": "あき", "choices": ["始", "後", "秋", "弱"], "correctAnswer": "秋", "reading": "あき", "example": "秋季", "version": 1}
 {"level": "LEVEL_8", "kanji": "朝", "questionType": "multipleChoice", "meaning": "あさ", "choices": ["朝", "字", "進", "合"], "correctAnswer": "朝", "reading": "あさ", "example": "朝食", "version": 1}
@@ -336,7 +336,7 @@
 {"level": "LEVEL_6", "kanji": "序", "questionType": "fillInTheBlank", "meaning": "じょ", "choices": ["皇", "序", "堡", "地"], "correctAnswer": "序", "reading": "じょ", "example": "序列", "version": 1}
 {"level": "LEVEL_6", "kanji": "順", "questionType": "handwriting", "meaning": "じゅん", "choices": ["度", "図", "順", "道"], "correctAnswer": "順", "reading": "じゅん", "example": "順序", "version": 1}
 {"level": "LEVEL_6", "kanji": "並", "questionType": "multipleChoice", "meaning": "ならぶ", "choices": ["程", "区", "並", "等"], "correctAnswer": "並", "reading": "ならぶ", "example": "並列", "version": 1}
-{"level": "LEVEL_6", "kanji": "列", "questionType": "fillInTheBlank", "meaning": "れつ", "choices": ["列", "令", "並", "令"], "correctAnswer": "列", "reading": "れつ", "example": "列車", "version": 1}
+{"level": "LEVEL_6", "kanji": "列", "questionType": "fillInTheBlank", "meaning": "れつ", "choices": ["列", "令", "並", "制"], "correctAnswer": "列", "reading": "れつ", "example": "列車", "version": 1}
 {"level": "LEVEL_6", "kanji": "群", "questionType": "handwriting", "meaning": "ぐん", "choices": ["礎", "平", "群", "塞"], "correctAnswer": "群", "reading": "ぐん", "example": "群集", "version": 1}
 {"level": "LEVEL_6", "kanji": "団", "questionType": "multipleChoice", "meaning": "だん", "choices": ["令", "城", "町", "団"], "correctAnswer": "団", "reading": "だん", "example": "団体", "version": 1}
 {"level": "LEVEL_6", "kanji": "体", "questionType": "fillInTheBlank", "meaning": "たい", "choices": ["協", "等", "体", "略"], "correctAnswer": "体", "reading": "たい", "example": "団体", "version": 1}
@@ -373,9 +373,9 @@
 {"level": "LEVEL_6", "kanji": "法", "questionType": "handwriting", "meaning": "ほう", "choices": ["強", "態", "法", "別"], "correctAnswer": "法", "reading": "ほう", "example": "法律", "version": 1}
 {"level": "LEVEL_6", "kanji": "律", "questionType": "multipleChoice", "meaning": "りつ", "choices": ["律", "列", "客", "王"], "correctAnswer": "律", "reading": "りつ", "example": "律令", "version": 1}
 {"level": "LEVEL_6", "kanji": "令", "questionType": "fillInTheBlank", "meaning": "れい", "choices": ["制", "皇", "帝", "令"], "correctAnswer": "令", "reading": "れい", "example": "命令", "version": 1}
-{"level": "LEVEL_6", "kanji": "命", "questionType": "handwriting", "meaning": "めい", "choices": ["令", "命", "同", "则"], "correctAnswer": "命", "reading": "めい", "example": "命令", "version": 1}
+{"level": "LEVEL_6", "kanji": "命", "questionType": "handwriting", "meaning": "めい", "choices": ["令", "命", "同", "則"], "correctAnswer": "命", "reading": "めい", "example": "命令", "version": 1}
 {"level": "LEVEL_6", "kanji": "令", "questionType": "multipleChoice", "meaning": "りょう", "choices": ["令", "図", "協", "共"], "correctAnswer": "令", "reading": "りょう", "example": "命令", "version": 1}
-{"level": "LEVEL_6", "kanji": "令", "questionType": "fillInTheBlank", "meaning": "いいつけ", "choices": ["令", "则", "公", "和"], "correctAnswer": "令", "reading": "いいつけ", "example": "支持", "version": 1}
+{"level": "LEVEL_6", "kanji": "令", "questionType": "fillInTheBlank", "meaning": "いいつけ", "choices": ["令", "則", "公", "和"], "correctAnswer": "令", "reading": "いいつけ", "example": "支持", "version": 1}
 {"level": "LEVEL_6", "kanji": "制", "questionType": "handwriting", "meaning": "せい", "choices": ["制", "命", "婿", "同"], "correctAnswer": "制", "reading": "せい", "example": "制度", "version": 1}
 {"level": "LEVEL_6", "kanji": "度", "questionType": "multipleChoice", "meaning": "ど", "choices": ["市", "度", "礎", "夫"], "correctAnswer": "度", "reading": "ど", "example": "制度", "version": 1}
 {"level": "LEVEL_6", "kanji": "略", "questionType": "fillInTheBlank", "meaning": "りゃく", "choices": ["強", "略", "村", "里"], "correctAnswer": "略", "reading": "りゃく", "example": "略図", "version": 1}
@@ -383,7 +383,7 @@
 {"level": "LEVEL_6", "kanji": "表", "questionType": "multipleChoice", "meaning": "おもて", "choices": ["表", "区", "规", "皇"], "correctAnswer": "表", "reading": "おもて", "example": "表面", "version": 1}
 {"level": "LEVEL_6", "kanji": "里", "questionType": "fillInTheBlank", "meaning": "さと", "choices": ["法", "道", "里", "強"], "correctAnswer": "里", "reading": "さと", "example": "里程", "version": 1}
 {"level": "LEVEL_6", "kanji": "程", "questionType": "handwriting", "meaning": "ほど", "choices": ["形", "村", "都", "程"], "correctAnswer": "程", "reading": "ほど", "example": "道程", "version": 1}
-{"level": "LEVEL_6", "kanji": "道", "questionType": "multipleChoice", "meaning": "みち", "choices": ["令", "道", "令", "図"], "correctAnswer": "道", "reading": "みち", "example": "道路", "version": 1}
+{"level": "LEVEL_6", "kanji": "道", "questionType": "multipleChoice", "meaning": "みち", "choices": ["令", "道", "帝", "図"], "correctAnswer": "道", "reading": "みち", "example": "道路", "version": 1}
 {"level": "LEVEL_6", "kanji": "路", "questionType": "fillInTheBlank", "meaning": "ろ", "choices": ["力", "民", "主", "路"], "correctAnswer": "路", "reading": "ろ", "example": "道路", "version": 1}
 {"level": "LEVEL_6", "kanji": "線", "questionType": "handwriting", "meaning": "せん", "choices": ["線", "順", "石", "区"], "correctAnswer": "線", "reading": "せん", "example": "路線", "version": 1}
 {"level": "LEVEL_6", "kanji": "軌", "questionType": "multipleChoice", "meaning": "き", "choices": ["城", "団", "軌", "強"], "correctAnswer": "軌", "reading": "き", "example": "軌道", "version": 1}
@@ -410,7 +410,7 @@
 {"level": "LEVEL_6", "kanji": "強", "questionType": "multipleChoice", "meaning": "つよい", "choices": ["塁", "陵", "強", "区"], "correctAnswer": "強", "reading": "つよい", "example": "強大", "version": 1}
 {"level": "LEVEL_6", "kanji": "大", "questionType": "fillInTheBlank", "meaning": "おおきい", "choices": ["国", "大", "市", "造"], "correctAnswer": "大", "reading": "おおきい", "example": "大规", "version": 1}
 {"level": "LEVEL_6", "kanji": "规", "questionType": "handwriting", "meaning": "きめ", "choices": ["体", "规", "塞", "塁"], "correctAnswer": "规", "reading": "きめ", "example": "規則", "version": 1}
-{"level": "LEVEL_6", "kanji": "则", "questionType": "multipleChoice", "meaning": "のり", "choices": ["则", "軌", "順", "嫁"], "correctAnswer": "则", "reading": "のり", "example": "規則", "version": 1}
+{"level": "LEVEL_6", "kanji": "則", "questionType": "multipleChoice", "meaning": "のり", "choices": ["則", "軌", "順", "嫁"], "correctAnswer": "則", "reading": "のり", "example": "規則", "version": 1}
 {"level": "LEVEL_5", "kanji": "識", "questionType": "multipleChoice", "meaning": "しるす", "choices": ["心", "識", "痛", "周"], "correctAnswer": "識", "reading": "しるす", "example": "識別", "version": 1}
 {"level": "LEVEL_5", "kanji": "別", "questionType": "fillInTheBlank", "meaning": "べつ", "choices": ["別", "接", "緒", "頭"], "correctAnswer": "別", "reading": "べつ", "example": "別離", "version": 1}
 {"level": "LEVEL_5", "kanji": "認", "questionType": "handwriting", "meaning": "みとめる", "choices": ["毛", "径", "認", "痛"], "correctAnswer": "認", "reading": "みとめる", "example": "認識", "version": 1}
@@ -497,7 +497,7 @@
 {"level": "LEVEL_5", "kanji": "色", "questionType": "handwriting", "meaning": "いろ", "choices": ["与", "患", "色", "拍"], "correctAnswer": "色", "reading": "いろ", "example": "色盲", "version": 1}
 {"level": "LEVEL_5", "kanji": "盲", "questionType": "multipleChoice", "meaning": "もう", "choices": ["脳", "腹", "盲", "薬"], "correctAnswer": "盲", "reading": "もう", "example": "色盲", "version": 1}
 {"level": "LEVEL_5", "kanji": "聴", "questionType": "fillInTheBlank", "meaning": "ちょう", "choices": ["聴", "脈", "酸", "眠"], "correctAnswer": "聴", "reading": "ちょう", "example": "聴力", "version": 1}
-{"level": "LEVEL_5", "kanji": "嗅", "questionType": "handwriting", "meaning": "きゅう", "choices": ["嗅", "臓", "医", "臓"], "correctAnswer": "嗅", "reading": "きゅう", "example": "嗅覚", "version": 1}
+{"level": "LEVEL_5", "kanji": "嗅", "questionType": "handwriting", "meaning": "きゅう", "choices": ["嗅", "臓", "医", "鼻"], "correctAnswer": "嗅", "reading": "きゅう", "example": "嗅覚", "version": 1}
 {"level": "LEVEL_5", "kanji": "味", "questionType": "multipleChoice", "meaning": "あじ", "choices": ["緒", "殊", "味", "肉"], "correctAnswer": "味", "reading": "あじ", "example": "味覚", "version": 1}
 {"level": "LEVEL_5", "kanji": "触", "questionType": "fillInTheBlank", "meaning": "しょく", "choices": ["方", "触", "患", "周"], "correctAnswer": "触", "reading": "しょく", "example": "触覚", "version": 1}
 {"level": "LEVEL_5", "kanji": "痛", "questionType": "handwriting", "meaning": "いたむ", "choices": ["縁", "眼", "痛", "腕"], "correctAnswer": "痛", "reading": "いたむ", "example": "痛覚", "version": 1}
