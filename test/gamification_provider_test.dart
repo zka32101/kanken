@@ -43,6 +43,14 @@ void main() {
       mockDocRef = MockDocumentReference();
     });
 
+    // users/{uid}/profiles/{profileId}/stats/current までの参照チェーンを同じモックで辿らせる
+    void stubStatsDoc(MockDocumentSnapshot snapshot) {
+      when(() => mockFirestore.collection(any())).thenReturn(mockCollection);
+      when(() => mockCollection.doc(any())).thenReturn(mockDocRef);
+      when(() => mockDocRef.collection(any())).thenReturn(mockCollection);
+      when(() => mockDocRef.get()).thenAnswer((_) async => snapshot);
+    }
+
     test('GamificationNotifier initializes with loading state', () {
       final notifier = GamificationNotifier(mockFirestore, 'test-user-123');
 
@@ -69,15 +77,7 @@ void main() {
         data: mockStatsData,
       );
 
-      when(() => mockFirestore.collection('users')).thenReturn(mockCollection);
-      when(() => mockCollection.doc('test-user-123'))
-          .thenReturn(mockDocRef as DocumentReference<Map<String, dynamic>>);
-      when(() => (mockDocRef as MockDocumentReference).collection('stats'))
-          .thenReturn(mockCollection);
-      when(() => mockCollection.doc('current'))
-          .thenReturn(mockDocRef as DocumentReference<Map<String, dynamic>>);
-      when(() => (mockDocRef as MockDocumentReference).get())
-          .thenAnswer((_) async => mockSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+      stubStatsDoc(mockSnapshot);
 
       final notifier = GamificationNotifier(mockFirestore, 'test-user-123');
       await notifier.loadStats();
@@ -90,15 +90,7 @@ void main() {
     test('loadStats returns initial values when doc does not exist', () async {
       final mockSnapshot = MockDocumentSnapshot(exists: false);
 
-      when(() => mockFirestore.collection('users')).thenReturn(mockCollection);
-      when(() => mockCollection.doc('test-user-123'))
-          .thenReturn(mockDocRef as DocumentReference<Map<String, dynamic>>);
-      when(() => (mockDocRef as MockDocumentReference).collection('stats'))
-          .thenReturn(mockCollection);
-      when(() => mockCollection.doc('current'))
-          .thenReturn(mockDocRef as DocumentReference<Map<String, dynamic>>);
-      when(() => (mockDocRef as MockDocumentReference).get())
-          .thenAnswer((_) async => mockSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+      stubStatsDoc(mockSnapshot);
 
       final notifier = GamificationNotifier(mockFirestore, 'test-user-123');
       await notifier.loadStats();
@@ -140,15 +132,7 @@ void main() {
         data: mockStatsData,
       );
 
-      when(() => mockFirestore.collection('users')).thenReturn(mockCollection);
-      when(() => mockCollection.doc('test-user-123'))
-          .thenReturn(mockDocRef as DocumentReference<Map<String, dynamic>>);
-      when(() => (mockDocRef as MockDocumentReference).collection('stats'))
-          .thenReturn(mockCollection);
-      when(() => mockCollection.doc('current'))
-          .thenReturn(mockDocRef as DocumentReference<Map<String, dynamic>>);
-      when(() => (mockDocRef as MockDocumentReference).get())
-          .thenAnswer((_) async => mockSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+      stubStatsDoc(mockSnapshot);
 
       final notifier = GamificationNotifier(mockFirestore, 'test-user-123');
       await notifier.loadStats();
@@ -161,14 +145,19 @@ void main() {
 
   group('gamificationStatsProvider Tests', () {
     test('gamificationStatsProvider requires authentication', () async {
-      final container = ProviderContainer();
+      // 未ログイン(currentUserId == null)なら例外になる。Firebase 実体は使わずモックで差し替える
+      final container = ProviderContainer(
+        overrides: [
+          firebaseProvider.overrideWithValue(MockFirebaseFirestore()),
+          currentUserIdProvider.overrideWithValue(null),
+        ],
+      );
+      addTearDown(container.dispose);
 
-      // Mock firebaseProvider to return a mock Firestore
-      final mockFirestore = MockFirebaseFirestore();
-      container.read(firebaseProvider); // Ensure it's initialized
-
-      // This test verifies the provider requires a logged-in user
-      expect(() => container.read(gamificationStatsProvider), isNotNull);
+      await expectLater(
+        container.read(gamificationStatsProvider.future),
+        throwsA(isA<Exception>()),
+      );
     });
   });
 }

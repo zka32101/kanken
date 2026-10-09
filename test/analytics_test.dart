@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kanken/models/analytics.dart';
+import 'package:kanken/models/learning_goal.dart';
 
 void main() {
   group('LearningAnalytics Tests', () {
@@ -112,95 +113,79 @@ void main() {
   });
 
   group('LearningGoal Tests', () {
+    LearningGoal make({
+      String goalId = 'goal1',
+      GoalType type = GoalType.accuracyRate,
+      int targetValue = 100,
+      int currentValue = 0,
+      DateTime? deadline,
+      DateTime? createdAt,
+    }) =>
+        LearningGoal(
+          goalId: goalId,
+          userId: 'user1',
+          type: type,
+          targetValue: targetValue,
+          currentValue: currentValue,
+          createdAt: createdAt ?? DateTime.now(),
+          deadline: deadline,
+        );
+
     test('LearningGoal can be created', () {
-      final deadline = DateTime.now().add(const Duration(days: 1));
-      final goal = LearningGoal(
-        goalId: 'goal1',
-        userId: 'user1',
-        type: 'daily',
+      final goal = make(
         targetValue: 80,
-        currentValue: 0,
-        goalType: 'accuracy',
-        deadline: deadline,
-        isCompleted: false,
-        createdAt: DateTime.now(),
+        deadline: DateTime.now().add(const Duration(days: 1)),
       );
 
       expect(goal.goalId, equals('goal1'));
-      expect(goal.type, equals('daily'));
-      expect(goal.goalType, equals('accuracy'));
+      expect(goal.type, equals(GoalType.accuracyRate));
+      expect(goal.isActive, isTrue);
       expect(goal.isAchieved, isFalse);
+      expect(goal.isExpired, isFalse);
     });
 
-    test('progress calculates correctly', () {
-      final deadline = DateTime.now().add(const Duration(days: 1));
-      final goal = LearningGoal(
-        goalId: 'goal1',
-        userId: 'user1',
-        type: 'daily',
-        targetValue: 100,
-        currentValue: 50,
-        goalType: 'accuracy',
-        deadline: deadline,
-        isCompleted: false,
-        createdAt: DateTime.now(),
-      );
+    test('progressRate calculates correctly', () {
+      final goal = make(targetValue: 100, currentValue: 50);
 
-      expect(goal.progress, equals(0.5));
-      expect(goal.isAchieved, isFalse);
+      expect(goal.progressRate, equals(0.5));
+      expect(goal.progressPercentage, equals(50));
     });
 
-    test('isAchieved returns correct status', () {
-      final deadline = DateTime.now().add(const Duration(days: 1));
-      final goalNotAchieved = LearningGoal(
-        goalId: 'goal1',
-        userId: 'user1',
-        type: 'daily',
-        targetValue: 100,
-        currentValue: 50,
-        goalType: 'accuracy',
-        deadline: deadline,
-        isCompleted: false,
-        createdAt: DateTime.now(),
-      );
+    test('progressRate is clamped and safe for zero target', () {
+      expect(make(targetValue: 100, currentValue: 150).progressRate, equals(1.0));
+      expect(make(targetValue: 0, currentValue: 10).progressRate, equals(0.0));
+    });
 
-      final goalAchieved = LearningGoal(
-        goalId: 'goal2',
-        userId: 'user1',
-        type: 'daily',
-        targetValue: 100,
-        currentValue: 100,
-        goalType: 'accuracy',
-        deadline: deadline,
-        isCompleted: false,
-        createdAt: DateTime.now(),
-      );
+    test('isExpired reflects deadline', () {
+      final past = make(deadline: DateTime.now().subtract(const Duration(days: 1)));
+      expect(past.isExpired, isTrue);
+      expect(make().isExpired, isFalse);
+    });
 
-      expect(goalNotAchieved.isAchieved, isFalse);
-      expect(goalAchieved.isAchieved, isTrue);
+    test('typeLabel and unit follow the goal type', () {
+      final goal = make(type: GoalType.weeklyStudyMinutes);
+      expect(goal.typeLabel, equals('週間学習時間'));
+      expect(goal.unit, equals('分'));
     });
 
     test('JSON round-trip serialization', () {
-      final deadline = DateTime(2026, 9, 14);
-      final original = LearningGoal(
+      final original = make(
         goalId: 'goal1',
-        userId: 'user1',
-        type: 'daily',
+        type: GoalType.streakDays,
         targetValue: 80,
         currentValue: 40,
-        goalType: 'accuracy',
-        deadline: deadline,
-        isCompleted: false,
+        deadline: DateTime(2026, 9, 14),
         createdAt: DateTime(2026, 9, 13),
       );
 
-      final json = original.toJson();
-      final fromJson = LearningGoal.fromJson(json as Map<String, dynamic>);
+      final fromJson = LearningGoal.fromJson(original.toJson());
 
       expect(fromJson.goalId, equals(original.goalId));
       expect(fromJson.userId, equals(original.userId));
       expect(fromJson.type, equals(original.type));
       expect(fromJson.targetValue, equals(original.targetValue));
+      expect(fromJson.currentValue, equals(original.currentValue));
+      expect(fromJson.deadline, equals(original.deadline));
     });
   });
 

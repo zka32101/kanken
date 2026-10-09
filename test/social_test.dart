@@ -1,40 +1,85 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kanken/models/social.dart';
+import 'package:kanken/models/friend.dart';
 
 void main() {
-  group('Friend Tests', () {
-    test('Friend can be created', () {
-      final friend = Friend(
-        friendId: 'friend1',
-        userId: 'user1',
-        displayName: '太郎',
-        avatarUrl: null,
+  Friend makeFriend({
+    FriendStatus status = FriendStatus.friend,
+    DateTime? lastPlayedAt,
+  }) =>
+      Friend(
+        userId: 'user1_default',
+        userName: '太郎',
         level: 10,
-        connectedAt: DateTime.now(),
+        experience: 500,
+        accuracyRate: 0.8,
+        streak: 3,
+        status: status,
+        addedAt: DateTime(2026, 9, 13),
+        lastPlayedAt: lastPlayedAt,
       );
 
-      expect(friend.friendId, equals('friend1'));
-      expect(friend.userId, equals('user1'));
-      expect(friend.displayName, equals('太郎'));
+  group('Friend Tests', () {
+    test('Friend can be created', () {
+      final friend = makeFriend();
+
+      expect(friend.userId, equals('user1_default'));
+      expect(friend.userName, equals('太郎'));
       expect(friend.level, equals(10));
+      expect(friend.getStatusLabel(), equals('フレンド中'));
+    });
+
+    test('ステータス表示がステータスごとに切り替わる', () {
+      expect(makeFriend(status: FriendStatus.pending).getStatusLabel(),
+          equals('リクエスト待ち'));
+      expect(makeFriend(status: FriendStatus.requested).getStatusLabel(),
+          equals('リクエスト済み'));
+      expect(makeFriend().getStatusIcon(), equals('✅'));
+      expect(makeFriend(status: FriendStatus.pending).getStatusIcon(),
+          equals('⏳'));
+      expect(makeFriend(status: FriendStatus.requested).getStatusIcon(),
+          equals('📤'));
+    });
+
+    test('isOnline は30分以内の活動で true', () {
+      expect(makeFriend().isOnline, isFalse);
+      expect(
+          makeFriend(
+                  lastPlayedAt:
+                      DateTime.now().subtract(const Duration(minutes: 5)))
+              .isOnline,
+          isTrue);
+      expect(
+          makeFriend(
+                  lastPlayedAt:
+                      DateTime.now().subtract(const Duration(minutes: 31)))
+              .isOnline,
+          isFalse);
     });
 
     test('JSON round-trip serialization', () {
-      final original = Friend(
-        friendId: 'friend1',
-        userId: 'user1',
-        displayName: '太郎',
-        avatarUrl: null,
-        level: 10,
-        connectedAt: DateTime(2026, 9, 13),
+      final original = makeFriend(
+        status: FriendStatus.pending,
+        lastPlayedAt: DateTime(2026, 9, 14),
       );
 
-      final json = original.toJson();
-      final fromJson = Friend.fromJson(json as Map<String, dynamic>);
+      final fromJson = Friend.fromJson(original.toJson());
 
-      expect(fromJson.friendId, equals(original.friendId));
-      expect(fromJson.displayName, equals(original.displayName));
+      expect(fromJson.userId, equals(original.userId));
+      expect(fromJson.userName, equals(original.userName));
       expect(fromJson.level, equals(original.level));
+      expect(fromJson.accuracyRate, equals(original.accuracyRate));
+      expect(fromJson.status, equals(FriendStatus.pending));
+      expect(fromJson.addedAt, equals(original.addedAt));
+      expect(fromJson.lastPlayedAt, equals(original.lastPlayedAt));
+    });
+
+    test('欠損フィールドはデフォルト値で補われる', () {
+      final f = Friend.fromJson({});
+      expect(f.userId, equals(''));
+      expect(f.userName, equals('Unknown'));
+      expect(f.level, equals(1));
+      expect(f.status, equals(FriendStatus.friend));
+      expect(f.lastPlayedAt, isNull);
     });
   });
 
@@ -42,119 +87,33 @@ void main() {
     test('FriendRequest can be created', () {
       final request = FriendRequest(
         requestId: 'req1',
-        fromUserId: 'user1',
-        toUserId: 'user2',
-        fromDisplayName: '太郎',
-        fromAvatarUrl: null,
-        status: 'pending',
+        fromUserId: 'user1_default',
+        fromUserName: '太郎',
+        toUserId: 'user2_default',
         createdAt: DateTime.now(),
       );
 
       expect(request.requestId, equals('req1'));
-      expect(request.status, equals('pending'));
-      expect(request.isPending, isTrue);
-      expect(request.isAccepted, isFalse);
-    });
-
-    test('FriendRequest status properties work correctly', () {
-      final pendingRequest = FriendRequest(
-        requestId: 'req1',
-        fromUserId: 'user1',
-        toUserId: 'user2',
-        fromDisplayName: '太郎',
-        fromAvatarUrl: null,
-        status: 'pending',
-        createdAt: DateTime.now(),
-      );
-
-      final acceptedRequest = FriendRequest(
-        requestId: 'req2',
-        fromUserId: 'user1',
-        toUserId: 'user2',
-        fromDisplayName: '太郎',
-        fromAvatarUrl: null,
-        status: 'accepted',
-        createdAt: DateTime.now(),
-      );
-
-      final rejectedRequest = FriendRequest(
-        requestId: 'req3',
-        fromUserId: 'user1',
-        toUserId: 'user2',
-        fromDisplayName: '太郎',
-        fromAvatarUrl: null,
-        status: 'rejected',
-        createdAt: DateTime.now(),
-      );
-
-      expect(pendingRequest.isPending, isTrue);
-      expect(acceptedRequest.isAccepted, isTrue);
-      expect(rejectedRequest.isRejected, isTrue);
+      expect(request.fromUserName, equals('太郎'));
+      expect(request.toUserId, equals('user2_default'));
     });
 
     test('JSON round-trip serialization', () {
       final original = FriendRequest(
         requestId: 'req1',
-        fromUserId: 'user1',
-        toUserId: 'user2',
-        fromDisplayName: '太郎',
-        fromAvatarUrl: null,
-        status: 'pending',
+        fromUserId: 'user1_default',
+        fromUserName: '太郎',
+        toUserId: 'user2_default',
         createdAt: DateTime(2026, 9, 13),
       );
 
-      final json = original.toJson();
-      final fromJson = FriendRequest.fromJson(json as Map<String, dynamic>);
+      final fromJson = FriendRequest.fromJson(original.toJson());
 
       expect(fromJson.requestId, equals(original.requestId));
-      expect(fromJson.status, equals(original.status));
-      expect(fromJson.isPending, isTrue);
-    });
-  });
-
-  group('SocialUserProfile Tests', () {
-    test('SocialUserProfile can be created', () {
-      final profile = SocialUserProfile(
-        userId: 'user1',
-        displayName: '太郎',
-        avatarUrl: null,
-        bio: '漢字学習中',
-        level: 15,
-        totalBattles: 25,
-        winRate: 0.72,
-        totalFriends: 10,
-        lastOnline: DateTime.now(),
-      );
-
-      expect(profile.userId, equals('user1'));
-      expect(profile.displayName, equals('太郎'));
-      expect(profile.level, equals(15));
-      expect(profile.totalBattles, equals(25));
-      expect(profile.winRate, equals(0.72));
-    });
-
-    test('JSON round-trip serialization', () {
-      final original = SocialUserProfile(
-        userId: 'user1',
-        displayName: '太郎',
-        avatarUrl: null,
-        bio: '漢字学習中',
-        level: 15,
-        totalBattles: 25,
-        winRate: 0.72,
-        totalFriends: 10,
-        lastOnline: DateTime(2026, 9, 13, 10, 30),
-      );
-
-      final json = original.toJson();
-      final fromJson =
-          SocialUserProfile.fromJson(json as Map<String, dynamic>);
-
-      expect(fromJson.userId, equals(original.userId));
-      expect(fromJson.displayName, equals(original.displayName));
-      expect(fromJson.level, equals(original.level));
-      expect(fromJson.winRate, equals(original.winRate));
-      expect(fromJson.totalFriends, equals(original.totalFriends));
+      expect(fromJson.fromUserId, equals(original.fromUserId));
+      expect(fromJson.fromUserName, equals(original.fromUserName));
+      expect(fromJson.toUserId, equals(original.toUserId));
+      expect(fromJson.createdAt, equals(original.createdAt));
     });
   });
 }

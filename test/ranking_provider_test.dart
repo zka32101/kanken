@@ -1,83 +1,62 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kanken/models/user_ranking.dart';
+
+UserRanking _make({
+  String userId = 'user-1',
+  String userName = 'Alice',
+  int rank = 1,
+  int level = 50,
+  int experience = 10000,
+  int coins = 500,
+  double accuracyRate = 0.9,
+  int streak = 25,
+  DateTime? lastPlayedAt,
+}) {
+  return UserRanking(
+    userId: userId,
+    userName: userName,
+    rank: rank,
+    level: level,
+    experience: experience,
+    coins: coins,
+    accuracyRate: accuracyRate,
+    streak: streak,
+    lastPlayedAt: lastPlayedAt ?? DateTime.now(),
+  );
+}
 
 void main() {
   group('UserRanking Tests', () {
     test('UserRanking creates with valid data', () {
-      final ranking = UserRanking(
-        userId: 'user-1',
-        userName: 'Alice',
-        rank: 1,
-        score: 10000,
-        level: 50,
-        correctAnswers: 450,
-        totalQuestions: 500,
-        streak: 25,
-        lastPlayedAt: DateTime.now(),
-      );
+      final ranking = _make();
 
       expect(ranking.userId, equals('user-1'));
       expect(ranking.userName, equals('Alice'));
       expect(ranking.rank, equals(1));
-      expect(ranking.score, equals(10000));
+      expect(ranking.experience, equals(10000));
     });
 
     test('UserRanking rank ordering', () {
       final rankings = [
-        UserRanking(
-          userId: 'user-1',
-          userName: 'Alice',
-          rank: 1,
-          score: 10000,
-          level: 50,
-          correctAnswers: 450,
-          totalQuestions: 500,
-          streak: 25,
-          lastPlayedAt: DateTime.now(),
-        ),
-        UserRanking(
-          userId: 'user-2',
-          userName: 'Bob',
-          rank: 2,
-          score: 9500,
-          level: 48,
-          correctAnswers: 425,
-          totalQuestions: 500,
-          streak: 15,
-          lastPlayedAt: DateTime.now(),
-        ),
-        UserRanking(
-          userId: 'user-3',
-          userName: 'Charlie',
-          rank: 3,
-          score: 9000,
-          level: 45,
-          correctAnswers: 400,
-          totalQuestions: 500,
-          streak: 10,
-          lastPlayedAt: DateTime.now(),
-        ),
+        _make(rank: 1, experience: 10000, level: 50),
+        _make(userId: 'user-2', userName: 'Bob', rank: 2, experience: 9500, level: 48),
+        _make(userId: 'user-3', userName: 'Charlie', rank: 3, experience: 9000, level: 45),
       ];
 
       expect(rankings[0].rank, lessThan(rankings[1].rank));
-      expect(rankings[0].score, greaterThan(rankings[1].score));
+      expect(rankings[0].experience, greaterThan(rankings[1].experience));
     });
 
-    test('UserRanking calculates accuracy', () {
-      final ranking = UserRanking(
-        userId: 'user-4',
-        userName: 'David',
-        rank: 10,
-        score: 5000,
-        level: 30,
-        correctAnswers: 400,
-        totalQuestions: 500,
-        streak: 5,
-        lastPlayedAt: DateTime.now(),
-      );
-
-      final accuracy = (ranking.correctAnswers / ranking.totalQuestions) * 100;
-      expect(accuracy, equals(80.0));
+    test('UserRanking getRankBadge / getRankLabel', () {
+      expect(_make(rank: 1).getRankBadge(), equals('🥇'));
+      expect(_make(rank: 2).getRankBadge(), equals('🥈'));
+      expect(_make(rank: 3).getRankBadge(), equals('🥉'));
+      expect(_make(rank: 10).getRankBadge(), equals('10位'));
+      expect(_make(rank: 1).getRankLabel(), equals('1位 (金)'));
+      expect(_make(rank: 2).getRankLabel(), equals('2位 (銀)'));
+      expect(_make(rank: 3).getRankLabel(), equals('3位 (銅)'));
+      expect(_make(rank: 10).getRankLabel(), equals('10位'));
     });
 
     test('UserRanking fromJson creates instance', () {
@@ -85,12 +64,12 @@ void main() {
         'userId': 'user-5',
         'userName': 'Eve',
         'rank': 5,
-        'score': 7500,
         'level': 35,
-        'correctAnswers': 350,
-        'totalQuestions': 500,
+        'experience': 7500,
+        'coins': 120,
+        'accuracyRate': 0.7,
         'streak': 8,
-        'lastPlayedAt': DateTime.now().toIso8601String(),
+        'lastPlayedAt': Timestamp.fromDate(DateTime(2026, 9, 13)),
       };
 
       final ranking = UserRanking.fromJson(jsonData);
@@ -98,90 +77,56 @@ void main() {
       expect(ranking.userId, equals('user-5'));
       expect(ranking.userName, equals('Eve'));
       expect(ranking.rank, equals(5));
+      expect(ranking.experience, equals(7500));
+      expect(ranking.coins, equals(120));
+      expect(ranking.accuracyRate, equals(0.7));
+      expect(ranking.lastPlayedAt, equals(DateTime(2026, 9, 13)));
+    });
+
+    test('UserRanking fromJson: 欠損フィールドはデフォルト値', () {
+      final ranking = UserRanking.fromJson({});
+
+      expect(ranking.userId, equals(''));
+      expect(ranking.userName, equals('Unknown'));
+      expect(ranking.rank, equals(0));
+      expect(ranking.level, equals(1));
+      expect(ranking.accuracyRate, equals(0.0));
+    });
+
+    test('UserRanking JSON round-trip', () {
+      final original = _make(lastPlayedAt: DateTime(2026, 9, 13, 8));
+
+      final restored = UserRanking.fromJson(original.toJson());
+
+      expect(restored.userId, equals(original.userId));
+      expect(restored.rank, equals(original.rank));
+      expect(restored.level, equals(original.level));
+      expect(restored.experience, equals(original.experience));
+      expect(restored.coins, equals(original.coins));
+      expect(restored.accuracyRate, equals(original.accuracyRate));
+      expect(restored.streak, equals(original.streak));
+      expect(restored.lastPlayedAt, equals(original.lastPlayedAt));
     });
 
     test('UserRanking level progression', () {
-      final newbie = UserRanking(
-        userId: 'user-new',
-        userName: 'NewUser',
-        rank: 1000,
-        score: 100,
-        level: 1,
-        correctAnswers: 10,
-        totalQuestions: 100,
-        streak: 0,
-        lastPlayedAt: DateTime.now(),
-      );
-
-      final veteran = UserRanking(
-        userId: 'user-vet',
-        userName: 'Veteran',
-        rank: 1,
-        score: 50000,
-        level: 100,
-        correctAnswers: 4500,
-        totalQuestions: 5000,
-        streak: 50,
-        lastPlayedAt: DateTime.now(),
-      );
+      final newbie = _make(level: 1, experience: 100, rank: 1000);
+      final veteran = _make(level: 100, experience: 50000, rank: 1);
 
       expect(veteran.level, greaterThan(newbie.level));
-      expect(veteran.score, greaterThan(newbie.score));
+      expect(veteran.experience, greaterThan(newbie.experience));
     });
 
     test('UserRanking streak tracking', () {
-      final noStreak = UserRanking(
-        userId: 'user-6',
-        userName: 'Frank',
-        rank: 50,
-        score: 3000,
-        level: 20,
-        correctAnswers: 150,
-        totalQuestions: 500,
-        streak: 0,
-        lastPlayedAt: DateTime.now().subtract(Duration(days: 3)),
-      );
-
-      final onStreak = UserRanking(
-        userId: 'user-7',
-        userName: 'Grace',
-        rank: 15,
-        score: 8000,
-        level: 40,
-        correctAnswers: 380,
-        totalQuestions: 500,
-        streak: 30,
-        lastPlayedAt: DateTime.now(),
-      );
+      final noStreak = _make(streak: 0);
+      final onStreak = _make(streak: 30);
 
       expect(onStreak.streak, greaterThan(noStreak.streak));
     });
 
     test('UserRanking recent activity', () {
       final now = DateTime.now();
-      final active = UserRanking(
-        userId: 'user-8',
-        userName: 'Henry',
-        rank: 20,
-        score: 6500,
-        level: 35,
-        correctAnswers: 300,
-        totalQuestions: 500,
-        streak: 12,
-        lastPlayedAt: now,
-      );
-
-      final inactive = UserRanking(
-        userId: 'user-9',
-        userName: 'Ivy',
-        rank: 200,
-        score: 2000,
-        level: 15,
-        correctAnswers: 100,
-        totalQuestions: 500,
-        streak: 0,
-        lastPlayedAt: now.subtract(Duration(days: 30)),
-      );
+      final active = _make(lastPlayedAt: now);
+      final inactive = _make(lastPlayedAt: now.subtract(const Duration(days: 30)));
 
       final daysSinceActive = now.difference(active.lastPlayedAt).inDays;
       final daysSinceInactive = now.difference(inactive.lastPlayedAt).inDays;
@@ -191,41 +136,39 @@ void main() {
 
     test('UserRanking top 10 leaderboard', () {
       final leaderboard = List.generate(10, (i) {
-        return UserRanking(
+        return _make(
           userId: 'user-$i',
           userName: 'Player $i',
           rank: i + 1,
-          score: 10000 - (i * 500),
+          experience: 10000 - (i * 500),
           level: 50 - (i * 2),
-          correctAnswers: 450 - (i * 20),
-          totalQuestions: 500,
-          streak: 25 - (i * 2),
-          lastPlayedAt: DateTime.now().subtract(Duration(days: i)),
         );
       });
 
       expect(leaderboard.length, equals(10));
       expect(leaderboard.first.rank, equals(1));
       expect(leaderboard.last.rank, equals(10));
-      expect(leaderboard[0].score, greaterThan(leaderboard[9].score));
+      expect(leaderboard[0].experience, greaterThan(leaderboard[9].experience));
+    });
+  });
+
+  group('RankingFilter Tests', () {
+    test('同じ値のフィルターは等価（Riverpod familyのキャッシュ判定用）', () {
+      const a = RankingFilter(type: RankingType.experience, limit: 50);
+      const b = RankingFilter(type: RankingType.experience, limit: 50);
+      const c = RankingFilter(type: RankingType.streak, limit: 50);
+
+      expect(a, equals(b));
+      expect(a.hashCode, equals(b.hashCode));
+      expect(a, isNot(equals(c)));
     });
 
-    test('UserRanking score calculation', () {
-      final ranking = UserRanking(
-        userId: 'user-10',
-        userName: 'Jack',
-        rank: 5,
-        score: 5000,
-        level: 30,
-        correctAnswers: 300,
-        totalQuestions: 400,
-        streak: 10,
-        lastPlayedAt: DateTime.now(),
-      );
+    test('デフォルトはレベル順・全期間・100件', () {
+      const f = RankingFilter();
 
-      final expectedScore = ranking.level * 100 + ranking.correctAnswers * 10;
-      expect(ranking.score, isNotNull);
-      expect(ranking.score, greaterThan(0));
+      expect(f.type, equals(RankingType.level));
+      expect(f.period, equals(RankingPeriod.allTime));
+      expect(f.limit, equals(100));
     });
   });
 }
