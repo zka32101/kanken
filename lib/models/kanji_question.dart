@@ -15,6 +15,8 @@ class KanjiQuestion {
   // 「いち」のようにそのまま書く。
   final String? reading;
   final String? example; // 用例（例: 「一番目（いちばんめ）」）
+  // 上記reading/example以外の読みと用例（音読み・訓読みが複数ある漢字用）。
+  final List<ExtraReading> extraReadings;
 
   KanjiQuestion({
     required this.id,
@@ -27,6 +29,7 @@ class KanjiQuestion {
     required this.version,
     this.reading,
     this.example,
+    this.extraReadings = const [],
   });
 
   factory KanjiQuestion.fromJson(Map<String, dynamic> json) {
@@ -41,6 +44,10 @@ class KanjiQuestion {
       version: json['version'] ?? 1,
       reading: json['reading'] as String?,
       example: json['example'] as String?,
+      extraReadings: (json['extraReadings'] as List?)
+              ?.map((e) => ExtraReading.fromJson(Map<String, dynamic>.from(e as Map)))
+              .toList() ??
+          const [],
     );
   }
 
@@ -65,6 +72,7 @@ class KanjiQuestion {
       'version': version,
       'reading': reading,
       'example': example,
+      'extraReadings': extraReadings.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -79,6 +87,7 @@ class KanjiQuestion {
     int? version,
     String? reading,
     String? example,
+    List<ExtraReading>? extraReadings,
   }) {
     return KanjiQuestion(
       id: id ?? this.id,
@@ -91,6 +100,29 @@ class KanjiQuestion {
       version: version ?? this.version,
       reading: reading ?? this.reading,
       example: example ?? this.example,
+      extraReadings: extraReadings ?? this.extraReadings,
     );
   }
+
+  /// 主たる読みと追加の読みをまとめた一覧（reading空の場合は追加分のみ）。
+  List<ExtraReading> get allReadings => [
+        if (reading != null && reading!.isNotEmpty)
+          ExtraReading(reading: reading!, example: example ?? ''),
+        ...extraReadings,
+      ];
+}
+
+/// 漢字の追加の読みと、その読みを使う用例。
+class ExtraReading {
+  final String reading;
+  final String example;
+
+  const ExtraReading({required this.reading, required this.example});
+
+  factory ExtraReading.fromJson(Map<String, dynamic> json) => ExtraReading(
+        reading: json['reading'] as String? ?? '',
+        example: json['example'] as String? ?? '',
+      );
+
+  Map<String, dynamic> toJson() => {'reading': reading, 'example': example};
 }
