@@ -17,11 +17,7 @@ void main() async {
 
   // 初期化（Firebase・課金・広告・保存データの読み込み）には時間がかかる。その間、
   // 下部に組織ロゴを出した起動画面を先に出す。初期化が終わったら本来の画面に差し替える。
-  runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: StartupSplash()));
-
-  // 初期化（Firebase・課金・広告・保存データの読み込み）には時間がかかる。その間、
-  // 下部に組織ロゴを出した起動画面を先に出す。初期化が終わったら本来の画面に差し替える。
-  runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: StartupSplash()));
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: kankenStartupSplash()));
 
   // Firebase初期化
   // google-services.jsonが存在する場合、ネイティブ側(FirebaseInitProvider)が
@@ -61,8 +57,11 @@ void main() async {
     overrides: [
       coinServiceProvider.overrideWithValue(coinService),
       outfitServiceProvider.overrideWithValue(outfitService),
+      handsFreeStoreProvider.overrideWithValue(SharedPreferencesHandsFreeStore('kanken')),
     ],
   );
+  // ながら学習モードの設定（片手・読み上げ）を読み込む
+  await container.read(handsFreeProvider.notifier).load();
   container.read(feedbackProvider.notifier).setSubmitHandler((report) async {
     await FirebaseFirestore.instance
         .collection('feedback')

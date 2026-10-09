@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +8,7 @@ import 'package:app_common_kit/app_common_kit.dart';
 import '../models/user.dart';
 import '../services/firestore_service.dart';
 import '../services/handwriting_strictness.dart';
+import '../services/learning_transfer_service.dart';
 import '../viewmodels/user_viewmodel.dart';
 import '../viewmodels/services_provider.dart';
 import '../widgets/parental_gate_dialog.dart';
@@ -43,6 +45,83 @@ class HandwritingStrictnessTile extends ConsumerWidget {
           ref.read(handwritingStrictnessProvider.notifier).set(v);
         },
       ),
+    );
+  }
+}
+
+/// ながら学習モード（片手・読み上げ）の設定。
+class HandsFreeSection extends ConsumerWidget {
+  const HandsFreeSection({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(handsFreeProvider);
+    final notifier = ref.read(handsFreeProvider.notifier);
+    return Column(
+      children: [
+        SwitchListTile(
+          secondary: const Icon(Icons.record_voice_over),
+          title: const Text('ながら学習モード'),
+          subtitle: const Text('大きなボタンを下に寄せて、片手で答えられます（選択式の問題）'),
+          value: settings.enabled,
+          onChanged: notifier.setEnabled,
+        ),
+        if (settings.enabled)
+          SwitchListTile(
+            secondary: const Icon(Icons.volume_up),
+            title: const Text('問題を読み上げる'),
+            subtitle: const Text('問題と選択肢を、端末の音声で読み上げます'),
+            value: settings.speakQuestion,
+            onChanged: notifier.setSpeakQuestion,
+          ),
+      ],
+    );
+  }
+}
+
+/// 学習の引き継ぎ（機種変更）。コイン・衣装・推しの成長を、ログイン中のアカウントに保存／復元する。
+/// 学習の記録やフレンドなどは、同じアカウントでログインすれば自動で引き継がれる。
+class TransferSection extends ConsumerWidget {
+  const TransferSection({Key? key}) : super(key: key);
+
+  Future<void> _run(BuildContext context, WidgetRef ref, {required bool restore}) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      messenger.showSnackBar(const SnackBar(content: Text('ログインしてください')));
+      return;
+    }
+    final transfer = buildKankenTransfer(
+      uid: uid,
+      coin: ref.read(coinServiceProvider),
+      outfit: ref.read(outfitServiceProvider),
+    );
+    final result = restore ? await transfer.restore() : await transfer.backup();
+    if (restore) {
+      // 復元した内容を画面に反映する
+      await ref.read(coinProvider.notifier).load();
+      ref.invalidate(outfitProvider);
+    }
+    messenger.showSnackBar(SnackBar(content: Text(transferResultMessage(result, restore: restore))));
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        ListTile(
+          leading: const Icon(Icons.cloud_upload_outlined),
+          title: const Text('いまの状態を保存する'),
+          subtitle: const Text('コイン・衣装・推しの成長を、アカウントに保存します'),
+          onTap: () => _run(context, ref, restore: false),
+        ),
+        ListTile(
+          leading: const Icon(Icons.cloud_download_outlined),
+          title: const Text('保存した内容を復元する'),
+          subtitle: const Text('機種変更したとき、同じアカウントでログインして実行します'),
+          onTap: () => _run(context, ref, restore: true),
+        ),
+      ],
     );
   }
 }
@@ -91,6 +170,12 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
               const HandwritingStrictnessTile(),
+              const Divider(),
+              const _SectionHeader('ながら学習'),
+              const HandsFreeSection(),
+              const Divider(),
+              const _SectionHeader('データの引き継ぎ'),
+              const TransferSection(),
               const Divider(),
               const _SectionHeader('公開設定'),
               SwitchListTile(

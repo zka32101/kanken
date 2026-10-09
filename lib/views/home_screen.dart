@@ -17,6 +17,7 @@ import '../widgets/menu_grid_card.dart';
 import '../widgets/oshi_card.dart';
 import '../widgets/oshi_readiness_card.dart';
 import '../widgets/banner_ad_widget.dart';
+import '../widgets/hands_free_practice_body.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -828,6 +829,17 @@ class PracticeScreen extends ConsumerWidget {
     final level = ref.read(currentLevelProvider);
     final levelProgress =
         levelStats != null ? levelProgressFor(levelStats, level) : null;
+
+    // ながら学習モード（片手・読み上げ）: 選択式の問題は、大きなボタンを下に寄せた表示にする。
+    if (ref.watch(handsFreeProvider).enabled &&
+        question.source.questionType == QuestionType.multipleChoice) {
+      return HandsFreePracticeBody(
+        question: question,
+        index: currentIndex,
+        total: totalQuestions,
+        onAnswer: (isCorrect) => _handleAnswer(context, ref, isCorrect),
+      );
+    }
 
     return Padding(
       padding: const EdgeInsets.all(16),

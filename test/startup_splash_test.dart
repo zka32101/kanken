@@ -4,7 +4,7 @@ import 'package:kanken/widgets/startup_splash.dart';
 
 void main() {
   testWidgets('起動画面は、アプリのアイコンと組織ロゴを一枚の画面に出す', (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: StartupSplash()));
+    await tester.pumpWidget(MaterialApp(home: kankenStartupSplash()));
 
     final paths = tester
         .widgetList<Image>(find.byType(Image))
@@ -14,7 +14,7 @@ void main() {
     expect(paths, contains('assets/branding/yourwish_logo.png'));
     expect(
       tester.widget<Scaffold>(find.byType(Scaffold)).backgroundColor,
-      StartupSplash.splashBackground,
+      kankenSplashBackground,
     );
   });
 }
