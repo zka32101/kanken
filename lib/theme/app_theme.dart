@@ -13,6 +13,8 @@ class AppColors {
   static const Color primary = Color(0xFFB45F06);
   static const Color primaryDark = Color(0xFF8A4905);
   static const Color primaryOnDark = Color(0xFFF5B461);
+  // 淡い塗り（背景・選択行）。primaryDark の文字が 6.05:1。
+  static const Color primarySoft = Color(0xFFFBEEDC);
 
   // 機能カテゴリカラー（意味のグルーピングに基づく統一配色）
   static const Color study = Color(0xFF2FA86A);      // 学習・演習系（緑）
