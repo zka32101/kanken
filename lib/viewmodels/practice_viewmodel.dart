@@ -77,8 +77,8 @@ List<PracticeQuestion> _buildPracticeQuestions(
 ) {
   final random = Random();
   final allReadings = questions
-      .map((q) => q.reading)
-      .whereType<String>()
+      .expand((q) => q.allReadings)
+      .map((r) => r.reading)
       .where((r) => r.isNotEmpty)
       .toSet()
       .toList();
@@ -103,13 +103,18 @@ List<PracticeQuestion> _buildPracticeQuestions(
     }
 
     if (actualMode == PracticeMode.reading) {
-      final correctReading = question.reading!;
-      final distractors = allReadings.where((r) => r != correctReading).toList()
+      // 複数の読みを持つ漢字は、出題のたびにどれか1つを正解として選ぶ。
+      final picked = question.allReadings[random.nextInt(question.allReadings.length)];
+      final correctReading = picked.reading;
+      // 同じ漢字の他の読みは紛らわしい不正解になるため選択肢から除く。
+      final ownReadings = question.allReadings.map((r) => r.reading).toSet();
+      final distractors = allReadings.where((r) => !ownReadings.contains(r)).toList()
         ..shuffle(random);
       final choices = [correctReading, ...distractors.take(3)]..shuffle(random);
 
       return PracticeQuestion(
-        source: question,
+        // 解説（読み方・用例）が出題した読みと一致するよう差し替える。
+        source: question.copyWith(reading: picked.reading, example: picked.example),
         actualMode: actualMode,
         prompt: question.kanji,
         instruction: 'この漢字の読み方はどれ？',
