@@ -1,3 +1,4 @@
+import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/index.dart';
@@ -217,11 +218,9 @@ class _HandwritingPracticeScreenState
     );
 
     if (judgement.isCorrect) {
-      await SoundEffectService().playCorrectSound();
-      await HapticFeedbackService.lightTap();
+      await ref.read(answerFeedbackProvider).correct();
     } else {
-      await SoundEffectService().playIncorrectSound();
-      await HapticFeedbackService.shake();
+      await ref.read(answerFeedbackProvider).incorrect();
     }
 
     // 答案ログ・日次学習目標・苦手漢字分析を記録する（漢字学習画面からの

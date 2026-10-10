@@ -976,9 +976,7 @@ class PracticeScreen extends ConsumerWidget {
     // 演出（Lottie + SE + ハプティクス）
     if (isCorrect) {
       // SE再生（正解）
-      await SoundEffectService().playCorrectSound();
-      // ハプティクス（軽いタップ）
-      await HapticFeedbackService.lightTap();
+      await ref.read(answerFeedbackProvider).correct();
       // 正解演出表示
       _showCorrectFeedback(context, question);
       // Analytics: 3問正解でAha Moment
@@ -988,9 +986,7 @@ class PracticeScreen extends ConsumerWidget {
       }
     } else {
       // SE再生（不正解）
-      await SoundEffectService().playIncorrectSound();
-      // ハプティクス（シェイク）
-      await HapticFeedbackService.shake();
+      await ref.read(answerFeedbackProvider).incorrect();
       // 不正解演出表示
       _showIncorrectFeedback(context, question);
     }
@@ -1015,6 +1011,7 @@ class PracticeScreen extends ConsumerWidget {
         await showLevelClearCelebration(
           context,
           levelName: HomeScreen.levelNames[level] ?? level,
+          feedback: ref.read(answerFeedbackProvider),
         );
       }
     }

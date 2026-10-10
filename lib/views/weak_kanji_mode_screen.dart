@@ -260,8 +260,7 @@ class WeakKanjiModeScreen extends ConsumerWidget {
     await practiceVM.answerQuestion(isCorrect);
 
     if (isCorrect) {
-      await SoundEffectService().playCorrectSound();
-      await HapticFeedbackService.lightTap();
+      await ref.read(answerFeedbackProvider).correct();
 
       // フィードバックウィジェットをダイアログで表示
       if (context.mounted) {
@@ -294,8 +293,7 @@ class WeakKanjiModeScreen extends ConsumerWidget {
         );
       }
     } else {
-      await SoundEffectService().playIncorrectSound();
-      await HapticFeedbackService.shake();
+      await ref.read(answerFeedbackProvider).incorrect();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('もう一度確認しましょう'),
