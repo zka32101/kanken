@@ -17,6 +17,8 @@ const Map<String, int> _levelKanjiCount = {
   'LEVEL_5': 191,
   'LEVEL_4': 313,
   'LEVEL_3': 284,
+  'LEVEL_2_PRE': 328,
+  'LEVEL_2': 185,
 };
 
 class LearningGoalsScreen extends ConsumerWidget {

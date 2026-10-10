@@ -30,9 +30,10 @@ class OshiReadinessCard extends ConsumerWidget {
     var mockPassed = false;
     try {
       ref.watch(coinProvider); // 合格のコインが付いたら再描画する
-      final level = int.tryParse(
-              ref.watch(currentLevelProvider).replaceFirst('LEVEL_', '')) ??
-          10;
+      final levelString = ref.watch(currentLevelProvider);
+      final level = levelString == 'LEVEL_2_PRE'
+          ? 25
+          : int.tryParse(levelString.replaceFirst('LEVEL_', '')) ?? 10;
       mockPassed = mockPassedInLedger(ref.read(coinServiceProvider).ledger, level);
     } catch (_) {}
     return ReadinessProgressCard(
