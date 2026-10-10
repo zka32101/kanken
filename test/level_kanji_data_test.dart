@@ -79,6 +79,20 @@ void main() {
     });
   });
 
+  group('1級(2,797字・要照合)', () {
+    test('2,797字。準1級までの5,213字(常用+準1級)と重複しない', () {
+      final lower = [
+        for (final l in [...gradeOf.keys, 'LEVEL_4', 'LEVEL_3', 'LEVEL_2_PRE', 'LEVEL_2', 'LEVEL_1_PRE'])
+          ...LevelKanjiData.forLevel(l),
+      ];
+      final l1 = LevelKanjiData.forLevel('LEVEL_1');
+      expect(lower.length, 3077);
+      expect(l1.length, 2797);
+      expect(l1.toSet().length, l1.length, reason: '1級内の重複');
+      expect(l1.toSet().intersection(lower.toSet()), isEmpty);
+    });
+  });
+
   group('問題データ(シード)', () {
     final js = File('scripts/seed-kanji-questions.js').readAsStringSync();
     final start = js.indexOf('const questions = [') + 'const questions = '.length;
@@ -89,7 +103,7 @@ void main() {
     test('級ごとの問題数が配当漢字の数と一致し、重複がない', () {
       final ids = qs.map((q) => q['id'] as String).toList();
       expect(ids.toSet().length, ids.length);
-      for (final level in [...gradeOf.keys, 'LEVEL_4', 'LEVEL_3', 'LEVEL_2_PRE', 'LEVEL_2', 'LEVEL_1_PRE']) {
+      for (final level in [...gradeOf.keys, 'LEVEL_4', 'LEVEL_3', 'LEVEL_2_PRE', 'LEVEL_2', 'LEVEL_1_PRE', 'LEVEL_1']) {
         final inLevel = qs.where((q) => q['level'] == level).toList();
         final kanji = LevelKanjiData.forLevel(level);
         expect(inLevel.map((q) => q['kanji']).toSet(), kanji.toSet(), reason: level);
