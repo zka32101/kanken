@@ -12,6 +12,7 @@ import 'mock_exam_enhanced_screen.dart';
 int _levelStringToInt(String levelString) {
   // 準2級は整数にできないので 25 とする（模擬試験の問題データはまだ無い）。
   if (levelString == 'LEVEL_2_PRE') return 25;
+  if (levelString == 'LEVEL_1_PRE') return 15;
   return int.tryParse(levelString.replaceFirst('LEVEL_', '')) ?? 10;
 }
 

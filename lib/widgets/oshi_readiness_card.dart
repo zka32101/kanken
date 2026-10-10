@@ -33,7 +33,9 @@ class OshiReadinessCard extends ConsumerWidget {
       final levelString = ref.watch(currentLevelProvider);
       final level = levelString == 'LEVEL_2_PRE'
           ? 25
-          : int.tryParse(levelString.replaceFirst('LEVEL_', '')) ?? 10;
+          : levelString == 'LEVEL_1_PRE'
+              ? 15
+              : int.tryParse(levelString.replaceFirst('LEVEL_', '')) ?? 10;
       mockPassed = mockPassedInLedger(ref.read(coinServiceProvider).ledger, level);
     } catch (_) {}
     return ReadinessProgressCard(
