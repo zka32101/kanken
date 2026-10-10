@@ -31,6 +31,8 @@ class HomeScreen extends ConsumerWidget {
     'LEVEL_5',  // 小6
     'LEVEL_4',  // 中学校程度
     'LEVEL_3',  // 中学校卒業程度
+    'LEVEL_2_PRE', // 高校在学程度（要照合）
+    'LEVEL_2',  // 高校卒業・大学・一般程度（要照合）
   ];
 
   static const Map<String, String> levelNames = {
@@ -42,6 +44,8 @@ class HomeScreen extends ConsumerWidget {
     'LEVEL_5': '5級（小6）',
     'LEVEL_4': '4級（中学校程度）',
     'LEVEL_3': '3級（中学校卒業程度）',
+    'LEVEL_2_PRE': '準2級（高校在学程度）',
+    'LEVEL_2': '2級（高校卒業・大学・一般程度）',
   };
 
   @override

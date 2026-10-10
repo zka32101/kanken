@@ -96,4 +96,33 @@ void main() {
       expect(KanjiInfoData.get('稲')!.readings, containsAll(['トウ', 'いね', 'いな']));
     });
   });
+
+  group('準2級・2級(513字)', () {
+    final upper = [for (final l in ['LEVEL_2_PRE', 'LEVEL_2']) ...LevelKanjiData.forLevel(l)];
+
+    test('配当漢字すべてに読みと用例がある', () {
+      expect(upper.length, 513);
+      for (final k in upper) {
+        final info = KanjiInfoData.get(k);
+        expect(info, isNotNull, reason: k);
+        expect(info!.readings, isNotEmpty, reason: k);
+        expect(info.examples, isNotEmpty, reason: k);
+      }
+    });
+
+    test('読みの形・用例の形が正しく、見出しの漢字を含み、重複しない', () {
+      for (final k in upper) {
+        final info = KanjiInfoData.get(k)!;
+        expect(info.readings.toSet().length, info.readings.length, reason: k);
+        for (final r in info.readings) {
+          expect(onYomi.hasMatch(r) || kunYomi.hasMatch(r), isTrue, reason: '$k: $r');
+        }
+        expect(info.examples.toSet().length, info.examples.length, reason: k);
+        for (final e in info.examples) {
+          expect(example.hasMatch(e), isTrue, reason: '$k: $e');
+          expect(e.contains(k), isTrue, reason: '$k: $e');
+        }
+      }
+    });
+  });
 }

@@ -6,6 +6,7 @@ import 'package:kanken/screens/stroke_order_screen.dart';
 void main() {
   const levels = [
     'LEVEL_10', 'LEVEL_9', 'LEVEL_8', 'LEVEL_7', 'LEVEL_6', 'LEVEL_5', 'LEVEL_4', 'LEVEL_3',
+    'LEVEL_2_PRE', 'LEVEL_2',
   ];
 
   test('どの級の一覧も、その級の配当漢字の部分集合（他の級の字を含まない）', () {
@@ -24,8 +25,8 @@ void main() {
     }
   });
 
-  test('書き順データの無い級(4級・3級)は小学校の漢字で埋めず、空になる', () {
-    for (final level in ['LEVEL_4', 'LEVEL_3']) {
+  test('書き順データの無い級(4級〜2級)は小学校の漢字で埋めず、空になる', () {
+    for (final level in ['LEVEL_4', 'LEVEL_3', 'LEVEL_2_PRE', 'LEVEL_2']) {
       expect(strokeOrderKanjiForLevel(level), isEmpty, reason: level);
     }
     expect(strokeOrderKanjiForLevel('LEVEL_10'), isNot(contains('園')));
