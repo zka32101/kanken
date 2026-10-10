@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import '../services/sound_effect_service.dart';
+import 'package:app_common_kit/app_common_kit.dart';
 
 /// 級クリア（演習での正答率達成）を祝う証書風ダイアログ。
 /// confetti.json（Lottie）とバッジ獲得SEを使う。
 Future<void> showLevelClearCelebration(
   BuildContext context, {
   required String levelName,
+  required AnswerFeedback feedback,
 }) async {
-  // バッジ獲得SE
-  await SoundEffectService().playBadgeUnlockedSound();
+  // バッジ獲得SE＋触覚
+  await feedback.badgeUnlocked();
 
   if (!context.mounted) return;
 

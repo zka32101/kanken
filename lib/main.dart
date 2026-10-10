@@ -12,6 +12,7 @@ import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 import 'widgets/startup_splash.dart';
 import 'services/ad_service.dart';
+import 'services/audioplayers_sound_backend.dart';
 import 'services/coin_sync_service.dart';
 import 'services/purchases_service.dart';
 
@@ -61,6 +62,8 @@ void main() async {
       coinServiceProvider.overrideWithValue(coinService),
       outfitServiceProvider.overrideWithValue(outfitService),
       handsFreeStoreProvider.overrideWithValue(SharedPreferencesHandsFreeStore('kanken')),
+      // 解答時の効果音と触覚（app_common_kit の AnswerFeedback。音源はこのアプリの assets/sounds/）
+      answerFeedbackProvider.overrideWithValue(AnswerFeedback(sound: AudioplayersSoundBackend())),
     ],
   );
   // ながら学習モードの設定（片手・読み上げ）を読み込む
