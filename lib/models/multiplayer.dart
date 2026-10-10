@@ -90,6 +90,9 @@ class BattleRoom {
     return status == 'waiting' && participants.length >= 2;
   }
 
+  /// 参加者の uid 一覧（セキュリティルールでの参加判定用に保存する）。
+  List<String> get participantIds => [for (final p in participants) p.userId];
+
   /// ルームが満員か判定
   bool isFull() {
     return participants.length >= maxParticipants;
@@ -146,6 +149,9 @@ class BattleRoom {
     'examLevel': examLevel,
     'maxParticipants': maxParticipants,
     'participants': participants.map((p) => p.toJson()).toList(),
+    // Firestore のセキュリティルールは、マップのリストを検索できない（ラムダ式が使えない）ため、
+    // 参加者の判定用に uid だけの配列を併せて保存する。
+    'participantIds': participantIds,
     'status': status,
     'totalQuestions': totalQuestions,
     'timePerQuestionSeconds': timePerQuestionSeconds,
