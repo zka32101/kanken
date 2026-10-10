@@ -8,6 +8,7 @@ import '../services/index.dart';
 import '../widgets/index.dart';
 import '../router/app_router.dart';
 import '../providers/ranking_provider.dart';
+import '../providers/purchases_provider.dart';
 import '../providers/friend_provider.dart';
 import '../providers/spaced_repetition_provider.dart';
 import '../providers/level_progress_provider.dart';
@@ -344,7 +345,11 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
+  /// プレミアムプラン加入者だけが学べる級（準1級・1級）
+  static const premiumOnlyLevels = {'LEVEL_1_PRE', 'LEVEL_1'};
+
   Widget _buildLevelGrid(BuildContext context, WidgetRef ref, String currentLevel) {
+    final isPremium = ref.watch(hasAdsRemovedProvider).valueOrNull ?? false;
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -355,6 +360,10 @@ class HomeScreen extends ConsumerWidget {
         final isSelected = level == currentLevel;
         return GestureDetector(
           onTap: () {
+            if (premiumOnlyLevels.contains(level) && !isPremium) {
+              _showPremiumRequired(context, levelNames[level]?.split('（').first ?? level);
+              return;
+            }
             ref.read(currentLevelProvider.notifier).state = level;
           },
           child: Container(
@@ -367,19 +376,49 @@ class HomeScreen extends ConsumerWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
-              child: Text(
-                levelNames[level]?.split('（').first ?? level,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: isSelected ? Colors.white : Colors.black87,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (premiumOnlyLevels.contains(level) && !isPremium)
+                    const Padding(
+                      padding: EdgeInsets.only(right: 4),
+                      child: Icon(Icons.lock, size: 16, color: Colors.black45),
+                    ),
+                  Text(
+                    levelNames[level]?.split('（').first ?? level,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: isSelected ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
         );
       }).toList(),
+    );
+  }
+
+  void _showPremiumRequired(BuildContext context, String levelName) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('$levelNameはプレミアムプラン限定です'),
+        content: const Text('準1級・1級はプレミアムプランに加入すると学習できます（広告も非表示になります）。'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('閉じる')),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.goPaywall();
+            },
+            child: const Text('プランを見る'),
+          ),
+        ],
+      ),
     );
   }
 
