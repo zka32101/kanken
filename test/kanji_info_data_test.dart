@@ -155,25 +155,32 @@ void main() {
     });
   });
 
-  group('1級(2,797字・用例なし)', () {
+  group('1級(2,797字・用例は一部のみ)', () {
     final upper = LevelKanjiData.forLevel('LEVEL_1');
 
-    test('配当漢字すべてに読みがある。用例は付けていない', () {
+    test('配当漢字すべてに読みがある。用例は確実な字にだけ付けている', () {
       expect(upper.length, 2797);
+      var withExample = 0;
       for (final k in upper) {
         final info = KanjiInfoData.get(k);
         expect(info, isNotNull, reason: k);
         expect(info!.readings, isNotEmpty, reason: k);
-        expect(info.examples, isEmpty, reason: k);
+        if (info.examples.isNotEmpty) withExample++;
       }
+      expect(withExample, greaterThan(800));
     });
 
-    test('読みの形が正しく、重複しない', () {
+    test('読みの形・用例の形が正しく、見出しの漢字を含み、重複しない', () {
       for (final k in upper) {
         final info = KanjiInfoData.get(k)!;
         expect(info.readings.toSet().length, info.readings.length, reason: k);
         for (final r in info.readings) {
           expect(onYomi.hasMatch(r) || kunYomi.hasMatch(r), isTrue, reason: '$k: $r');
+        }
+        expect(info.examples.toSet().length, info.examples.length, reason: k);
+        for (final e in info.examples) {
+          expect(example.hasMatch(e), isTrue, reason: '$k: $e');
+          expect(e.contains(k), isTrue, reason: '$k: $e');
         }
       }
     });
