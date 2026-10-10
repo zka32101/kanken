@@ -1,4 +1,4 @@
-import 'package:app_common_kit/app_common_kit.dart' show MascotStage;
+import 'package:ukalab_core/ui.dart' show MascotStage;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kanken/providers/oshi_provider.dart';
 import 'package:kanken/services/oshi_progress_store.dart';

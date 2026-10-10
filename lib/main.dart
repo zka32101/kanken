@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_common_kit/app_common_kit.dart';
+import 'package:ukalab_core/ui.dart';
 import 'firebase_options.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';

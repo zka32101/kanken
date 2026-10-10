@@ -1,4 +1,4 @@
-import 'package:app_common_kit/app_common_kit.dart';
+import 'package:ukalab_core/ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// 学習の引き継ぎ（機種変更でコイン・衣装・推しの成長を復元する）の漢検アプリ側の組み立て。

@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:app_common_kit/app_common_kit.dart' show MascotStage, UkalabCert, UkalabOshiCard;
+import 'package:ukalab_core/ui.dart' show MascotStage, UkalabCert, UkalabOshiCard;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
