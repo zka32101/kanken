@@ -19,7 +19,7 @@ class PaywallScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('広告非表示プラン'),
+        title: const Text('プレミアムプラン'),
         centerTitle: true,
       ),
       body: hasAdsRemovedAsync.when(
@@ -50,7 +50,7 @@ class PaywallScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              '広告非表示プランが有効です。演習・模擬試験は広告なしで学習できます。',
+              'プレミアムプランが有効です。広告なしで学習でき、準1級・1級も利用できます。',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.black54),
             ),
