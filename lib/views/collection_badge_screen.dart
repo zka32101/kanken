@@ -79,6 +79,13 @@ class CollectionBadgeScreen extends ConsumerWidget {
       icon: Icons.school,
       conditionText: '2級の模擬試験に合格',
     ),
+    'LEVEL_1_PRE': BadgeInfo(
+      name: '準1級マスター',
+      description: '大学・一般程度の漢字をマスター',
+      color: Colors.pink,
+      icon: Icons.school,
+      conditionText: '準1級の模擬試験に合格',
+    ),
   };
 
   @override
