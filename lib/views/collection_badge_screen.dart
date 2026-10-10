@@ -89,7 +89,7 @@ class CollectionBadgeScreen extends ConsumerWidget {
     'LEVEL_1': BadgeInfo(
       name: '1級マスター',
       description: '大学・一般程度の漢字をマスター',
-      color: Colors.black87,
+      color: Colors.blueGrey,
       icon: Icons.school,
       conditionText: '1級の模擬試験に合格',
     ),
