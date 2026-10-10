@@ -769,6 +769,34 @@ class PracticeScreen extends ConsumerWidget {
         ),
         body: questions.when(
           data: (qList) {
+            // この級の問題がまだ用意されていないときは、「0問クリア」ではなく案内を出す
+            if (qList.isEmpty) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.hourglass_empty, size: 72, color: Colors.grey),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'この級の問題は、じゅんびちゅうです。\nほかの級で、れんしゅうしてね。',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton(
+                        onPressed: () {
+                          ref.read(practiceViewModelProvider.notifier).reset();
+                          Navigator.pop(context);
+                        },
+                        child: const Text('ホームに戻る'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
             if (currentIndex >= qList.length) {
               return Center(
                 child: Column(
