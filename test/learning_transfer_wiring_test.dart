@@ -1,4 +1,4 @@
-import 'package:app_common_kit/app_common_kit.dart';
+import 'package:ukalab_core/ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kanken/services/learning_transfer_service.dart';
 import 'package:kanken/services/oshi_progress_store.dart';

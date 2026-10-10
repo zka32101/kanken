@@ -1,7 +1,6 @@
-import 'package:app_common_kit/app_common_kit.dart'
+import 'package:ukalab_core/ui.dart'
     show MascotStage, MasteryInput, MasteryModel;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/index.dart';
 import '../services/oshi_progress_store.dart';
 import '../viewmodels/index.dart';
 import 'level_progress_provider.dart';

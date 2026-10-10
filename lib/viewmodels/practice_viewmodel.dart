@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:app_common_kit/app_common_kit.dart' show CoinEvent, coinProvider;
+import 'package:ukalab_core/ui.dart' show CoinEvent, coinProvider;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/compound_structure_data.dart';
 import '../data/level_kanji_data.dart';
