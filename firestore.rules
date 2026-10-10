@@ -149,18 +149,17 @@ service cloud.firestore {
     }
 
     // 対戦ルーム: ルーム一覧表示・参加判定のため読み取りはログインユーザー全員に許可。
-    // 書き込みは参加者（作成者を含む）本人がリスト内に含まれる場合のみ許可する。
+    // 書き込みは参加者本人のみ。参加者の判定は、ルームに保存した participantIds（uid の配列）で行う。
+    // （participants はマップのリストで、規則言語にはリストを検索するラムダ式が無いため。）
     function isParticipant(data) {
-      return isSignedIn() &&
-        data.participants is list &&
-        data.participants.size() > 0 &&
-        data.participants.filter(p => p.userId == request.auth.uid).size() > 0;
+      return isSignedIn() && request.auth.uid in data.get('participantIds', []);
     }
 
     match /battleRooms/{roomId} {
       allow read: if isSignedIn();
       allow create: if isSignedIn() &&
-        request.resource.data.creatorId == request.auth.uid;
+        request.resource.data.creatorId == request.auth.uid &&
+        isParticipant(request.resource.data);
       allow update: if isParticipant(resource.data) ||
         isParticipant(request.resource.data);
       allow delete: if isSignedIn() && resource.data.creatorId == request.auth.uid;

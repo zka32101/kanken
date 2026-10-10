@@ -192,6 +192,7 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
           .doc(roomId)
           .update({
         'participants': updatedParticipants.map((p) => p.toJson()).toList(),
+        'participantIds': [for (final p in updatedParticipants) p.userId],
       });
 
       final updatedRoom = room.copyWith(
@@ -377,6 +378,7 @@ class BattleRoomNotifier extends StateNotifier<BattleRoomState> {
         'status': 'finished',
         'finishedAt': Timestamp.now(),
         'participants': finalParticipants.map((p) => p.toJson()).toList(),
+        'participantIds': [for (final p in finalParticipants) p.userId],
       });
 
       // 各参加者の対戦統計を更新
